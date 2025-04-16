@@ -1,0 +1,90 @@
+-- 创建测试表
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    department_id INT,
+    salary DECIMAL(10, 2)
+);
+CREATE TABLE departments (
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(50)
+);
+-- 插入测试数据
+INSERT INTO employees (employee_id, first_name, last_name, department_id, salary) VALUES
+(1, 'John', 'Doe', 1, 50000.00),
+(2, 'Jane', 'Smith', 2, 60000.00),
+(3, 'Alice', 'Johnson', 1, 55000.00),
+(4, 'Bob', 'Brown', 2, 65000.00);
+INSERT INTO departments (department_id, department_name) VALUES
+(1, 'HR'),
+(2, 'Engineering');
+-- 创建 SIMPLE 物化视图
+CREATE MATERIALIZED VIEW simple_mview AS
+SELECT employee_id, first_name, last_name
+FROM employees;
+-- 查询 SIMPLE 物化视图
+SELECT * FROM simple_mview;
+-- 创建 AGGREGATE 物化视图
+CREATE MATERIALIZED VIEW aggregate_mview AS
+SELECT department_id, AVG(salary) AS avg_salary
+FROM employees
+GROUP BY department_id;
+-- 查询 AGGREGATE 物化视图
+SELECT * FROM aggregate_mview;
+-- 创建 JOIN 物化视图
+CREATE MATERIALIZED VIEW join_mview AS
+SELECT e.employee_id, e.first_name, e.last_name, d.department_name
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id;
+-- 查询 JOIN 物化视图
+SELECT * FROM join_mview;
+-- 创建 Sub-Query 物化视图
+CREATE MATERIALIZED VIEW subquery_mview AS
+SELECT employee_id, first_name, last_name
+FROM employees
+WHERE department_id IN (SELECT department_id FROM departments WHERE department_name = 'HR');
+-- 查询 Sub-Query 物化视图
+SELECT * FROM subquery_mview;
+-- 创建 SETS 物化视图
+CREATE MATERIALIZED VIEW sets_mview AS
+SELECT employee_id, first_name, last_name FROM employees WHERE department_id = 1
+UNION ALL
+SELECT employee_id, first_name, last_name FROM employees WHERE department_id = 2;
+-- 查询 SETS 物化视图
+SELECT * FROM sets_mview;
+-- 创建 COMPLEX 物化视图
+CREATE MATERIALIZED VIEW complex_mview AS
+SELECT e.employee_id, e.first_name, e.last_name, d.department_name, AVG(e.salary) OVER (PARTITION BY e.department_id) AS avg_salary
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id
+WHERE e.salary > (SELECT AVG(salary) FROM employees);
+-- 查询 COMPLEX 物化视图
+SELECT * FROM complex_mview;
+-- 删除 SIMPLE 物化视图
+DROP MATERIALIZED VIEW simple_mview;
+-- 删除 AGGREGATE 物化视图
+DROP MATERIALIZED VIEW aggregate_mview;
+-- 删除 JOIN 物化视图
+DROP MATERIALIZED VIEW join_mview;
+-- 删除 Sub-Query 物化视图
+DROP MATERIALIZED VIEW subquery_mview;
+-- 删除 SETS 物化视图
+DROP MATERIALIZED VIEW sets_mview;
+-- 删除 COMPLEX 物化视图
+DROP MATERIALIZED VIEW complex_mview;
+-- 刷新 SIMPLE 物化视图
+REFRESH MATERIALIZED VIEW simple_mview;
+-- 刷新 AGGREGATE 物化视图
+REFRESH MATERIALIZED VIEW aggregate_mview;
+-- 刷新 JOIN 物化视图
+REFRESH MATERIALIZED VIEW join_mview;
+-- 刷新 Sub-Query 物化视图
+REFRESH MATERIALIZED VIEW subquery_mview;
+-- 刷新 SETS 物化视图
+REFRESH MATERIALIZED VIEW sets_mview;
+-- 刷新 COMPLEX 物化视图
+REFRESH MATERIALIZED VIEW complex_mview;
+-- 查询物化视图类型
+SELECT mview_name, mview_type
+FROM SYS.USER_MVIEWS

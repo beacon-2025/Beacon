@@ -1,0 +1,6 @@
+```plaintext
+ALTER_JAVA_CLASS -> 'ALTER' 'JAVA' 'CLASS' SCHEMA_NAME '.' JAVA_CLASS_NAME 'COMPILE' DEBUG_OPTION
+SCHEMA_NAME -> 'schemaname_1'
+JAVA_CLASS_NAME -> 'javaclass_name_1'
+DEBUG_OPTION -> 'DEBUG' | ''
+```

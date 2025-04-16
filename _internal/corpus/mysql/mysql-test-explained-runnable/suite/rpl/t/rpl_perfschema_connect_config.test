@@ -1,0 +1,5 @@
+
+
+# We cannot set source_ssl=1 when both ssl_crl and ssl_crlpath are used in
+# CHANGE MASTER. (See bug#18165937)
+CHANGE REPLICATION SOURCE to SOURCE_SSL=0

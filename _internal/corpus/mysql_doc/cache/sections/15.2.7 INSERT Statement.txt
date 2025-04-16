@@ -1,0 +1,459 @@
+15.2.7 INSERT Statement
+INSERT [LOW_PRIORITY | DELAYED | HIGH_PRIORITY] [IGNORE]
+    [INTO] tbl_name
+    [PARTITION (partition_name [, partition_name] ...)]
+    [(col_name [, col_name] ...)]
+    { {VALUES | VALUE} (value_list) [, (value_list)] ... }
+    [AS row_alias[(col_alias [, col_alias] ...)]]
+    [ON DUPLICATE KEY UPDATE assignment_list]
+INSERT [LOW_PRIORITY | DELAYED | HIGH_PRIORITY] [IGNORE]
+    [INTO] tbl_name
+    [PARTITION (partition_name [, partition_name] ...)]
+    SET assignment_list
+    [AS row_alias[(col_alias [, col_alias] ...)]]
+    [ON DUPLICATE KEY UPDATE assignment_list]
+INSERT [LOW_PRIORITY | HIGH_PRIORITY] [IGNORE]
+    [INTO] tbl_name
+    [PARTITION (partition_name [, partition_name] ...)]
+    [(col_name [, col_name] ...)]
+    { SELECT ... 
+      | TABLE table_name 
+      | VALUES row_constructor_list
+    }
+    [ON DUPLICATE KEY UPDATE assignment_list]
+value:
+    {expr | DEFAULT}
+value_list:
+    value [, value] ...
+row_constructor_list:
+    ROW(value_list)[, ROW(value_list)][, ...]
+assignment:
+    col_name = 
+          value
+        | [row_alias.]col_name
+        | [tbl_name.]col_name
+        | [row_alias.]col_alias
+assignment_list:
+    assignment [, assignment] ...
+INSERT inserts new rows into an existing table. The INSERT ... VALUES, INSERT ... VALUES
+ROW(), and INSERT ... SET forms of the statement insert rows based on explicitly specified values.
+The INSERT ... SELECT form inserts rows selected from another table or tables. You can also
+use INSERT ... TABLE to insert rows from a single table. INSERT with an ON DUPLICATE KEY
+UPDATE clause enables existing rows to be updated if a row to be inserted would cause a duplicate
+value in a UNIQUE index or PRIMARY KEY. A row alias with one or more optional column aliases can
+be used with ON DUPLICATE KEY UPDATE to refer to the row to be inserted.
+For additional information about INSERT ... SELECT and INSERT ... ON DUPLICATE KEY
+UPDATE, see Section 15.2.7.1, “INSERT ... SELECT Statement”, and Section 15.2.7.2, “INSERT ... ON
+DUPLICATE KEY UPDATE Statement”.
+In MySQL 9.1, the DELAYED keyword is accepted but ignored by the server. For the reasons for this,
+see Section 15.2.7.3, “INSERT DELAYED Statement”,
+Inserting into a table requires the INSERT privilege for the table. If the ON DUPLICATE KEY UPDATE
+clause is used and a duplicate key causes an UPDATE to be performed instead, the statement requires
+the UPDATE privilege for the columns to be updated. For columns that are read but not modified you
+need only the SELECT privilege (such as for a column referenced only on the right hand side of an
+col_name=expr assignment in an ON DUPLICATE KEY UPDATE clause).
+When inserting into a partitioned table, you can control which partitions and subpartitions accept new
+rows. The PARTITION clause takes a list of the comma-separated names of one or more partitions or
+subpartitions (or both) of the table. If any of the rows to be inserted by a given INSERT statement do
+not match one of the partitions listed, the INSERT statement fails with the error Found a row not
+matching the given partition set. For more information and examples, see Section 26.5,
+“Partition Selection”.
+tbl_name is the table into which rows should be inserted. Specify the columns for which the statement
+provides values as follows:
+• Provide a parenthesized list of comma-separated column names following the table name. In this
+case, a value for each named column must be provided by the VALUES list, VALUES ROW() list, or
+SELECT statement. For the INSERT TABLE form, the number of columns in the source table must
+match the number of columns to be inserted.
+• If you do not specify a list of column names for INSERT ... VALUES or INSERT ... SELECT,
+values for every column in the table must be provided by the VALUES list, SELECT statement,
+or TABLE statement. If you do not know the order of the columns in the table, use DESCRIBE
+tbl_name to find out.
+• A SET clause indicates columns explicitly by name, together with the value to assign each one.
+Column values can be given in several ways:
+• If strict SQL mode is not enabled, any column not explicitly given a value is set to its default (explicit
+or implicit) value. For example, if you specify a column list that does not name all the columns in the
+table, unnamed columns are set to their default values. Default value assignment is described in
+Section 13.6, “Data Type Default Values”.
+If strict SQL mode is enabled, an INSERT statement generates an error if it does not specify an
+explicit value for every column that has no default value. See Section 7.1.11, “Server SQL Modes”.
+• If both the column list and the VALUES list are empty, INSERT creates a row with each column set to
+its default value:
+INSERT INTO tbl_name () VALUES();
+If strict mode is not enabled, MySQL uses the implicit default value for any column that has no
+explicitly defined default. If strict mode is enabled, an error occurs if any column has no default value.
+• Use the keyword DEFAULT to set a column explicitly to its default value. This makes it easier to
+write INSERT statements that assign values to all but a few columns, because it enables you to
+avoid writing an incomplete VALUES list that does not include a value for each column in the table.
+Otherwise, you must provide the list of column names corresponding to each value in the VALUES
+list.
+• If a generated column is inserted into explicitly, the only permitted value is DEFAULT. For information
+about generated columns, see Section 15.1.20.8, “CREATE TABLE and Generated Columns”.
+• In expressions, you can use DEFAULT(col_name) to produce the default value for column
+col_name.
+• Type conversion of an expression expr that provides a column value might occur if the expression
+data type does not match the column data type. Conversion of a given value can result in different
+inserted values depending on the column type. For example, inserting the string '1999.0e-2' into
+an INT, FLOAT, DECIMAL(10,6), or YEAR column inserts the value 1999, 19.9921, 19.992100,
+or 1999, respectively. The value stored in the INT and YEAR columns is 1999 because the string-to-
+number conversion looks only at as much of the initial part of the string as may be considered a valid
+integer or year. For the FLOAT and DECIMAL columns, the string-to-number conversion considers
+the entire string a valid numeric value.
+• An expression expr can refer to any column that was set earlier in a value list. For example, you can
+do this because the value for col2 refers to col1, which has previously been assigned:
+INSERT INTO tbl_name (col1,col2) VALUES(15,col1*2);
+But the following is not legal, because the value for col1 refers to col2, which is assigned after
+col1:
+INSERT INTO tbl_name (col1,col2) VALUES(col2*2,15);
+An exception occurs for columns that contain AUTO_INCREMENT values. Because
+AUTO_INCREMENT values are generated after other value assignments, any reference to an
+AUTO_INCREMENT column in the assignment returns a 0.
+INSERT statements that use VALUES syntax can insert multiple rows. To do this, include multiple lists
+of comma-separated column values, with lists enclosed within parentheses and separated by commas.
+Example:
+INSERT INTO tbl_name (a,b,c)
+    VALUES(1,2,3), (4,5,6), (7,8,9);
+Each values list must contain exactly as many values as are to be inserted per row. The following
+statement is invalid because it contains one list of nine values, rather than three lists of three values
+each:
+INSERT INTO tbl_name (a,b,c) VALUES(1,2,3,4,5,6,7,8,9);
+VALUE is a synonym for VALUES in this context. Neither implies anything about the number of values
+lists, nor about the number of values per list. Either may be used whether there is a single values list or
+multiple lists, and regardless of the number of values per list.
+INSERT statements using VALUES ROW() syntax can also insert multiple rows. In this case, each
+value list must be contained within a ROW() (row constructor), like this:
+INSERT INTO tbl_name (a,b,c)
+    VALUES ROW(1,2,3), ROW(4,5,6), ROW(7,8,9);
+The affected-rows value for an INSERT can be obtained using the ROW_COUNT() SQL function or
+the mysql_affected_rows() C API function. See Section 14.15, “Information Functions”, and
+mysql_affected_rows().
+If you use INSERT ... VALUES or INSERT ... VALUES ROW() with multiple value lists, or
+INSERT ... SELECT or INSERT ... TABLE, the statement returns an information string in this
+format:
+Records: N1 Duplicates: N2 Warnings: N3
+If you are using the C API, the information string can be obtained by invoking the mysql_info()
+function. See mysql_info().
+Records indicates the number of rows processed by the statement. (This is not necessarily the
+number of rows actually inserted because Duplicates can be nonzero.) Duplicates indicates the
+number of rows that could not be inserted because they would duplicate some existing unique index
+value. Warnings indicates the number of attempts to insert column values that were problematic in
+some way. Warnings can occur under any of the following conditions:
+• Inserting NULL into a column that has been declared NOT NULL. For multiple-row INSERT
+statements or INSERT INTO ... SELECT statements, the column is set to the implicit default
+value for the column data type. This is 0 for numeric types, the empty string ('') for string types,
+and the “zero” value for date and time types. INSERT INTO ... SELECT statements are handled
+the same way as multiple-row inserts because the server does not examine the result set from the
+SELECT to see whether it returns a single row. (For a single-row INSERT, no warning occurs when
+NULL is inserted into a NOT NULL column. Instead, the statement fails with an error.)
+• Setting a numeric column to a value that lies outside the column range. The value is clipped to the
+closest endpoint of the range.
+• Assigning a value such as '10.34 a' to a numeric column. The trailing nonnumeric text is stripped
+off and the remaining numeric part is inserted. If the string value has no leading numeric part, the
+column is set to 0.
+• Inserting a string into a string column (CHAR, VARCHAR, TEXT, or BLOB) that exceeds the column
+maximum length. The value is truncated to the column maximum length.
+• Inserting a value into a date or time column that is illegal for the data type. The column is set to the
+appropriate zero value for the type.
+• For INSERT examples involving AUTO_INCREMENT column values, see Section 5.6.9, “Using
+AUTO_INCREMENT”.
+If INSERT inserts a row into a table that has an AUTO_INCREMENT column, you can find the value
+used for that column by using the LAST_INSERT_ID() SQL function or the mysql_insert_id()
+C API function.
+Note
+These two functions do not always behave identically. The behavior of
+INSERT statements with respect to AUTO_INCREMENT columns is discussed
+further in Section 14.15, “Information Functions”, and mysql_insert_id().
+The INSERT statement supports the following modifiers:
+• If you use the LOW_PRIORITY modifier, execution of the INSERT is delayed until no other clients
+are reading from the table. This includes other clients that began reading while existing clients are
+reading, and while the INSERT LOW_PRIORITY statement is waiting. It is possible, therefore, for a
+client that issues an INSERT LOW_PRIORITY statement to wait for a very long time.
+LOW_PRIORITY affects only storage engines that use only table-level locking (such as MyISAM,
+MEMORY, and MERGE).
+Note
+LOW_PRIORITY should normally not be used with MyISAM tables because
+doing so disables concurrent inserts. See Section 10.11.3, “Concurrent
+Inserts”.
+• If you specify HIGH_PRIORITY, it overrides the effect of the --low-priority-updates option
+if the server was started with that option. It also causes concurrent inserts not to be used. See
+Section 10.11.3, “Concurrent Inserts”.
+HIGH_PRIORITY affects only storage engines that use only table-level locking (such as MyISAM,
+MEMORY, and MERGE).
+• If you use the IGNORE modifier, ignorable errors that occur while executing the INSERT statement
+are ignored. For example, without IGNORE, a row that duplicates an existing UNIQUE index or
+PRIMARY KEY value in the table causes a duplicate-key error and the statement is aborted. With
+IGNORE, the row is discarded and no error occurs. Ignored errors generate warnings instead.
+ IGNORE has a similar effect on inserts into partitioned tables where no partition matching a given
+value is found. Without IGNORE, such INSERT statements are aborted with an error. When INSERT
+IGNORE is used, the insert operation fails silently for rows containing the unmatched value, but
+inserts rows that are matched. For an example, see Section 26.2.2, “LIST Partitioning”.
+Data conversions that would trigger errors abort the statement if IGNORE is not specified. With
+IGNORE, invalid values are adjusted to the closest values and inserted; warnings are produced but
+the statement does not abort. You can determine with the mysql_info() C API function how many
+rows were actually inserted into the table.
+For more information, see The Effect of IGNORE on Statement Execution.
+You can use REPLACE instead of INSERT to overwrite old rows. REPLACE is the counterpart
+to INSERT IGNORE in the treatment of new rows that contain unique key values that duplicate
+old rows: The new rows replace the old rows rather than being discarded. See Section 15.2.12,
+“REPLACE Statement”.
+• If you specify ON DUPLICATE KEY UPDATE, and a row is inserted that would cause a duplicate
+value in a UNIQUE index or PRIMARY KEY, an UPDATE of the old row occurs. The affected-rows
+value per row is 1 if the row is inserted as a new row, 2 if an existing row is updated, and 0 if
+an existing row is set to its current values. If you specify the CLIENT_FOUND_ROWS flag to the
+mysql_real_connect() C API function when connecting to mysqld, the affected-rows value
+is 1 (not 0) if an existing row is set to its current values. See Section 15.2.7.2, “INSERT ... ON
+DUPLICATE KEY UPDATE Statement”.
+• INSERT DELAYED was deprecated in MySQL 5.6, and is scheduled for eventual removal. In MySQL
+9.1, the DELAYED modifier is accepted but ignored. Use INSERT (without DELAYED) instead. See
+Section 15.2.7.3, “INSERT DELAYED Statement”.
+15.2.7.1 INSERT ... SELECT Statement
+INSERT [LOW_PRIORITY | HIGH_PRIORITY] [IGNORE]
+    [INTO] tbl_name
+    [PARTITION (partition_name [, partition_name] ...)]
+    [(col_name [, col_name] ...)]
+    {   SELECT ... 
+      | TABLE table_name 
+      | VALUES row_constructor_list
+    }
+    [ON DUPLICATE KEY UPDATE assignment_list]
+value:
+    {expr | DEFAULT}
+value_list:
+    value [, value] ...
+row_constructor_list:
+    ROW(value_list)[, ROW(value_list)][, ...]
+assignment:
+    col_name = 
+          value
+        | [row_alias.]col_name
+        | [tbl_name.]col_name
+        | [row_alias.]col_alias
+assignment_list:
+    assignment [, assignment] ...
+With INSERT ... SELECT, you can quickly insert many rows into a table from the result of a SELECT
+statement, which can select from one or many tables. For example:
+INSERT INTO tbl_temp2 (fld_id)
+  SELECT tbl_temp1.fld_order_id
+  FROM tbl_temp1 WHERE tbl_temp1.fld_order_id > 100;
+TABLE statement in place of SELECT, as shown here:
+INSERT INTO ta TABLE tb;
+TABLE tb is equivalent to SELECT * FROM tb. It can be useful when inserting all columns from the
+source table into the target table, and no filtering with WHERE is required. In addition, the rows from
+TABLE can be ordered by one or more columns using ORDER BY, and the number of rows inserted can
+be limited using a LIMIT clause. For more information, see Section 15.2.16, “TABLE Statement”.
+The following conditions hold for INSERT ... SELECT statements, and, except where noted, for
+INSERT ... TABLE as well:
+• Specify IGNORE to ignore rows that would cause duplicate-key violations.
+• The target table of the INSERT statement may appear in the FROM clause of the SELECT part of the
+query, or as the table named by TABLE. However, you cannot insert into a table and select from the
+same table in a subquery.
+When selecting from and inserting into the same table, MySQL creates an internal temporary table
+to hold the rows from the SELECT and then inserts those rows into the target table. However, you
+cannot use INSERT INTO t ... SELECT ... FROM t when t is a TEMPORARY table, because
+TEMPORARY tables cannot be referred to twice in the same statement. For the same reason, you
+cannot use INSERT INTO t ... TABLE t when t is a temporary table. See Section 10.4.4,
+“Internal Temporary Table Use in MySQL”, and Section B.3.6.2, “TEMPORARY Table Problems”.
+• AUTO_INCREMENT columns work as usual.
+• To ensure that the binary log can be used to re-create the original tables, MySQL does not
+permit concurrent inserts for INSERT ... SELECT or INSERT ... TABLE statements (see
+Section 10.11.3, “Concurrent Inserts”).
+• To avoid ambiguous column reference problems when the SELECT and the INSERT refer to the
+same table, provide a unique alias for each table used in the SELECT part, and qualify column
+names in that part with the appropriate alias.
+The TABLE statement does not support aliases.
+You can explicitly select which partitions or subpartitions (or both) of the source or target table (or
+both) are to be used with a PARTITION clause following the name of the table. When PARTITION
+is used with the name of the source table in the SELECT portion of the statement, rows are selected
+only from the partitions or subpartitions named in its partition list. When PARTITION is used with the
+name of the target table for the INSERT portion of the statement, it must be possible to insert all rows
+selected into the partitions or subpartitions named in the partition list following the option. Otherwise,
+the INSERT ... SELECT statement fails. For more information and examples, see Section 26.5,
+“Partition Selection”.
+TABLE does not support a PARTITION clause.
+For INSERT ... SELECT statements, see Section 15.2.7.2, “INSERT ... ON DUPLICATE KEY
+UPDATE Statement” for conditions under which the SELECT columns can be referred to in an ON
+DUPLICATE KEY UPDATE clause. This also works for INSERT ... TABLE.
+The order in which a SELECT or TABLE statement with no ORDER BY clause returns rows is
+nondeterministic. This means that, when using replication, there is no guarantee that such a SELECT
+returns rows in the same order on the source and the replica, which can lead to inconsistencies
+between them. To prevent this from occurring, always write INSERT ... SELECT or INSERT ...
+TABLE statements that are to be replicated using an ORDER BY clause that produces the same row
+order on the source and the replica. See also Section 19.5.1.19, “Replication and LIMIT”.
+Due to this issue, INSERT ... SELECT ON DUPLICATE KEY UPDATE and INSERT IGNORE ...
+SELECT statements are flagged as unsafe for statement-based replication. Such statements produce a
+warning in the error log when using statement-based mode and are written to the binary log using the
+row-based format when using MIXED mode. (Bug #11758262, Bug #50439)
+See also Section 19.2.1.1, “Advantages and Disadvantages of Statement-Based and Row-Based
+Replication”.
+15.2.7.2 INSERT ... ON DUPLICATE KEY UPDATE Statement
+If you specify an ON DUPLICATE KEY UPDATE clause and a row to be inserted would cause a
+duplicate value in a UNIQUE index or PRIMARY KEY, an UPDATE of the old row occurs. For example,
+if column a is declared as UNIQUE and contains the value 1, the following two statements have similar
+effect:
+INSERT INTO t1 (a,b,c) VALUES (1,2,3)
+  ON DUPLICATE KEY UPDATE c=c+1;
+UPDATE t1 SET c=c+1 WHERE a=1;
+The effects are not quite identical: For an InnoDB table where a is an auto-increment column, the
+INSERT statement increases the auto-increment value but the UPDATE does not.
+If column b is also unique, the INSERT is equivalent to this UPDATE statement instead:
+UPDATE t1 SET c=c+1 WHERE a=1 OR b=2 LIMIT 1;
+If a=1 OR b=2 matches several rows, only one row is updated. In general, you should try to avoid
+using an ON DUPLICATE KEY UPDATE clause on tables with multiple unique indexes.
+With ON DUPLICATE KEY UPDATE, the affected-rows value per row is 1 if the row is inserted as
+a new row, 2 if an existing row is updated, and 0 if an existing row is set to its current values. If
+you specify the CLIENT_FOUND_ROWS flag to the mysql_real_connect() C API function when
+connecting to mysqld, the affected-rows value is 1 (not 0) if an existing row is set to its current values.
+If a table contains an AUTO_INCREMENT column and INSERT ... ON DUPLICATE KEY UPDATE
+inserts or updates a row, the LAST_INSERT_ID() function returns the AUTO_INCREMENT value.
+The ON DUPLICATE KEY UPDATE clause can contain multiple column assignments, separated by
+commas.
+It is possible to use IGNORE with ON DUPLICATE KEY UPDATE in an INSERT statement, but this may
+not behave as you expect when inserting multiple rows into a table that has multiple unique keys. This
+becomes apparent when an updated value is itself a duplicate key value. Consider the table t, created
+and populated by the statements shown here:
+mysql> CREATE TABLE t (a SERIAL, b BIGINT NOT NULL, UNIQUE KEY (b));;
+Query OK, 0 rows affected (0.03 sec)
+mysql> INSERT INTO t VALUES ROW(1,1), ROW(2,2);
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+mysql> TABLE t;
++---+---+
+| a | b |
++---+---+
+| 1 | 1 |
+| 2 | 2 |
++---+---+
+2 rows in set (0.00 sec)
+Now we attempt to insert two rows, one of which contains a duplicate key value, using ON DUPLICATE
+KEY UPDATE, where the UPDATE clause itself results in a duplicate key value:
+mysql> INSERT INTO t VALUES ROW(2,3), ROW(3,3) ON DUPLICATE KEY UPDATE a=a+1, b=b-1;
+ERROR 1062 (23000): Duplicate entry '1' for key 't.b'
+mysql> TABLE t;
++---+---+
+| a | b |
++---+---+
+| 1 | 1 |
+| 2 | 2 |
++---+---+
+2 rows in set (0.00 sec)
+The first row contains a duplicate value for one of the table's unique keys (column a), but b=b+1 in the
+UPDATE clause results in a unique key violation for column b; the statement is immediately rejected
+with an error, and no rows are updated. Let us repeat the statement, this time adding the IGNORE
+keyword, like this:
+mysql> INSERT IGNORE INTO t VALUES ROW(2,3), ROW(3,3) 
+    -> ON DUPLICATE KEY UPDATE a=a+1, b=b-1;
+Query OK, 1 row affected, 1 warning (0.00 sec)
+Records: 2  Duplicates: 1  Warnings: 1
+This time, the previous error is demoted to a warning, as shown here:
+mysql> SHOW WARNINGS;
++---------+------+-----------------------------------+
+| Level   | Code | Message                           |
++---------+------+-----------------------------------+
+| Warning | 1062 | Duplicate entry '1' for key 't.b' |
++---------+------+-----------------------------------+
+1 row in set (0.00 sec)
+Because the statement was not rejected, execution continues. This means that the second row is
+inserted into t, as we can see here:
+mysql> TABLE t;
++---+---+
+| a | b |
++---+---+
+| 1 | 1 |
+| 2 | 2 |
+| 3 | 3 |
++---+---+
+3 rows in set (0.00 sec)
+In assignment value expressions in the ON DUPLICATE KEY UPDATE clause, you can use the
+VALUES(col_name) function to refer to column values from the INSERT portion of the INSERT ...
+ON DUPLICATE KEY UPDATE statement. In other words, VALUES(col_name) in the ON DUPLICATE
+KEY UPDATE clause refers to the value of col_name that would be inserted, had no duplicate-key
+conflict occurred. This function is especially useful in multiple-row inserts. The VALUES() function
+is meaningful only as an introducer for INSERT statement value lists, or in the ON DUPLICATE KEY
+UPDATE clause of an INSERT statement, and returns NULL otherwise. For example:
+INSERT INTO t1 (a,b,c) VALUES (1,2,3),(4,5,6)
+  ON DUPLICATE KEY UPDATE c=VALUES(a)+VALUES(b);
+That statement is identical to the following two statements:
+INSERT INTO t1 (a,b,c) VALUES (1,2,3)
+  ON DUPLICATE KEY UPDATE c=3;
+INSERT INTO t1 (a,b,c) VALUES (4,5,6)
+  ON DUPLICATE KEY UPDATE c=9;
+Note
+The use of VALUES() to refer to the new row and columns is deprecated, and
+subject to removal in a future version of MySQL. Instead, use row and column
+aliases, as described in the next few paragraphs of this section.
+It is possible to use an alias for the row, with, optionally, one or more of its columns to be inserted,
+following the VALUES or SET clause, and preceded by the AS keyword. Using the row alias new, the
+statement shown previously using VALUES() to access the new column values can be written in the
+form shown here:
+INSERT INTO t1 (a,b,c) VALUES (1,2,3),(4,5,6) AS new
+  ON DUPLICATE KEY UPDATE c = new.a+new.b;
+If, in addition, you use the column aliases m, n, and p, you can omit the row alias in the assignment
+clause and write the same statement like this:
+INSERT INTO t1 (a,b,c) VALUES (1,2,3),(4,5,6) AS new(m,n,p)
+  ON DUPLICATE KEY UPDATE c = m+n;
+When using column aliases in this fashion, you must still use a row alias following the VALUES clause,
+even if you do not make direct use of it in the assignment clause.
+An INSERT ... SELECT ... ON DUPLICATE KEY UPDATE statement that uses VALUES() in the
+UPDATE clause, like this one, throws a warning:
+INSERT INTO t1
+  SELECT c, c+d FROM t2
+  ON DUPLICATE KEY UPDATE b = VALUES(b);
+You can eliminate such warnings by using a subquery instead, like this:
+INSERT INTO t1
+  SELECT * FROM (SELECT c, c+d AS e FROM t2) AS dt
+  ON DUPLICATE KEY UPDATE b = e;
+You can also use row and column aliases with a SET clause, as mentioned previously. Employing SET
+instead of VALUES in the two INSERT ... ON DUPLICATE KEY UPDATE statements just shown can
+be done as shown here:
+INSERT INTO t1 SET a=1,b=2,c=3 AS new
+  ON DUPLICATE KEY UPDATE c = new.a+new.b;
+INSERT INTO t1 SET a=1,b=2,c=3 AS new(m,n,p)
+  ON DUPLICATE KEY UPDATE c = m+n;
+The row alias must not be the same as the name of the table. If column aliases are not used, or if
+they are the same as the column names, they must be distinguished using the row alias in the ON
+DUPLICATE KEY UPDATE clause. Column aliases must be unique with regard to the row alias to
+which they apply (that is, no column aliases referring to columns of the same row may be the same).
+For INSERT ... SELECT statements, these rules apply regarding acceptable forms of SELECT query
+expressions that you can refer to in an ON DUPLICATE KEY UPDATE clause:
+• References to columns from queries on a single table, which may be a derived table.
+• References to columns from queries on a join over multiple tables.
+• References to columns from DISTINCT queries.
+• References to columns in other tables, as long as the SELECT does not use GROUP BY. One side
+effect is that you must qualify references to nonunique column names.
+References to columns from a UNION are not supported. To work around this restriction, rewrite the
+UNION as a derived table so that its rows can be treated as a single-table result set. For example, this
+statement produces an error:
+INSERT INTO t1 (a, b)
+  SELECT c, d FROM t2
+  UNION
+  SELECT e, f FROM t3
+ON DUPLICATE KEY UPDATE b = b + c;
+Instead, use an equivalent statement that rewrites the UNION as a derived table:
+INSERT INTO t1 (a, b)
+SELECT * FROM
+  (SELECT c, d FROM t2
+   UNION
+   SELECT e, f FROM t3) AS dt
+ON DUPLICATE KEY UPDATE b = b + c;
+The technique of rewriting a query as a derived table also enables references to columns from GROUP
+BY queries.
+Because the results of INSERT ... SELECT statements depend on the ordering of rows from
+the SELECT and this order cannot always be guaranteed, it is possible when logging INSERT ...
+SELECT ON DUPLICATE KEY UPDATE statements for the source and the replica to diverge.
+Thus, INSERT ... SELECT ON DUPLICATE KEY UPDATE statements are flagged as unsafe
+for statement-based replication. Such statements produce a warning in the error log when using
+statement-based mode and are written to the binary log using the row-based format when using MIXED
+mode. An INSERT ... ON DUPLICATE KEY UPDATE statement against a table having more than
+one unique or primary key is also marked as unsafe. (Bug #11765650, Bug #58637)
+See also Section 19.2.1.1, “Advantages and Disadvantages of Statement-Based and Row-Based
+Replication”.
+15.2.7.3 INSERT DELAYED Statement
+INSERT DELAYED ...
+The DELAYED option for the INSERT statement is a MySQL extension to standard SQL. In previous
+versions of MySQL, it can be used for certain kinds of tables (such as MyISAM), such that when a client
+uses INSERT DELAYED, it gets an okay from the server at once, and the row is queued to be inserted
+when the table is not in use by any other thread.
+DELAYED inserts and replaces were deprecated in MySQL 5.6. In MySQL 9.1, DELAYED is not
+supported. The server recognizes but ignores the DELAYED keyword, handles the insert as a
+nondelayed insert, and generates an ER_WARN_LEGACY_SYNTAX_CONVERTED warning: INSERT
+DELAYED is no longer supported. The statement was converted to INSERT. The
+DELAYED keyword is scheduled for removal in a future release.

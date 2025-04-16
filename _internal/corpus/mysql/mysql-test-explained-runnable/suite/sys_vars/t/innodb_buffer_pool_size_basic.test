@@ -1,0 +1,3 @@
+
+
+SET @start_buffer_pool_size = @@GLOBAL.innodb_buffer_pool_size

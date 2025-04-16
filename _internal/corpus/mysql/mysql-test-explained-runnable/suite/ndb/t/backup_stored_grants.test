@@ -1,0 +1,4 @@
+
+
+# (2) Create an NDB stored user u@n
+CREATE USER u@n

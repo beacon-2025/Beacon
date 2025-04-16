@@ -1,0 +1,16 @@
+15.1.7 ALTER PROCEDURE Statement
+ALTER PROCEDURE proc_name [characteristic ...]
+characteristic: {
+    COMMENT 'string'
+  | LANGUAGE SQL
+  | { CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA }
+  | SQL SECURITY { DEFINER | INVOKER }
+}
+This statement can be used to change the characteristics of a stored procedure. More than one change
+may be specified in an ALTER PROCEDURE statement. However, you cannot change the parameters or
+body of a stored procedure using this statement; to make such changes, you must drop and re-create
+the procedure using DROP PROCEDURE and CREATE PROCEDURE.
+You must have the ALTER ROUTINE privilege for the procedure. By default, that privilege is
+granted automatically to the procedure creator. This behavior can be changed by disabling the
+automatic_sp_privileges system variable. See Section 27.2.2, “Stored Routines and MySQL
+Privileges”.

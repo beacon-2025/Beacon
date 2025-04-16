@@ -1,0 +1,115 @@
+-- 公共前置语句：创建表和插入数据
+CREATE TABLE PRODUCTION.PRODUCT (
+    NAME VARCHAR(100),
+    NOWPRICE DECIMAL(10, 2)
+);
+INSERT INTO PRODUCTION.PRODUCT (NAME, NOWPRICE) VALUES
+('红楼梦', 15.00),
+('水浒传', 18.00),
+('老人与海', 8.00),
+('射雕英雄传(全四册)', 25.00),
+('鲁迅文集(小说、散文、杂文)全两册', 12.00),
+('长征', 30.00),
+('数据结构(C语言版)(附光盘)', 22.00),
+('工作中无小事', 10.00),
+('突破英文基础词汇', 11.00),
+('噼里啪啦丛书(全 7册)', 28.00);
+CREATE TABLE PURCHASING.VENDOR (
+    NAME VARCHAR(100),
+    CREDIT INT
+);
+INSERT INTO PURCHASING.VENDOR (NAME, CREDIT) VALUES
+('上海画报出版社', 1),
+('长江文艺出版社', 1),
+('北京十月文艺出版社', 1),
+('人民邮电出版社', 1),
+('清华大学出版社', 1),
+('中华书局', 1),
+('广州出版社', 1),
+('上海出版社', 1),
+('21世纪出版社', 1),
+('外语教学与研究出版社', 1),
+('机械工业出版社', 1),
+('文学出版社', 1);
+-- 测试用例 1: 简单CASE表达式
+SELECT NAME,
+       CASE NOWPRICE
+           WHEN 15.00 THEN '普通'
+           WHEN 25.00 THEN '昂贵'
+           ELSE '便宜'
+       END AS 选择
+FROM PRODUCTION.PRODUCT;
+-- 测试用例 2: 搜索CASE表达式
+SELECT NAME,
+       CASE
+           WHEN NOWPRICE > 20 THEN '昂贵'
+           WHEN NOWPRICE <= 20 AND NOWPRICE >= 10 THEN '普通'
+           ELSE '便宜'
+       END AS 选择
+FROM PRODUCTION.PRODUCT;
+-- 测试用例 3: CASE表达式在WHERE子句中使用
+SELECT NAME, CREDIT
+FROM PURCHASING.VENDOR
+WHERE NAME IN (SELECT CASE
+                         WHEN CREDIT = 1 THEN '中华书局'
+                         ELSE 'NOT EQUAL'
+                     END
+               FROM PURCHASING.VENDOR);
+-- 测试用例 4: CASE表达式在UPDATE语句中使用
+UPDATE PURCHASING.VENDOR
+SET CREDIT = CASE
+                 WHEN CREDIT > 1 THEN 1
+                 ELSE CREDIT
+             END;
+SELECT NAME, CREDIT
+FROM PURCHASING.VENDOR;
+-- 测试用例 5: CASE表达式在SELECT子句中使用NULL
+SELECT NAME,
+       CASE
+           WHEN NOWPRICE > 20 THEN '昂贵'
+           WHEN NOWPRICE <= 20 AND NOWPRICE >= 10 THEN '普通'
+           ELSE NULL
+       END AS 选择
+FROM PRODUCTION.PRODUCT;
+-- 测试用例 6: CASE表达式在SELECT子句中使用多列
+SELECT NAME,
+       CASE
+           WHEN (NAME, CREDIT) IN (SELECT NAME, CREDIT FROM PURCHASING.VENDOR WHERE CREDIT = 1) THEN '采购'
+           ELSE '考虑'
+       END AS 选择
+FROM PURCHASING.VENDOR;
+-- 测试用例 7: CASE表达式在SELECT子句中使用隐式ELSE NULL
+SELECT NAME,
+       CASE
+           WHEN NOWPRICE > 20 THEN '昂贵'
+           WHEN NOWPRICE <= 20 AND NOWPRICE >= 10 THEN '普通'
+       END AS 选择
+FROM PRODUCTION.PRODUCT;
+-- 测试用例 8: CASE表达式在SELECT子句中使用复杂条件
+SELECT NAME,
+       CASE
+           WHEN NOWPRICE > 20 AND NAME LIKE '%丛书%' THEN '昂贵丛书'
+           WHEN NOWPRICE <= 20 AND NOWPRICE >= 10 THEN '普通'
+           ELSE '便宜'
+       END AS 选择
+FROM PRODUCTION.PRODUCT;
+-- 测试用例 9: CASE表达式在SELECT子句中使用嵌套CASE
+SELECT NAME,
+       CASE
+           WHEN NOWPRICE > 20 THEN
+               CASE
+                   WHEN NAME LIKE '%丛书%' THEN '昂贵丛书'
+                   ELSE '昂贵'
+               END
+           WHEN NOWPRICE <= 20 AND NOWPRICE >= 10 THEN '普通'
+           ELSE '便宜'
+       END AS 选择
+FROM PRODUCTION.PRODUCT;
+-- 测试用例 10: CASE表达式在SELECT子句中使用多条件
+SELECT NAME,
+       CASE
+           WHEN NOWPRICE > 20 AND CREDIT = 1 THEN '昂贵且信用高'
+           WHEN NOWPRICE <= 20 AND NOWPRICE >= 10 THEN '普通'
+           ELSE '便宜'
+       END AS 选择
+FROM PRODUCTION.PRODUCT

@@ -1,0 +1,3 @@
+
+
+SET @@SESSION.immediate_server_version = 123456

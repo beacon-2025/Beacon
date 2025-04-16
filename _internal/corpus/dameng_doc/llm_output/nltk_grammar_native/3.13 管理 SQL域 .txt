@@ -1,0 +1,11 @@
+```plaintext
+S -> CREATE_DOMAIN | DROP_DOMAIN | GRANT_DOMAIN | USE_DOMAIN_IN_TABLE
+CREATE_DOMAIN -> 'CREATE' 'DOMAIN' 'domain_name_1' 'AS' DATA_TYPE DOMAIN_CONSTRAINT DEFAULT_CLAUSE
+DROP_DOMAIN -> 'DROP' 'DOMAIN' 'domain_name_1'
+GRANT_DOMAIN -> 'GRANT' 'DOMAIN' 'domain_name_1' 'TO' 'user_name_1'
+USE_DOMAIN_IN_TABLE -> 'CREATE' 'TABLE' 'table_name_1' '(' COLUMN_DEFINITION ')'
+COLUMN_DEFINITION -> 'column_name_1' 'domain_name_1'
+DATA_TYPE -> 'data_type_value'
+DOMAIN_CONSTRAINT -> 'domain_constraint_value'
+DEFAULT_CLAUSE -> 'DEFAULT' 'default_value'
+```

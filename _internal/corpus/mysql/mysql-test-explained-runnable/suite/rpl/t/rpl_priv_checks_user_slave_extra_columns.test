@@ -1,0 +1,2 @@
+
+SET @@session.binlog_row_image = MINIMAL

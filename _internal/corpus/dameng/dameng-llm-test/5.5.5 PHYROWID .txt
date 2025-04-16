@@ -1,0 +1,76 @@
+-- 创建表 table1
+CREATE TABLE table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+-- 插入数据到 table1
+INSERT INTO table1 (id, name) VALUES (1, 'Alice');
+INSERT INTO table1 (id, name) VALUES (2, 'Bob');
+INSERT INTO table1 (id, name) VALUES (3, 'Charlie');
+-- 创建表 table2
+CREATE TABLE table2 (
+    id INT PRIMARY KEY,
+    description VARCHAR(100)
+);
+-- 插入数据到 table2
+INSERT INTO table2 (id, description) VALUES (1, 'Description 1');
+INSERT INTO table2 (id, description) VALUES (2, 'Description 2');
+INSERT INTO table2 (id, description) VALUES (3, 'Description 3');
+-- 使用 CSCN 操作符查询 PHYROWID
+SELECT PHYROWID, id, name FROM table1 WHERE id = 1;
+-- 使用 CSEK 操作符查询 PHYROWID
+SELECT PHYROWID, id, name FROM table1 WHERE id BETWEEN 1 AND 3;
+-- 使用 BLKUP 操作符查询 PHYROWID
+SELECT PHYROWID, id, name FROM table1 WHERE name = 'Alice';
+-- 使用 SSEK 操作符查询 PHYROWID
+SELECT PHYROWID, id, description FROM table2 WHERE id = 2;
+-- 使用 SSCN 操作符查询 PHYROWID
+SELECT PHYROWID, id, description FROM table2 WHERE description LIKE 'Description%';
+-- 组合查询 PHYROWID
+SELECT PHYROWID, id, name FROM table1 WHERE id = 3 UNION SELECT PHYROWID, id, description FROM table2 WHERE id = 3;
+-- 使用 PHYROWID 进行排序
+SELECT PHYROWID, id, name FROM table1 ORDER BY PHYROWID;
+-- 使用 PHYROWID 进行分组
+SELECT PHYROWID, COUNT(*) FROM table1 GROUP BY PHYROWID;
+-- 使用 PHYROWID 进行连接查询
+SELECT t1.PHYROWID, t1.name, t2.description 
+FROM table1 t1 
+JOIN table2 t2 ON t1.id = t2.id;
+-- 使用 PHYROWID 进行子查询
+SELECT PHYROWID, id, name 
+FROM table1 
+WHERE PHYROWID IN (SELECT PHYROWID FROM table2 WHERE description = 'Description 2');
+-- 使用 PHYROWID 进行更新操作
+UPDATE table1 SET name = 'David' WHERE PHYROWID = (SELECT PHYROWID FROM table1 WHERE id = 1);
+-- 使用 PHYROWID 进行删除操作
+DELETE FROM table1 WHERE PHYROWID = (SELECT PHYROWID FROM table1 WHERE id = 2);
+-- 使用 PHYROWID 进行插入操作
+INSERT INTO table1 (id, name) SELECT 4, 'Eve' FROM table1 WHERE PHYROWID = (SELECT PHYROWID FROM table1 WHERE id = 3);
+-- 使用 PHYROWID 进行复杂查询
+SELECT PHYROWID, id, name 
+FROM table1 
+WHERE PHYROWID IN (SELECT PHYROWID FROM table2 WHERE description LIKE 'Description%') 
+AND id > 1;
+-- 使用 PHYROWID 进行多表查询
+SELECT t1.PHYROWID, t1.name, t2.description 
+FROM table1 t1, table2 t2 
+WHERE t1.PHYROWID = t2.PHYROWID;
+-- 使用 PHYROWID 进行嵌套查询
+SELECT PHYROWID, id, name 
+FROM table1 
+WHERE PHYROWID = (SELECT PHYROWID FROM table1 WHERE id = (SELECT id FROM table2 WHERE description = 'Description 3'));
+-- 使用 PHYROWID 进行聚合查询
+SELECT PHYROWID, MAX(id) FROM table1 GROUP BY PHYROWID;
+-- 使用 PHYROWID 进行条件查询
+SELECT PHYROWID, id, name 
+FROM table1 
+WHERE PHYROWID = (SELECT PHYROWID FROM table1 WHERE name = 'Charlie');
+-- 使用 PHYROWID 进行联合查询
+SELECT PHYROWID, id, name FROM table1 
+UNION 
+SELECT PHYROWID, id, description FROM table2;
+-- 使用 PHYROWID 进行分页查询
+SELECT PHYROWID, id, name 
+FROM table1 
+ORDER BY PHYROWID 
+LIMIT 2 OFFSET 1

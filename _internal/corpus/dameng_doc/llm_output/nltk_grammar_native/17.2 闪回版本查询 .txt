@@ -1,0 +1,17 @@
+```
+FLASHBACK_QUERY -> VERSIONS_BETWEEN
+VERSIONS_BETWEEN -> 'VERSIONS' 'BETWEEN' TIMESTAMP_RANGE | 'VERSIONS' 'BETWEEN' TRXID_RANGE
+TIMESTAMP_RANGE -> 'TIMESTAMP' 'time_exp1' 'AND' 'time_exp2'
+TRXID_RANGE -> 'TRXID' 'trxid1' 'AND' 'trxid2'
+
+time_exp1 -> 'time_value'
+time_exp2 -> 'time_value'
+trxid1 -> 'int_value'
+trxid2 -> 'int_value'
+
+PSEUDO_COLUMN -> 'VERSIONS_STARTTRXID' | 'VERSIONS_STARTTIME' | 'VERSIONS_ENDTRXID' | 'VERSIONS_ENDTIME' | 'VERSIONS_OPERATION'
+VERSIONS_OPERATION -> 'I' | 'D' | 'U'
+
+TABLE_NAME -> 'table_name_1'
+COLUMN_NAME -> 'column_name_1'
+```

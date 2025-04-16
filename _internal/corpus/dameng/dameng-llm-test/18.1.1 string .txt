@@ -1,0 +1,89 @@
+-- 创建一个公共表用于测试
+CREATE TABLE test_table_common (
+    id INT PRIMARY KEY,
+    name STRING
+);
+-- 测试用例 1: 插入一个简单的字符串
+INSERT INTO test_table_common (id, name) VALUES (1, 'HelloWorld');
+-- 测试用例 2: 插入一个包含数字的字符串
+INSERT INTO test_table_common (id, name) VALUES (2, 'Hello123');
+-- 测试用例 3: 插入一个包含特殊字符的字符串
+INSERT INTO test_table_common (id, name) VALUES (3, 'Hello_World');
+-- 测试用例 4: 插入一个以数字开头的字符串（需要使用引号）
+INSERT INTO test_table_common (id, name) VALUES (4, '123Hello');
+-- 测试用例 5: 插入一个包含转义字符的字符串
+INSERT INTO test_table_common (id, name) VALUES (5, 'Hello\nWorld');
+-- 测试用例 6: 插入一个包含双引号的字符串
+INSERT INTO test_table_common (id, name) VALUES (6, 'Hello\"World');
+-- 测试用例 7: 插入一个包含反斜杠的字符串
+INSERT INTO test_table_common (id, name) VALUES (7, 'Hello\\World');
+-- 测试用例 8: 插入一个包含斜杠的字符串
+INSERT INTO test_table_common (id, name) VALUES (8, 'Hello/World');
+-- 测试用例 9: 插入一个包含退格字符的字符串
+INSERT INTO test_table_common (id, name) VALUES (9, 'Hello\bWorld');
+-- 测试用例 10: 插入一个包含换页字符的字符串
+INSERT INTO test_table_common (id, name) VALUES (10, 'Hello\fWorld');
+-- 测试用例 11: 插入一个包含换行字符的字符串
+INSERT INTO test_table_common (id, name) VALUES (11, 'Hello\nWorld');
+-- 测试用例 12: 插入一个包含回车字符的字符串
+INSERT INTO test_table_common (id, name) VALUES (12, 'Hello\rWorld');
+-- 测试用例 13: 插入一个包含水平制表符的字符串
+INSERT INTO test_table_common (id, name) VALUES (13, 'Hello\tWorld');
+-- 测试用例 14: 插入一个包含Unicode字符的字符串
+INSERT INTO test_table_common (id, name) VALUES (14, 'Hello\u0041World');
+-- 测试用例 15: 插入一个空字符串
+INSERT INTO test_table_common (id, name) VALUES (15, '');
+-- 测试用例 16: 插入一个包含空格的字符串
+INSERT INTO test_table_common (id, name) VALUES (16, 'Hello World');
+-- 测试用例 17: 插入一个以大写字母开头的字符串
+INSERT INTO test_table_common (id, name) VALUES (17, 'HELLOWORLD');
+-- 测试用例 18: 插入一个以小写字母开头的字符串
+INSERT INTO test_table_common (id, name) VALUES (18, 'helloworld');
+-- 测试用例 19: 插入一个包含多个特殊字符的字符串
+INSERT INTO test_table_common (id, name) VALUES (19, 'Hello_World_123');
+-- 测试用例 20: 插入一个包含路径的字符串
+INSERT INTO test_table_common (id, name) VALUES (20, '/home/user/file.txt');
+-- 测试用例 21: 创建一个新表并插入字符串
+CREATE TABLE test_table_21 (
+    id INT PRIMARY KEY,
+    description STRING
+);
+INSERT INTO test_table_21 (id, description) VALUES (1, 'This is a test description.');
+-- 测试用例 22: 插入一个包含多个转义字符的字符串
+INSERT INTO test_table_21 (id, description) VALUES (2, 'This is a test\nwith\tescape\tcharacters.');
+-- 测试用例 23: 插入一个包含Unicode字符的字符串
+INSERT INTO test_table_21 (id, description) VALUES (3, 'This is a test with Unicode: \u0041\u0042\u0043');
+-- 测试用例 24: 插入一个包含路径的字符串
+INSERT INTO test_table_21 (id, description) VALUES (4, '/var/log/syslog');
+-- 测试用例 25: 插入一个包含双引号的字符串
+INSERT INTO test_table_21 (id, description) VALUES (5, 'This is a "quoted" string.');
+-- 测试用例 26: 插入一个包含反斜杠的字符串
+INSERT INTO test_table_21 (id, description) VALUES (6, 'This is a \\backslash\\ string.');
+-- 测试用例 27: 插入一个包含斜杠的字符串
+INSERT INTO test_table_21 (id, description) VALUES (7, 'This is a /slash/ string.');
+-- 测试用例 28: 插入一个包含退格字符的字符串
+INSERT INTO test_table_21 (id, description) VALUES (8, 'This is a \bbackspace\b string.');
+-- 测试用例 29: 插入一个包含换页字符的字符串
+INSERT INTO test_table_21 (id, description) VALUES (9, 'This is a \fformfeed\f string.');
+-- 测试用例 30: 插入一个包含换行字符的字符串
+INSERT INTO test_table_21 (id, description) VALUES (10, 'This is a \nnewline\n string.');
+-- 测试用例 31: 插入一个包含回车字符的字符串
+INSERT INTO test_table_21 (id, description) VALUES (11, 'This is a \rcarriage return\r string.');
+-- 测试用例 32: 插入一个包含水平制表符的字符串
+INSERT INTO test_table_21 (id, description) VALUES (12, 'This is a \thorizontal tab\t string.');
+-- 测试用例 33: 插入一个包含Unicode字符的字符串
+INSERT INTO test_table_21 (id, description) VALUES (13, 'This is a \u0041\u0042\u0043 Unicode string.');
+-- 测试用例 34: 插入一个空字符串
+INSERT INTO test_table_21 (id, description) VALUES (14, '');
+-- 测试用例 35: 插入一个包含空格的字符串
+INSERT INTO test_table_21 (id, description) VALUES (15, 'This is a string with spaces.');
+-- 测试用例 36: 插入一个以大写字母开头的字符串
+INSERT INTO test_table_21 (id, description) VALUES (16, 'THIS IS A UPPERCASE STRING.');
+-- 测试用例 37: 插入一个以小写字母开头的字符串
+INSERT INTO test_table_21 (id, description) VALUES (17, 'this is a lowercase string.');
+-- 测试用例 38: 插入一个包含多个特殊字符的字符串
+INSERT INTO test_table_21 (id, description) VALUES (18, 'This is a string with _underscores_ and 123 numbers.');
+-- 测试用例 39: 插入一个包含路径的字符串
+INSERT INTO test_table_21 (id, description) VALUES (19, '/usr/local/bin/script.sh');
+-- 测试用例 40: 插入一个包含双引号的字符串
+INSERT INTO test_table_21 (id, description) VALUES (20, 'This is a "double quoted" string.')

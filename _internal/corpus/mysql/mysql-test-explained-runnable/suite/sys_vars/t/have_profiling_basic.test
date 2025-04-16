@@ -1,0 +1,4 @@
+#
+# only global
+#
+select @@global.have_profiling="1"

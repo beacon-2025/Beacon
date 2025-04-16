@@ -1,0 +1,52 @@
+-- 公共前置语句：创建一个模式
+CREATE SCHEMA test_schema;
+-- 测试用例 1: 创建一个简单的C外部函数，使用默认模式，标量类型参数，返回整数类型
+CREATE OR REPLACE FUNCTION test_schema.func1 (param1 INT)
+RETURN INT
+EXTERNAL '/usr/lib/libtest.so'
+USING CS;
+-- 测试用例 2: 创建一个C外部函数，指定模式，结构化参数，返回字符串类型
+CREATE OR REPLACE FUNCTION test_schema.func2 (param1 IN OUT VARCHAR(50))
+RETURN VARCHAR(50)
+EXTERNAL '/usr/lib/libtest.so' func2_impl
+USING C;
+-- 测试用例 3: 创建一个C外部函数，使用默认模式，标量类型参数，返回浮点数类型
+CREATE OR REPLACE FUNCTION func3 (param1 FLOAT)
+RETURN FLOAT
+EXTERNAL '/usr/lib/libtest.so'
+USING CS;
+-- 测试用例 4: 创建一个C外部函数，指定模式，结构化参数，返回日期类型
+CREATE OR REPLACE FUNCTION test_schema.func4 (param1 IN OUT DATE))
+RETURN DATE
+EXTERNAL '/usr/lib/libtest.so' func4_impl
+USING C;
+-- 测试用例 5: 创建一个C外部函数，使用默认模式，标量类型参数，返回布尔类型
+CREATE OR REPLACE FUNCTION func5 (param1 BOOLEAN)
+RETURN BOOLEAN
+EXTERNAL '/usr/lib/libtest.so'
+USING CS;
+-- 测试用例 6: 创建一个C外部函数，指定模式，结构化参数，返回二进制类型
+CREATE OR REPLACE FUNCTION test_schema.func6 (param1 IN OUT BLOB))
+RETURN BLOB
+EXTERNAL '/usr/lib/libtest.so' func6_impl
+USING C;
+-- 测试用例 7: 创建一个C外部函数，使用默认模式，标量类型参数，返回时间戳类型
+CREATE OR REPLACE FUNCTION func7 (param1 TIMESTAMP)
+RETURN TIMESTAMP
+EXTERNAL '/usr/lib/libtest.so'
+USING CS;
+-- 测试用例 8: 创建一个C外部函数，指定模式，结构化参数，返回数组类型
+CREATE OR REPLACE FUNCTION test_schema.func8 (param1 IN OUT ARRAY))
+RETURN ARRAY
+EXTERNAL '/usr/lib/libtest.so' func8_impl
+USING C;
+-- 测试用例 9: 创建一个C外部函数，使用默认模式，标量类型参数，返回JSON类型
+CREATE OR REPLACE FUNCTION func9 (param1 JSON)
+RETURN JSON
+EXTERNAL '/usr/lib/libtest.so'
+USING CS;
+-- 测试用例 10: 创建一个C外部函数，指定模式，结构化参数，返回XML类型
+CREATE OR REPLACE FUNCTION test_schema.func10 (param1 IN OUT XML))
+RETURN XML
+EXTERNAL '/usr/lib/libtest.so' func10_impl
+USING C

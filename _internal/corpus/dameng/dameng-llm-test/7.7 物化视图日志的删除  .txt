@@ -1,0 +1,42 @@
+-- 创建模式和表
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+CREATE TABLE schema1.table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+CREATE TABLE schema2.table2 (
+    id INT PRIMARY KEY,
+    description TEXT
+);
+-- 创建物化视图日志
+CREATE MATERIALIZED VIEW LOG ON schema1.table1;
+CREATE MATERIALIZED VIEW LOG ON schema2.table2;
+-- 测试用例1: 删除默认模式下的物化视图日志
+DROP MATERIALIZED VIEW LOG ON schema1.table1;
+-- 测试用例2: 删除指定模式下的物化视图日志
+DROP MATERIALIZED VIEW LOG ON schema2.table2;
+-- 测试用例3: 删除物化视图日志时，表名不带模式名（假设当前模式为schema1）
+SET search_path TO schema1;
+DROP MATERIALIZED VIEW LOG ON table1;
+-- 测试用例4: 删除物化视图日志时，表名带模式名（当前模式为schema1）
+SET search_path TO schema1;
+DROP MATERIALIZED VIEW LOG ON schema2.table2;
+-- 测试用例5: 删除物化视图日志时，表名带模式名（当前模式为schema2）
+SET search_path TO schema2;
+DROP MATERIALIZED VIEW LOG ON schema1.table1;
+-- 测试用例6: 删除物化视图日志时，表名不带模式名（当前模式为schema2）
+SET search_path TO schema2;
+DROP MATERIALIZED VIEW LOG ON table2;
+-- 测试用例7: 删除物化视图日志时，表名带模式名（当前模式为public）
+SET search_path TO public;
+DROP MATERIALIZED VIEW LOG ON schema1.table1;
+-- 测试用例8: 删除物化视图日志时，表名带模式名（当前模式为public）
+SET search_path TO public;
+DROP MATERIALIZED VIEW LOG ON schema2.table2;
+-- 测试用例9: 删除物化视图日志时，表名不带模式名（当前模式为public）
+SET search_path TO public;
+DROP MATERIALIZED VIEW LOG ON table1;
+-- 测试用例10: 删除物化视图日志时，表名不带模式名（当前模式为public）
+SET search_path TO public;
+DROP MATERIALIZED VIEW LOG ON table2

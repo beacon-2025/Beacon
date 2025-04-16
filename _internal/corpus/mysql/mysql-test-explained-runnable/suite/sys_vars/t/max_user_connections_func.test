@@ -1,0 +1,7 @@
+
+
+###################################
+#Setting value max_user_connection#
+###################################
+
+Set Global max_user_connections=2

@@ -1,0 +1,18 @@
+```plaintext
+NULL_USAGE -> NULL_AS_VALUE | NULL_AS_NAME
+NULL_AS_VALUE -> 'null' | 'NULL' | 'nUll' | 'nULL'
+NULL_AS_NAME -> 'null'
+
+JSON_INSERTION -> JSON_STRICT | JSON_LAX
+JSON_STRICT -> 'IS JSON (STRICT)' 'null'
+JSON_LAX -> 'IS JSON (LAX)' NULL_AS_VALUE
+
+JSON_VALUE -> 'json_value' 'null' 'SQL_NULL'
+JSON_QUERY -> 'json_query' 'null' 'WITH WRAPPER' '[' 'null' ']'
+
+TABLE_CREATION -> 'drop table' 't_json_null_name_1' ';' 'create table' 't_json_null_name_1' '(' 'c1' 'int' ',' 'c2' 'varchar2(100)' 'CHECK' '(' 'c2' 'is json' ')' ')' ';'
+
+INSERT_STATEMENT -> 'insert into' 't_json_null_name_1' 'values' '(' '1' ',' 'null' ')' ';' | 'insert into' 't_json_null_name_1' 'values' '(' '2' ',' '{"dameng":null}' ')' ';' | 'insert into' 't_json_null_name_1' 'values' '(' '3' ',' 'NULL' ')' ';' | 'insert into' 't_json_null_name_1' 'values' '(' '4' ',' '{"dameng":NULL}' ')' ';' 'commit' ';'
+
+SELECT_STATEMENT -> 'select' 'json_value' '(' 'c2' ',' '$.dameng' ')' 'from' 't_json_null_name_1' ';' | 'select' 'json_query' '(' 'c2' ',' '$.dameng' 'WITH WRAPPER' ')' 'from' 't_json_null_name_1' ';'
+```

@@ -1,0 +1,2 @@
+
+SHOW STATUS WHERE VARIABLE_NAME LIKE '%component%'

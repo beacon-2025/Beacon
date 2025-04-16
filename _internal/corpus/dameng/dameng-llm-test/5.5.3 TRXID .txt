@@ -1,0 +1,54 @@
+-- 创建一个测试表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+-- 插入一些测试数据
+INSERT INTO test_table1 (id, name) VALUES (1, 'Alice');
+INSERT INTO test_table1 (id, name) VALUES (2, 'Bob');
+-- 测试用例 1: 查询当前事务的TRXID
+BEGIN;
+SELECT TRXID FROM test_table1 WHERE id = 1;
+COMMIT;
+-- 测试用例 2: 在事务中插入数据并查询TRXID
+BEGIN;
+INSERT INTO test_table1 (id, name) VALUES (3, 'Charlie');
+SELECT TRXID FROM test_table1 WHERE id = 3;
+COMMIT;
+-- 测试用例 3: 在事务中更新数据并查询TRXID
+BEGIN;
+UPDATE test_table1 SET name = 'David' WHERE id = 2;
+SELECT TRXID FROM test_table1 WHERE id = 2;
+COMMIT;
+-- 测试用例 4: 在事务中删除数据并查询TRXID
+BEGIN;
+DELETE FROM test_table1 WHERE id = 1;
+SELECT TRXID FROM test_table1 WHERE id = 1;
+COMMIT;
+-- 测试用例 5: 在事务中查询TRXID，但不提交事务
+BEGIN;
+SELECT TRXID FROM test_table1 WHERE id = 2;
+-- 不提交事务，观察TRXID的变化;
+-- 测试用例 6: 在事务中查询TRXID，然后回滚事务
+BEGIN;
+SELECT TRXID FROM test_table1 WHERE id = 2;
+ROLLBACK;
+-- 测试用例 7: 在事务中查询TRXID，然后提交事务
+BEGIN;
+SELECT TRXID FROM test_table1 WHERE id = 2;
+COMMIT;
+-- 测试用例 8: 在事务中查询TRXID，然后插入数据并提交
+BEGIN;
+SELECT TRXID FROM test_table1 WHERE id = 2;
+INSERT INTO test_table1 (id, name) VALUES (4, 'Eve');
+COMMIT;
+-- 测试用例 9: 在事务中查询TRXID，然后更新数据并提交
+BEGIN;
+SELECT TRXID FROM test_table1 WHERE id = 2;
+UPDATE test_table1 SET name = 'Frank' WHERE id = 2;
+COMMIT;
+-- 测试用例 10: 在事务中查询TRXID，然后删除数据并提交
+BEGIN;
+SELECT TRXID FROM test_table1 WHERE id = 2;
+DELETE FROM test_table1 WHERE id = 2;
+COMMIT

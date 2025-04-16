@@ -1,0 +1,4 @@
+```plaintext
+GROUP_BY_CLAUSE -> 'GROUP' 'BY' 'column_name_1'
+HAVING_CLAUSE -> 'HAVING' 'condition_value'
+```

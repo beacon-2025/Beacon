@@ -1,0 +1,34 @@
+-- 创建模式
+CREATE SCHEMA purchasing;
+-- 创建表并插入数据
+CREATE TABLE purchasing.vendor (
+    vendor_id INT PRIMARY KEY,
+    vendor_name VARCHAR(100)
+);
+INSERT INTO purchasing.vendor (vendor_id, vendor_name) VALUES (1, 'Vendor A');
+INSERT INTO purchasing.vendor (vendor_id, vendor_name) VALUES (2, 'Vendor B');
+-- 创建物化视图
+CREATE MATERIALIZED VIEW purchasing.mv_vendor_excellent AS
+SELECT * FROM purchasing.vendor WHERE vendor_id = 1;
+-- 创建物化视图日志
+CREATE MATERIALIZED VIEW LOG ON purchasing.vendor;
+-- 测试用例 1: 使用FAST方式刷新物化视图
+REFRESH MATERIALIZED VIEW purchasing.mv_vendor_excellent FAST;
+-- 测试用例 2: 使用COMPLETE方式刷新物化视图
+REFRESH MATERIALIZED VIEW purchasing.mv_vendor_excellent COMPLETE;
+-- 测试用例 3: 使用FORCE方式刷新物化视图
+REFRESH MATERIALIZED VIEW purchasing.mv_vendor_excellent FORCE;
+-- 测试用例 4: 刷新不带模式名的物化视图
+REFRESH MATERIALIZED VIEW mv_vendor_excellent COMPLETE;
+-- 测试用例 5: 刷新不存在的物化视图（预期报错）
+REFRESH MATERIALIZED VIEW purchasing.non_existent_view FAST;
+-- 测试用例 6: 刷新物化视图时省略刷新方式（默认使用COMPLETE）
+REFRESH MATERIALIZED VIEW purchasing.mv_vendor_excellent;
+-- 测试用例 7: 刷新物化视图时使用错误的刷新方式（预期报错）
+REFRESH MATERIALIZED VIEW purchasing.mv_vendor_excellent INVALID_MODE;
+-- 测试用例 8: 刷新物化视图时使用错误的模式名（预期报错）
+REFRESH MATERIALIZED VIEW non_existent_schema.mv_vendor_excellent FAST;
+-- 测试用例 9: 刷新物化视图时使用错误的物化视图名（预期报错）
+REFRESH MATERIALIZED VIEW purchasing.non_existent_view FAST;
+-- 测试用例 10: 刷新物化视图时使用错误的路径格式（预期报错）
+REFRESH MATERIALIZED VIEW /path/to/view FAST

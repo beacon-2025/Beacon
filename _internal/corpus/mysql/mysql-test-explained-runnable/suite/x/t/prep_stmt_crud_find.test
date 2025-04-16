@@ -1,0 +1,9 @@
+
+
+## running the prepared statements via classic-protocol
+## should result in the same results as the xprotocol
+## Crud::Find statements
+
+SET @id1 = '0000616daea30000000000000001',
+  @id2 = '0000616daea30000000000000002',
+  @id3 = '0000616daea30000000000000003'

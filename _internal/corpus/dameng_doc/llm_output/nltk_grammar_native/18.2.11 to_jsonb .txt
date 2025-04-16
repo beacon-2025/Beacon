@@ -1,0 +1,4 @@
+```plaintext
+TO_JSONB_FUNCTION -> 'to_jsonb' '(' JSON_EXP1 ')'
+JSON_EXP1 -> 'json_string_value' | 'clob_value'
+```

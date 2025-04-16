@@ -1,0 +1,15 @@
+```plaintext
+AGGREGATE_FUNCTION -> COUNT_FUNC | DISTINCT_FUNC | COMPLETE_FUNC | VARIANCE_FUNC | COVARIANCE_FUNC | FIRST_VALUE_FUNC | AREA_MAX_FUNC | FIRST_LAST_FUNC | LISTAGG_FUNC | MEDIAN_FUNC | WM_CONCAT_FUNC
+COUNT_FUNC -> 'COUNT' '(' '*' ')'
+DISTINCT_FUNC -> 'AVG' | 'MAX' | 'MIN' | 'SUM' | 'COUNT' '(' 'DISTINCT' 'column_name_1' ')'
+COMPLETE_FUNC -> 'AVG' | 'MAX' | 'MIN' | 'COUNT' | 'SUM' '(' 'ALL' 'value_expression_1' ')'
+VARIANCE_FUNC -> 'VAR_POP' | 'VAR_SAMP' | 'VARIANCE' | 'STDDEV_POP' | 'STDDEV_SAMP' | 'STDDEV'
+COVARIANCE_FUNC -> 'COVAR_POP' | 'COVAR_SAMP' | 'CORR'
+FIRST_VALUE_FUNC -> 'FIRST_VALUE' '(' 'column_name_1' ')'
+AREA_MAX_FUNC -> 'AREA_MAX' '(' 'expression_1' ',' 'low_value_1' ',' 'high_value_1' ')'
+FIRST_LAST_FUNC -> 'AVG' | 'MAX' | 'MIN' | 'COUNT' | 'SUM' '(' 'ALL' 'value_expression_1' ')' 'KEEP' '(' 'DENSE_RANK' 'FIRST' | 'LAST' 'ORDER_BY_CLAUSE' ')'
+LISTAGG_FUNC -> 'LISTAGG' | 'LISTAGG2' '(' 'expression_1' ',' 'expression_2' ')' 'WITHIN' 'GROUP' '(' 'ORDER_BY_CLAUSE' ')'
+MEDIAN_FUNC -> 'MEDIAN' '(' 'expression_1' ')'
+WM_CONCAT_FUNC -> 'WM_CONCAT' '(' 'expression_1' ')'
+ORDER_BY_CLAUSE -> 'ORDER' 'BY' 'column_name_1' 'ASC' | 'DESC'
+```

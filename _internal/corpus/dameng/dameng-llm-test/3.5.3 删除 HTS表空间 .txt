@@ -1,0 +1,46 @@
+-- 创建HTS表空间
+CREATE HUGE TABLESPACE HTS_NAME1;
+CREATE HUGE TABLESPACE HTS_NAME2;
+CREATE HUGE TABLESPACE HTS_NAME3;
+-- 测试用例1: 删除存在的HTS表空间
+DROP HUGE TABLESPACE HTS_NAME1;
+-- 测试用例2: 删除不存在的HTS表空间（不使用IF EXISTS）
+-- 预期结果：报错
+DROP HUGE TABLESPACE NON_EXISTENT_HTS;
+-- 测试用例3: 删除不存在的HTS表空间（使用IF EXISTS）
+-- 预期结果：不报错
+DROP HUGE TABLESPACE IF EXISTS NON_EXISTENT_HTS;
+-- 测试用例4: 删除存在的HTS表空间（使用IF EXISTS）
+DROP HUGE TABLESPACE IF EXISTS HTS_NAME2;
+-- 测试用例5: 删除已被使用的HTS表空间
+-- 前置语句：创建一个表并使用HTS表空间
+CREATE TABLE test_table1 (id INT) TABLESPACE HTS_NAME3;
+-- 预期结果：报错，因为表空间正在被使用
+DROP HUGE TABLESPACE HTS_NAME3;
+-- 测试用例6: 删除已被使用的HTS表空间（使用IF EXISTS）
+-- 前置语句：创建一个表并使用HTS表空间
+CREATE TABLE test_table2 (id INT) TABLESPACE HTS_NAME3;
+-- 预期结果：报错，因为表空间正在被使用
+DROP HUGE TABLESPACE IF EXISTS HTS_NAME3;
+-- 测试用例7: 删除已被使用的HTS表空间（先删除表）
+-- 前置语句：创建一个表并使用HTS表空间
+CREATE TABLE test_table3 (id INT) TABLESPACE HTS_NAME3;
+-- 删除表
+DROP TABLE test_table3;
+-- 删除HTS表空间
+DROP HUGE TABLESPACE HTS_NAME3;
+-- 测试用例8: 删除已被使用的HTS表空间（先删除表，使用IF EXISTS）
+-- 前置语句：创建一个表并使用HTS表空间
+CREATE TABLE test_table4 (id INT) TABLESPACE HTS_NAME3;
+-- 删除表
+DROP TABLE test_table4;
+-- 删除HTS表空间
+DROP HUGE TABLESPACE IF EXISTS HTS_NAME3;
+-- 测试用例9: 删除不存在的HTS表空间（使用IF EXISTS，多次执行）
+-- 预期结果：不报错
+DROP HUGE TABLESPACE IF EXISTS NON_EXISTENT_HTS;
+DROP HUGE TABLESPACE IF EXISTS NON_EXISTENT_HTS;
+-- 测试用例10: 删除存在的HTS表空间（多次执行）
+-- 预期结果：第一次成功，第二次报错
+DROP HUGE TABLESPACE HTS_NAME1;
+DROP HUGE TABLESPACE HTS_NAME1

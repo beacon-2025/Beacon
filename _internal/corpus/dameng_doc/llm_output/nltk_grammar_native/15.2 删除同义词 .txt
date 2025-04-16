@@ -1,0 +1,5 @@
+```plaintext
+DROP_SYNONYM -> 'DROP' PUBLIC_OPTION 'SYNONYM' IF_EXISTS_OPTION 'synonym_name_1'
+PUBLIC_OPTION -> 'PUBLIC' | ''
+IF_EXISTS_OPTION -> 'IF EXISTS' | ''
+```

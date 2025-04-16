@@ -1,0 +1,3 @@
+
+
+SET @@global.character_set_client = DEFAULT

@@ -1,0 +1,362 @@
+-- 创建一些公共的表结构，供后续测试用例使用
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    salary DECIMAL(10, 2)
+);
+CREATE TABLE departments (
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(100)
+);
+CREATE TABLE projects (
+    project_id INT PRIMARY KEY,
+    project_name VARCHAR(100),
+    start_date DATE,
+    end_date DATE
+);
+-- 测试用例 1: 插入数据到 employees 表
+INSERT INTO employees (employee_id, first_name, last_name, salary) VALUES (1, 'John', 'Doe', 50000.00);
+-- 测试用例 2: 插入数据到 departments 表
+INSERT INTO departments (department_id, department_name) VALUES (101, 'Human Resources');
+-- 测试用例 3: 插入数据到 projects 表
+INSERT INTO projects (project_id, project_name, start_date, end_date) VALUES (1001, 'Project Alpha', '2023-01-01', '2023-12-31');
+-- 测试用例 4: 查询 employees 表中的所有数据
+SELECT * FROM employees;
+-- 测试用例 5: 查询 departments 表中的所有数据
+SELECT * FROM departments;
+-- 测试用例 6: 查询 projects 表中的所有数据
+SELECT * FROM projects;
+-- 测试用例 7: 更新 employees 表中的数据
+UPDATE employees SET salary = 55000.00 WHERE employee_id = 1;
+-- 测试用例 8: 更新 departments 表中的数据
+UPDATE departments SET department_name = 'HR Department' WHERE department_id = 101;
+-- 测试用例 9: 更新 projects 表中的数据
+UPDATE projects SET end_date = '2024-06-30' WHERE project_id = 1001;
+-- 测试用例 10: 删除 employees 表中的数据
+DELETE FROM employees WHERE employee_id = 1;
+-- 测试用例 11: 删除 departments 表中的数据
+DELETE FROM departments WHERE department_id = 101;
+-- 测试用例 12: 删除 projects 表中的数据
+DELETE FROM projects WHERE project_id = 1001;
+-- 测试用例 13: 创建新表并插入数据
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,
+    customer_name VARCHAR(100),
+    email VARCHAR(100)
+);
+INSERT INTO customers (customer_id, customer_name, email) VALUES (1, 'Alice Smith', 'alice@example.com');
+-- 测试用例 14: 查询 customers 表中的所有数据
+SELECT * FROM customers;
+-- 测试用例 15: 删除 customers 表
+DROP TABLE customers;
+-- 测试用例 16: 创建新表并插入数据
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    order_date DATE,
+    customer_id INT
+);
+INSERT INTO orders (order_id, order_date, customer_id) VALUES (1, '2023-10-01', 1);
+-- 测试用例 17: 查询 orders 表中的所有数据
+SELECT * FROM orders;
+-- 测试用例 18: 删除 orders 表
+DROP TABLE orders;
+-- 测试用例 19: 创建新表并插入数据
+CREATE TABLE products (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(100),
+    price DECIMAL(10, 2)
+);
+INSERT INTO products (product_id, product_name, price) VALUES (101, 'Laptop', 1200.00);
+-- 测试用例 20: 查询 products 表中的所有数据
+SELECT * FROM products;
+-- 测试用例 21: 删除 products 表
+DROP TABLE products;
+-- 测试用例 22: 创建新表并插入数据
+CREATE TABLE inventory (
+    inventory_id INT PRIMARY KEY,
+    product_id INT,
+    quantity INT
+);
+INSERT INTO inventory (inventory_id, product_id, quantity) VALUES (1, 101, 50);
+-- 测试用例 23: 查询 inventory 表中的所有数据
+SELECT * FROM inventory;
+-- 测试用例 24: 删除 inventory 表
+DROP TABLE inventory;
+-- 测试用例 25: 创建新表并插入数据
+CREATE TABLE suppliers (
+    supplier_id INT PRIMARY KEY,
+    supplier_name VARCHAR(100),
+    contact_email VARCHAR(100)
+);
+INSERT INTO suppliers (supplier_id, supplier_name, contact_email) VALUES (1, 'Tech Corp', 'info@techcorp.com');
+-- 测试用例 26: 查询 suppliers 表中的所有数据
+SELECT * FROM suppliers;
+-- 测试用例 27: 删除 suppliers 表
+DROP TABLE suppliers;
+-- 测试用例 28: 创建新表并插入数据
+CREATE TABLE shipments (
+    shipment_id INT PRIMARY KEY,
+    product_id INT,
+    shipment_date DATE,
+    quantity INT
+);
+INSERT INTO shipments (shipment_id, product_id, shipment_date, quantity) VALUES (1, 101, '2023-10-05', 100);
+-- 测试用例 29: 查询 shipments 表中的所有数据
+SELECT * FROM shipments;
+-- 测试用例 30: 删除 shipments 表
+DROP TABLE shipments;
+-- 测试用例 31: 创建新表并插入数据
+CREATE TABLE payments (
+    payment_id INT PRIMARY KEY,
+    customer_id INT,
+    amount DECIMAL(10, 2),
+    payment_date DATE
+);
+INSERT INTO payments (payment_id, customer_id, amount, payment_date) VALUES (1, 1, 500.00, '2023-10-10');
+-- 测试用例 32: 查询 payments 表中的所有数据
+SELECT * FROM payments;
+-- 测试用例 33: 删除 payments 表
+DROP TABLE payments;
+-- 测试用例 34: 创建新表并插入数据
+CREATE TABLE reviews (
+    review_id INT PRIMARY KEY,
+    product_id INT,
+    customer_id INT,
+    rating INT,
+    review_text TEXT
+);
+INSERT INTO reviews (review_id, product_id, customer_id, rating, review_text) VALUES (1, 101, 1, 5, 'Excellent product!');
+-- 测试用例 35: 查询 reviews 表中的所有数据
+SELECT * FROM reviews;
+-- 测试用例 36: 删除 reviews 表
+DROP TABLE reviews;
+-- 测试用例 37: 创建新表并插入数据
+CREATE TABLE discounts (
+    discount_id INT PRIMARY KEY,
+    product_id INT,
+    discount_rate DECIMAL(5, 2),
+    start_date DATE,
+    end_date DATE
+);
+INSERT INTO discounts (discount_id, product_id, discount_rate, start_date, end_date) VALUES (1, 101, 0.10, '2023-10-01', '2023-10-31');
+-- 测试用例 38: 查询 discounts 表中的所有数据
+SELECT * FROM discounts;
+-- 测试用例 39: 删除 discounts 表
+DROP TABLE discounts;
+-- 测试用例 40: 创建新表并插入数据
+CREATE TABLE promotions (
+    promotion_id INT PRIMARY KEY,
+    promotion_name VARCHAR(100),
+    start_date DATE,
+    end_date DATE
+);
+INSERT INTO promotions (promotion_id, promotion_name, start_date, end_date) VALUES (1, 'Holiday Sale', '2023-12-01', '2023-12-31');
+-- 测试用例 41: 查询 promotions 表中的所有数据
+SELECT * FROM promotions;
+-- 测试用例 42: 删除 promotions 表
+DROP TABLE promotions;
+-- 测试用例 43: 创建新表并插入数据
+CREATE TABLE invoices (
+    invoice_id INT PRIMARY KEY,
+    customer_id INT,
+    invoice_date DATE,
+    total_amount DECIMAL(10, 2)
+);
+INSERT INTO invoices (invoice_id, customer_id, invoice_date, total_amount) VALUES (1, 1, '2023-10-15', 1200.00);
+-- 测试用例 44: 查询 invoices 表中的所有数据
+SELECT * FROM invoices;
+-- 测试用例 45: 删除 invoices 表
+DROP TABLE invoices;
+-- 测试用例 46: 创建新表并插入数据
+CREATE TABLE returns (
+    return_id INT PRIMARY KEY,
+    product_id INT,
+    customer_id INT,
+    return_date DATE,
+    quantity INT
+);
+INSERT INTO returns (return_id, product_id, customer_id, return_date, quantity) VALUES (1, 101, 1, '2023-10-20', 2);
+-- 测试用例 47: 查询 returns 表中的所有数据
+SELECT * FROM returns;
+-- 测试用例 48: 删除 returns 表
+DROP TABLE returns;
+-- 测试用例 49: 创建新表并插入数据
+CREATE TABLE warranties (
+    warranty_id INT PRIMARY KEY,
+    product_id INT,
+    warranty_start_date DATE,
+    warranty_end_date DATE
+);
+INSERT INTO warranties (warranty_id, product_id, warranty_start_date, warranty_end_date) VALUES (1, 101, '2023-10-01', '2024-09-30');
+-- 测试用例 50: 查询 warranties 表中的所有数据
+SELECT * FROM warranties;
+-- 测试用例 51: 删除 warranties 表
+DROP TABLE warranties;
+-- 测试用例 52: 创建新表并插入数据
+CREATE TABLE subscriptions (
+    subscription_id INT PRIMARY KEY,
+    customer_id INT,
+    start_date DATE,
+    end_date DATE,
+    status VARCHAR(50)
+);
+INSERT INTO subscriptions (subscription_id, customer_id, start_date, end_date, status) VALUES (1, 1, '2023-10-01', '2024-09-30', 'Active');
+-- 测试用例 53: 查询 subscriptions 表中的所有数据
+SELECT * FROM subscriptions;
+-- 测试用例 54: 删除 subscriptions 表
+DROP TABLE subscriptions;
+-- 测试用例 55: 创建新表并插入数据
+CREATE TABLE feedback (
+    feedback_id INT PRIMARY KEY,
+    customer_id INT,
+    feedback_text TEXT,
+    feedback_date DATE
+);
+INSERT INTO feedback (feedback_id, customer_id, feedback_text, feedback_date) VALUES (1, 1, 'Great service!', '2023-10-25');
+-- 测试用例 56: 查询 feedback 表中的所有数据
+SELECT * FROM feedback;
+-- 测试用例 57: 删除 feedback 表
+DROP TABLE feedback;
+-- 测试用例 58: 创建新表并插入数据
+CREATE TABLE logs (
+    log_id INT PRIMARY KEY,
+    log_message TEXT,
+    log_date DATE
+);
+INSERT INTO logs (log_id, log_message, log_date) VALUES (1, 'System started', '2023-10-01');
+-- 测试用例 59: 查询 logs 表中的所有数据
+SELECT * FROM logs;
+-- 测试用例 60: 删除 logs 表
+DROP TABLE logs;
+-- 测试用例 61: 创建新表并插入数据
+CREATE TABLE settings (
+    setting_id INT PRIMARY KEY,
+    setting_name VARCHAR(100),
+    setting_value TEXT
+);
+INSERT INTO settings (setting_id, setting_name, setting_value) VALUES (1, 'theme', 'dark');
+-- 测试用例 62: 查询 settings 表中的所有数据
+SELECT * FROM settings;
+-- 测试用例 63: 删除 settings 表
+DROP TABLE settings;
+-- 测试用例 64: 创建新表并插入数据
+CREATE TABLE notifications (
+    notification_id INT PRIMARY KEY,
+    user_id INT,
+    message TEXT,
+    notification_date DATE
+);
+INSERT INTO notifications (notification_id, user_id, message, notification_date) VALUES (1, 1, 'Welcome to our platform!', '2023-10-01');
+-- 测试用例 65: 查询 notifications 表中的所有数据
+SELECT * FROM notifications;
+-- 测试用例 66: 删除 notifications 表
+DROP TABLE notifications;
+-- 测试用例 67: 创建新表并插入数据
+CREATE TABLE tasks (
+    task_id INT PRIMARY KEY,
+    task_name VARCHAR(100),
+    due_date DATE,
+    status VARCHAR(50)
+);
+INSERT INTO tasks (task_id, task_name, due_date, status) VALUES (1, 'Complete project report', '2023-10-31', 'Pending');
+-- 测试用例 68: 查询 tasks 表中的所有数据
+SELECT * FROM tasks;
+-- 测试用例 69: 删除 tasks 表
+DROP TABLE tasks;
+-- 测试用例 70: 创建新表并插入数据
+CREATE TABLE events (
+    event_id INT PRIMARY KEY,
+    event_name VARCHAR(100),
+    event_date DATE,
+    location VARCHAR(100)
+);
+INSERT INTO events (event_id, event_name, event_date, location) VALUES (1, 'Annual Conference', '2023-11-15', 'New York');
+-- 测试用例 71: 查询 events 表中的所有数据
+SELECT * FROM events;
+-- 测试用例 72: 删除 events 表
+DROP TABLE events;
+-- 测试用例 73: 创建新表并插入数据
+CREATE TABLE tickets (
+    ticket_id INT PRIMARY KEY,
+    event_id INT,
+    customer_id INT,
+    ticket_price DECIMAL(10, 2)
+);
+INSERT INTO tickets (ticket_id, event_id, customer_id, ticket_price) VALUES (1, 1, 1, 100.00);
+-- 测试用例 74: 查询 tickets 表中的所有数据
+SELECT * FROM tickets;
+-- 测试用例 75: 删除 tickets 表
+DROP TABLE tickets;
+-- 测试用例 76: 创建新表并插入数据
+CREATE TABLE attendees (
+    attendee_id INT PRIMARY KEY,
+    event_id INT,
+    attendee_name VARCHAR(100),
+    email VARCHAR(100)
+);
+INSERT INTO attendees (attendee_id, event_id, attendee_name, email) VALUES (1, 1, 'Alice Smith', 'alice@example.com');
+-- 测试用例 77: 查询 attendees 表中的所有数据
+SELECT * FROM attendees;
+-- 测试用例 78: 删除 attendees 表
+DROP TABLE attendees;
+-- 测试用例 79: 创建新表并插入数据
+CREATE TABLE sponsors (
+    sponsor_id INT PRIMARY KEY,
+    sponsor_name VARCHAR(100),
+    contact_email VARCHAR(100)
+);
+INSERT INTO sponsors (sponsor_id, sponsor_name, contact_email) VALUES (1, 'Tech Corp', 'info@techcorp.com');
+-- 测试用例 80: 查询 sponsors 表中的所有数据
+SELECT * FROM sponsors;
+-- 测试用例 81: 删除 sponsors 表
+DROP TABLE sponsors;
+-- 测试用例 82: 创建新表并插入数据
+CREATE TABLE speakers (
+    speaker_id INT PRIMARY KEY,
+    event_id INT,
+    speaker_name VARCHAR(100),
+    bio TEXT
+);
+INSERT INTO speakers (speaker_id, event_id, speaker_name, bio) VALUES (1, 1, 'John Doe', 'Expert in database systems');
+-- 测试用例 83: 查询 speakers 表中的所有数据
+SELECT * FROM speakers;
+-- 测试用例 84: 删除 speakers 表
+DROP TABLE speakers;
+-- 测试用例 85: 创建新表并插入数据
+CREATE TABLE sessions (
+    session_id INT PRIMARY KEY,
+    event_id INT,
+    session_name VARCHAR(100),
+    start_time TIME,
+    end_time TIME
+);
+INSERT INTO sessions (session_id, event_id, session_name, start_time, end_time) VALUES (1, 1, 'Database Optimization', '09:00:00', '10:00:00');
+-- 测试用例 86: 查询 sessions 表中的所有数据
+SELECT * FROM sessions;
+-- 测试用例 87: 删除 sessions 表
+DROP TABLE sessions;
+-- 测试用例 88: 创建新表并插入数据
+CREATE TABLE materials (
+    material_id INT PRIMARY KEY,
+    session_id INT,
+    material_name VARCHAR(100),
+    file_path VARCHAR(255)
+);
+INSERT INTO materials (material_id, session_id, material_name, file_path) VALUES (1, 1, 'Optimization Guide', '/materials/optimization_guide.pdf');
+-- 测试用例 89: 查询 materials 表中的所有数据
+SELECT * FROM materials;
+-- 测试用例 90: 删除 materials 表
+DROP TABLE materials;
+-- 测试用例 91: 创建新表并插入数据
+CREATE TABLE registrations (
+    registration_id INT PRIMARY KEY,
+    event_id INT,
+    attendee_id INT,
+    registration_date DATE
+);
+INSERT INTO registrations (registration_id, event_id, attendee_id, registration_date) VALUES (1, 1, 1, '2023-10-01');
+-- 测试用例 92: 查询 registrations 表中的所有数据
+SELECT * FROM registrations;
+-- 测试用例 93: 删除 registrations 表
+DROP TABLE registrations

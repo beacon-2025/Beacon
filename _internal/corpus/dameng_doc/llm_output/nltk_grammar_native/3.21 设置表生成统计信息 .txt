@@ -1,0 +1,6 @@
+```
+STAT_ON -> 'STAT' 'ON' TABLE_NAME GLOBAL_OPTION
+TABLE_NAME -> SCHEMA_NAME '.' 'table_name_1' | 'table_name_1'
+SCHEMA_NAME -> 'schemaname_1'
+GLOBAL_OPTION -> 'GLOBAL' | ''
+```

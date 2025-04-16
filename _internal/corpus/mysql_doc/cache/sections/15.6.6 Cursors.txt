@@ -1,0 +1,93 @@
+15.6.6 Cursors
+MySQL supports cursors inside stored programs. The syntax is as in embedded SQL. Cursors have
+these properties:
+• Asensitive: The server may or may not make a copy of its result table
+• Read only: Not updatable
+• Nonscrollable: Can be traversed only in one direction and cannot skip rows
+Cursor declarations must appear before handler declarations and after variable and condition
+declarations.
+Example:
+CREATE PROCEDURE curdemo()
+BEGIN
+  DECLARE done INT DEFAULT FALSE;
+  DECLARE a CHAR(16);
+  DECLARE b, c INT;
+  DECLARE cur1 CURSOR FOR SELECT id,data FROM test.t1;
+  DECLARE cur2 CURSOR FOR SELECT i FROM test.t2;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+  OPEN cur1;
+  OPEN cur2;
+  read_loop: LOOP
+    FETCH cur1 INTO a, b;
+    FETCH cur2 INTO c;
+    IF done THEN
+      LEAVE read_loop;
+    END IF;
+    IF b < c THEN
+      INSERT INTO test.t3 VALUES (a,b);
+    ELSE
+      INSERT INTO test.t3 VALUES (a,c);
+    END IF;
+  END LOOP;
+  CLOSE cur1;
+  CLOSE cur2;
+END;
+15.6.6.1 Cursor CLOSE Statement
+CLOSE cursor_name
+This statement closes a previously opened cursor. For an example, see Section 15.6.6, “Cursors”.
+An error occurs if the cursor is not open.
+If not closed explicitly, a cursor is closed at the end of the BEGIN ... END block in which it was
+declared.
+15.6.6.2 Cursor DECLARE Statement
+DECLARE cursor_name CURSOR FOR select_statement
+This statement declares a cursor and associates it with a SELECT statement that retrieves the rows to
+be traversed by the cursor. To fetch the rows later, use a FETCH statement. The number of columns
+retrieved by the SELECT statement must match the number of output variables specified in the FETCH
+statement.
+The SELECT statement cannot have an INTO clause.
+Cursor declarations must appear before handler declarations and after variable and condition
+declarations.
+A stored program may contain multiple cursor declarations, but each cursor declared in a given block
+must have a unique name. For an example, see Section 15.6.6, “Cursors”.
+For information available through SHOW statements, it is possible in many cases to obtain equivalent
+information by using a cursor with an INFORMATION_SCHEMA table.
+15.6.6.3 Cursor FETCH Statement
+FETCH [[NEXT] FROM] cursor_name INTO var_name [, var_name] ...
+This statement fetches the next row for the SELECT statement associated with the specified cursor
+(which must be open), and advances the cursor pointer. If a row exists, the fetched columns are stored
+in the named variables. The number of columns retrieved by the SELECT statement must match the
+number of output variables specified in the FETCH statement.
+If no more rows are available, a No Data condition occurs with SQLSTATE value '02000'. To detect
+this condition, you can set up a handler for it (or for a NOT FOUND condition). For an example, see
+Section 15.6.6, “Cursors”.
+Be aware that another operation, such as a SELECT or another FETCH, may also cause the handler
+to execute by raising the same condition. If it is necessary to distinguish which operation raised the
+condition, place the operation within its own BEGIN ... END block so that it can be associated with its
+own handler.
+15.6.6.4 Cursor OPEN Statement
+OPEN cursor_name
+This statement opens a previously declared cursor. For an example, see Section 15.6.6, “Cursors”.
+15.6.6.5 Restrictions on Server-Side Cursors
+Server-side cursors are implemented in the C API using the mysql_stmt_attr_set() function. The
+same implementation is used for cursors in stored routines. A server-side cursor enables a result set
+to be generated on the server side, but not transferred to the client except for those rows that the client
+requests. For example, if a client executes a query but is only interested in the first row, the remaining
+rows are not transferred.
+In MySQL, a server-side cursor is materialized into an internal temporary table. Initially, this is a
+MEMORY table, but is converted to a MyISAM table when its size exceeds the minimum value of the
+max_heap_table_size and tmp_table_size system variables. The same restrictions apply
+to internal temporary tables created to hold the result set for a cursor as for other uses of internal
+temporary tables. See Section 10.4.4, “Internal Temporary Table Use in MySQL”. One limitation of the
+implementation is that for a large result set, retrieving its rows through a cursor might be slow.
+Cursors are read only; you cannot use a cursor to update rows.
+UPDATE WHERE CURRENT OF and DELETE WHERE CURRENT OF are not implemented, because
+updatable cursors are not supported.
+Cursors are nonholdable (not held open after a commit).
+Cursors are asensitive.
+Cursors are nonscrollable.
+Cursors are not named. The statement handler acts as the cursor ID.
+You can have open only a single cursor per prepared statement. If you need several cursors, you must
+prepare several statements.
+You cannot use a cursor for a statement that generates a result set if the statement is not supported
+in prepared mode. This includes statements such as CHECK TABLE, HANDLER READ, and SHOW
+BINLOG EVENTS.

@@ -1,0 +1,42 @@
+-- 创建模式
+CREATE SCHEMA test_schema;
+-- 创建表1
+CREATE TABLE test_schema.table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT
+);
+-- 插入数据到表1
+INSERT INTO test_schema.table1 (id, name, age) VALUES (1, 'Alice', 25);
+INSERT INTO test_schema.table1 (id, name, age) VALUES (2, 'Bob', 30);
+INSERT INTO test_schema.table1 (id, name, age) VALUES (3, 'Charlie', 35);
+-- 创建表2
+CREATE TABLE test_schema.table2 (
+    id INT PRIMARY KEY,
+    address VARCHAR(100),
+    salary DECIMAL(10, 2)
+);
+-- 插入数据到表2
+INSERT INTO test_schema.table2 (id, address, salary) VALUES (1, '123 Main St', 50000.00);
+INSERT INTO test_schema.table2 (id, address, salary) VALUES (2, '456 Elm St', 60000.00);
+INSERT INTO test_schema.table2 (id, address, salary) VALUES (3, '789 Oak St', 70000.00);
+-- 测试用例1: 查询表1中的所有列
+SELECT * FROM test_schema.table1;
+-- 测试用例2: 查询表1中的特定列
+SELECT name, age FROM test_schema.table1;
+-- 测试用例3: 查询表1中满足条件的记录
+SELECT * FROM test_schema.table1 WHERE age > 30;
+-- 测试用例4: 查询表1中的记录并按年龄排序
+SELECT * FROM test_schema.table1 ORDER BY age DESC;
+-- 测试用例5: 查询表1中的记录并限制返回的行数
+SELECT * FROM test_schema.table1 LIMIT 2;
+-- 测试用例6: 查询表2中的所有列
+SELECT * FROM test_schema.table2;
+-- 测试用例7: 查询表2中的特定列
+SELECT address, salary FROM test_schema.table2;
+-- 测试用例8: 查询表2中满足条件的记录
+SELECT * FROM test_schema.table2 WHERE salary > 55000.00;
+-- 测试用例9: 查询表2中的记录并按薪水排序
+SELECT * FROM test_schema.table2 ORDER BY salary ASC;
+-- 测试用例10: 查询表2中的记录并限制返回的行数
+SELECT * FROM test_schema.table2 LIMIT 1

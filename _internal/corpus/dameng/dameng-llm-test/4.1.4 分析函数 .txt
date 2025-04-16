@@ -1,0 +1,193 @@
+-- 公共前置语句：创建表和插入数据
+CREATE TABLE Production_Product (
+    ProductID INT PRIMARY KEY,
+    Name VARCHAR(255),
+    Author VARCHAR(255),
+    Publisher VARCHAR(255),
+    OriginalPrice DECIMAL(10, 2),
+    NowPrice DECIMAL(10, 2),
+    Discount DECIMAL(5, 2),
+    OrderDate DATE
+);
+INSERT INTO Production_Product (ProductID, Name, Author, Publisher, OriginalPrice, NowPrice, Discount, OrderDate) VALUES
+(1, '老人与海', '海明威', '上海出版社', 20.00, 15.00, 5.00, '2023-01-01'),
+(2, '红楼梦', '曹雪芹,高鹗', '中华书局', 30.00, 25.00, 5.00, '2023-01-02'),
+(3, '水浒传', '施耐庵，罗贯中', '中华书局', 25.00, 20.00, 5.00, '2023-01-03'),
+(4, '射雕英雄传', '金庸', '广州出版社', 40.00, 35.00, 5.00, '2023-01-04'),
+(5, '数据结构', '严蔚敏，吴伟民', '清华大学出版社', 50.00, 45.00, 5.00, '2023-01-05'),
+(6, '长征', '王树增', '人民文学出版社', 60.00, 55.00, 5.00, '2023-01-06'),
+(7, '突破英文基础词汇', '刘毅', '外语教学与研究出版社', 10.00, 8.00, 2.00, '2023-01-07'),
+(8, '工作中无小事', '陈满麒', '机械工业出版社', 15.00, 12.00, 3.00, '2023-01-08'),
+(9, '鲁迅文集', '鲁迅', '21世纪出版社', 35.00, 30.00, 5.00, '2023-01-09'),
+(10, '噼里啪啦丛书', '佐佐木洋子', '21世纪出版社', 45.00, 40.00, 5.00, '2023-01-10');
+-- 测试用例 1: 使用 COUNT(*) 分析函数
+SELECT Author, COUNT(*) OVER (PARTITION BY Author) AS AuthorCount
+FROM Production_Product;
+-- 测试用例 2: 使用 AVG 分析函数
+SELECT Author, AVG(NowPrice) OVER (PARTITION BY Author) AS AvgPrice
+FROM Production_Product;
+-- 测试用例 3: 使用 MAX 分析函数
+SELECT Author, MAX(NowPrice) OVER (PARTITION BY Author) AS MaxPrice
+FROM Production_Product;
+-- 测试用例 4: 使用 MIN 分析函数
+SELECT Author, MIN(NowPrice) OVER (PARTITION BY Author) AS MinPrice
+FROM Production_Product;
+-- 测试用例 5: 使用 SUM 分析函数
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author) AS TotalPrice
+FROM Production_Product;
+-- 测试用例 6: 使用 VAR_POP 分析函数
+SELECT Publisher, VAR_POP(NowPrice) OVER (PARTITION BY Publisher) AS VarPopPrice
+FROM Production_Product;
+-- 测试用例 7: 使用 VAR_SAMP 分析函数
+SELECT Publisher, VAR_SAMP(NowPrice) OVER (PARTITION BY Publisher) AS VarSampPrice
+FROM Production_Product;
+-- 测试用例 8: 使用 STDDEV_POP 分析函数
+SELECT Publisher, STDDEV_POP(NowPrice) OVER (PARTITION BY Publisher) AS StdDevPopPrice
+FROM Production_Product;
+-- 测试用例 9: 使用 STDDEV_SAMP 分析函数
+SELECT Publisher, STDDEV_SAMP(NowPrice) OVER (PARTITION BY Publisher) AS StdDevSampPrice
+FROM Production_Product;
+-- 测试用例 10: 使用 CORR 分析函数
+SELECT Publisher, CORR(OriginalPrice, NowPrice) OVER (PARTITION BY Publisher) AS CorrPrice
+FROM Production_Product;
+-- 测试用例 11: 使用 FIRST_VALUE 分析函数
+SELECT Author, FIRST_VALUE(NowPrice) OVER (PARTITION BY Author ORDER BY NowPrice) AS FirstPrice
+FROM Production_Product;
+-- 测试用例 12: 使用 LAST_VALUE 分析函数
+SELECT Author, LAST_VALUE(NowPrice) OVER (PARTITION BY Author ORDER BY NowPrice ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS LastPrice
+FROM Production_Product;
+-- 测试用例 13: 使用 LAG 分析函数
+SELECT OrderDate, LAG(NowPrice, 1, 0) OVER (ORDER BY OrderDate) AS PrevPrice
+FROM Production_Product;
+-- 测试用例 14: 使用 LEAD 分析函数
+SELECT OrderDate, LEAD(NowPrice, 1, 0) OVER (ORDER BY OrderDate) AS NextPrice
+FROM Production_Product;
+-- 测试用例 15: 使用 RANK 分析函数
+SELECT Author, RANK() OVER (ORDER BY NowPrice DESC) AS PriceRank
+FROM Production_Product;
+-- 测试用例 16: 使用 DENSE_RANK 分析函数
+SELECT Author, DENSE_RANK() OVER (ORDER BY NowPrice DESC) AS PriceDenseRank
+FROM Production_Product;
+-- 测试用例 17: 使用 ROW_NUMBER 分析函数
+SELECT Author, ROW_NUMBER() OVER (ORDER BY NowPrice DESC) AS RowNum
+FROM Production_Product;
+-- 测试用例 18: 使用 PERCENT_RANK 分析函数
+SELECT Author, PERCENT_RANK() OVER (ORDER BY NowPrice) AS PercentRank
+FROM Production_Product;
+-- 测试用例 19: 使用 CUME_DIST 分析函数
+SELECT Author, CUME_DIST() OVER (ORDER BY NowPrice) AS CumeDist
+FROM Production_Product;
+-- 测试用例 20: 使用 NTILE 分析函数
+SELECT Author, NTILE(3) OVER (ORDER BY NowPrice) AS PriceGroup
+FROM Production_Product;
+-- 测试用例 21: 使用 PERCENTILE_CONT 分析函数
+SELECT Author, PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY NowPrice) OVER () AS MedianPrice
+FROM Production_Product;
+-- 测试用例 22: 使用 PERCENTILE_DISC 分析函数
+SELECT Author, PERCENTILE_DISC(0.5) WITHIN GROUP (ORDER BY NowPrice) OVER () AS MedianPriceDisc
+FROM Production_Product;
+-- 测试用例 23: 使用 LISTAGG 分析函数
+SELECT Publisher, LISTAGG(Name, ', ') WITHIN GROUP (ORDER BY Name) OVER (PARTITION BY Publisher) AS BookList
+FROM Production_Product;
+-- 测试用例 24: 使用 NTH_VALUE 分析函数
+SELECT Publisher, NTH_VALUE(NowPrice, 2) FROM FIRST RESPECT NULLS OVER (PARTITION BY Publisher ORDER BY NowPrice DESC) AS SecondHighestPrice
+FROM Production_Product;
+-- 测试用例 25: 使用 WM_CONCAT 分析函数
+SELECT Publisher, WM_CONCAT(Name) OVER (PARTITION BY Publisher) AS BookList
+FROM Production_Product;
+-- 测试用例 26: 使用 ROWS 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate ROWS BETWEEN UNBOUNDED PRECEDING AND CURRENT ROW) AS RunningTotal
+FROM Production_Product;
+-- 测试用例 27: 使用 RANGE 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate RANGE BETWEEN INTERVAL '1' DAY PRECEDING AND CURRENT ROW) AS RunningTotal
+FROM Production_Product;
+-- 测试用例 28: 使用 RATIO_TO_REPORT 分析函数
+SELECT Author, RATIO_TO_REPORT(NowPrice) OVER (PARTITION BY Author) AS PriceRatio
+FROM Production_Product;
+-- 测试用例 29: 使用 COVAR_POP 分析函数
+SELECT Publisher, COVAR_POP(OriginalPrice, NowPrice) OVER (PARTITION BY Publisher) AS CovarPop
+FROM Production_Product;
+-- 测试用例 30: 使用 COVAR_SAMP 分析函数
+SELECT Publisher, COVAR_SAMP(OriginalPrice, NowPrice) OVER (PARTITION BY Publisher) AS CovarSamp
+FROM Production_Product;
+-- 测试用例 31: 使用 VARIANCE 分析函数
+SELECT Publisher, VARIANCE(NowPrice) OVER (PARTITION BY Publisher) AS VariancePrice
+FROM Production_Product;
+-- 测试用例 32: 使用 STDDEV 分析函数
+SELECT Publisher, STDDEV(NowPrice) OVER (PARTITION BY Publisher) AS StdDevPrice
+FROM Production_Product;
+-- 测试用例 33: 使用 ROWS UNBOUNDED PRECEDING 窗口子句
+SELECT Author, MAX(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate ROWS UNBOUNDED PRECEDING) AS MaxPriceToDate
+FROM Production_Product;
+-- 测试用例 34: 使用 ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING 窗口子句
+SELECT Author, MIN(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate ROWS BETWEEN CURRENT ROW AND UNBOUNDED FOLLOWING) AS MinPriceFromDate
+FROM Production_Product;
+-- 测试用例 35: 使用 RANGE BETWEEN INTERVAL '1' DAY PRECEDING AND CURRENT ROW 窗口子句
+SELECT Author, AVG(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate RANGE BETWEEN INTERVAL '1' DAY PRECEDING AND CURRENT ROW) AS AvgPriceLastDay
+FROM Production_Product;
+-- 测试用例 36: 使用 ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate ROWS BETWEEN 1 PRECEDING AND 1 FOLLOWING) AS SumPriceAround
+FROM Production_Product;
+-- 测试用例 37: 使用 RANGE BETWEEN 10 PRECEDING AND 10 FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate RANGE BETWEEN 10 PRECEDING AND 10 FOLLOWING) AS SumPriceRange
+FROM Production_Product;
+-- 测试用例 38: 使用 ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS TotalPrice
+FROM Production_Product;
+-- 测试用例 39: 使用 RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate RANGE BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING) AS TotalPriceRange
+FROM Production_Product;
+-- 测试用例 40: 使用 ROWS BETWEEN CURRENT ROW AND CURRENT ROW 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate ROWS BETWEEN CURRENT ROW AND CURRENT ROW) AS CurrentPrice
+FROM Production_Product;
+-- 测试用例 41: 使用 RANGE BETWEEN CURRENT ROW AND CURRENT ROW 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate RANGE BETWEEN CURRENT ROW AND CURRENT ROW) AS CurrentPriceRange
+FROM Production_Product;
+-- 测试用例 42: 使用 ROWS BETWEEN 2 PRECEDING AND 1 PRECEDING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate ROWS BETWEEN 2 PRECEDING AND 1 PRECEDING) AS SumPriceBefore
+FROM Production_Product;
+-- 测试用例 43: 使用 RANGE BETWEEN 2 PRECEDING AND 1 PRECEDING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate RANGE BETWEEN 2 PRECEDING AND 1 PRECEDING) AS SumPriceBeforeRange
+FROM Production_Product;
+-- 测试用例 44: 使用 ROWS BETWEEN 1 FOLLOWING AND 2 FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate ROWS BETWEEN 1 FOLLOWING AND 2 FOLLOWING) AS SumPriceAfter
+FROM Production_Product;
+-- 测试用例 45: 使用 RANGE BETWEEN 1 FOLLOWING AND 2 FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate RANGE BETWEEN 1 FOLLOWING AND 2 FOLLOWING) AS SumPriceAfterRange
+FROM Production_Product;
+-- 测试用例 46: 使用 ROWS BETWEEN UNBOUNDED PRECEDING AND 1 FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate ROWS BETWEEN UNBOUNDED PRECEDING AND 1 FOLLOWING) AS SumPriceUpToNext
+FROM Production_Product;
+-- 测试用例 47: 使用 RANGE BETWEEN UNBOUNDED PRECEDING AND 1 FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate RANGE BETWEEN UNBOUNDED PRECEDING AND 1 FOLLOWING) AS SumPriceUpToNextRange
+FROM Production_Product;
+-- 测试用例 48: 使用 ROWS BETWEEN 1 PRECEDING AND UNBOUNDED FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate ROWS BETWEEN 1 PRECEDING AND UNBOUNDED FOLLOWING) AS SumPriceFromPrev
+FROM Production_Product;
+-- 测试用例 49: 使用 RANGE BETWEEN 1 PRECEDING AND UNBOUNDED FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate RANGE BETWEEN 1 PRECEDING AND UNBOUNDED FOLLOWING) AS SumPriceFromPrevRange
+FROM Production_Product;
+-- 测试用例 50: 使用 ROWS BETWEEN 2 PRECEDING AND 2 FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate ROWS BETWEEN 2 PRECEDING AND 2 FOLLOWING) AS SumPriceAround2
+FROM Production_Product;
+-- 测试用例 51: 使用 RANGE BETWEEN 2 PRECEDING AND 2 FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate RANGE BETWEEN 2 PRECEDING AND 2 FOLLOWING) AS SumPriceAround2Range
+FROM Production_Product;
+-- 测试用例 52: 使用 ROWS BETWEEN UNBOUNDED PRECEDING AND 2 FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate ROWS BETWEEN UNBOUNDED PRECEDING AND 2 FOLLOWING) AS SumPriceUpToNext2
+FROM Production_Product;
+-- 测试用例 53: 使用 RANGE BETWEEN UNBOUNDED PRECEDING AND 2 FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate RANGE BETWEEN UNBOUNDED PRECEDING AND 2 FOLLOWING) AS SumPriceUpToNext2Range
+FROM Production_Product;
+-- 测试用例 54: 使用 ROWS BETWEEN 2 PRECEDING AND UNBOUNDED FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate ROWS BETWEEN 2 PRECEDING AND UNBOUNDED FOLLOWING) AS SumPriceFromPrev2
+FROM Production_Product;
+-- 测试用例 55: 使用 RANGE BETWEEN 2 PRECEDING AND UNBOUNDED FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate RANGE BETWEEN 2 PRECEDING AND UNBOUNDED FOLLOWING) AS SumPriceFromPrev2Range
+FROM Production_Product;
+-- 测试用例 56: 使用 ROWS BETWEEN 3 PRECEDING AND 3 FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate ROWS BETWEEN 3 PRECEDING AND 3 FOLLOWING) AS SumPriceAround3
+FROM Production_Product;
+-- 测试用例 57: 使用 RANGE BETWEEN 3 PRECEDING AND 3 FOLLOWING 窗口子句
+SELECT Author, SUM(NowPrice) OVER (PARTITION BY Author ORDER BY OrderDate RANGE BETWEEN 3 PRECEDING AND 3 FOLLOWING) AS SumPriceAround3Range
+FROM Production_Product

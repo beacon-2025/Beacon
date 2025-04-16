@@ -1,0 +1,65 @@
+# ==== Purpose ====
+#
+# The purpose of this test is to check that crashing the server while there
+# are several XA transactions executing up until several points of `XA
+# PREPARE/COMMIT/ROLLBACK` statements, will result in consistency between
+# SE and TC after recovery is finished.
+#
+# ==== Requirements ====
+#
+# R1. When crashing in the middle of an XA transaction and after recovery,
+#     storage engine and transaction coordinator MUST be in sync.
+#
+# For a more detailed list of requirements for the expected state for each
+# of the sync points, check the `Requirements` section for the tests listed
+# in `Related tests` section of `common/xa_crash_safe/setup.inc`.
+#
+# ==== Implementation ====
+#
+# 1) Execute several `XA PREPARE` statements up until:
+#    a) Before preparing in the SEs.
+#    b) Before preparing in the TC.
+#    c) Before setting the transaction as prepared in TC.
+#    d) After writing to the TC log.
+# 2) Kill the server and restart it.
+# 3) Check that:
+#    a) SE recovery rolled back the transaction executed in 1.a)
+#    b) XA recovery rolled back the transaction executed in 1.b)
+#    c) XA recovery left in prepared state transaction executed in 1.b) and
+#       1.c)
+# 4) Clean up pending transactions
+# 5) Execute several `XA COMMIT` statements up until:
+#    a) Before starting the commit process.
+#    b) Before invoking the before commit hook.
+#    c) Before committing in SEs.
+# 6) Kill the server and restart it.
+# 7) Check that:
+#    a) XA recovery left in prepared state transaction executed in 5.a) and
+#       5.b)
+#    b) XA recovery committed the transaction executed in 5.c)
+# 8) Clean up pending transactions
+# 9) Execute several `XA ROLLBACK` statements up until:
+#    a) Before starting the rollback process.
+#    b) Before invoking the before commit hook.
+#    c) Before rolling back in SEs.
+# 10) Kill the server and restart it.
+# 11) Check that:
+#    a) XA recovery left in prepared state transaction executed in 9.a) and
+#       9.b)
+#    b) XA recovery rlled back the transaction executed in 9.c)
+# 12) Clean up pending transactions
+# 13) Execute several `XA COMMIT ... ONE PHASE` statements up until:
+#    a) Before preparing in SEs.
+#    b) Before invoking the before commit hook.
+#    c) Before committing in SEs.
+# 14) Kill the server and restart it.
+# 15) Check that:
+#    a) SE recovery rolled back the transaction executed in 13.a)
+#    b) XA recovery rolled back the transaction executed in 13.b)
+#    c) XA recovery committed transaction executed in 13.c)
+#
+# ==== References ====
+#
+# WL#11300: Crash-safe XA + binary log
+#
+# Related tests

@@ -1,0 +1,5 @@
+
+
+  select Variable_value into @epoch
+    from performance_schema.global_status
+   where Variable_name like 'Ndb_last_commit_epoch_session'

@@ -1,0 +1,1059 @@
+15.1.9 ALTER TABLE Statement
+ALTER TABLE tbl_name
+    [alter_option [, alter_option] ...]
+    [partition_options]
+alter_option: {
+    table_options
+  | ADD [COLUMN] col_name column_definition
+        [FIRST | AFTER col_name]
+  | ADD [COLUMN] (col_name column_definition,...)
+  | ADD {INDEX | KEY} [index_name]
+        [index_type] (key_part,...) [index_option] ...
+  | ADD {FULLTEXT | SPATIAL} [INDEX | KEY] [index_name]
+        (key_part,...) [index_option] ...
+  | ADD [CONSTRAINT [symbol]] PRIMARY KEY
+        [index_type] (key_part,...)
+        [index_option] ...
+  | ADD [CONSTRAINT [symbol]] UNIQUE [INDEX | KEY]
+        [index_name] [index_type] (key_part,...)
+        [index_option] ...
+  | ADD [CONSTRAINT [symbol]] FOREIGN KEY
+        [index_name] (col_name,...)
+        reference_definition
+  | ADD [CONSTRAINT [symbol]] CHECK (expr) [[NOT] ENFORCED]
+  | DROP {CHECK | CONSTRAINT} symbol
+  | ALTER {CHECK | CONSTRAINT} symbol [NOT] ENFORCED
+  | ALGORITHM [=] {DEFAULT | INSTANT | INPLACE | COPY}
+  | ALTER [COLUMN] col_name {
+        SET DEFAULT {literal | (expr)}
+      | SET {VISIBLE | INVISIBLE}
+      | DROP DEFAULT
+    }
+  | ALTER INDEX index_name {VISIBLE | INVISIBLE}
+  | CHANGE [COLUMN] old_col_name new_col_name column_definition
+        [FIRST | AFTER col_name]
+  | [DEFAULT] CHARACTER SET [=] charset_name [COLLATE [=] collation_name]
+  | CONVERT TO CHARACTER SET charset_name [COLLATE collation_name]
+  | {DISABLE | ENABLE} KEYS
+  | {DISCARD | IMPORT} TABLESPACE
+  | DROP [COLUMN] col_name
+  | DROP {INDEX | KEY} index_name
+  | DROP PRIMARY KEY
+  | DROP FOREIGN KEY fk_symbol
+  | FORCE
+  | LOCK [=] {DEFAULT | NONE | SHARED | EXCLUSIVE}
+  | MODIFY [COLUMN] col_name column_definition
+        [FIRST | AFTER col_name]
+  | ORDER BY col_name [, col_name] ...
+  | RENAME COLUMN old_col_name TO new_col_name
+  | RENAME {INDEX | KEY} old_index_name TO new_index_name
+  | RENAME [TO | AS] new_tbl_name
+  | {WITHOUT | WITH} VALIDATION
+}
+partition_options:
+    partition_option [partition_option] ...
+partition_option: {
+    ADD PARTITION (partition_definition)
+  | DROP PARTITION partition_names
+  | DISCARD PARTITION {partition_names | ALL} TABLESPACE
+  | IMPORT PARTITION {partition_names | ALL} TABLESPACE
+  | TRUNCATE PARTITION {partition_names | ALL}
+  | COALESCE PARTITION number
+  | REORGANIZE PARTITION partition_names INTO (partition_definitions)
+  | EXCHANGE PARTITION partition_name WITH TABLE tbl_name [{WITH | WITHOUT} VALIDATION]
+  | ANALYZE PARTITION {partition_names | ALL}
+  | CHECK PARTITION {partition_names | ALL}
+  | OPTIMIZE PARTITION {partition_names | ALL}
+  | REBUILD PARTITION {partition_names | ALL}
+  | REPAIR PARTITION {partition_names | ALL}
+  | REMOVE PARTITIONING
+}
+key_part: {col_name [(length)] | (expr)} [ASC | DESC]
+index_type:
+    USING {BTREE | HASH}
+index_option: {
+    KEY_BLOCK_SIZE [=] value
+  | index_type
+  | WITH PARSER parser_name
+  | COMMENT 'string'
+  | {VISIBLE | INVISIBLE}
+}
+table_options:
+    table_option [[,] table_option] ...
+table_option: {
+    AUTOEXTEND_SIZE [=] value
+  | AUTO_INCREMENT [=] value
+  | AVG_ROW_LENGTH [=] value
+  | [DEFAULT] CHARACTER SET [=] charset_name
+  | CHECKSUM [=] {0 | 1}
+  | [DEFAULT] COLLATE [=] collation_name
+  | COMMENT [=] 'string'
+  | COMPRESSION [=] {'ZLIB' | 'LZ4' | 'NONE'}
+  | CONNECTION [=] 'connect_string'
+  | {DATA | INDEX} DIRECTORY [=] 'absolute path to directory'
+  | DELAY_KEY_WRITE [=] {0 | 1}
+  | ENCRYPTION [=] {'Y' | 'N'}
+  | ENGINE [=] engine_name
+  | ENGINE_ATTRIBUTE [=] 'string'
+  | INSERT_METHOD [=] { NO | FIRST | LAST }
+  | KEY_BLOCK_SIZE [=] value
+  | MAX_ROWS [=] value
+  | MIN_ROWS [=] value
+  | PACK_KEYS [=] {0 | 1 | DEFAULT}
+  | PASSWORD [=] 'string'
+  | ROW_FORMAT [=] {DEFAULT | DYNAMIC | FIXED | COMPRESSED | REDUNDANT | COMPACT}
+  | SECONDARY_ENGINE_ATTRIBUTE [=] 'string'
+  | STATS_AUTO_RECALC [=] {DEFAULT | 0 | 1}
+  | STATS_PERSISTENT [=] {DEFAULT | 0 | 1}
+  | STATS_SAMPLE_PAGES [=] value
+  | TABLESPACE tablespace_name [STORAGE {DISK | MEMORY}]
+  | UNION [=] (tbl_name[,tbl_name]...)
+}
+partition_options:
+    (see CREATE TABLE options)
+ALTER TABLE changes the structure of a table. For example, you can add or delete columns, create
+or destroy indexes, change the type of existing columns, or rename columns or the table itself. You can
+also change characteristics such as the storage engine used for the table or the table comment.
+• To use ALTER TABLE, you need ALTER, CREATE, and INSERT privileges for the table. Renaming a
+table requires ALTER and DROP on the old table, ALTER, CREATE, and INSERT on the new table.
+• Following the table name, specify the alterations to be made. If none are given, ALTER TABLE does
+nothing.
+• The syntax for many of the permissible alterations is similar to clauses of the CREATE TABLE
+statement. column_definition clauses use the same syntax for ADD and CHANGE as for CREATE
+TABLE. For more information, see Section 15.1.20, “CREATE TABLE Statement”.
+• The word COLUMN is optional and can be omitted, except for RENAME COLUMN (to distinguish a
+column-renaming operation from the RENAME table-renaming operation).
+• Multiple ADD, ALTER, DROP, and CHANGE clauses are permitted in a single ALTER TABLE statement,
+separated by commas. This is a MySQL extension to standard SQL, which permits only one of each
+clause per ALTER TABLE statement. For example, to drop multiple columns in a single statement,
+do this:
+ALTER TABLE t2 DROP COLUMN c, DROP COLUMN d;
+• If a storage engine does not support an attempted ALTER TABLE operation, a warning may result.
+Such warnings can be displayed with SHOW WARNINGS. See Section 15.7.7.41, “SHOW WARNINGS
+Statement”. For information on troubleshooting ALTER TABLE, see Section B.3.6.1, “Problems with
+ALTER TABLE”.
+• For information about generated columns, see Section 15.1.9.2, “ALTER TABLE and Generated
+Columns”.
+• For usage examples, see Section 15.1.9.3, “ALTER TABLE Examples”.
+• InnoDB supports addition of multi-valued indexes on JSON columns using a key_part specification
+can take the form (CAST json_path AS type ARRAY). See Multi-Valued Indexes, for detailed
+information regarding multi-valued index creation and usage of, as well as restrictions and limitations
+on multi-valued indexes.
+• With the mysql_info() C API function, you can find out how many rows were copied by ALTER
+TABLE. See mysql_info().
+There are several additional aspects to the ALTER TABLE statement, described under the following
+topics in this section:
+• Table Options
+• Performance and Space Requirements
+• Concurrency Control
+• Adding and Dropping Columns
+• Renaming, Redefining, and Reordering Columns
+• Primary Keys and Indexes
+• Foreign Keys and Other Constraints
+• Changing the Character Set
+• Importing InnoDB Tables
+• Row Order for MyISAM Tables
+• Partitioning Options
+Table Options
+table_options signifies table options of the kind that can be used in the CREATE TABLE statement,
+such as ENGINE, AUTO_INCREMENT, AVG_ROW_LENGTH, MAX_ROWS, ROW_FORMAT, or TABLESPACE.
+For descriptions of all table options, see Section 15.1.20, “CREATE TABLE Statement”. However,
+ALTER TABLE ignores DATA DIRECTORY and INDEX DIRECTORY when given as table options.
+ALTER TABLE permits them only as partitioning options, and requires that you have the FILE
+privilege.
+Use of table options with ALTER TABLE provides a convenient way of altering single table
+characteristics. For example:
+• If t1 is currently not an InnoDB table, this statement changes its storage engine to InnoDB:
+ALTER TABLE t1 ENGINE = InnoDB;
+• See Section 17.6.1.5, “Converting Tables from MyISAM to InnoDB” for considerations when
+switching tables to the InnoDB storage engine.
+• When you specify an ENGINE clause, ALTER TABLE rebuilds the table. This is true even if the
+table already has the specified storage engine.
+• Running ALTER TABLE tbl_name ENGINE=INNODB on an existing InnoDB table performs a
+“null” ALTER TABLE operation, which can be used to defragment an InnoDB table, as described
+in Section 17.11.4, “Defragmenting a Table”. Running ALTER TABLE tbl_name FORCE on an
+InnoDB table performs the same function.
+• ALTER TABLE tbl_name ENGINE=INNODB and ALTER TABLE tbl_name FORCE use online
+DDL. For more information, see Section 17.12, “InnoDB and Online DDL”.
+• The outcome of attempting to change the storage engine of a table is affected by whether the
+desired storage engine is available and the setting of the NO_ENGINE_SUBSTITUTION SQL
+mode, as described in Section 7.1.11, “Server SQL Modes”.
+• To prevent inadvertent loss of data, ALTER TABLE cannot be used to change the storage engine
+of a table to MERGE or BLACKHOLE.
+• To change the InnoDB table to use compressed row-storage format:
+ALTER TABLE t1 ROW_FORMAT = COMPRESSED;
+• The ENCRYPTION clause enables or disables page-level data encryption for an InnoDB table. A
+keyring plugin must be installed and configured to enable encryption.
+If the table_encryption_privilege_check variable is enabled, the
+TABLE_ENCRYPTION_ADMIN privilege is required to use an ENCRYPTION clause with a setting that
+differs from the default schema encryption setting.
+ENCRYPTION is also supported for tables residing in general tablespaces.
+For tables that reside in general tablespaces, table and tablespace encryption must match.
+The ENCRYPTION option is supported only by the InnoDB storage engine; thus it works only
+if the table already uses InnoDB (and you do not change the table's storage engine), or if the
+ALTER TABLE statement also specifies ENGINE=InnoDB. Otherwise the statement is rejected with
+ER_CHECK_NOT_IMPLEMENTED.
+Altering table encryption by moving a table to a different tablespace or changing the storage engine
+is not permitted without explicitly specifying an ENCRYPTION clause.
+Specifying an ENCRYPTION clause with a value other than 'N' or '' is not permitted if the table
+uses a storage engine that does not support encryption. Attempting to create a table without an
+ENCRYPTION clause in an encryption-enabled schema using a storage engine that does not support
+encryption is also not permitted.
+For more information, see Section 17.13, “InnoDB Data-at-Rest Encryption”.
+• To reset the current auto-increment value:
+ALTER TABLE t1 AUTO_INCREMENT = 13;
+You cannot reset the counter to a value less than or equal to the value that is currently in use. For
+both InnoDB and MyISAM, if the value is less than or equal to the maximum value currently in the
+AUTO_INCREMENT column, the value is reset to the current maximum AUTO_INCREMENT column
+value plus one.
+• To change the default table character set:
+ALTER TABLE t1 CHARACTER SET = utf8mb4;
+See also Changing the Character Set.
+• To add (or change) a table comment:
+ALTER TABLE t1 COMMENT = 'New table comment';
+• Use ALTER TABLE with the TABLESPACE option to move InnoDB tables between existing general
+tablespaces, file-per-table tablespaces, and the system tablespace. See Moving Tables Between
+Tablespaces Using ALTER TABLE.
+• ALTER TABLE ... TABLESPACE operations always cause a full table rebuild, even if the
+TABLESPACE attribute has not changed from its previous value.
+• ALTER TABLE ... TABLESPACE syntax does not support moving a table from a temporary
+tablespace to a persistent tablespace.
+• The DATA DIRECTORY clause, which is supported with CREATE TABLE ... TABLESPACE, is
+not supported with ALTER TABLE ... TABLESPACE, and is ignored if specified.
+• For more information about the capabilities and limitations of the TABLESPACE option, see CREATE
+TABLE.
+• MySQL NDB Cluster 9.1 supports setting NDB_TABLE options for controlling a table's partition
+balance (fragment count type), read-from-any-replica capability, full replication, or any combination
+of these, as part of the table comment for an ALTER TABLE statement in the same manner as for
+CREATE TABLE, as shown in this example:
+ALTER TABLE t1 COMMENT = "NDB_TABLE=READ_BACKUP=0,PARTITION_BALANCE=FOR_RA_BY_NODE";
+It is also possible to set NDB_COMMENT options for columns of NDB tables as part of an ALTER
+TABLE statement, like this one:
+ALTER TABLE t1 
+  CHANGE COLUMN c1 c1 BLOB 
+    COMMENT = 'NDB_COLUMN=BLOB_INLINE_SIZE=4096,MAX_BLOB_PART_SIZE';
+Bear in mind that ALTER TABLE ... COMMENT ... discards any existing comment for the table.
+See Setting NDB_TABLE options, for additional information and examples.
+• ENGINE_ATTRIBUTE and SECONDARY_ENGINE_ATTRIBUTE options are used to specify table,
+column, and index attributes for primary and secondary storage engines. These options are reserved
+for future use. Index attributes cannot be altered. An index must be dropped and added back with the
+desired change, which can be performed in a single ALTER TABLE statement.
+To verify that the table options were changed as intended, use SHOW CREATE TABLE, or query the
+Information Schema TABLES table.
+Performance and Space Requirements
+ALTER TABLE operations are processed using one of the following algorithms:
+• COPY: Operations are performed on a copy of the original table, and table data is copied from the
+original table to the new table row by row. Concurrent DML is not permitted.
+• INPLACE: Operations avoid copying table data but may rebuild the table in place. An exclusive
+metadata lock on the table may be taken briefly during preparation and execution phases of the
+operation. Typically, concurrent DML is supported.
+• INSTANT: Operations only modify metadata in the data dictionary. An exclusive metadata lock on
+the table may be taken briefly during the execution phase of the operation. Table data is unaffected,
+making operations instantaneous. Concurrent DML is permitted.
+For tables using the NDB storage engine, these algorithms work as follows:
+• COPY: NDB creates a copy of the table and alters it; the NDB Cluster handler then copies the data
+between the old and new versions of the table. Subsequently, NDB deletes the old table and renames
+the new one.
+This is sometimes also referred to as a “copying” or “offline” ALTER TABLE.
+• INPLACE: The data nodes make the required changes; the NDB Cluster handler does not copy data
+or otherwise take part.
+This is sometimes also referred to as a “non-copying” or “online” ALTER TABLE.
+• INSTANT: Not supported by NDB.
+See Section 25.6.12, “Online Operations with ALTER TABLE in NDB Cluster”, for more information.
+The ALGORITHM clause is optional. If the ALGORITHM clause is omitted, MySQL uses
+ALGORITHM=INSTANT for storage engines and ALTER TABLE clauses that support it. Otherwise,
+ALGORITHM=INPLACE is used. If ALGORITHM=INPLACE is not supported, ALGORITHM=COPY is used.
+Note
+After adding a column to a partitioned table using ALGORITHM=INSTANT, it is
+no longer possible to perform ALTER TABLE ... EXCHANGE PARTITION on
+the table.
+Specifying an ALGORITHM clause requires the operation to use the specified algorithm for clauses and
+storage engines that support it, or fail with an error otherwise. Specifying ALGORITHM=DEFAULT is the
+same as omitting the ALGORITHM clause.
+ALTER TABLE operations that use the COPY algorithm wait for other operations that are modifying the
+table to complete. After alterations are applied to the table copy, data is copied over, the original table
+is deleted, and the table copy is renamed to the name of the original table. While the ALTER TABLE
+operation executes, the original table is readable by other sessions (with the exception noted shortly).
+Updates and writes to the table started after the ALTER TABLE operation begins are stalled until the
+new table is ready, then are automatically redirected to the new table. The temporary copy of the table
+is created in the database directory of the original table unless it is a RENAME TO operation that moves
+the table to a database that resides in a different directory.
+The exception referred to earlier is that ALTER TABLE blocks reads (not just writes) at the point where
+it is ready to clear outdated table structures from the table and table definition caches. At this point, it
+must acquire an exclusive lock. To do so, it waits for current readers to finish, and blocks new reads
+and writes.
+An ALTER TABLE operation that uses the COPY algorithm prevents concurrent DML operations.
+Concurrent queries are still allowed. That is, a table-copying operation always includes at least
+the concurrency restrictions of LOCK=SHARED (allow queries but not DML). You can further restrict
+concurrency for operations that support the LOCK clause by specifying LOCK=EXCLUSIVE, which
+prevents DML and queries. For more information, see Concurrency Control.
+To force use of the COPY algorithm for an ALTER TABLE operation that would otherwise not use it,
+specify ALGORITHM=COPY or enable the old_alter_table system variable. If there is a conflict
+between the old_alter_table setting and an ALGORITHM clause with a value other than DEFAULT,
+the ALGORITHM clause takes precedence.
+For InnoDB tables, an ALTER TABLE operation that uses the COPY algorithm on a table that resides
+in a shared tablespace can increase the amount of space used by the tablespace. Such operations
+require as much additional space as the data in the table plus indexes. For a table residing in a shared
+tablespace, the additional space used during the operation is not released back to the operating
+system as it is for a table that resides in a file-per-table tablespace.
+For information about space requirements for online DDL operations, see Section 17.12.3, “Online DDL
+Space Requirements”.
+ALTER TABLE operations that support the INPLACE algorithm include:
+• ALTER TABLE operations supported by the InnoDB online DDL feature. See Section 17.12.1,
+“Online DDL Operations”.
+• Renaming a table. MySQL renames files that correspond to the table tbl_name without making
+a copy. (You can also use the RENAME TABLE statement to rename tables. See Section 15.1.36,
+“RENAME TABLE Statement”.) Privileges granted specifically for the renamed table are not migrated
+to the new name. They must be changed manually.
+• Operations that modify table metadata only. These operations are immediate because the server
+does not touch table contents. Metadata-only operations include:
+• Renaming a column. In NDB Cluster, this operation can also be performed online.
+• Changing the default value of a column (except for NDB tables).
+• Modifying the definition of an ENUM or SET column by adding new enumeration or set members
+to the end of the list of valid member values, as long as the storage size of the data type does
+not change. For example, adding a member to a SET column that has 8 members changes the
+required storage per value from 1 byte to 2 bytes; this requires a table copy. Adding members in
+the middle of the list causes renumbering of existing members, which requires a table copy.
+• Changing the definition of a spatial column to remove the SRID attribute. (Adding or changing an
+SRID attribute requires a rebuild, and cannot be done in place, because the server must verify that
+all values have the specified SRID value.)
+• Changing a column character set, when these conditions apply:
+• The column data type is CHAR, VARCHAR, a TEXT type, or ENUM.
+• The character set change is from utf8mb3 to utf8mb4, or any character set to binary.
+• There is no index on the column.
+• Changing a generated column, when these conditions apply:
+• For InnoDB tables, statements that modify generated stored columns but do not change their
+type, expression, or nullability.
+• For non-InnoDB tables, statements that modify generated stored or virtual columns but do not
+change their type, expression, or nullability.
+An example of such a change is a change to the column comment.
+• Renaming an index.
+• Adding or dropping a secondary index, for InnoDB and NDB tables. See Section 17.12.1, “Online
+DDL Operations”.
+• For NDB tables, operations that add and drop indexes on variable-width columns. These operations
+occur online, without table copying and without blocking concurrent DML actions for most of their
+duration. See Section 25.6.12, “Online Operations with ALTER TABLE in NDB Cluster”.
+• Modifying index visibility with an ALTER INDEX operation.
+• Column modifications of tables containing generated columns that depend on columns with a
+DEFAULT value if the modified columns are not involved in the generated column expressions. For
+example, changing the NULL property of a separate column can be done in place without a table
+rebuild.
+ALTER TABLE operations that support the INSTANT algorithm include:
+• Adding a column. This feature is referred to as “Instant ADD COLUMN”. Limitations apply. See
+Section 17.12.1, “Online DDL Operations”.
+• Dropping a column. This feature is referred to as “Instant DROP COLUMN”. Limitations apply. See
+Section 17.12.1, “Online DDL Operations”.
+• Adding or dropping a virtual column.
+• Adding or dropping a column default value.
+• Modifying the definition of an ENUM or SET column. The same restrictions apply as described above
+for ALGORITHM=INSTANT.
+• Changing the index type.
+• Renaming a table. The same restrictions apply as described above for ALGORITHM=INSTANT.
+For more information about operations that support ALGORITHM=INSTANT, see Section 17.12.1,
+“Online DDL Operations”.
+ALTER TABLE upgrades MySQL 5.5 temporal columns to 5.6 format for ADD COLUMN, CHANGE
+COLUMN, MODIFY COLUMN, ADD INDEX, and FORCE operations. This conversion cannot be done
+using the INPLACE algorithm because the table must be rebuilt, so specifying ALGORITHM=INPLACE
+in these cases results in an error. Specify ALGORITHM=COPY if necessary.
+If an ALTER TABLE operation on a multicolumn index used to partition a table by KEY changes the
+order of the columns, it can only be performed using ALGORITHM=COPY.
+The WITHOUT VALIDATION and WITH VALIDATION clauses affect whether ALTER TABLE performs
+an in-place operation for virtual generated column modifications. See Section 15.1.9.2, “ALTER TABLE
+and Generated Columns”.
+NDB Cluster 9.1 supports online operations using the same ALGORITHM=INPLACE syntax used with
+the standard MySQL Server. NDB does not allow changing a tablespace online. See Section 25.6.12,
+“Online Operations with ALTER TABLE in NDB Cluster”, for more information.
+When performing a copying ALTER TABLE, NDB checks to ensure that no concurrent writes have
+been made to the affected table. If it finds that any have been made, NDB rejects the ALTER TABLE
+statement and raises ER_TABLE_DEF_CHANGED.
+ALTER TABLE with DISCARD ... PARTITION ... TABLESPACE or IMPORT ...
+PARTITION ... TABLESPACE does not create any temporary tables or temporary partition files.
+ALTER TABLE with ADD PARTITION, DROP PARTITION, COALESCE PARTITION, REBUILD
+PARTITION, or REORGANIZE PARTITION does not create temporary tables (except when used with
+NDB tables); however, these operations can and do create temporary partition files.
+ADD or DROP operations for RANGE or LIST partitions are immediate operations or nearly so. ADD or
+COALESCE operations for HASH or KEY partitions copy data between all partitions, unless LINEAR
+HASH or LINEAR KEY was used; this is effectively the same as creating a new table, although the ADD
+or COALESCE operation is performed partition by partition. REORGANIZE operations copy only changed
+partitions and do not touch unchanged ones.
+For MyISAM tables, you can speed up index re-creation (the slowest part of the alteration process) by
+setting the myisam_sort_buffer_size system variable to a high value.
+Concurrency Control
+For ALTER TABLE operations that support it, you can use the LOCK clause to control the level of
+concurrent reads and writes on a table while it is being altered. Specifying a non-default value for this
+clause enables you to require a certain amount of concurrent access or exclusivity during the alter
+operation, and halts the operation if the requested degree of locking is not available.
+Only LOCK = DEFAULT is permitted for operations that use ALGORITHM=INSTANT. The other LOCK
+clause parameters are not applicable.
+The parameters for the LOCK clause are:
+• LOCK = DEFAULT
+Maximum level of concurrency for the given ALGORITHM clause (if any) and ALTER TABLE
+operation: Permit concurrent reads and writes if supported. If not, permit concurrent reads if
+supported. If not, enforce exclusive access.
+• LOCK = NONE
+If supported, permit concurrent reads and writes. Otherwise, an error occurs.
+• LOCK = SHARED
+If supported, permit concurrent reads but block writes. Writes are blocked even if concurrent writes
+are supported by the storage engine for the given ALGORITHM clause (if any) and ALTER TABLE
+operation. If concurrent reads are not supported, an error occurs.
+• LOCK = EXCLUSIVE
+Enforce exclusive access. This is done even if concurrent reads/writes are supported by the storage
+engine for the given ALGORITHM clause (if any) and ALTER TABLE operation.
+Adding and Dropping Columns
+Use ADD to add new columns to a table, and DROP to remove existing columns. DROP col_name is a
+MySQL extension to standard SQL.
+To add a column at a specific position within a table row, use FIRST or AFTER col_name. The default
+is to add the column last.
+If a table contains only one column, the column cannot be dropped. If what you intend is to remove the
+table, use the DROP TABLE statement instead.
+If columns are dropped from a table, the columns are also removed from any index of which they are a
+part. If all columns that make up an index are dropped, the index is dropped as well. If you use CHANGE
+or MODIFY to shorten a column for which an index exists on the column, and the resulting column
+length is less than the index length, MySQL shortens the index automatically.
+For ALTER TABLE ... ADD, if the column has an expression default value that uses a
+nondeterministic function, the statement may produce a warning or error. For further information, see
+Section 13.6, “Data Type Default Values”, and Section 19.1.3.7, “Restrictions on Replication with
+GTIDs”.
+Renaming, Redefining, and Reordering Columns
+The CHANGE, MODIFY, RENAME COLUMN, and ALTER clauses enable the names and definitions of
+existing columns to be altered. They have these comparative characteristics:
+• CHANGE:
+• Can rename a column and change its definition, or both.
+• Has more capability than MODIFY or RENAME COLUMN, but at the expense of convenience for
+some operations. CHANGE requires naming the column twice if not renaming it, and requires
+respecifying the column definition if only renaming it.
+• With FIRST or AFTER, can reorder columns.
+• MODIFY:
+• Can change a column definition but not its name.
+• More convenient than CHANGE to change a column definition without renaming it.
+• With FIRST or AFTER, can reorder columns.
+• RENAME COLUMN:
+• Can change a column name but not its definition.
+• More convenient than CHANGE to rename a column without changing its definition.
+• ALTER: Used only to change a column default value.
+CHANGE is a MySQL extension to standard SQL. MODIFY and RENAME COLUMN are MySQL
+extensions for Oracle compatibility.
+To alter a column to change both its name and definition, use CHANGE, specifying the old and new
+names and the new definition. For example, to rename an INT NOT NULL column from a to b and
+change its definition to use the BIGINT data type while retaining the NOT NULL attribute, do this:
+ALTER TABLE t1 CHANGE a b BIGINT NOT NULL;
+To change a column definition but not its name, use CHANGE or MODIFY. With CHANGE, the syntax
+requires two column names, so you must specify the same name twice to leave the name unchanged.
+For example, to change the definition of column b, do this:
+ALTER TABLE t1 CHANGE b b INT NOT NULL;
+MODIFY is more convenient to change the definition without changing the name because it requires the
+column name only once:
+ALTER TABLE t1 MODIFY b INT NOT NULL;
+To change a column name but not its definition, use CHANGE or RENAME COLUMN. With CHANGE,
+the syntax requires a column definition, so to leave the definition unchanged, you must respecify the
+definition the column currently has. For example, to rename an INT NOT NULL column from b to a, do
+this:
+ALTER TABLE t1 CHANGE b a INT NOT NULL;
+RENAME COLUMN is more convenient to change the name without changing the definition because it
+requires only the old and new names:
+ALTER TABLE t1 RENAME COLUMN b TO a;
+In general, you cannot rename a column to a name that already exists in the table. However, this is
+sometimes not the case, such as when you swap names or move them through a cycle. If a table has
+columns named a, b, and c, these are valid operations:
+-- swap a and b
+ALTER TABLE t1 RENAME COLUMN a TO b,
+               RENAME COLUMN b TO a;
+-- "rotate" a, b, c through a cycle
+ALTER TABLE t1 RENAME COLUMN a TO b,
+               RENAME COLUMN b TO c,
+               RENAME COLUMN c TO a;
+For column definition changes using CHANGE or MODIFY, the definition must include the data type and
+all attributes that should apply to the new column, other than index attributes such as PRIMARY KEY
+or UNIQUE. Attributes present in the original definition but not specified for the new definition are not
+carried forward. Suppose that a column col1 is defined as INT UNSIGNED DEFAULT 1 COMMENT
+'my column' and you modify the column as follows, intending to change only INT to BIGINT:
+ALTER TABLE t1 MODIFY col1 BIGINT;
+That statement changes the data type from INT to BIGINT, but it also drops the UNSIGNED, DEFAULT,
+and COMMENT attributes. To retain them, the statement must include them explicitly:
+ALTER TABLE t1 MODIFY col1 BIGINT UNSIGNED DEFAULT 1 COMMENT 'my column';
+For data type changes using CHANGE or MODIFY, MySQL tries to convert existing column values to the
+new type as well as possible.
+Warning
+This conversion may result in alteration of data. For example, if you shorten
+a string column, values may be truncated. To prevent the operation from
+succeeding if conversions to the new data type would result in loss of data,
+enable strict SQL mode before using ALTER TABLE (see Section 7.1.11,
+“Server SQL Modes”).
+If you use CHANGE or MODIFY to shorten a column for which an index exists on the column, and the
+resulting column length is less than the index length, MySQL shortens the index automatically.
+For columns renamed by CHANGE or RENAME COLUMN, MySQL automatically renames these
+references to the renamed column:
+• Indexes that refer to the old column, including invisible indexes and disabled MyISAM indexes.
+• Foreign keys that refer to the old column.
+For columns renamed by CHANGE or RENAME COLUMN, MySQL does not automatically rename these
+references to the renamed column:
+• Generated column and partition expressions that refer to the renamed column. You must use
+CHANGE to redefine such expressions in the same ALTER TABLE statement as the one that renames
+the column.
+• Views and stored programs that refer to the renamed column. You must manually alter the definition
+of these objects to refer to the new column name.
+To reorder columns within a table, use FIRST and AFTER in CHANGE or MODIFY operations.
+ALTER ... SET DEFAULT or ALTER ... DROP DEFAULT specify a new default value for a column
+or remove the old default value, respectively. If the old default is removed and the column can be
+NULL, the new default is NULL. If the column cannot be NULL, MySQL assigns a default value as
+described in Section 13.6, “Data Type Default Values”.
+ALTER ... SET VISIBLE and ALTER ... SET INVISIBLE enable column visibility to be
+changed. See Section 15.1.20.10, “Invisible Columns”.
+Primary Keys and Indexes
+DROP PRIMARY KEY drops the primary key. If there is no primary key, an error occurs. For
+information about the performance characteristics of primary keys, especially for InnoDB tables, see
+Section 10.3.2, “Primary Key Optimization”.
+If the sql_require_primary_key system variable is enabled, attempting to drop a primary key
+produces an error.
+If you add a UNIQUE INDEX or PRIMARY KEY to a table, MySQL stores it before any nonunique index
+to permit detection of duplicate keys as early as possible.
+DROP INDEX removes an index. This is a MySQL extension to standard SQL. See Section 15.1.27,
+“DROP INDEX Statement”. To determine index names, use SHOW INDEX FROM tbl_name.
+Some storage engines permit you to specify an index type when creating an index. The syntax for
+the index_type specifier is USING type_name. For details about USING, see Section 15.1.15,
+“CREATE INDEX Statement”. The preferred position is after the column list. Expect support for use of
+the option before the column list to be removed in a future MySQL release.
+index_option values specify additional options for an index. USING is one such option. For details
+about permissible index_option values, see Section 15.1.15, “CREATE INDEX Statement”.
+RENAME INDEX old_index_name TO new_index_name renames an index. This is a MySQL
+extension to standard SQL. The content of the table remains unchanged. old_index_name must be
+the name of an existing index in the table that is not dropped by the same ALTER TABLE statement.
+new_index_name is the new index name, which cannot duplicate the name of an index in the resulting
+table after changes have been applied. Neither index name can be PRIMARY.
+If you use ALTER TABLE on a MyISAM table, all nonunique indexes are created in a separate batch
+(as for REPAIR TABLE). This should make ALTER TABLE much faster when you have many indexes.
+For MyISAM tables, key updating can be controlled explicitly. Use ALTER TABLE ... DISABLE
+KEYS to tell MySQL to stop updating nonunique indexes. Then use ALTER TABLE ... ENABLE
+KEYS to re-create missing indexes. MyISAM does this with a special algorithm that is much faster than
+inserting keys one by one, so disabling keys before performing bulk insert operations should give a
+considerable speedup. Using ALTER TABLE ... DISABLE KEYS requires the INDEX privilege in
+addition to the privileges mentioned earlier.
+While the nonunique indexes are disabled, they are ignored for statements such as SELECT and
+EXPLAIN that otherwise would use them.
+After an ALTER TABLE statement, it may be necessary to run ANALYZE TABLE to update index
+cardinality information. See Section 15.7.7.23, “SHOW INDEX Statement”.
+The ALTER INDEX operation permits an index to be made visible or invisible. An invisible index is
+not used by the optimizer. Modification of index visibility applies to indexes other than primary keys
+(either explicit or implicit), and cannot be performed using ALGORITHM=INSTANT. This feature is
+storage engine neutral (supported for any engine). For more information, see Section 10.3.12, “Invisible
+Indexes”.
+Foreign Keys and Other Constraints
+The FOREIGN KEY and REFERENCES clauses are supported by the InnoDB and NDB storage
+engines, which implement ADD [CONSTRAINT [symbol]] FOREIGN KEY [index_name] (...)
+REFERENCES ... (...). See Section 15.1.20.5, “FOREIGN KEY Constraints”. For other storage
+engines, the clauses are parsed but ignored.
+For ALTER TABLE, unlike CREATE TABLE, ADD FOREIGN KEY ignores index_name if given and
+uses an automatically generated foreign key name. As a workaround, include the CONSTRAINT clause
+to specify the foreign key name:
+ADD CONSTRAINT name FOREIGN KEY (....) ...
+Important
+MySQL silently ignores inline REFERENCES specifications, where the
+references are defined as part of the column specification. MySQL accepts
+only REFERENCES clauses defined as part of a separate FOREIGN KEY
+specification.
+Note
+Partitioned InnoDB tables do not support foreign keys. This restriction does not
+apply to NDB tables, including those explicitly partitioned by [LINEAR] KEY.
+For more information, see Section 26.6.2, “Partitioning Limitations Relating to
+Storage Engines”.
+MySQL Server and NDB Cluster both support the use of ALTER TABLE to drop foreign keys:
+ALTER TABLE tbl_name DROP FOREIGN KEY fk_symbol;
+Adding and dropping a foreign key in the same ALTER TABLE statement is supported for ALTER
+TABLE ... ALGORITHM=INPLACE but not for ALTER TABLE ... ALGORITHM=COPY.
+The server prohibits changes to foreign key columns that have the potential to cause loss of referential
+integrity. A workaround is to use ALTER TABLE ... DROP FOREIGN KEY before changing the
+column definition and ALTER TABLE ... ADD FOREIGN KEY afterward. Examples of prohibited
+changes include:
+• Changes to the data type of foreign key columns that may be unsafe. For example, changing
+VARCHAR(20) to VARCHAR(30) is permitted, but changing it to VARCHAR(1024) is not because
+that alters the number of length bytes required to store individual values.
+• Changing a NULL column to NOT NULL in non-strict mode is prohibited to prevent converting NULL
+values to default non-NULL values, for which there are no corresponding values in the referenced
+table. The operation is permitted in strict mode, but an error is returned if any such conversion is
+required.
+ALTER TABLE tbl_name RENAME new_tbl_name changes internally generated foreign
+key constraint names and user-defined foreign key constraint names that begin with the string
+“tbl_name_ibfk_” to reflect the new table name. InnoDB interprets foreign key constraint names that
+begin with the string “tbl_name_ibfk_” as internally generated names.
+ALTER TABLE permits CHECK constraints for existing tables to be added, dropped, or altered:
+• Add a new CHECK constraint:
+ALTER TABLE tbl_name
+    ADD [CONSTRAINT [symbol]] CHECK (expr) [[NOT] ENFORCED];
+The meaning of constraint syntax elements is the same as for CREATE TABLE. See
+Section 15.1.20.6, “CHECK Constraints”.
+• Drop an existing CHECK constraint named symbol:
+ALTER TABLE tbl_name
+    DROP CHECK symbol;
+• Alter whether an existing CHECK constraint named symbol is enforced:
+ALTER TABLE tbl_name
+    ALTER CHECK symbol [NOT] ENFORCED;
+The DROP CHECK and ALTER CHECK clauses are MySQL extensions to standard SQL.
+ALTER TABLE permits more general (and SQL standard) syntax for dropping and altering existing
+constraints of any type, where the constraint type is determined from the constraint name:
+• Drop an existing constraint named symbol:
+ALTER TABLE tbl_name
+    DROP CONSTRAINT symbol;
+If the sql_require_primary_key system variable is enabled, attempting to drop a primary key
+produces an error.
+• Alter whether an existing constraint named symbol is enforced:
+ALTER TABLE tbl_name
+    ALTER CONSTRAINT symbol [NOT] ENFORCED;
+Only CHECK constraints can be altered to be unenforced. All other constraint types are always
+enforced.
+The SQL standard specifies that all types of constraints (primary key, unique index, foreign key,
+check) belong to the same namespace. In MySQL, each constraint type has its own namespace per
+schema. Consequently, names for each type of constraint must be unique per schema, but constraints
+of different types can have the same name. When multiple constraints have the same name, DROP
+CONSTRAINT and ADD CONSTRAINT are ambiguous and an error occurs. In such cases, constraint-
+specific syntax must be used to modify the constraint. For example, use DROP PRIMARY KEY or
+DROP FOREIGN KEY to drop a primary key or foreign key.
+If a table alteration causes a violation of an enforced CHECK constraint, an error occurs and the table is
+not modified. Examples of operations for which an error occurs:
+• Attempts to add the AUTO_INCREMENT attribute to a column that is used in a CHECK constraint.
+• Attempts to add an enforced CHECK constraint or enforce a nonenforced CHECK constraint for which
+existing rows violate the constraint condition.
+• Attempts to modify, rename, or drop a column that is used in a CHECK constraint, unless that
+constraint is also dropped in the same statement. Exception: If a CHECK constraint refers only to a
+single column, dropping the column automatically drops the constraint.
+ALTER TABLE tbl_name RENAME new_tbl_name changes internally generated and user-defined
+CHECK constraint names that begin with the string “tbl_name_chk_” to reflect the new table name.
+MySQL interprets CHECK constraint names that begin with the string “tbl_name_chk_” as internally
+generated names.
+Changing the Character Set
+ To change the table default character set and all character columns (CHAR, VARCHAR, TEXT) to a new
+character set, use a statement like this:
+ALTER TABLE tbl_name CONVERT TO CHARACTER SET charset_name;
+The statement also changes the collation of all character columns. If you specify no COLLATE clause to
+indicate which collation to use, the statement uses default collation for the character set. If this collation
+is inappropriate for the intended table use (for example, if it would change from a case-sensitive
+collation to a case-insensitive collation), specify a collation explicitly.
+For a column that has a data type of VARCHAR or one of the TEXT types, CONVERT TO CHARACTER
+SET changes the data type as necessary to ensure that the new column is long enough to store as
+many characters as the original column. For example, a TEXT column has two length bytes, which
+store the byte-length of values in the column, up to a maximum of 65,535. For a latin1 TEXT column,
+each character requires a single byte, so the column can store up to 65,535 characters. If the column
+is converted to utf8mb4, each character might require up to 4 bytes, for a maximum possible length
+of 4 × 65,535 = 262,140 bytes. That length does not fit in a TEXT column's length bytes, so MySQL
+converts the data type to MEDIUMTEXT, which is the smallest string type for which the length bytes can
+record a value of 262,140. Similarly, a VARCHAR column might be converted to MEDIUMTEXT.
+To avoid data type changes of the type just described, do not use CONVERT TO CHARACTER SET.
+Instead, use MODIFY to change individual columns. For example:
+ALTER TABLE t MODIFY latin1_text_col TEXT CHARACTER SET utf8mb4;
+ALTER TABLE t MODIFY latin1_varchar_col VARCHAR(M) CHARACTER SET utf8mb4;
+If you specify CONVERT TO CHARACTER SET binary, the CHAR, VARCHAR, and TEXT columns are
+converted to their corresponding binary string types (BINARY, VARBINARY, BLOB). This means that the
+columns no longer have a character set and a subsequent CONVERT TO operation does not apply to
+them.
+If charset_name is DEFAULT in a CONVERT TO CHARACTER SET operation, the character set
+named by the character_set_database system variable is used.
+Warning
+The CONVERT TO operation converts column values between the original and
+named character sets. This is not what you want if you have a column in one
+character set (like latin1) but the stored values actually use some other,
+incompatible character set (like utf8mb4). In this case, you have to do the
+following for each such column:
+ALTER TABLE t1 CHANGE c1 c1 BLOB;
+ALTER TABLE t1 CHANGE c1 c1 TEXT CHARACTER SET utf8mb4;
+The reason this works is that there is no conversion when you convert to or from
+BLOB columns.
+To change only the default character set for a table, use this statement:
+ALTER TABLE tbl_name DEFAULT CHARACTER SET charset_name;
+The word DEFAULT is optional. The default character set is the character set that is used if you
+do not specify the character set for columns that you add to a table later (for example, with ALTER
+TABLE ... ADD column).
+When the foreign_key_checks system variable is enabled, which is the default setting, character
+set conversion is not permitted on tables that include a character string column used in a foreign key
+constraint. The workaround is to disable foreign_key_checks before performing the character set
+conversion. You must perform the conversion on both tables involved in the foreign key constraint
+before re-enabling foreign_key_checks. If you re-enable foreign_key_checks after converting
+only one of the tables, an ON DELETE CASCADE or ON UPDATE CASCADE operation could corrupt
+data in the referencing table due to implicit conversion that occurs during these operations (Bug
+#45290, Bug #74816).
+Importing InnoDB Tables
+An InnoDB table created in its own file-per-table tablespace can be imported from a backup or from
+another MySQL server instance using DISCARD TABLEPACE and IMPORT TABLESPACE clauses. See
+Section 17.6.1.3, “Importing InnoDB Tables”.
+Row Order for MyISAM Tables
+ORDER BY enables you to create the new table with the rows in a specific order. This option is useful
+primarily when you know that you query the rows in a certain order most of the time. By using this
+option after major changes to the table, you might be able to get higher performance. In some cases, it
+might make sorting easier for MySQL if the table is in order by the column that you want to order it by
+later.
+Note
+The table does not remain in the specified order after inserts and deletes.
+ORDER BY syntax permits one or more column names to be specified for sorting, each of which
+optionally can be followed by ASC or DESC to indicate ascending or descending sort order, respectively.
+The default is ascending order. Only column names are permitted as sort criteria; arbitrary expressions
+are not permitted. This clause should be given last after any other clauses.
+ORDER BY does not make sense for InnoDB tables because InnoDB always orders table rows
+according to the clustered index.
+When used on a partitioned table, ALTER TABLE ... ORDER BY orders rows within each partition
+only.
+Partitioning Options
+partition_options signifies options that can be used with partitioned tables for repartitioning, to
+add, drop, discard, import, merge, and split partitions, and to perform partitioning maintenance.
+It is possible for an ALTER TABLE statement to contain a PARTITION BY or REMOVE PARTITIONING
+clause in an addition to other alter specifications, but the PARTITION BY or REMOVE PARTITIONING
+clause must be specified last after any other specifications. The ADD PARTITION, DROP PARTITION,
+DISCARD PARTITION, IMPORT PARTITION, COALESCE PARTITION, REORGANIZE PARTITION,
+EXCHANGE PARTITION, ANALYZE PARTITION, CHECK PARTITION, and REPAIR PARTITION
+options cannot be combined with other alter specifications in a single ALTER TABLE, since the options
+just listed act on individual partitions.
+For more information about partition options, see Section 15.1.20, “CREATE TABLE Statement”, and
+Section 15.1.9.1, “ALTER TABLE Partition Operations”. For information about and examples of ALTER
+TABLE ... EXCHANGE PARTITION statements, see Section 26.3.3, “Exchanging Partitions and
+Subpartitions with Tables”.
+15.1.9.1 ALTER TABLE Partition Operations
+Partitioning-related clauses for ALTER TABLE can be used with partitioned tables for repartitioning, to
+add, drop, discard, import, merge, and split partitions, and to perform partitioning maintenance.
+• Simply using a partition_options clause with ALTER TABLE on a partitioned table repartitions
+the table according to the partitioning scheme defined by the partition_options. This clause
+always begins with PARTITION BY, and follows the same syntax and other rules as apply
+to the partition_options clause for CREATE TABLE (for more detailed information, see
+Section 15.1.20, “CREATE TABLE Statement”), and can also be used to partition an existing table
+that is not already partitioned. For example, consider a (nonpartitioned) table defined as shown here:
+CREATE TABLE t1 (
+    id INT,
+    year_col INT
+);
+This table can be partitioned by HASH, using the id column as the partitioning key, into 8 partitions
+by means of this statement:
+ALTER TABLE t1
+    PARTITION BY HASH(id)
+    PARTITIONS 8;
+MySQL supports an ALGORITHM option with [SUB]PARTITION BY [LINEAR] KEY.
+ALGORITHM=1 causes the server to use the same key-hashing functions as MySQL 5.1 when
+computing the placement of rows in partitions; ALGORITHM=2 means that the server employs the
+key-hashing functions implemented and used by default for new KEY partitioned tables in MySQL
+5.5 and later. (Partitioned tables created with the key-hashing functions employed in MySQL 5.5
+and later cannot be used by a MySQL 5.1 server.) Not specifying the option has the same effect
+as using ALGORITHM=2. This option is intended for use chiefly when upgrading or downgrading
+[LINEAR] KEY partitioned tables between MySQL 5.1 and later MySQL versions, or for creating
+tables partitioned by KEY or LINEAR KEY on a MySQL 5.5 or later server which can be used on a
+MySQL 5.1 server.
+The table that results from using an ALTER TABLE ... PARTITION BY statement must follow
+the same rules as one created using CREATE TABLE ... PARTITION BY. This includes the rules
+governing the relationship between any unique keys (including any primary key) that the table might
+have, and the column or columns used in the partitioning expression, as discussed in Section 26.6.1,
+“Partitioning Keys, Primary Keys, and Unique Keys”. The CREATE TABLE ... PARTITION BY
+rules for specifying the number of partitions also apply to ALTER TABLE ... PARTITION BY.
+The partition_definition clause for ALTER TABLE ADD PARTITION supports the same
+options as the clause of the same name for the CREATE TABLE statement. (See Section 15.1.20,
+“CREATE TABLE Statement”, for the syntax and description.) Suppose that you have the partitioned
+table created as shown here:
+CREATE TABLE t1 (
+    id INT,
+    year_col INT
+)
+PARTITION BY RANGE (year_col) (
+    PARTITION p0 VALUES LESS THAN (1991),
+    PARTITION p1 VALUES LESS THAN (1995),
+    PARTITION p2 VALUES LESS THAN (1999)
+);
+You can add a new partition p3 to this table for storing values less than 2002 as follows:
+ALTER TABLE t1 ADD PARTITION (PARTITION p3 VALUES LESS THAN (2002));
+DROP PARTITION can be used to drop one or more RANGE or LIST partitions. This statement
+cannot be used with HASH or KEY partitions; instead, use COALESCE PARTITION (see later in this
+section). Any data that was stored in the dropped partitions named in the partition_names list is
+discarded. For example, given the table t1 defined previously, you can drop the partitions named p0
+and p1 as shown here:
+ALTER TABLE t1 DROP PARTITION p0, p1;
+Note
+DROP PARTITION does not work with tables that use the NDB storage
+engine. See Section 26.3.1, “Management of RANGE and LIST Partitions”,
+and Section 25.2.7, “Known Limitations of NDB Cluster”.
+ADD PARTITION and DROP PARTITION do not currently support IF [NOT] EXISTS.
+The DISCARD PARTITION ... TABLESPACE and IMPORT PARTITION ... TABLESPACE
+options extend the Transportable Tablespace feature to individual InnoDB table partitions. Each
+InnoDB table partition has its own tablespace file (.ibd file). The Transportable Tablespace feature
+makes it easy to copy the tablespaces from a running MySQL server instance to another running
+instance, or to perform a restore on the same instance. Both options take a comma-separated list of
+one or more partition names. For example:
+ALTER TABLE t1 DISCARD PARTITION p2, p3 TABLESPACE;
+ALTER TABLE t1 IMPORT PARTITION p2, p3 TABLESPACE;
+When running DISCARD PARTITION ... TABLESPACE and IMPORT PARTITION ...
+TABLESPACE on subpartitioned tables, both partition and subpartition names are allowed. When a
+partition name is specified, subpartitions of that partition are included.
+The Transportable Tablespace feature also supports copying or restoring partitioned InnoDB tables.
+For more information, see Section 17.6.1.3, “Importing InnoDB Tables”.
+Renames of partitioned tables are supported. You can rename individual partitions indirectly using
+ALTER TABLE ... REORGANIZE PARTITION; however, this operation copies the partition's data.
+To delete rows from selected partitions, use the TRUNCATE PARTITION option. This option takes
+a list of one or more comma-separated partition names. Consider the table t1 created by this
+statement:
+CREATE TABLE t1 (
+    id INT,
+    year_col INT
+)
+PARTITION BY RANGE (year_col) (
+    PARTITION p0 VALUES LESS THAN (1991),
+    PARTITION p1 VALUES LESS THAN (1995),
+    PARTITION p2 VALUES LESS THAN (1999),
+    PARTITION p3 VALUES LESS THAN (2003),
+    PARTITION p4 VALUES LESS THAN (2007)
+);
+To delete all rows from partition p0, use the following statement:
+ALTER TABLE t1 TRUNCATE PARTITION p0;
+The statement just shown has the same effect as the following DELETE statement:
+DELETE FROM t1 WHERE year_col < 1991;
+When truncating multiple partitions, the partitions do not have to be contiguous: This can greatly
+simplify delete operations on partitioned tables that would otherwise require very complex WHERE
+conditions if done with DELETE statements. For example, this statement deletes all rows from
+partitions p1 and p3:
+ALTER TABLE t1 TRUNCATE PARTITION p1, p3;
+An equivalent DELETE statement is shown here:
+DELETE FROM t1 WHERE
+    (year_col >= 1991 AND year_col < 1995)
+    OR
+    (year_col >= 2003 AND year_col < 2007);
+If you use the ALL keyword in place of the list of partition names, the statement acts on all table
+partitions.
+TRUNCATE PARTITION merely deletes rows; it does not alter the definition of the table itself, or of
+any of its partitions.
+To verify that the rows were dropped, check the INFORMATION_SCHEMA.PARTITIONS table, using
+a query such as this one:
+SELECT PARTITION_NAME, TABLE_ROWS
+    FROM INFORMATION_SCHEMA.PARTITIONS
+    WHERE TABLE_NAME = 't1';
+COALESCE PARTITION can be used with a table that is partitioned by HASH or KEY to reduce the
+number of partitions by number. Suppose that you have created table t2 as follows:
+CREATE TABLE t2 (
+    name VARCHAR (30),
+    started DATE
+)
+PARTITION BY HASH( YEAR(started) )
+PARTITIONS 6;
+To reduce the number of partitions used by t2 from 6 to 4, use the following statement:
+ALTER TABLE t2 COALESCE PARTITION 2;
+The data contained in the last number partitions is merged into the remaining partitions. In this case,
+partitions 4 and 5 are merged into the first 4 partitions (the partitions numbered 0, 1, 2, and 3).
+To change some but not all the partitions used by a partitioned table, you can use REORGANIZE
+PARTITION. This statement can be used in several ways:
+• To merge a set of partitions into a single partition. This is done by naming several partitions in the
+partition_names list and supplying a single definition for partition_definition.
+• To split an existing partition into several partitions. Accomplish this by naming a single partition for
+partition_names and providing multiple partition_definitions.
+• To change the ranges for a subset of partitions defined using VALUES LESS THAN or the value
+lists for a subset of partitions defined using VALUES IN.
+Note
+For partitions that have not been explicitly named, MySQL automatically
+provides the default names p0, p1, p2, and so on. The same is true with
+regard to subpartitions.
+For more detailed information about and examples of ALTER TABLE ... REORGANIZE
+PARTITION statements, see Section 26.3.1, “Management of RANGE and LIST Partitions”.
+• To exchange a table partition or subpartition with a table, use the ALTER TABLE ... EXCHANGE
+PARTITION statement—that is, to move any existing rows in the partition or subpartition to the
+nonpartitioned table, and any existing rows in the nonpartitioned table to the table partition or
+subpartition.
+Once one or more columns have been added to a partitioned table using ALGORITHM=INSTANT, it is
+no longer possible to exchange partitions with that table.
+For usage information and examples, see Section 26.3.3, “Exchanging Partitions and Subpartitions
+with Tables”.
+• Several options provide partition maintenance and repair functionality analogous to that implemented
+for nonpartitioned tables by statements such as CHECK TABLE and REPAIR TABLE (which
+are also supported for partitioned tables; for more information, see Section 15.7.3, “Table
+Maintenance Statements”). These include ANALYZE PARTITION, CHECK PARTITION, OPTIMIZE
+PARTITION, REBUILD PARTITION, and REPAIR PARTITION. Each of these options takes a
+partition_names clause consisting of one or more names of partitions, separated by commas.
+The partitions must already exist in the target table. You can also use the ALL keyword in place of
+partition_names, in which case the statement acts on all table partitions. For more information
+and examples, see Section 26.3.4, “Maintenance of Partitions”.
+InnoDB does not currently support per-partition optimization; ALTER TABLE ... OPTIMIZE
+PARTITION causes the entire table to rebuilt and analyzed, and an appropriate warning to be
+issued. (Bug #11751825, Bug #42822) To work around this problem, use ALTER TABLE ...
+REBUILD PARTITION and ALTER TABLE ... ANALYZE PARTITION instead.
+The ANALYZE PARTITION, CHECK PARTITION, OPTIMIZE PARTITION, and REPAIR
+PARTITION options are not supported for tables which are not partitioned.
+• REMOVE PARTITIONING enables you to remove a table's partitioning without otherwise affecting the
+table or its data. This option can be combined with other ALTER TABLE options such as those used
+to add, drop, or rename columns or indexes.
+• Using the ENGINE option with ALTER TABLE changes the storage engine used by the table without
+affecting the partitioning. The target storage engine must provide its own partitioning handler. Only
+the InnoDB and NDB storage engines have native partitioning handlers.
+It is possible for an ALTER TABLE statement to contain a PARTITION BY or REMOVE PARTITIONING
+clause in an addition to other alter specifications, but the PARTITION BY or REMOVE PARTITIONING
+clause must be specified last after any other specifications.
+The ADD PARTITION, DROP PARTITION, COALESCE PARTITION, REORGANIZE PARTITION,
+ANALYZE PARTITION, CHECK PARTITION, and REPAIR PARTITION options cannot be combined
+with other alter specifications in a single ALTER TABLE, since the options just listed act on individual
+partitions. For more information, see Section 15.1.9.1, “ALTER TABLE Partition Operations”.
+Only a single instance of any one of the following options can be used in a given ALTER TABLE
+statement: PARTITION BY, ADD PARTITION, DROP PARTITION, TRUNCATE PARTITION,
+EXCHANGE PARTITION, REORGANIZE PARTITION, or COALESCE PARTITION, ANALYZE
+PARTITION, CHECK PARTITION, OPTIMIZE PARTITION, REBUILD PARTITION, REMOVE
+PARTITIONING.
+For example, the following two statements are invalid:
+ALTER TABLE t1 ANALYZE PARTITION p1, ANALYZE PARTITION p2;
+ALTER TABLE t1 ANALYZE PARTITION p1, CHECK PARTITION p2;
+In the first case, you can analyze partitions p1 and p2 of table t1 concurrently using a single statement
+with a single ANALYZE PARTITION option that lists both of the partitions to be analyzed, like this:
+ALTER TABLE t1 ANALYZE PARTITION p1, p2;
+In the second case, it is not possible to perform ANALYZE and CHECK operations on different partitions
+of the same table concurrently. Instead, you must issue two separate statements, like this:
+ALTER TABLE t1 ANALYZE PARTITION p1;
+ALTER TABLE t1 CHECK PARTITION p2;
+REBUILD operations are currently unsupported for subpartitions. The REBUILD keyword is expressly
+disallowed with subpartitions, and causes ALTER TABLE to fail with an error if so used.
+CHECK PARTITION and REPAIR PARTITION operations fail when the partition to be checked or
+repaired contains any duplicate key errors.
+For more information about these statements, see Section 26.3.4, “Maintenance of Partitions”.
+15.1.9.2 ALTER TABLE and Generated Columns
+ALTER TABLE operations permitted for generated columns are ADD, MODIFY, and CHANGE.
+• Generated columns can be added.
+CREATE TABLE t1 (c1 INT);
+ALTER TABLE t1 ADD COLUMN c2 INT GENERATED ALWAYS AS (c1 + 1) STORED;
+• The data type and expression of generated columns can be modified.
+CREATE TABLE t1 (c1 INT, c2 INT GENERATED ALWAYS AS (c1 + 1) STORED);
+ALTER TABLE t1 MODIFY COLUMN c2 TINYINT GENERATED ALWAYS AS (c1 + 5) STORED;
+• Generated columns can be renamed or dropped, if no other column refers to them.
+CREATE TABLE t1 (c1 INT, c2 INT GENERATED ALWAYS AS (c1 + 1) STORED);
+ALTER TABLE t1 CHANGE c2 c3 INT GENERATED ALWAYS AS (c1 + 1) STORED;
+ALTER TABLE t1 DROP COLUMN c3;
+• Virtual generated columns cannot be altered to stored generated columns, or vice versa. To work
+around this, drop the column, then add it with the new definition.
+CREATE TABLE t1 (c1 INT, c2 INT GENERATED ALWAYS AS (c1 + 1) VIRTUAL);
+ALTER TABLE t1 DROP COLUMN c2;
+ALTER TABLE t1 ADD COLUMN c2 INT GENERATED ALWAYS AS (c1 + 1) STORED;
+• Nongenerated columns can be altered to stored but not virtual generated columns.
+CREATE TABLE t1 (c1 INT, c2 INT);
+ALTER TABLE t1 MODIFY COLUMN c2 INT GENERATED ALWAYS AS (c1 + 1) STORED;
+• Stored but not virtual generated columns can be altered to nongenerated columns. The stored
+generated values become the values of the nongenerated column.
+CREATE TABLE t1 (c1 INT, c2 INT GENERATED ALWAYS AS (c1 + 1) STORED);
+ALTER TABLE t1 MODIFY COLUMN c2 INT;
+• ADD COLUMN is not an in-place operation for stored columns (done without using a temporary table)
+because the expression must be evaluated by the server. For stored columns, indexing changes are
+done in place, and expression changes are not done in place. Changes to column comments are
+done in place.
+• For non-partitioned tables, ADD COLUMN and DROP COLUMN are in-place operations for virtual
+columns. However, adding or dropping a virtual column cannot be performed in place in combination
+with other ALTER TABLE operations.
+For partitioned tables, ADD COLUMN and DROP COLUMN are not in-place operations for virtual
+columns.
+• InnoDB supports secondary indexes on virtual generated columns. Adding or dropping a
+secondary index on a virtual generated column is an in-place operation. For more information, see
+Section 15.1.20.9, “Secondary Indexes and Generated Columns”.
+• When a VIRTUAL generated column is added to a table or modified, it is not ensured that data being
+calculated by the generated column expression is not out of range for the column. This can lead to
+inconsistent data being returned and unexpectedly failed statements. To permit control over whether
+validation occurs for such columns, ALTER TABLE supports WITHOUT VALIDATION and WITH
+VALIDATION clauses:
+• With WITHOUT VALIDATION (the default if neither clause is specified), an in-place operation is
+performed (if possible), data integrity is not checked, and the statement finishes more quickly.
+However, later reads from the table might report warnings or errors for the column if values are out
+of range.
+• With WITH VALIDATION, ALTER TABLE copies the table. If an out-of-range or any other error
+occurs, the statement fails. Because a table copy is performed, the statement takes longer.
+WITHOUT VALIDATION and WITH VALIDATION are permitted only with ADD COLUMN, CHANGE
+COLUMN, and MODIFY COLUMN operations. Otherwise, an ER_WRONG_USAGE error occurs.
+• If expression evaluation causes truncation or provides incorrect input to a function, the ALTER
+TABLE statement terminates with an error and the DDL operation is rejected.
+• An ALTER TABLE statement that changes the default value of a column col_name may also
+change the value of a generated column expression that refers to the column using col_name,
+which may change the value of a generated column expression that refers to the column using
+DEFAULT(col_name). For this reason, ALTER TABLE operations that change the definition of a
+column cause a table rebuild if any generated column expression uses DEFAULT().
+15.1.9.3 ALTER TABLE Examples
+Begin with a table t1 created as shown here:
+CREATE TABLE t1 (a INTEGER, b CHAR(10));
+To rename the table from t1 to t2:
+ALTER TABLE t1 RENAME t2;
+To change column a from INTEGER to TINYINT NOT NULL (leaving the name the same), and to
+change column b from CHAR(10) to CHAR(20) as well as renaming it from b to c:
+ALTER TABLE t2 MODIFY a TINYINT NOT NULL, CHANGE b c CHAR(20);
+To add a new TIMESTAMP column named d:
+ALTER TABLE t2 ADD d TIMESTAMP;
+To add an index on column d and a UNIQUE index on column a:
+ALTER TABLE t2 ADD INDEX (d), ADD UNIQUE (a);
+To remove column c:
+ALTER TABLE t2 DROP COLUMN c;
+To add a new AUTO_INCREMENT integer column named c:
+ALTER TABLE t2 ADD c INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  ADD PRIMARY KEY (c);
+We indexed c (as a PRIMARY KEY) because AUTO_INCREMENT columns must be indexed, and we
+declare c as NOT NULL because primary key columns cannot be NULL.
+For NDB tables, it is also possible to change the storage type used for a table or column. For example,
+consider an NDB table created as shown here:
+mysql> CREATE TABLE t1 (c1 INT) TABLESPACE ts_1 ENGINE NDB;
+Query OK, 0 rows affected (1.27 sec)
+To convert this table to disk-based storage, you can use the following ALTER TABLE statement:
+mysql> ALTER TABLE t1 TABLESPACE ts_1 STORAGE DISK;
+Query OK, 0 rows affected (2.99 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+mysql> SHOW CREATE TABLE t1\G
+*************************** 1. row ***************************
+       Table: t1
+Create Table: CREATE TABLE `t1` (
+  `c1` int(11) DEFAULT NULL
+) /*!50100 TABLESPACE ts_1 STORAGE DISK */
+ENGINE=ndbcluster DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+1 row in set (0.01 sec)
+It is not necessary that the tablespace was referenced when the table was originally created; however,
+the tablespace must be referenced by the ALTER TABLE:
+mysql> CREATE TABLE t2 (c1 INT) ts_1 ENGINE NDB;
+Query OK, 0 rows affected (1.00 sec)
+mysql> ALTER TABLE t2 STORAGE DISK;
+ERROR 1005 (HY000): Can't create table 'c.#sql-1750_3' (errno: 140)
+mysql> ALTER TABLE t2 TABLESPACE ts_1 STORAGE DISK;
+Query OK, 0 rows affected (3.42 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+mysql> SHOW CREATE TABLE t2\G
+*************************** 1. row ***************************
+       Table: t1
+Create Table: CREATE TABLE `t2` (
+  `c1` int(11) DEFAULT NULL
+) /*!50100 TABLESPACE ts_1 STORAGE DISK */
+ENGINE=ndbcluster DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+1 row in set (0.01 sec)
+To change the storage type of an individual column, you can use ALTER TABLE ... MODIFY
+[COLUMN]. For example, suppose you create an NDB Cluster Disk Data table with two columns, using
+this CREATE TABLE statement:
+mysql> CREATE TABLE t3 (c1 INT, c2 INT)
+    ->     TABLESPACE ts_1 STORAGE DISK ENGINE NDB;
+Query OK, 0 rows affected (1.34 sec)
+To change column c2 from disk-based to in-memory storage, include a STORAGE MEMORY clause in
+the column definition used by the ALTER TABLE statement, as shown here:
+mysql> ALTER TABLE t3 MODIFY c2 INT STORAGE MEMORY;
+Query OK, 0 rows affected (3.14 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+You can make an in-memory column into a disk-based column by using STORAGE DISK in a similar
+fashion.
+Column c1 uses disk-based storage, since this is the default for the table (determined by the table-
+level STORAGE DISK clause in the CREATE TABLE statement). However, column c2 uses in-memory
+storage, as can be seen here in the output of SHOW CREATE TABLE:
+mysql> SHOW CREATE TABLE t3\G
+*************************** 1. row ***************************
+       Table: t3
+Create Table: CREATE TABLE `t3` (
+  `c1` int(11) DEFAULT NULL,
+  `c2` int(11) /*!50120 STORAGE MEMORY */ DEFAULT NULL
+) /*!50100 TABLESPACE ts_1 STORAGE DISK */ ENGINE=ndbcluster DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_09
+1 row in set (0.02 sec)
+When you add an AUTO_INCREMENT column, column values are filled in with sequence numbers
+automatically. For MyISAM tables, you can set the first sequence number by executing SET
+INSERT_ID=value before ALTER TABLE or by using the AUTO_INCREMENT=value table option.
+With MyISAM tables, if you do not change the AUTO_INCREMENT column, the sequence number is not
+affected. If you drop an AUTO_INCREMENT column and then add another AUTO_INCREMENT column,
+the numbers are resequenced beginning with 1.
+When replication is used, adding an AUTO_INCREMENT column to a table might not produce the
+same ordering of the rows on the replica and the source. This occurs because the order in which the
+rows are numbered depends on the specific storage engine used for the table and the order in which
+the rows were inserted. If it is important to have the same order on the source and replica, the rows
+must be ordered before assigning an AUTO_INCREMENT number. Assuming that you want to add an
+AUTO_INCREMENT column to the table t1, the following statements produce a new table t2 identical to
+t1 but with an AUTO_INCREMENT column:
+CREATE TABLE t2 (id INT AUTO_INCREMENT PRIMARY KEY)
+SELECT * FROM t1 ORDER BY col1, col2;
+This assumes that the table t1 has columns col1 and col2.
+This set of statements also produces a new table t2 identical to t1, with the addition of an
+AUTO_INCREMENT column:
+CREATE TABLE t2 LIKE t1;
+ALTER TABLE t2 ADD id INT AUTO_INCREMENT PRIMARY KEY;
+INSERT INTO t2 SELECT * FROM t1 ORDER BY col1, col2;
+Important
+To guarantee the same ordering on both source and replica, all columns of t1
+must be referenced in the ORDER BY clause.
+Regardless of the method used to create and populate the copy having the AUTO_INCREMENT column,
+the final step is to drop the original table and then rename the copy:
+DROP TABLE t1;
+ALTER TABLE t2 RENAME t1;

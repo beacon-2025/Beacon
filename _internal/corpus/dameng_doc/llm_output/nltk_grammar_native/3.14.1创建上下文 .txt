@@ -1,0 +1,14 @@
+```plaintext
+CREATE_CONTEXT -> 'CREATE' OR_REPLACE 'CONTEXT' NAMESPACE 'USING' SCHEMA_NAME '.' PACKAGE_NAME
+OR_REPLACE -> 'OR REPLACE' | ''
+NAMESPACE -> 'namespace_name_1'
+SCHEMA_NAME -> 'schemaname_name_1'
+PACKAGE_NAME -> 'packagename_name_1'
+
+SYS_CONTEXT -> 'SYS_CONTEXT' '(' 'namespace_value' ',' 'parameter_value' ',' 'length_value' ')'
+namespace_value -> 'namespace_name_1'
+parameter_value -> 'parameter_name_1'
+length_value -> 'int_value'
+
+USERENV_ATTRIBUTES -> 'CURRENT_SCHEMA' | 'CURRENT_SCHEMAID' | 'CURRENT_USER' | 'CURRENT_USERID' | 'DB_NAME' | 'HOST' | 'INSTANCE_NAME' | 'IP_ADDRESS' | 'ISDBA' | 'LANG' | 'LANGUAGE' | 'NETWORK_PROTOCOL' | 'SERVER_HOST' | 'SESSION_USER' | 'SESSION_USERID' | 'SID'
+```

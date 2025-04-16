@@ -1,0 +1,2 @@
+
+SELECT GET_LOCK('mysqltest_lock', 100)

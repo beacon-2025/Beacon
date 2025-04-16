@@ -1,0 +1,2 @@
+
+create table `#mysql50#q.q` (f1 int primary key) engine=innodb

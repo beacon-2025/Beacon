@@ -1,0 +1,141 @@
+-- 公共前置语句：创建表和插入数据
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    salary DECIMAL(10, 2)
+);
+INSERT INTO employees (employee_id, first_name, last_name, salary) VALUES (1, 'John', 'Doe', 50000.00);
+INSERT INTO employees (employee_id, first_name, last_name, salary) VALUES (2, 'Jane', 'Smith', 60000.00);
+CREATE TABLE departments (
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(50)
+);
+INSERT INTO departments (department_id, department_name) VALUES (1, 'HR');
+INSERT INTO departments (department_id, department_name) VALUES (2, 'IT');
+-- 测试用例 1: 创建一个简单的包规范，包含变量定义
+CREATE OR REPLACE PACKAGE employee_pkg AS
+    emp_id employees.employee_id%TYPE;
+emp_name employees.first_name%TYPE;
+emp_salary employees.salary%TYPE;
+END employee_pkg;
+-- 测试用例 2: 创建一个包规范，包含游标定义
+CREATE OR REPLACE PACKAGE department_pkg AS
+    CURSOR dept_cursor IS SELECT * FROM departments;
+END department_pkg;
+-- 测试用例 3: 创建一个包规范，包含异常定义
+CREATE OR REPLACE PACKAGE exception_pkg AS
+    invalid_employee EXCEPTION FOR -20001;
+END exception_pkg;
+-- 测试用例 4: 创建一个包规范，包含过程定义
+CREATE OR REPLACE PACKAGE procedure_pkg AS
+    PROCEDURE update_salary(emp_id IN INT, new_salary IN DECIMAL);
+END procedure_pkg;
+-- 测试用例 5: 创建一个包规范，包含函数定义
+CREATE OR REPLACE PACKAGE function_pkg AS
+    FUNCTION get_employee_name(emp_id IN INT) RETURN VARCHAR;
+END function_pkg;
+-- 测试用例 6: 创建一个包规范，包含类型定义
+CREATE OR REPLACE PACKAGE type_pkg AS
+    TYPE employee_record IS RECORD (
+        emp_id employees.employee_id%TYPE,
+        emp_name employees.first_name%TYPE,
+        emp_salary employees.salary%TYPE
+    );
+END type_pkg;
+-- 测试用例 7: 创建一个包规范，包含多个声明
+CREATE OR REPLACE PACKAGE multi_declare_pkg AS
+    emp_id employees.employee_id%TYPE;
+CURSOR emp_cursor IS SELECT * FROM employees;
+invalid_employee EXCEPTION FOR -20001;
+PROCEDURE update_salary(emp_id IN INT, new_salary IN DECIMAL);
+FUNCTION get_employee_name(emp_id IN INT) RETURN VARCHAR;
+TYPE employee_record IS RECORD (
+        emp_id employees.employee_id%TYPE,
+        emp_name employees.first_name%TYPE,
+        emp_salary employees.salary%TYPE
+    );
+END multi_declare_pkg;
+-- 测试用例 8: 创建一个包规范，使用 WITH ENCRYPTION 选项
+CREATE OR REPLACE PACKAGE encrypted_pkg WITH ENCRYPTION AS
+    emp_id employees.employee_id%TYPE;
+END encrypted_pkg;
+-- 测试用例 9: 创建一个包规范，使用 AUTHID CURRENT_USER 选项
+CREATE OR REPLACE PACKAGE current_user_pkg AUTHID CURRENT_USER AS
+    emp_id employees.employee_id%TYPE;
+END current_user_pkg;
+-- 测试用例 10: 创建一个包规范，使用 AUTHID DEFINER 选项
+CREATE OR REPLACE PACKAGE definer_pkg AUTHID DEFINER AS
+    emp_id employees.employee_id%TYPE;
+END definer_pkg;
+-- 测试用例 11: 创建一个包规范，包含默认值的变量定义
+CREATE OR REPLACE PACKAGE default_value_pkg AS
+    emp_id employees.employee_id%TYPE := 1;
+emp_name employees.first_name%TYPE := 'John';
+emp_salary employees.salary%TYPE := 50000.00;
+END default_value_pkg;
+-- 测试用例 12: 创建一个包规范，包含记录类型定义
+CREATE OR REPLACE PACKAGE record_type_pkg AS
+    TYPE employee_record IS RECORD (
+        emp_id employees.employee_id%TYPE,
+        emp_name employees.first_name%TYPE,
+        emp_salary employees.salary%TYPE
+    );
+END record_type_pkg;
+-- 测试用例 13: 创建一个包规范，包含多个变量定义
+CREATE OR REPLACE PACKAGE multi_variable_pkg AS
+    emp_id1 employees.employee_id%TYPE;
+emp_id2 employees.employee_id%TYPE;
+emp_name1 employees.first_name%TYPE;
+emp_name2 employees.first_name%TYPE;
+END multi_variable_pkg;
+-- 测试用例 14: 创建一个包规范，包含多个游标定义
+CREATE OR REPLACE PACKAGE multi_cursor_pkg AS
+    CURSOR emp_cursor1 IS SELECT * FROM employees;
+CURSOR emp_cursor2 IS SELECT * FROM employees WHERE salary > 50000;
+END multi_cursor_pkg;
+-- 测试用例 15: 创建一个包规范，包含多个异常定义
+CREATE OR REPLACE PACKAGE multi_exception_pkg AS
+    invalid_employee1 EXCEPTION FOR -20001;
+invalid_employee2 EXCEPTION FOR -20002;
+END multi_exception_pkg;
+-- 测试用例 16: 创建一个包规范，包含多个过程定义
+CREATE OR REPLACE PACKAGE multi_procedure_pkg AS
+    PROCEDURE update_salary1(emp_id IN INT, new_salary IN DECIMAL);
+PROCEDURE update_salary2(emp_id IN INT, new_salary IN DECIMAL);
+END multi_procedure_pkg;
+-- 测试用例 17: 创建一个包规范，包含多个函数定义
+CREATE OR REPLACE PACKAGE multi_function_pkg AS
+    FUNCTION get_employee_name1(emp_id IN INT) RETURN VARCHAR;
+FUNCTION get_employee_name2(emp_id IN INT) RETURN VARCHAR;
+END multi_function_pkg;
+-- 测试用例 18: 创建一个包规范，包含多个类型定义
+CREATE OR REPLACE PACKAGE multi_type_pkg AS
+    TYPE employee_record1 IS RECORD (
+        emp_id employees.employee_id%TYPE,
+        emp_name employees.first_name%TYPE,
+        emp_salary employees.salary%TYPE
+    );
+TYPE employee_record2 IS RECORD (
+        emp_id employees.employee_id%TYPE,
+        emp_name employees.first_name%TYPE,
+        emp_salary employees.salary%TYPE
+    );
+END multi_type_pkg;
+-- 测试用例 19: 创建一个包规范，包含所有可能的声明
+CREATE OR REPLACE PACKAGE all_declare_pkg AS
+    emp_id employees.employee_id%TYPE;
+CURSOR emp_cursor IS SELECT * FROM employees;
+invalid_employee EXCEPTION FOR -20001;
+PROCEDURE update_salary(emp_id IN INT, new_salary IN DECIMAL);
+FUNCTION get_employee_name(emp_id IN INT) RETURN VARCHAR;
+TYPE employee_record IS RECORD (
+        emp_id employees.employee_id%TYPE,
+        emp_name employees.first_name%TYPE,
+        emp_salary employees.salary%TYPE
+    );
+END all_declare_pkg;
+-- 测试用例 20: 创建一个包规范，使用不同的模式名
+CREATE OR REPLACE PACKAGE schema_name.pkg_with_schema AS
+    emp_id employees.employee_id%TYPE;
+END schema_name.pkg_with_schema

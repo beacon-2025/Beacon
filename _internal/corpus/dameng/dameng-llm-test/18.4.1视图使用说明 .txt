@@ -1,0 +1,49 @@
+-- 公共前置语句：创建基础表
+CREATE TABLE table1 (
+    id INT PRIMARY KEY,
+    c1 TEXT,
+    c2 TEXT
+);
+CREATE TABLE table2 (
+    id INT PRIMARY KEY,
+    c1 TEXT,
+    c2 TEXT
+);
+CREATE TABLE table3 (
+    id INT PRIMARY KEY,
+    c1 TEXT,
+    c2 TEXT,
+    c3 TEXT GENERATED ALWAYS AS (c1 || c2) VIRTUAL
+);
+-- 测试用例1: 当JSON列的IS JSON约束被失效后，该列仍然在视图中显示
+ALTER TABLE table1 ADD CONSTRAINT chk_json_c1 CHECK (c1 IS JSON);
+ALTER TABLE table1 DROP CONSTRAINT chk_json_c1;
+CREATE VIEW view1 AS SELECT * FROM table1;
+-- 测试用例2: 当 IS JSON 涉及多列时，则所有涉及的列均在视图中显示
+ALTER TABLE table1 ADD CONSTRAINT chk_json_c1_c2 CHECK (c1 || c2 IS JSON);
+CREATE VIEW view2 AS SELECT * FROM table1;
+-- 测试用例3: 如果IS JSON与其他约束进行AND运算时，则所有涉及的列均在视图中显示
+ALTER TABLE table1 ADD CONSTRAINT chk_json_and_c1_c2 CHECK (c1 IS JSON AND c2 = '1');
+CREATE VIEW view3 AS SELECT * FROM table1;
+-- 测试用例4: 如果 IS JSON 与其他约束进行OR运算时，则所有列均不在视图中显示
+ALTER TABLE table1 ADD CONSTRAINT chk_json_or_c1_c2 CHECK (c1 IS JSON OR c2 < '1000');
+CREATE VIEW view4 AS SELECT * FROM table1;
+-- 测试用例5: 如果IS NOT JSON作为CHECK约束时，则该列不在视图中显示
+ALTER TABLE table1 ADD CONSTRAINT chk_not_json_c1 CHECK (c1 IS NOT JSON);
+CREATE VIEW view5 AS SELECT * FROM table1;
+-- 测试用例6: 如果NOT IS JSON作为CHECK约束时，则该列也不能在视图中显示
+ALTER TABLE table1 ADD CONSTRAINT chk_not_is_json_c2 CHECK (NOT (c2 IS JSON));
+CREATE VIEW view6 AS SELECT * FROM table1;
+-- 测试用例7: 当虚拟列相关的实际列使用 IS JSON 作为 CHECK 约束时，该虚拟列不在视图中显示
+ALTER TABLE table3 ADD CONSTRAINT chk_json_c1_c2 CHECK (c1 IS JSON AND c2 IS JSON);
+CREATE VIEW view7 AS SELECT * FROM table3;
+-- 测试用例8: 当虚拟列使用 IS JSON 作为 CHECK 约束时，仅该虚拟列在视图中显示，实际列则不在视图中显示
+ALTER TABLE table3 ADD CONSTRAINT chk_json_c3 CHECK (c3 IS JSON);
+CREATE VIEW view8 AS SELECT * FROM table3;
+-- 测试用例9: 多列IS JSON约束，且与其他约束组合
+ALTER TABLE table2 ADD CONSTRAINT chk_json_c1_c2 CHECK (c1 IS JSON AND c2 IS JSON);
+ALTER TABLE table2 ADD CONSTRAINT chk_c1_value CHECK (c1 = 'value');
+CREATE VIEW view9 AS SELECT * FROM table2;
+-- 测试用例10: 多列IS JSON约束，且与其他约束组合（OR运算）
+ALTER TABLE table2 ADD CONSTRAINT chk_json_or_c1_c2 CHECK (c1 IS JSON OR c2 IS JSON);
+CREATE VIEW view10 AS SELECT * FROM table2

@@ -1,0 +1,63 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+-- 创建表
+CREATE TABLE schema1.table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+-- 创建触发器
+CREATE TRIGGER schema1.trigger1
+AFTER INSERT ON schema1.table1
+FOR EACH ROW
+BEGIN
+    -- 触发器逻辑
+    UPDATE schema1.table1 SET name = 'Triggered' WHERE id = NEW.id;
+END;
+-- 用例1: 禁用触发器
+ALTER TRIGGER schema1.trigger1 DISABLE;
+-- 用例2: 启用触发器
+ALTER TRIGGER schema1.trigger1 ENABLE;
+-- 用例3: 创建另一个触发器并禁用
+CREATE TRIGGER schema1.trigger2
+AFTER UPDATE ON schema1.table1
+FOR EACH ROW
+BEGIN
+    -- 触发器逻辑
+    UPDATE schema1.table1 SET name = 'Updated' WHERE id = NEW.id;
+END;
+ALTER TRIGGER schema1.trigger2 DISABLE;
+-- 用例4: 启用另一个触发器
+ALTER TRIGGER schema1.trigger2 ENABLE;
+-- 用例5: 创建第三个触发器并禁用
+CREATE TRIGGER schema1.trigger3
+AFTER DELETE ON schema1.table1
+FOR EACH ROW
+BEGIN
+    -- 触发器逻辑
+    DELETE FROM schema1.table1 WHERE id = OLD.id;
+END;
+ALTER TRIGGER schema1.trigger3 DISABLE;
+-- 用例6: 启用第三个触发器
+ALTER TRIGGER schema1.trigger3 ENABLE;
+-- 用例7: 创建第四个触发器并禁用
+CREATE TRIGGER schema1.trigger4
+BEFORE INSERT ON schema1.table1
+FOR EACH ROW
+BEGIN
+    -- 触发器逻辑
+    SET NEW.name = 'Before Insert';
+END;
+ALTER TRIGGER schema1.trigger4 DISABLE;
+-- 用例8: 启用第四个触发器
+ALTER TRIGGER schema1.trigger4 ENABLE;
+-- 用例9: 创建第五个触发器并禁用
+CREATE TRIGGER schema1.trigger5
+BEFORE UPDATE ON schema1.table1
+FOR EACH ROW
+BEGIN
+    -- 触发器逻辑
+    SET NEW.name = 'Before Update';
+END;
+ALTER TRIGGER schema1.trigger5 DISABLE;
+-- 用例10: 启用第五个触发器
+ALTER TRIGGER schema1.trigger5 ENABLE

@@ -1,0 +1,7 @@
+```plaintext
+DROP_VIEW -> 'DROP' 'VIEW' IF_EXISTS SCHEMA_NAME '.' VIEW_NAME DROP_OPTION
+IF_EXISTS -> 'IF EXISTS' | ''
+SCHEMA_NAME -> 'schemaname_1' | ''
+VIEW_NAME -> 'viewname_1'
+DROP_OPTION -> 'RESTRICT' | 'CASCADE' | ''
+```

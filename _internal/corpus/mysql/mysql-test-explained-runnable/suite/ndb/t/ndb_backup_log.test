@@ -1,0 +1,3 @@
+
+
+create table txt (a varbinary(36000))

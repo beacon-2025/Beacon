@@ -1,0 +1,14 @@
+-- 公共前置语句：无
+-- 由于所有测试用例都是独立的会话设置，不需要任何前置语句。;
+-- 测试用例 1: 设置当前会话的自然语言排序方式为 BINARY
+ALTER SESSION SET NLS_SORT=BINARY;
+-- 测试用例 2: 设置当前会话的自然语言排序方式为 SCHINESE_PINYIN_M
+ALTER SESSION SET NLS_SORT=SCHINESE_PINYIN_M;
+-- 测试用例 3: 设置当前会话的自然语言排序方式为 SCHINESE_STROKE_M
+ALTER SESSION SET NLS_SORT=SCHINESE_STROKE_M;
+-- 测试用例 4: 设置当前会话的自然语言排序方式为 SCHINESE_RADICAL_M
+ALTER SESSION SET NLS_SORT=SCHINESE_RADICAL_M;
+-- 测试用例 5: 设置当前会话的自然语言排序方式为 THAI_CI_AS
+ALTER SESSION SET NLS_SORT=THAI_CI_AS;
+-- 测试用例 6: 设置当前会话的自然语言排序方式为 KOREAN_M
+ALTER SESSION SET NLS_SORT=KOREAN_M

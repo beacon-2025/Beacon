@@ -1,0 +1,187 @@
+-- 创建测试表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+-- 创建测试表2
+CREATE TABLE test_table2 (
+    id INT PRIMARY KEY,
+    description VARCHAR(100)
+);
+-- 创建测试视图
+CREATE VIEW test_view1 AS
+SELECT id, name FROM test_table1;
+-- 测试用例1: 创建表触发器并替换
+CREATE OR REPLACE TRIGGER trigger1
+BEFORE INSERT ON test_table1
+FOR EACH ROW
+BEGIN
+    -- 触发器逻辑
+END;
+CREATE OR REPLACE TRIGGER trigger1
+BEFORE UPDATE ON test_table1
+FOR EACH ROW
+BEGIN
+    -- 替换触发器逻辑
+END;
+-- 测试用例2: 创建事件触发器并替换
+CREATE OR REPLACE TRIGGER event_trigger1
+AFTER CREATE ON SCHEMA
+BEGIN
+    -- 触发器逻辑
+END;
+CREATE OR REPLACE TRIGGER event_trigger1
+AFTER DROP ON SCHEMA
+BEGIN
+    -- 替换触发器逻辑
+END;
+-- 测试用例3: 创建表触发器并替换，基于不同的表
+CREATE OR REPLACE TRIGGER trigger2
+BEFORE INSERT ON test_table2
+FOR EACH ROW
+BEGIN
+    -- 触发器逻辑
+END;
+-- 尝试替换触发器，基于不同的表（应报错）
+CREATE OR REPLACE TRIGGER trigger2
+BEFORE INSERT ON test_table1
+FOR EACH ROW
+BEGIN
+    -- 替换触发器逻辑
+END;
+-- 测试用例4: 创建事件触发器并替换，触发对象名变化（应报错）
+CREATE OR REPLACE TRIGGER event_trigger2
+AFTER CREATE ON DATABASE
+BEGIN
+    -- 触发器逻辑
+END;
+CREATE OR REPLACE TRIGGER event_trigger2
+AFTER CREATE ON SCHEMA
+BEGIN
+    -- 替换触发器逻辑
+END;
+-- 测试用例5: 创建事件触发器并替换，触发模式变化（应报错）
+CREATE OR REPLACE TRIGGER event_trigger3
+AFTER CREATE ON SCHEMA
+BEGIN
+    -- 触发器逻辑
+END;
+CREATE OR REPLACE TRIGGER event_trigger3
+AFTER DROP ON SCHEMA
+BEGIN
+    -- 替换触发器逻辑
+END;
+-- 测试用例6: 创建事件触发器并替换，事件类型变化（应报错）
+CREATE OR REPLACE TRIGGER event_trigger4
+AFTER CREATE ON SCHEMA
+BEGIN
+    -- 触发器逻辑
+END;
+CREATE OR REPLACE TRIGGER event_trigger4
+AFTER ALTER ON SCHEMA
+BEGIN
+    -- 替换触发器逻辑
+END;
+-- 测试用例7: 创建事件触发器并替换，事件类型为AUDIT
+CREATE OR REPLACE TRIGGER event_trigger5
+AFTER AUDIT ON SCHEMA
+BEGIN
+    -- 触发器逻辑
+END;
+CREATE OR REPLACE TRIGGER event_trigger5
+AFTER NOAUDIT ON SCHEMA
+BEGIN
+    -- 替换触发器逻辑
+END;
+-- 测试用例8: 创建事件触发器并替换，事件类型为PRIV
+CREATE OR REPLACE TRIGGER event_trigger6
+AFTER GRANT ON SCHEMA
+BEGIN
+    -- 触发器逻辑
+END;
+CREATE OR REPLACE TRIGGER event_trigger6
+AFTER REVOKE ON SCHEMA
+BEGIN
+    -- 替换触发器逻辑
+END;
+-- 测试用例9: 创建事件触发器并替换，事件类型为LOGIN
+CREATE OR REPLACE TRIGGER event_trigger7
+AFTER LOGIN ON SCHEMA
+BEGIN
+    -- 触发器逻辑
+END;
+CREATE OR REPLACE TRIGGER event_trigger7
+AFTER LOGOUT ON SCHEMA
+BEGIN
+    -- 替换触发器逻辑
+END;
+-- 测试用例10: 创建事件触发器并替换，事件类型为SERVER
+CREATE OR REPLACE TRIGGER event_trigger8
+AFTER SERVER ON SCHEMA
+BEGIN
+    -- 触发器逻辑
+END;
+CREATE OR REPLACE TRIGGER event_trigger8
+AFTER SERVER ON SCHEMA
+BEGIN
+    -- 替换触发器逻辑
+END;
+-- 测试用例11: 创建事件触发器并替换，事件类型为BACK
+CREATE OR REPLACE TRIGGER event_trigger9
+AFTER BACKUP DATABASE ON SCHEMA
+BEGIN
+    -- 触发器逻辑
+END;
+CREATE OR REPLACE TRIGGER event_trigger9
+AFTER RESTORE DATABASE ON SCHEMA
+BEGIN
+    -- 替换触发器逻辑
+END;
+-- 测试用例12: 创建事件触发器并替换，事件类型为TIMER
+CREATE OR REPLACE TRIGGER event_trigger10
+AFTER TIMER ON SCHEMA
+BEGIN
+    -- 触发器逻辑
+END;
+CREATE OR REPLACE TRIGGER event_trigger10
+AFTER TIMER ON SCHEMA
+BEGIN
+    -- 替换触发器逻辑
+END;
+-- 测试用例13: 创建事件触发器并替换，事件类型为STARTUP
+CREATE OR REPLACE TRIGGER event_trigger11
+AFTER STARTUP ON SCHEMA
+BEGIN
+    -- 触发器逻辑
+END;
+CREATE OR REPLACE TRIGGER event_trigger11
+AFTER SHUTDOWN ON SCHEMA
+BEGIN
+    -- 替换触发器逻辑
+END;
+-- 测试用例14: 创建表触发器并替换，基于视图
+CREATE OR REPLACE TRIGGER trigger3
+BEFORE INSERT ON test_view1
+FOR EACH ROW
+BEGIN
+    -- 触发器逻辑
+END;
+CREATE OR REPLACE TRIGGER trigger3
+BEFORE UPDATE ON test_view1
+FOR EACH ROW
+BEGIN
+    -- 替换触发器逻辑
+END;
+-- 测试用例15: 创建表触发器并替换，基于不同的视图（应报错）
+CREATE OR REPLACE TRIGGER trigger4
+BEFORE INSERT ON test_view1
+FOR EACH ROW
+BEGIN
+    -- 触发器逻辑
+END;
+CREATE OR REPLACE TRIGGER trigger4
+BEFORE INSERT ON test_table1
+FOR EACH ROW
+BEGIN
+    -- 替换触发器逻辑
+END

@@ -1,0 +1,77 @@
+-- 创建带有自增列的表
+CREATE TABLE table1 (
+    id INT IDENTITY(1, 1),
+    name VARCHAR(50)
+);
+-- 插入数据
+INSERT INTO table1 (name) VALUES ('Alice');
+INSERT INTO table1 (name) VALUES ('Bob');
+-- 测试用例 1: 查询自增列的种子值
+SELECT IDENT_SEED('table1');
+-- 测试用例 2: 查询自增列的增量值
+SELECT IDENT_INCR('table1');
+-- 测试用例 3: 创建带有自定义种子和增量的自增列表
+CREATE TABLE table2 (
+    id INT IDENTITY(10, 2),
+    description VARCHAR(100)
+);
+-- 插入数据
+INSERT INTO table2 (description) VALUES ('Item 1');
+INSERT INTO table2 (description) VALUES ('Item 2');
+-- 查询自增列的种子值
+SELECT IDENT_SEED('table2');
+-- 查询自增列的增量值
+SELECT IDENT_INCR('table2');
+-- 测试用例 4: 创建带有默认种子和增量的自增列表
+CREATE TABLE table3 (
+    id INT IDENTITY,
+    value VARCHAR(50)
+);
+-- 插入数据
+INSERT INTO table3 (value) VALUES ('Value 1');
+INSERT INTO table3 (value) VALUES ('Value 2');
+-- 查询自增列的种子值
+SELECT IDENT_SEED('table3');
+-- 查询自增列的增量值
+SELECT IDENT_INCR('table3');
+-- 测试用例 5: 尝试更新自增列（应报错）
+UPDATE table1 SET id = 5 WHERE name = 'Alice';
+-- 测试用例 6: 创建带有负增量的自增列表
+CREATE TABLE table4 (
+    id INT IDENTITY(100, -1),
+    note VARCHAR(50)
+);
+-- 插入数据
+INSERT INTO table4 (note) VALUES ('Note 1');
+INSERT INTO table4 (note) VALUES ('Note 2');
+-- 查询自增列的种子值
+SELECT IDENT_SEED('table4');
+-- 查询自增列的增量值
+SELECT IDENT_INCR('table4');
+-- 测试用例 7: 创建带有BIGINT自增列的表
+CREATE TABLE table5 (
+    id BIGINT IDENTITY(1, 1),
+    data VARCHAR(50)
+);
+-- 插入数据
+INSERT INTO table5 (data) VALUES ('Data 1');
+INSERT INTO table5 (data) VALUES ('Data 2');
+-- 查询自增列的种子值
+SELECT IDENT_SEED('table5');
+-- 查询自增列的增量值
+SELECT IDENT_INCR('table5');
+-- 测试用例 8: 尝试创建带有小数种子和增量的自增列表（应报错）
+CREATE TABLE table6 (
+    id INT IDENTITY(1.5, 1.5),
+    info VARCHAR(50)
+);
+-- 测试用例 9: 尝试创建带有超出范围种子和增量的自增列表（应报错）
+CREATE TABLE table7 (
+    id INT IDENTITY(2147483648, 1),
+    detail VARCHAR(50)
+);
+-- 测试用例 10: 尝试创建带有零增量的自增列表（应报错）
+CREATE TABLE table8 (
+    id INT IDENTITY(1, 0),
+    remark VARCHAR(50)
+)

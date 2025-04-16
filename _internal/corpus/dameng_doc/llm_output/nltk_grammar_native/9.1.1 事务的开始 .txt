@@ -1,0 +1,4 @@
+```plaintext
+TRANSACTION_START -> SQL_STATEMENT
+SQL_STATEMENT -> 'executable_sql_statement'
+```

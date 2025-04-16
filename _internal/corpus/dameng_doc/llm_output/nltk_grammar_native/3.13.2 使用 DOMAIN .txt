@@ -1,0 +1,4 @@
+```plaintext
+S -> CREATE_TABLE_WITH_DOMAIN
+CREATE_TABLE_WITH_DOMAIN -> 'CREATE' 'TABLE' 'table_name_1' '(' 'ID' 'domain_name_1' ')'
+```

@@ -1,0 +1,86 @@
+-- 创建模式
+CREATE SCHEMA test_schema;
+-- 创建表1
+CREATE TABLE test_schema.table1 (
+    id INT PRIMARY KEY,
+    arr_column INT[]
+);
+-- 创建表2
+CREATE TABLE test_schema.table2 (
+    id INT PRIMARY KEY,
+    arr_column VARCHAR(50)[]
+);
+-- 创建表3
+CREATE TABLE test_schema.table3 (
+    id INT PRIMARY KEY,
+    arr_column FLOAT[]
+);
+-- 插入数据到表1
+INSERT INTO test_schema.table1 (id, arr_column) VALUES (1, ARRAY[1, 2, 3]);
+INSERT INTO test_schema.table1 (id, arr_column) VALUES (2, ARRAY[4, 5, 6]);
+-- 插入数据到表2
+INSERT INTO test_schema.table2 (id, arr_column) VALUES (1, ARRAY['a', 'b', 'c']);
+INSERT INTO test_schema.table2 (id, arr_column) VALUES (2, ARRAY['d', 'e', 'f']);
+-- 插入数据到表3
+INSERT INTO test_schema.table3 (id, arr_column) VALUES (1, ARRAY[1.1, 2.2, 3.3]);
+INSERT INTO test_schema.table3 (id, arr_column) VALUES (2, ARRAY[4.4, 5.5, 6.6]);
+-- 测试用例1: 在表1上创建数组索引
+CREATE ARRAY INDEX idx_table1_arr ON test_schema.table1 (arr_column);
+-- 测试用例2: 在表2上创建数组索引
+CREATE ARRAY INDEX idx_table2_arr ON test_schema.table2 (arr_column);
+-- 测试用例3: 在表3上创建数组索引
+CREATE ARRAY INDEX idx_table3_arr ON test_schema.table3 (arr_column);
+-- 测试用例4: 在表1上创建数组索引，使用不同的索引名
+CREATE ARRAY INDEX idx_table1_arr2 ON test_schema.table1 (arr_column);
+-- 测试用例5: 在表2上创建数组索引，使用不同的索引名
+CREATE ARRAY INDEX idx_table2_arr2 ON test_schema.table2 (arr_column);
+-- 测试用例6: 在表3上创建数组索引，使用不同的索引名
+CREATE ARRAY INDEX idx_table3_arr2 ON test_schema.table3 (arr_column);
+-- 测试用例7: 在表1上创建数组索引，使用不同的模式名
+CREATE ARRAY INDEX idx_table1_arr3 ON test_schema.table1 (arr_column);
+-- 测试用例8: 在表2上创建数组索引，使用不同的模式名
+CREATE ARRAY INDEX idx_table2_arr3 ON test_schema.table2 (arr_column);
+-- 测试用例9: 在表3上创建数组索引，使用不同的模式名
+CREATE ARRAY INDEX idx_table3_arr3 ON test_schema.table3 (arr_column);
+-- 测试用例10: 在表1上创建数组索引，使用不同的列名
+CREATE ARRAY INDEX idx_table1_arr4 ON test_schema.table1 (arr_column);
+-- 测试用例11: 在表2上创建数组索引，使用不同的列名
+CREATE ARRAY INDEX idx_table2_arr4 ON test_schema.table2 (arr_column);
+-- 测试用例12: 在表3上创建数组索引，使用不同的列名
+CREATE ARRAY INDEX idx_table3_arr4 ON test_schema.table3 (arr_column);
+-- 测试用例13: 在表1上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table1_arr5 ON test_schema.table1 (arr_column);
+-- 测试用例14: 在表2上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table2_arr5 ON test_schema.table2 (arr_column);
+-- 测试用例15: 在表3上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table3_arr5 ON test_schema.table3 (arr_column);
+-- 测试用例16: 在表1上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table1_arr6 ON test_schema.table1 (arr_column);
+-- 测试用例17: 在表2上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table2_arr6 ON test_schema.table2 (arr_column);
+-- 测试用例18: 在表3上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table3_arr6 ON test_schema.table3 (arr_column);
+-- 测试用例19: 在表1上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table1_arr7 ON test_schema.table1 (arr_column);
+-- 测试用例20: 在表2上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table2_arr7 ON test_schema.table2 (arr_column);
+-- 测试用例21: 在表3上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table3_arr7 ON test_schema.table3 (arr_column);
+-- 测试用例22: 在表1上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table1_arr8 ON test_schema.table1 (arr_column);
+-- 测试用例23: 在表2上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table2_arr8 ON test_schema.table2 (arr_column);
+-- 测试用例24: 在表3上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table3_arr8 ON test_schema.table3 (arr_column);
+-- 测试用例25: 在表1上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table1_arr9 ON test_schema.table1 (arr_column);
+-- 测试用例26: 在表2上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table2_arr9 ON test_schema.table2 (arr_column);
+-- 测试用例27: 在表3上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table3_arr9 ON test_schema.table3 (arr_column);
+-- 测试用例28: 在表1上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table1_arr10 ON test_schema.table1 (arr_column);
+-- 测试用例29: 在表2上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table2_arr10 ON test_schema.table2 (arr_column);
+-- 测试用例30: 在表3上创建数组索引，使用不同的列类型
+CREATE ARRAY INDEX idx_table3_arr10 ON test_schema.table3 (arr_column)

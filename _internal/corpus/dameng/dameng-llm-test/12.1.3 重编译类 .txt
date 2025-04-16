@@ -1,0 +1,27 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 创建类
+CREATE CLASS schema1.class1;
+CREATE CLASS schema2.class2;
+CREATE CLASS class3;
+-- 测试用例 1: 重编译类，不带模式名
+ALTER CLASS class3 COMPILE;
+-- 测试用例 2: 重编译类，带模式名
+ALTER CLASS schema1.class1 COMPILE;
+-- 测试用例 3: 重编译类，带DEBUG选项
+ALTER CLASS schema2.class2 COMPILE DEBUG;
+-- 测试用例 4: 重编译类，不带DEBUG选项
+ALTER CLASS schema1.class1 COMPILE;
+-- 测试用例 5: 重编译类，使用不同的模式名和类名
+ALTER CLASS schema2.class2 COMPILE;
+-- 测试用例 6: 重编译类，不带模式名和DEBUG选项
+ALTER CLASS class3 COMPILE;
+-- 测试用例 7: 重编译类，带模式名和DEBUG选项
+ALTER CLASS schema1.class1 COMPILE DEBUG;
+-- 测试用例 8: 重编译类，带模式名，不带DEBUG选项
+ALTER CLASS schema2.class2 COMPILE;
+-- 测试用例 9: 重编译类，不带模式名，带DEBUG选项
+ALTER CLASS class3 COMPILE DEBUG;
+-- 测试用例 10: 重编译类，带模式名和DEBUG选项
+ALTER CLASS schema1.class1 COMPILE DEBUG

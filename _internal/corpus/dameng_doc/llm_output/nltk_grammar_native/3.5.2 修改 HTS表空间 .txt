@@ -1,0 +1,4 @@
+```plaintext
+S -> ALTER_HUGE_TABLESPACE
+ALTER_HUGE_TABLESPACE -> 'ALTER' 'HUGE' 'TABLESPACE' 'tablespace_name_1' 'ADD' 'PATH' 'path_value'
+```

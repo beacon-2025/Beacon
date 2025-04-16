@@ -1,0 +1,6 @@
+```plaintext
+DROP_USER -> 'DROP' 'USER' IF_EXISTS USER_NAME DROP_OPTION
+IF_EXISTS -> 'IF EXISTS' | ''
+USER_NAME -> 'username_1'
+DROP_OPTION -> 'RESTRICT' | 'CASCADE' | ''
+```

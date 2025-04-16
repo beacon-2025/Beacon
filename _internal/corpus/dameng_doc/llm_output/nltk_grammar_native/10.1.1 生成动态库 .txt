@@ -1,0 +1,18 @@
+```plaintext
+S -> DM_STRUCTURED_PARAM | SCALAR_TYPE_PARAM
+DM_STRUCTURED_PARAM -> 'de_data' 'function_name_1' '(' 'de_args' '*' 'args' ')' '{' 'C_LANGUAGE_FUNCTION_BODY' '}'
+C_LANGUAGE_FUNCTION_BODY -> 'C_LANGUAGE_FUNCTION_IMPLEMENTATION'
+
+de_data -> 'struct' 'de_data' '{' 'int' 'null_flag' ';' 'union' '{' 'int' 'v_int' ';' 'double' 'v_double' ';' 'char' 'v_str' '[]' ';' '}' 'data' ';' '}'
+de_args -> 'struct' 'de_args' '{' 'int' 'n_args' ';' 'de_data' '*' 'args' ';' '}'
+
+SCALAR_TYPE_PARAM -> 'RETURN_TYPE' 'function_name_2' '(' 'PARAMETER_LIST' ')' '{' 'C_LANGUAGE_FUNCTION_BODY' '}'
+RETURN_TYPE -> 'int' | 'double' | 'char' '*'
+PARAMETER_LIST -> 'int' | 'double' | 'char' '*' | 'int' ',' 'double' | 'int' ',' 'char' '*' | 'double' ',' 'char' '*' | 'int' ',' 'double' ',' 'char' '*'
+
+GET_FUNCTIONS -> 'int' 'de_get_int' '(' 'de_args' '*' 'args' ',' 'int' 'arg_id' ')' ';' | 'double' 'de_get_double' '(' 'de_args' '*' 'args' ',' 'int' 'arg_id' ')' ';' | 'char' '*' 'de_get_str' '(' 'de_args' '*' 'args' ',' 'int' 'arg_id' ')' ';' | 'char' '*' 'de_get_str_with_len' '(' 'de_args' '*' 'args' ',' 'int' 'arg_id' ',' 'int' '*' 'len' ')' ';'
+SET_FUNCTIONS -> 'void' 'de_set_int' '(' 'de_args' '*' 'args' ',' 'int' 'arg_id' ',' 'int' 'ret' ')' ';' | 'void' 'de_set_double' '(' 'de_args' '*' 'args' ',' 'int' 'arg_id' ',' 'double' 'ret' ')' ';' | 'void' 'de_set_str' '(' 'de_args' '*' 'args' ',' 'int' 'arg_id' ',' 'char' '*' 'ret' ')' ';' | 'void' 'de_set_str_with_len' '(' 'de_args' '*' 'args' ',' 'int' 'arg_id' ',' 'char' '*' 'ret' ',' 'int' 'len' ')' ';' | 'void' 'de_set_null' '(' 'de_args' '*' 'args' ',' 'int' 'arg_id' ')' ';'
+RETURN_FUNCTIONS -> 'de_data' 'de_return_int' '(' 'int' 'ret' ')' ';' | 'de_data' 'de_return_double' '(' 'double' 'ret' ')' ';' | 'de_data' 'de_return_str' '(' 'char' '*' 'ret' ')' ';' | 'de_data' 'de_return_str_with_len' '(' 'char' '*' 'ret' ',' 'int' 'len' ')' ';' | 'de_data' 'de_return_null' '(' ')' ';'
+DE_STR_FREE -> 'void' 'de_str_free' '(' 'char' '*' 'str' ')' ';'
+DE_IS_NULL -> 'int' 'de_is_null' '(' 'de_args' '*' 'args' ',' 'int' 'arg_id' ')' ';'
+```

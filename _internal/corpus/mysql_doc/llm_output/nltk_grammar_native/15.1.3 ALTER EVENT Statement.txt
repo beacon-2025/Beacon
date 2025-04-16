@@ -1,0 +1,17 @@
+```
+S -> ALTER_EVENT_STATEMENT
+
+ALTER_EVENT_STATEMENT -> 'ALTER' DEFINER_OPTION 'EVENT' 'event_name_1' ON_SCHEDULE_OPTION ON_COMPLETION_OPTION RENAME_OPTION ENABLE_DISABLE_OPTION COMMENT_OPTION DO_OPTION
+
+DEFINER_OPTION -> 'DEFINER' '=' 'user_name_1' | ''
+ON_SCHEDULE_OPTION -> 'ON SCHEDULE' 'schedule_value' | ''
+ON_COMPLETION_OPTION -> 'ON COMPLETION' NOT_PRESERVE_OPTION | ''
+NOT_PRESERVE_OPTION -> 'NOT PRESERVE' | 'PRESERVE'
+RENAME_OPTION -> 'RENAME TO' 'new_event_name_2' | ''
+ENABLE_DISABLE_OPTION -> 'ENABLE' | 'DISABLE' | 'DISABLE ON REPLICA' | 'DISABLE ON SLAVE' | ''
+COMMENT_OPTION -> 'COMMENT' 'string_value' | ''
+DO_OPTION -> 'DO' 'event_body_unknown' | ''
+
+SCHEDULE_VALUE -> 'EVERY' 'interval_value' 'STARTS' 'timestamp_value' | 'AT' 'timestamp_value'
+COMMENT_VALUE -> 'A sample comment.'  # Example comment, real implementation requires string handling
+```

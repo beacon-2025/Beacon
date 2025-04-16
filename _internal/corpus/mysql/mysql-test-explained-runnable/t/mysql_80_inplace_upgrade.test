@@ -1,0 +1,2 @@
+
+SELECT COUNT(*) = 0 FROM mysql.help_topic

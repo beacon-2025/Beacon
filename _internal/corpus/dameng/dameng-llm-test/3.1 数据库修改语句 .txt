@@ -1,0 +1,122 @@
+-- 公共前置语句：创建数据库并设置为MOUNT状态
+CREATE DATABASE test_db;
+ALTER DATABASE MOUNT;
+-- 测试用例1：增加日志文件
+ALTER DATABASE ADD LOGFILE '/data/dmlog_1.log' SIZE 200;
+-- 测试用例2：扩展日志文件大小
+ALTER DATABASE RESIZE LOGFILE '/data/dmlog_1.log' TO 300;
+-- 测试用例3：重命名日志文件
+ALTER DATABASE RENAME LOGFILE '/data/dmlog_1.log' TO '/data/dmlog_2.log';
+-- 测试用例4：设置数据库状态为OPEN
+ALTER DATABASE OPEN;
+-- 测试用例5：设置数据库状态为SUSPEND
+ALTER DATABASE SUSPEND;
+-- 测试用例6：设置数据库模式为PRIMARY
+ALTER DATABASE PRIMARY;
+ALTER DATABASE OPEN FORCE;
+-- 测试用例7：设置数据库模式为STANDBY
+ALTER DATABASE STANDBY;
+ALTER DATABASE OPEN FORCE;
+-- 测试用例8：设置数据库模式为NORMAL
+ALTER DATABASE NORMAL;
+ALTER DATABASE OPEN;
+-- 测试用例9：设置数据库归档模式为非归档
+ALTER DATABASE NOARCHIVELOG;
+-- 测试用例10：设置数据库归档模式为归档
+ALTER DATABASE ARCHIVELOG;
+-- 测试用例11：增加本地归档配置
+ALTER DATABASE ADD ARCHIVELOG 'DEST = /data/arch_local, TYPE = local, FILE_SIZE = 128, SPACE_LIMIT = 1024';
+-- 测试用例12：增加实时归档配置
+ALTER DATABASE ADD ARCHIVELOG 'DEST = realtime, TYPE = REALTIME';
+-- 测试用例13：增加异步归档配置
+ALTER DATABASE ADD ARCHIVELOG 'DEST = asyn1, TYPE = ASYNC, TIMER_NAME = timer1';
+-- 测试用例14：增加异步归档配置并设置归档延时发送时间
+ALTER DATABASE ADD ARCHIVELOG 'DEST=asyn2, TYPE=ASYNC, TIMER_NAME=timer2, ARCH_SEND_DELAY=10';
+-- 测试用例15：修改本地归档配置
+ALTER DATABASE MODIFY ARCHIVELOG 'DEST = /data/arch_local, TYPE = local, FILE_SIZE = 256, SPACE_LIMIT = 2048';
+-- 测试用例16：删除归档配置
+ALTER DATABASE DELETE ARCHIVELOG 'DEST = /data/arch_local';
+-- 测试用例17：归档当前日志
+ALTER DATABASE ARCHIVELOG CURRENT;
+-- 测试用例18：增加节点日志文件
+ALTER DATABASE ADD NODE LOGFILE '/data/dmlog_3.log' SIZE 200, '/data/dmlog_4.log' SIZE 200;
+-- 测试用例19：设置数据库状态为MOUNT
+ALTER DATABASE MOUNT;
+-- 测试用例20：设置数据库状态为OPEN FORCE
+ALTER DATABASE OPEN FORCE;
+-- 测试用例21：增加远程归档配置
+ALTER DATABASE ADD ARCHIVELOG 'DEST = remote1, TYPE = REMOTE, INCOMING_PATH = /remote/arch, FILE_SIZE = 128, SPACE_LIMIT = 1024';
+-- 测试用例22：增加主备即时归档配置
+ALTER DATABASE ADD ARCHIVELOG 'DEST = timely1, TYPE = TIMELY';
+-- 测试用例23：修改远程归档配置
+ALTER DATABASE MODIFY ARCHIVELOG 'DEST = remote1, TYPE = REMOTE, INCOMING_PATH = /remote/arch, FILE_SIZE = 256, SPACE_LIMIT = 2048';
+-- 测试用例24：删除远程归档配置
+ALTER DATABASE DELETE ARCHIVELOG 'DEST = remote1';
+-- 测试用例25：增加本地归档配置并设置挂起标志
+ALTER DATABASE ADD ARCHIVELOG 'DEST = /data/arch_local2, TYPE = local, FILE_SIZE = 128, SPACE_LIMIT = 1024, HANG_FLAG = 0';
+-- 测试用例26：增加本地归档配置并设置归档合并刷盘缓存大小
+ALTER DATABASE ADD ARCHIVELOG 'DEST = /data/arch_local3, TYPE = local, FILE_SIZE = 128, SPACE_LIMIT = 1024, ARCH_FLUSH_BUF_SIZE = 64';
+-- 测试用例27：增加远程归档配置并设置归档合并刷盘缓存大小
+ALTER DATABASE ADD ARCHIVELOG 'DEST = remote2, TYPE = REMOTE, INCOMING_PATH = /remote/arch2, FILE_SIZE = 128, SPACE_LIMIT = 1024, ARCH_FLUSH_BUF_SIZE = 64';
+-- 测试用例28：增加异步归档配置并设置归档合并刷盘缓存大小
+ALTER DATABASE ADD ARCHIVELOG 'DEST = asyn3, TYPE = ASYNC, TIMER_NAME = timer3, ARCH_FLUSH_BUF_SIZE = 64';
+-- 测试用例29：增加异步归档配置并设置归档延时发送时间及归档合并刷盘缓存大小
+ALTER DATABASE ADD ARCHIVELOG 'DEST = asyn4, TYPE = ASYNC, TIMER_NAME = timer4, ARCH_SEND_DELAY = 5, ARCH_FLUSH_BUF_SIZE = 32';
+-- 测试用例30：增加远程归档配置并设置文件和空间限制
+ALTER DATABASE ADD ARCHIVELOG 'DEST = remote3, TYPE = REMOTE, INCOMING_PATH = /remote/arch3, FILE_SIZE = 256, SPACE_LIMIT = 2048';
+-- 测试用例31：增加本地归档配置并设置文件和空间限制
+ALTER DATABASE ADD ARCHIVELOG 'DEST = /data/arch_local4, TYPE = local, FILE_SIZE = 256, SPACE_LIMIT = 2048';
+-- 测试用例32：增加实时归档配置并设置文件和空间限制
+ALTER DATABASE ADD ARCHIVELOG 'DEST = realtime2, TYPE = REALTIME, FILE_SIZE = 256, SPACE_LIMIT = 2048';
+-- 测试用例33：增加异步归档配置并设置文件和空间限制
+ALTER DATABASE ADD ARCHIVELOG 'DEST = asyn5, TYPE = ASYNC, TIMER_NAME = timer5, FILE_SIZE = 256, SPACE_LIMIT = 2048';
+-- 测试用例34：增加主备即时归档配置并设置文件和空间限制
+ALTER DATABASE ADD ARCHIVELOG 'DEST = timely2, TYPE = TIMELY, FILE_SIZE = 256, SPACE_LIMIT = 2048';
+-- 测试用例35：增加远程归档配置并设置归档合并刷盘缓存大小及文件和空间限制
+ALTER DATABASE ADD ARCHIVELOG 'DEST = remote4, TYPE = REMOTE, INCOMING_PATH = /remote/arch4, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64';
+-- 测试用例36：增加本地归档配置并设置归档合并刷盘缓存大小及文件和空间限制
+ALTER DATABASE ADD ARCHIVELOG 'DEST = /data/arch_local5, TYPE = local, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64';
+-- 测试用例37：增加实时归档配置并设置归档合并刷盘缓存大小及文件和空间限制
+ALTER DATABASE ADD ARCHIVELOG 'DEST = realtime3, TYPE = REALTIME, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64';
+-- 测试用例38：增加异步归档配置并设置归档合并刷盘缓存大小及文件和空间限制
+ALTER DATABASE ADD ARCHIVELOG 'DEST = asyn6, TYPE = ASYNC, TIMER_NAME = timer6, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64';
+-- 测试用例39：增加主备即时归档配置并设置归档合并刷盘缓存大小及文件和空间限制
+ALTER DATABASE ADD ARCHIVELOG 'DEST = timely3, TYPE = TIMELY, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64';
+-- 测试用例40：增加远程归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志
+ALTER DATABASE ADD ARCHIVELOG 'DEST = remote5, TYPE = REMOTE, INCOMING_PATH = /remote/arch5, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0';
+-- 测试用例41：增加本地归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志
+ALTER DATABASE ADD ARCHIVELOG 'DEST = /data/arch_local6, TYPE = local, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0';
+-- 测试用例42：增加实时归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志
+ALTER DATABASE ADD ARCHIVELOG 'DEST = realtime4, TYPE = REALTIME, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0';
+-- 测试用例43：增加异步归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志
+ALTER DATABASE ADD ARCHIVELOG 'DEST = asyn7, TYPE = ASYNC, TIMER_NAME = timer7, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0';
+-- 测试用例44：增加主备即时归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志
+ALTER DATABASE ADD ARCHIVELOG 'DEST = timely4, TYPE = TIMELY, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0';
+-- 测试用例45：增加远程归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志及归档延时发送时间
+ALTER DATABASE ADD ARCHIVELOG 'DEST = remote6, TYPE = REMOTE, INCOMING_PATH = /remote/arch6, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0, ARCH_SEND_DELAY = 5';
+-- 测试用例46：增加本地归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志及归档延时发送时间
+ALTER DATABASE ADD ARCHIVELOG 'DEST = /data/arch_local7, TYPE = local, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0, ARCH_SEND_DELAY = 5';
+-- 测试用例47：增加实时归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志及归档延时发送时间
+ALTER DATABASE ADD ARCHIVELOG 'DEST = realtime5, TYPE = REALTIME, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0, ARCH_SEND_DELAY = 5';
+-- 测试用例48：增加异步归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志及归档延时发送时间
+ALTER DATABASE ADD ARCHIVELOG 'DEST = asyn8, TYPE = ASYNC, TIMER_NAME = timer8, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0, ARCH_SEND_DELAY = 5';
+-- 测试用例49：增加主备即时归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志及归档延时发送时间
+ALTER DATABASE ADD ARCHIVELOG 'DEST = timely5, TYPE = TIMELY, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0, ARCH_SEND_DELAY = 5';
+-- 测试用例50：增加远程归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志及归档延时发送时间及定时器名称
+ALTER DATABASE ADD ARCHIVELOG 'DEST = remote7, TYPE = REMOTE, INCOMING_PATH = /remote/arch7, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0, ARCH_SEND_DELAY = 5, TIMER_NAME = timer9';
+-- 测试用例51：增加本地归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志及归档延时发送时间及定时器名称
+ALTER DATABASE ADD ARCHIVELOG 'DEST = /data/arch_local8, TYPE = local, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0, ARCH_SEND_DELAY = 5, TIMER_NAME = timer10';
+-- 测试用例52：增加实时归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志及归档延时发送时间及定时器名称
+ALTER DATABASE ADD ARCHIVELOG 'DEST = realtime6, TYPE = REALTIME, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0, ARCH_SEND_DELAY = 5, TIMER_NAME = timer11';
+-- 测试用例53：增加异步归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志及归档延时发送时间及定时器名称
+ALTER DATABASE ADD ARCHIVELOG 'DEST = asyn9, TYPE = ASYNC, TIMER_NAME = timer12, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0, ARCH_SEND_DELAY = 5';
+-- 测试用例54：增加主备即时归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志及归档延时发送时间及定时器名称
+ALTER DATABASE ADD ARCHIVELOG 'DEST = timely6, TYPE = TIMELY, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0, ARCH_SEND_DELAY = 5, TIMER_NAME = timer13';
+-- 测试用例55：增加远程归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志及归档延时发送时间及定时器名称及归档目标
+ALTER DATABASE ADD ARCHIVELOG 'DEST = remote8, TYPE = REMOTE, INCOMING_PATH = /remote/arch8, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0, ARCH_SEND_DELAY = 5, TIMER_NAME = timer14';
+-- 测试用例56：增加本地归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志及归档延时发送时间及定时器名称及归档目标
+ALTER DATABASE ADD ARCHIVELOG 'DEST = /data/arch_local9, TYPE = local, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0, ARCH_SEND_DELAY = 5, TIMER_NAME = timer15';
+-- 测试用例57：增加实时归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志及归档延时发送时间及定时器名称及归档目标
+ALTER DATABASE ADD ARCHIVELOG 'DEST = realtime7, TYPE = REALTIME, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0, ARCH_SEND_DELAY = 5, TIMER_NAME = timer16';
+-- 测试用例58：增加异步归档配置并设置归档合并刷盘缓存大小及文件和空间限制及挂起标志及归档延时发送时间及定时器名称及归档目标
+ALTER DATABASE ADD ARCHIVELOG 'DEST = asyn10, TYPE = ASYNC, TIMER_NAME = timer17, FILE_SIZE = 256, SPACE_LIMIT = 2048, ARCH_FLUSH_BUF_SIZE = 64, HANG_FLAG = 0, ARCH_SEND_DELAY = 5'

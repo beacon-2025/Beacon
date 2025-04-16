@@ -1,0 +1,3 @@
+
+SELECT NAME, FLAG, SPACE_TYPE FROM information_schema.INNODB_TABLESPACES
+	 where NAME="encrypt_ts"

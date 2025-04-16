@@ -1,0 +1,58 @@
+-- 创建测试表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+CREATE TABLE test_table2 (
+    id INT PRIMARY KEY,
+    description VARCHAR(100)
+);
+BEGIN TRANSACTION;
+INSERT INTO test_table1 (id, name) VALUES (1, 'Alice');
+INSERT INTO test_table2 (id, description) VALUES (1, 'Description for Alice');
+COMMIT;
+BEGIN TRANSACTION;
+INSERT INTO test_table1 (id, name) VALUES (2, 'Bob');
+INSERT INTO test_table2 (id, description) VALUES (2, 'Description for Bob');
+ROLLBACK;
+BEGIN TRANSACTION;
+INSERT INTO test_table1 (id, name) VALUES (3, 'Charlie');
+BEGIN TRANSACTION;
+INSERT INTO test_table2 (id, description) VALUES (3, 'Description for Charlie');
+COMMIT;
+COMMIT;
+BEGIN TRANSACTION;
+INSERT INTO test_table1 (id, name) VALUES (4, 'David');
+-- 假设这里有一个错误操作
+INSERT INTO test_table2 (id, description) VALUES (4, 'Description for David');
+ROLLBACK;
+BEGIN TRANSACTION;
+INSERT INTO test_table1 (id, name) VALUES (5, 'Eve');
+SELECT * FROM test_table1 WHERE id = 5;
+COMMIT;
+BEGIN TRANSACTION;
+INSERT INTO test_table1 (id, name) VALUES (6, 'Frank');
+UPDATE test_table1 SET name = 'Franklin' WHERE id = 6;
+COMMIT;
+BEGIN TRANSACTION;
+INSERT INTO test_table1 (id, name) VALUES (7, 'Grace');
+DELETE FROM test_table1 WHERE id = 7;
+COMMIT;
+BEGIN TRANSACTION;
+INSERT INTO test_table1 (id, name) VALUES (8, 'Hank');
+INSERT INTO test_table2 (id, description) VALUES (8, 'Description for Hank');
+COMMIT;
+BEGIN TRANSACTION;
+INSERT INTO test_table1 (id, name) VALUES (9, 'Ivy');
+IF (SELECT COUNT(*) FROM test_table1) > 0 THEN
+    INSERT INTO test_table2 (id, description) VALUES (9, 'Description for Ivy');
+END IF;
+COMMIT;
+BEGIN TRANSACTION;
+INSERT INTO test_table1 (id, name) VALUES (10, 'Jack');
+INSERT INTO test_table2 (id, description) VALUES (10, 'Description for Jack');
+SELECT t1.id, t1.name, t2.description 
+FROM test_table1 t1 
+JOIN test_table2 t2 ON t1.id = t2.id 
+WHERE t1.id = 10;
+COMMIT

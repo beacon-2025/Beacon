@@ -1,0 +1,4 @@
+
+
+# Expect no setup_loggers
+select count(*) from performance_schema.setup_loggers

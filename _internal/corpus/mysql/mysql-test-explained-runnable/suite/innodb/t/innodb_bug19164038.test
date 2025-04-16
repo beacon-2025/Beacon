@@ -1,0 +1,4 @@
+
+
+# Use small sort buffer pool so that we won't have all rows in the buffer.
+SELECT @@innodb_sort_buffer_size

@@ -1,0 +1,4 @@
+
+
+# Expect handles
+show global variables like "performance_schema_max_table_handles"

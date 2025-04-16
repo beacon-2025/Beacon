@@ -1,0 +1,118 @@
+15.2.6 IMPORT TABLE Statement
+IMPORT TABLE FROM sdi_file [, sdi_file] ...
+The IMPORT TABLE statement imports MyISAM tables based on information contained in .sdi
+(serialized dictionary information) metadata files. IMPORT TABLE requires the FILE privilege to read
+the .sdi and table content files, and the CREATE privilege for the table to be created.
+Tables can be exported from one server using mysqldump to write a file of SQL statements and
+imported into another server using mysql to process the dump file. IMPORT TABLE provides a faster
+alternative using the “raw” table files.
+Prior to import, the files that provide the table content must be placed in the appropriate schema
+directory for the import server, and the .sdi file must be located in a directory accessible to the server.
+For example, the .sdi file can be placed in the directory named by the secure_file_priv system
+variable, or (if secure_file_priv is empty) in a directory under the server data directory.
+The following example describes how to export MyISAM tables named employees and managers
+from the hr schema of one server and import them into the hr schema of another server. The example
+uses these assumptions (to perform a similar operation on your own system, modify the path names as
+appropriate):
+• For the export server, export_basedir represents its base directory, and its data directory is
+export_basedir/data.
+• For the import server, import_basedir represents its base directory, and its data directory is
+import_basedir/data.
+• Table files are exported from the export server into the /tmp/export directory and this directory is
+secure (not accessible to other users).
+• The import server uses /tmp/mysql-files as the directory named by its secure_file_priv
+system variable.
+To export tables from the export server, use this procedure:
+1. Ensure a consistent snapshot by executing this statement to lock the tables so that they cannot be
+modified during export:
+mysql> FLUSH TABLES hr.employees, hr.managers WITH READ LOCK;
+While the lock is in effect, the tables can still be used, but only for read access.
+2. At the file system level, copy the .sdi and table content files from the hr schema directory to the
+secure export directory:
+• The .sdi file is located in the hr schema directory, but might not have exactly the same
+basename as the table name. For example, the .sdi files for the employees and managers
+tables might be named employees_125.sdi and managers_238.sdi.
+• For a MyISAM table, the content files are its .MYD data file and .MYI index file.
+Given those file names, the copy commands look like this:
+$> cd export_basedir/data/hr
+$> cp employees_125.sdi /tmp/export
+$> cp managers_238.sdi /tmp/export
+$> cp employees.{MYD,MYI} /tmp/export
+$> cp managers.{MYD,MYI} /tmp/export
+3. Unlock the tables:
+mysql> UNLOCK TABLES;
+To import tables into the import server, use this procedure:
+1. The import schema must exist. If necessary, execute this statement to create it:
+mysql> CREATE SCHEMA hr;
+2. At the file system level, copy the .sdi files to the import server secure_file_priv directory, /
+tmp/mysql-files. Also, copy the table content files to the hr schema directory:
+$> cd /tmp/export
+$> cp employees_125.sdi /tmp/mysql-files
+$> cp managers_238.sdi /tmp/mysql-files
+$> cp employees.{MYD,MYI} import_basedir/data/hr
+$> cp managers.{MYD,MYI} import_basedir/data/hr
+3. Import the tables by executing an IMPORT TABLE statement that names the .sdi files:
+mysql> IMPORT TABLE FROM
+       '/tmp/mysql-files/employees.sdi',
+       '/tmp/mysql-files/managers.sdi';
+The .sdi file need not be placed in the import server directory named by the secure_file_priv
+system variable if that variable is empty; it can be in any directory accessible to the server, including
+the schema directory for the imported table. If the .sdi file is placed in that directory, however, it may
+be rewritten; the import operation creates a new .sdi file for the table, which overwrites the old .sdi
+file if the operation uses the same file name for the new file.
+Each sdi_file value must be a string literal that names the .sdi file for a table or is a pattern that
+matches .sdi files. If the string is a pattern, any leading directory path and the .sdi file name suffix
+must be given literally. Pattern characters are permitted only in the base name part of the file name:
+• ? matches any single character
+• * matches any sequence of characters, including no characters
+Using a pattern, the previous IMPORT TABLE statement could have been written like this (assuming
+that the /tmp/mysql-files directory contains no other .sdi files matching the pattern):
+IMPORT TABLE FROM '/tmp/mysql-files/*.sdi';
+To interpret the location of .sdi file path names, the server uses the same rules for IMPORT TABLE
+as the server-side rules for LOAD DATA (that is, the non-LOCAL rules). See Section 15.2.9, “LOAD
+DATA Statement”, paying particular attention to the rules used to interpret relative path names.
+IMPORT TABLE fails if the .sdi or table files cannot be located. After importing a table, the server
+attempts to open it and reports as warnings any problems detected. To attempt a repair to correct any
+reported issues, use REPAIR TABLE.
+IMPORT TABLE is not written to the binary log.
+Restrictions and Limitations
+IMPORT TABLE applies only to non-TEMPORARY MyISAM tables. It does not apply to tables created
+with a transactional storage engine, tables created with CREATE TEMPORARY TABLE, or views.
+An .sdi file used in an import operation must be generated on a server with the same data dictionary
+version and sdi version as the import server. The version information of the generating server is found
+in the .sdi file:
+{
+   "mysqld_version_id":80019,
+   "dd_version":80017,
+   "sdi_version":80016,
+   ...
+}
+To determine the data dictionary and sdi version of the import server, you can check the .sdi file of a
+recently created table on the import server.
+The table data and index files must be placed in the schema directory for the import server prior to
+the import operation, unless the table as defined on the export server uses the DATA DIRECTORY
+or INDEX DIRECTORY table options. In that case, modify the import procedure using one of these
+alternatives before executing the IMPORT TABLE statement:
+• Put the data and index files into the same directory on the import server host as on the export server
+host, and create symlinks in the import server schema directory to those files.
+• Put the data and index files into an import server host directory different from that on the export
+server host, and create symlinks in the import server schema directory to those files. In addition,
+modify the .sdi file to reflect the different file locations.
+• Put the data and index files into the schema directory on the import server host, and modify the .sdi
+file to remove the data and index directory table options.
+Any collation IDs stored in the .sdi file must refer to the same collations on the export and import
+servers.
+Trigger information for a table is not serialized into the table .sdi file, so triggers are not restored by
+the import operation.
+Some edits to an .sdi file are permissible prior to executing the IMPORT TABLE statement, whereas
+others are problematic or may even cause the import operation to fail:
+• Changing the data directory and index directory table options is required if the locations of the data
+and index files differ between the export and import servers.
+• Changing the schema name is required to import the table into a different schema on the import
+server than on the export server.
+• Changing schema and table names may be required to accommodate differences between
+file system case-sensitivity semantics on the export and import servers or differences in
+lower_case_table_names settings. Changing the table names in the .sdi file may require
+renaming the table files as well.
+• In some cases, changes to column definitions are permitted. Changing data types is likely to cause
+problems.

@@ -1,0 +1,3 @@
+
+# Check that warning says "tablespace is required for storage disk"
+SHOW WARNINGS

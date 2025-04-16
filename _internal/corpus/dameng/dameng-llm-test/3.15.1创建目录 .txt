@@ -1,0 +1,201 @@
+-- 无公共前置语句;
+-- 测试用例 1: 创建一个名为TEST_DIR1的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR1 AS '/home/user/test/path1';
+-- 测试用例 2: 创建一个名为TEST_DIR2的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR2 AS '/home/user/test/path2';
+-- 测试用例 3: 创建一个名为TEST_DIR3的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR3 AS '/home/user/test/path3';
+-- 测试用例 4: 创建一个名为TEST_DIR4的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR4 AS '/home/user/test/path4';
+-- 测试用例 5: 创建一个名为TEST_DIR5的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR5 AS '/home/user/test/path5';
+-- 测试用例 6: 创建一个名为TEST_DIR6的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR6 AS '/home/user/test/path6';
+-- 测试用例 7: 创建一个名为TEST_DIR7的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR7 AS '/home/user/test/path7';
+-- 测试用例 8: 创建一个名为TEST_DIR8的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR8 AS '/home/user/test/path8';
+-- 测试用例 9: 创建一个名为TEST_DIR9的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR9 AS '/home/user/test/path9';
+-- 测试用例 10: 创建一个名为TEST_DIR10的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR10 AS '/home/user/test/path10';
+-- 测试用例 11: 创建一个名为TEST_DIR11的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR11 AS '/home/user/test/path11';
+-- 测试用例 12: 创建一个名为TEST_DIR12的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR12 AS '/home/user/test/path12';
+-- 测试用例 13: 创建一个名为TEST_DIR13的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR13 AS '/home/user/test/path13';
+-- 测试用例 14: 创建一个名为TEST_DIR14的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR14 AS '/home/user/test/path14';
+-- 测试用例 15: 创建一个名为TEST_DIR15的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR15 AS '/home/user/test/path15';
+-- 测试用例 16: 创建一个名为TEST_DIR16的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR16 AS '/home/user/test/path16';
+-- 测试用例 17: 创建一个名为TEST_DIR17的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR17 AS '/home/user/test/path17';
+-- 测试用例 18: 创建一个名为TEST_DIR18的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR18 AS '/home/user/test/path18';
+-- 测试用例 19: 创建一个名为TEST_DIR19的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR19 AS '/home/user/test/path19';
+-- 测试用例 20: 创建一个名为TEST_DIR20的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR20 AS '/home/user/test/path20';
+-- 测试用例 21: 创建一个名为TEST_DIR21的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR21 AS '/home/user/test/path21';
+-- 测试用例 22: 创建一个名为TEST_DIR22的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR22 AS '/home/user/test/path22';
+-- 测试用例 23: 创建一个名为TEST_DIR23的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR23 AS '/home/user/test/path23';
+-- 测试用例 24: 创建一个名为TEST_DIR24的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR24 AS '/home/user/test/path24';
+-- 测试用例 25: 创建一个名为TEST_DIR25的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR25 AS '/home/user/test/path25';
+-- 测试用例 26: 创建一个名为TEST_DIR26的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR26 AS '/home/user/test/path26';
+-- 测试用例 27: 创建一个名为TEST_DIR27的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR27 AS '/home/user/test/path27';
+-- 测试用例 28: 创建一个名为TEST_DIR28的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR28 AS '/home/user/test/path28';
+-- 测试用例 29: 创建一个名为TEST_DIR29的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR29 AS '/home/user/test/path29';
+-- 测试用例 30: 创建一个名为TEST_DIR30的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR30 AS '/home/user/test/path30';
+-- 测试用例 31: 创建一个名为TEST_DIR31的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR31 AS '/home/user/test/path31';
+-- 测试用例 32: 创建一个名为TEST_DIR32的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR32 AS '/home/user/test/path32';
+-- 测试用例 33: 创建一个名为TEST_DIR33的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR33 AS '/home/user/test/path33';
+-- 测试用例 34: 创建一个名为TEST_DIR34的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR34 AS '/home/user/test/path34';
+-- 测试用例 35: 创建一个名为TEST_DIR35的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR35 AS '/home/user/test/path35';
+-- 测试用例 36: 创建一个名为TEST_DIR36的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR36 AS '/home/user/test/path36';
+-- 测试用例 37: 创建一个名为TEST_DIR37的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR37 AS '/home/user/test/path37';
+-- 测试用例 38: 创建一个名为TEST_DIR38的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR38 AS '/home/user/test/path38';
+-- 测试用例 39: 创建一个名为TEST_DIR39的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR39 AS '/home/user/test/path39';
+-- 测试用例 40: 创建一个名为TEST_DIR40的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR40 AS '/home/user/test/path40';
+-- 测试用例 41: 创建一个名为TEST_DIR41的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR41 AS '/home/user/test/path41';
+-- 测试用例 42: 创建一个名为TEST_DIR42的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR42 AS '/home/user/test/path42';
+-- 测试用例 43: 创建一个名为TEST_DIR43的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR43 AS '/home/user/test/path43';
+-- 测试用例 44: 创建一个名为TEST_DIR44的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR44 AS '/home/user/test/path44';
+-- 测试用例 45: 创建一个名为TEST_DIR45的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR45 AS '/home/user/test/path45';
+-- 测试用例 46: 创建一个名为TEST_DIR46的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR46 AS '/home/user/test/path46';
+-- 测试用例 47: 创建一个名为TEST_DIR47的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR47 AS '/home/user/test/path47';
+-- 测试用例 48: 创建一个名为TEST_DIR48的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR48 AS '/home/user/test/path48';
+-- 测试用例 49: 创建一个名为TEST_DIR49的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR49 AS '/home/user/test/path49';
+-- 测试用例 50: 创建一个名为TEST_DIR50的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR50 AS '/home/user/test/path50';
+-- 测试用例 51: 创建一个名为TEST_DIR51的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR51 AS '/home/user/test/path51';
+-- 测试用例 52: 创建一个名为TEST_DIR52的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR52 AS '/home/user/test/path52';
+-- 测试用例 53: 创建一个名为TEST_DIR53的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR53 AS '/home/user/test/path53';
+-- 测试用例 54: 创建一个名为TEST_DIR54的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR54 AS '/home/user/test/path54';
+-- 测试用例 55: 创建一个名为TEST_DIR55的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR55 AS '/home/user/test/path55';
+-- 测试用例 56: 创建一个名为TEST_DIR56的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR56 AS '/home/user/test/path56';
+-- 测试用例 57: 创建一个名为TEST_DIR57的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR57 AS '/home/user/test/path57';
+-- 测试用例 58: 创建一个名为TEST_DIR58的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR58 AS '/home/user/test/path58';
+-- 测试用例 59: 创建一个名为TEST_DIR59的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR59 AS '/home/user/test/path59';
+-- 测试用例 60: 创建一个名为TEST_DIR60的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR60 AS '/home/user/test/path60';
+-- 测试用例 61: 创建一个名为TEST_DIR61的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR61 AS '/home/user/test/path61';
+-- 测试用例 62: 创建一个名为TEST_DIR62的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR62 AS '/home/user/test/path62';
+-- 测试用例 63: 创建一个名为TEST_DIR63的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR63 AS '/home/user/test/path63';
+-- 测试用例 64: 创建一个名为TEST_DIR64的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR64 AS '/home/user/test/path64';
+-- 测试用例 65: 创建一个名为TEST_DIR65的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR65 AS '/home/user/test/path65';
+-- 测试用例 66: 创建一个名为TEST_DIR66的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR66 AS '/home/user/test/path66';
+-- 测试用例 67: 创建一个名为TEST_DIR67的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR67 AS '/home/user/test/path67';
+-- 测试用例 68: 创建一个名为TEST_DIR68的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR68 AS '/home/user/test/path68';
+-- 测试用例 69: 创建一个名为TEST_DIR69的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR69 AS '/home/user/test/path69';
+-- 测试用例 70: 创建一个名为TEST_DIR70的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR70 AS '/home/user/test/path70';
+-- 测试用例 71: 创建一个名为TEST_DIR71的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR71 AS '/home/user/test/path71';
+-- 测试用例 72: 创建一个名为TEST_DIR72的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR72 AS '/home/user/test/path72';
+-- 测试用例 73: 创建一个名为TEST_DIR73的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR73 AS '/home/user/test/path73';
+-- 测试用例 74: 创建一个名为TEST_DIR74的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR74 AS '/home/user/test/path74';
+-- 测试用例 75: 创建一个名为TEST_DIR75的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR75 AS '/home/user/test/path75';
+-- 测试用例 76: 创建一个名为TEST_DIR76的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR76 AS '/home/user/test/path76';
+-- 测试用例 77: 创建一个名为TEST_DIR77的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR77 AS '/home/user/test/path77';
+-- 测试用例 78: 创建一个名为TEST_DIR78的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR78 AS '/home/user/test/path78';
+-- 测试用例 79: 创建一个名为TEST_DIR79的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR79 AS '/home/user/test/path79';
+-- 测试用例 80: 创建一个名为TEST_DIR80的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR80 AS '/home/user/test/path80';
+-- 测试用例 81: 创建一个名为TEST_DIR81的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR81 AS '/home/user/test/path81';
+-- 测试用例 82: 创建一个名为TEST_DIR82的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR82 AS '/home/user/test/path82';
+-- 测试用例 83: 创建一个名为TEST_DIR83的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR83 AS '/home/user/test/path83';
+-- 测试用例 84: 创建一个名为TEST_DIR84的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR84 AS '/home/user/test/path84';
+-- 测试用例 85: 创建一个名为TEST_DIR85的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR85 AS '/home/user/test/path85';
+-- 测试用例 86: 创建一个名为TEST_DIR86的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR86 AS '/home/user/test/path86';
+-- 测试用例 87: 创建一个名为TEST_DIR87的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR87 AS '/home/user/test/path87';
+-- 测试用例 88: 创建一个名为TEST_DIR88的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR88 AS '/home/user/test/path88';
+-- 测试用例 89: 创建一个名为TEST_DIR89的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR89 AS '/home/user/test/path89';
+-- 测试用例 90: 创建一个名为TEST_DIR90的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR90 AS '/home/user/test/path90';
+-- 测试用例 91: 创建一个名为TEST_DIR91的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR91 AS '/home/user/test/path91';
+-- 测试用例 92: 创建一个名为TEST_DIR92的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR92 AS '/home/user/test/path92';
+-- 测试用例 93: 创建一个名为TEST_DIR93的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR93 AS '/home/user/test/path93';
+-- 测试用例 94: 创建一个名为TEST_DIR94的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR94 AS '/home/user/test/path94';
+-- 测试用例 95: 创建一个名为TEST_DIR95的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR95 AS '/home/user/test/path95';
+-- 测试用例 96: 创建一个名为TEST_DIR96的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR96 AS '/home/user/test/path96';
+-- 测试用例 97: 创建一个名为TEST_DIR97的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR97 AS '/home/user/test/path97';
+-- 测试用例 98: 创建一个名为TEST_DIR98的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR98 AS '/home/user/test/path98';
+-- 测试用例 99: 创建一个名为TEST_DIR99的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR99 AS '/home/user/test/path99';
+-- 测试用例 100: 创建一个名为TEST_DIR100的目录
+CREATE OR REPLACE DIRECTORY TEST_DIR100 AS '/home/user/test/path100'

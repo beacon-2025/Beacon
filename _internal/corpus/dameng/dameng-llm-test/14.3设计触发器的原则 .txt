@@ -1,0 +1,153 @@
+-- 创建测试表
+CREATE TABLE employees (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    salary DECIMAL(10, 2)
+);
+CREATE TABLE salary_changes (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    employee_id INT,
+    old_salary DECIMAL(10, 2),
+    new_salary DECIMAL(10, 2),
+    change_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+-- 创建触发器，在更新员工工资前记录旧工资
+CREATE TRIGGER before_employee_update
+BEFORE UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO salary_changes (employee_id, old_salary, new_salary)
+    VALUES (OLD.id, OLD.salary, NEW.salary);
+END;
+-- 插入测试数据
+INSERT INTO employees (id, name, salary) VALUES (1, 'John Doe', 50000.00);
+-- 更新员工工资，触发触发器
+UPDATE employees SET salary = 55000.00 WHERE id = 1;
+-- 查询salary_changes表以验证触发器是否执行
+SELECT * FROM salary_changes;
+-- 创建触发器，在插入新员工后记录工资变化
+CREATE TRIGGER after_employee_insert
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO salary_changes (employee_id, old_salary, new_salary)
+    VALUES (NEW.id, NULL, NEW.salary);
+END;
+-- 插入新员工，触发触发器
+INSERT INTO employees (id, name, salary) VALUES (2, 'Jane Smith', 60000.00);
+-- 查询salary_changes表以验证触发器是否执行
+SELECT * FROM salary_changes;
+-- 创建触发器，避免递归触发
+CREATE TRIGGER before_employee_update_no_recursion
+BEFORE UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    -- 避免递归触发，不更新employees表
+    IF NEW.salary > 100000.00 THEN
+        SET NEW.salary = 100000.00;
+END IF;
+END;
+-- 插入测试数据
+INSERT INTO employees (id, name, salary) VALUES (3, 'Alice Johnson', 90000.00);
+-- 更新员工工资，触发触发器
+UPDATE employees SET salary = 110000.00 WHERE id = 3;
+-- 查询employees表以验证触发器是否执行
+SELECT * FROM employees WHERE id = 3;
+-- 创建触发器，在删除员工后记录删除操作
+CREATE TRIGGER after_employee_delete
+AFTER DELETE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO salary_changes (employee_id, old_salary, new_salary)
+    VALUES (OLD.id, OLD.salary, NULL);
+END;
+-- 插入测试数据
+INSERT INTO employees (id, name, salary) VALUES (4, 'Bob Brown', 70000.00);
+-- 删除员工，触发触发器
+DELETE FROM employees WHERE id = 4;
+-- 查询salary_changes表以验证触发器是否执行
+SELECT * FROM salary_changes;
+-- 创建触发器，在插入新员工前检查工资是否合理
+CREATE TRIGGER before_employee_insert
+BEFORE INSERT ON employees
+FOR EACH ROW
+BEGIN
+    IF NEW.salary < 0 THEN
+        SET NEW.salary = 0;
+END IF;
+END;
+-- 插入新员工，触发触发器
+INSERT INTO employees (id, name, salary) VALUES (5, 'Charlie Davis', -1000.00);
+-- 查询employees表以验证触发器是否执行
+SELECT * FROM employees WHERE id = 5;
+-- 创建触发器，在更新员工工资后记录工资变化
+CREATE TRIGGER after_employee_update
+AFTER UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO salary_changes (employee_id, old_salary, new_salary)
+    VALUES (OLD.id, OLD.salary, NEW.salary);
+END;
+-- 插入测试数据
+INSERT INTO employees (id, name, salary) VALUES (6, 'Eva Green', 80000.00);
+-- 更新员工工资，触发触发器
+UPDATE employees SET salary = 85000.00 WHERE id = 6;
+-- 查询salary_changes表以验证触发器是否执行
+SELECT * FROM salary_changes;
+-- 创建触发器，在删除员工前检查工资是否为零
+CREATE TRIGGER before_employee_delete
+BEFORE DELETE ON employees
+FOR EACH ROW
+BEGIN
+    IF OLD.salary > 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Cannot delete employee with non-zero salary';
+END IF;
+END;
+-- 插入测试数据
+INSERT INTO employees (id, name, salary) VALUES (7, 'Frank White', 0.00);
+-- 删除员工，触发触发器
+DELETE FROM employees WHERE id = 7;
+-- 查询employees表以验证触发器是否执行
+SELECT * FROM employees WHERE id = 7;
+-- 创建触发器，在更新员工工资后记录工资变化，避免递归触发
+CREATE TRIGGER after_employee_update_no_recursion
+AFTER UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    -- 避免递归触发，不更新employees表
+    INSERT INTO salary_changes (employee_id, old_salary, new_salary)
+    VALUES (OLD.id, OLD.salary, NEW.salary);
+END;
+-- 插入测试数据
+INSERT INTO employees (id, name, salary) VALUES (8, 'Grace Lee', 90000.00);
+-- 更新员工工资，触发触发器
+UPDATE employees SET salary = 95000.00 WHERE id = 8;
+-- 查询salary_changes表以验证触发器是否执行
+SELECT * FROM salary_changes;
+-- 创建触发器，在更新员工工资前限制工资增长幅度
+CREATE TRIGGER before_employee_update_limit
+BEFORE UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    IF NEW.salary > OLD.salary * 1.1 THEN
+        SET NEW.salary = OLD.salary * 1.1;
+END IF;
+END;
+-- 插入测试数据
+INSERT INTO employees (id, name, salary) VALUES (9, 'Henry Brown', 100000.00);
+-- 更新员工工资，触发触发器
+UPDATE employees SET salary = 120000.00 WHERE id = 9;
+-- 查询employees表以验证触发器是否执行
+SELECT * FROM employees WHERE id = 9;
+-- 创建触发器，在插入新员工后记录新员工信息
+CREATE TRIGGER after_employee_insert_log
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO salary_changes (employee_id, old_salary, new_salary)
+    VALUES (NEW.id, NULL, NEW.salary);
+END;
+-- 插入新员工，触发触发器
+INSERT INTO employees (id, name, salary) VALUES (10, 'Ivy Chen', 110000.00);
+-- 查询salary_changes表以验证触发器是否执行
+SELECT * FROM salary_changes

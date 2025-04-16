@@ -1,0 +1,95 @@
+-- 创建Java类
+CREATE OR REPLACE JAVA CLASS jcls 
+{  
+    int a;
+public static int testAdd2(int a, int b) { 
+        return a + b;
+} 
+    public int testAdd3(int a, int b, int c) { 
+        return a + b + c;
+} 
+};
+-- 测试用例1: 创建表并使用Java类的静态方法
+CREATE TABLE tt1(c1 INT, c2 jcls);
+INSERT INTO tt1 VALUES(jcls.testAdd2(1, 2), jcls(1));
+-- 测试用例2: 创建表并使用Java类的成员方法
+CREATE TABLE tt2(c1 INT, c2 jcls);
+INSERT INTO tt2 VALUES(jcls().testAdd3(1, 2, 3), jcls(2));
+-- 测试用例3: 创建自定义记录类型
+CREATE TYPE rec_type AS OBJECT (
+    id INT,
+    name VARCHAR(50)
+);
+-- 测试用例4: 创建自定义对象类型
+CREATE TYPE obj_type AS OBJECT (
+    id INT,
+    name VARCHAR(50),
+    MEMBER FUNCTION get_name RETURN VARCHAR(50)
+);
+-- 测试用例5: 创建自定义对象类型的方法体
+CREATE TYPE BODY obj_type AS
+    MEMBER FUNCTION get_name RETURN VARCHAR(50) IS
+    BEGIN
+        RETURN self.name;
+END;
+END;
+-- 测试用例6: 创建表并使用自定义记录类型
+CREATE TABLE tt3(c1 INT, c2 rec_type);
+INSERT INTO tt3 VALUES(1, rec_type(1, 'Alice'));
+-- 测试用例7: 创建表并使用自定义对象类型
+CREATE TABLE tt4(c1 INT, c2 obj_type);
+INSERT INTO tt4 VALUES(1, obj_type(1, 'Bob'));
+-- 测试用例8: 查询自定义对象类型的方法
+SELECT c2.get_name() FROM tt4 WHERE c1 = 1;
+-- 测试用例9: 创建自定义数组类型
+CREATE TYPE arr_type AS VARRAY(10) OF INT;
+-- 测试用例10: 创建表并使用自定义数组类型
+CREATE TABLE tt5(c1 INT, c2 arr_type);
+INSERT INTO tt5 VALUES(1, arr_type(1, 2, 3));
+-- 测试用例11: 创建自定义集合类型
+CREATE TYPE set_type AS TABLE OF VARCHAR(50);
+-- 测试用例12: 创建表并使用自定义集合类型
+CREATE TABLE tt6(c1 INT, c2 set_type);
+INSERT INTO tt6 VALUES(1, set_type('A', 'B', 'C'));
+-- 测试用例13: 查询自定义集合类型
+SELECT * FROM TABLE(SELECT c2 FROM tt6 WHERE c1 = 1);
+-- 测试用例14: 创建嵌套表类型
+CREATE TYPE nested_table_type AS TABLE OF rec_type;
+-- 测试用例15: 创建表并使用嵌套表类型
+CREATE TABLE tt7(c1 INT, c2 nested_table_type);
+INSERT INTO tt7 VALUES(1, nested_table_type(rec_type(1, 'Alice'), rec_type(2, 'Bob')));
+-- 测试用例16: 查询嵌套表类型
+SELECT * FROM TABLE(SELECT c2 FROM tt7 WHERE c1 = 1);
+-- 测试用例17: 创建自定义类型并使用方法
+CREATE TYPE complex_type AS OBJECT (
+    real_part NUMBER,
+    imag_part NUMBER,
+    MEMBER FUNCTION magnitude RETURN NUMBER
+);
+CREATE TYPE BODY complex_type AS
+    MEMBER FUNCTION magnitude RETURN NUMBER IS
+    BEGIN
+        RETURN SQRT(self.real_part * self.real_part + self.imag_part * self.imag_part);
+END;
+END;
+-- 测试用例18: 创建表并使用自定义类型的方法
+CREATE TABLE tt8(c1 INT, c2 complex_type);
+INSERT INTO tt8 VALUES(1, complex_type(3, 4));
+SELECT c2.magnitude() FROM tt8 WHERE c1 = 1;
+-- 测试用例19: 创建自定义类型并使用方法
+CREATE TYPE point_type AS OBJECT (
+    x NUMBER,
+    y NUMBER,
+    MEMBER FUNCTION distance(p point_type) RETURN NUMBER
+);
+CREATE TYPE BODY point_type AS
+    MEMBER FUNCTION distance(p point_type) RETURN NUMBER IS
+    BEGIN
+        RETURN SQRT(POWER(self.x - p.x, 2) + POWER(self.y - p.y, 2));
+END;
+END;
+-- 测试用例20: 创建表并使用自定义类型的方法
+CREATE TABLE tt9(c1 INT, c2 point_type);
+INSERT INTO tt9 VALUES(1, point_type(0, 0));
+INSERT INTO tt9 VALUES(2, point_type(3, 4));
+SELECT c2.distance(point_type(0, 0)) FROM tt9 WHERE c1 = 2

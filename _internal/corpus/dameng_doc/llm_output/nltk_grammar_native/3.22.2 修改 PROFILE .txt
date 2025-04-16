@@ -1,0 +1,6 @@
+```plaintext
+S -> ALTER_PROFILE
+ALTER_PROFILE -> 'ALTER' 'PROFILE' PROFILE_NAME 'LIMIT' RESOURCE_SETTINGS
+PROFILE_NAME -> 'profile_name_1'
+RESOURCE_SETTINGS -> 'resource_settings_value'
+```

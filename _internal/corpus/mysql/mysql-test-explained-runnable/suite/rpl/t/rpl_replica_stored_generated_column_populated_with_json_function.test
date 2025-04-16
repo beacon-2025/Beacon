@@ -1,0 +1,8 @@
+
+    CREATE TABLE `log_data` (
+      `id` INT UNSIGNED NOT NULL,
+      `data` MEDIUMTEXT NOT NULL,
+      `gcol` JSON GENERATED ALWAYS AS (json_extract(`data`,'$.x')) STORED,
+      KEY `idx` ((cast(json_extract(`gcol`,_utf8mb4'$') as char(128) array))),
+      PRIMARY KEY (`id`)
+    ) ENGINE = InnoDB

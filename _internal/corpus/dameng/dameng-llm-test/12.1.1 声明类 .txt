@@ -1,0 +1,259 @@
+-- 创建一个模式
+CREATE SCHEMA test_schema;
+CREATE CLASS test_schema.SimpleClass AS
+    var1 INT,
+    var2 VARCHAR(50)
+END SimpleClass;
+CREATE CLASS test_schema.ClassWithDefaults AS
+    var1 INT DEFAULT 10,
+    var2 VARCHAR(50) DEFAULT 'default_value'
+END ClassWithDefaults;
+CREATE CLASS test_schema.ClassWithStaticMethod AS
+    STATIC PROCEDURE static_proc(param1 INT)
+END ClassWithStaticMethod;
+CREATE CLASS test_schema.ClassWithMemberMethod AS
+    MEMBER PROCEDURE member_proc(param1 INT)
+END ClassWithMemberMethod;
+CREATE CLASS test_schema.ClassWithFunction AS
+    FUNCTION func1(param1 INT) RETURN INT
+END ClassWithFunction;
+CREATE CLASS test_schema.ClassWithMapFunction AS
+    MAP FUNCTION map_func(param1 INT) RETURN INT
+END ClassWithMapFunction;
+CREATE CLASS test_schema.ClassWithType AS
+    TYPE custom_type IS INT
+END ClassWithType;
+CREATE CLASS test_schema.ParentClass AS
+    var1 INT
+END ParentClass;
+CREATE CLASS test_schema.ChildClass UNDER test_schema.ParentClass AS
+    var2 VARCHAR(50)
+END ChildClass;
+CREATE CLASS test_schema.NotFinalClass NOT FINAL AS
+    var1 INT
+END NotFinalClass;
+CREATE CLASS test_schema.NotInstantiableClass NOT INSTANTIABLE AS
+    var1 INT
+END NotInstantiableClass;
+CREATE CLASS test_schema.ClassWithAuthid AS
+    var1 INT
+END ClassWithAuthid AUTHID CURRENT_USER;
+CREATE CLASS test_schema.ClassWithAuthidDefiner AS
+    var1 INT
+END ClassWithAuthidDefiner AUTHID DEFINER;
+CREATE CLASS test_schema.EncryptedClass WITH ENCRYPTION AS
+    var1 INT
+END EncryptedClass;
+CREATE CLASS test_schema.ParentClassWithMethod AS
+    PROCEDURE proc1(param1 INT)
+END ParentClassWithMethod;
+CREATE CLASS test_schema.ChildClassWithMethod UNDER test_schema.ParentClassWithMethod AS
+    OVERRIDING PROCEDURE proc1(param1 INT)
+END ChildClassWithMethod;
+CREATE CLASS test_schema.ClassWithFinalMethod AS
+    FINAL PROCEDURE final_proc(param1 INT)
+END ClassWithFinalMethod;
+CREATE CLASS test_schema.ClassWithNotInstantiableMethod AS
+    NOT INSTANTIABLE PROCEDURE not_instantiable_proc(param1 INT)
+END ClassWithNotInstantiableMethod;
+CREATE CLASS test_schema.ClassWithDeterministicFunction AS
+    FUNCTION deterministic_func(param1 INT) RETURN INT DETERMINISTIC
+END ClassWithDeterministicFunction;
+CREATE CLASS test_schema.ClassWithPipelinedFunction AS
+    FUNCTION pipelined_func(param1 INT) RETURN INT PIPELINED
+END ClassWithPipelinedFunction;
+CREATE CLASS test_schema.ClassWithMultipleVars AS
+    var1 INT,
+    var2 VARCHAR(50),
+    var3 DATE
+END ClassWithMultipleVars;
+CREATE CLASS test_schema.ClassWithMultipleMethods AS
+    PROCEDURE proc1(param1 INT),
+    FUNCTION func1(param1 INT) RETURN INT,
+    STATIC PROCEDURE static_proc(param1 INT)
+END ClassWithMultipleMethods;
+CREATE OR REPLACE CLASS test_schema.ReplaceableClass AS
+    var1 INT
+END ReplaceableClass;
+CREATE CLASS test_schema.GrandParentClass AS
+    var1 INT
+END GrandParentClass;
+CREATE CLASS test_schema.ParentClass UNDER test_schema.GrandParentClass AS
+    var2 VARCHAR(50)
+END ParentClass;
+CREATE CLASS test_schema.ChildClass UNDER test_schema.ParentClass AS
+    var3 DATE
+END ChildClass;
+CREATE CLASS test_schema.NotInstantiableNotFinalClass NOT INSTANTIABLE NOT FINAL AS
+    var1 INT
+END NotInstantiableNotFinalClass;
+CREATE CLASS test_schema.ClassWithStaticAndMemberMethods AS
+    STATIC PROCEDURE static_proc(param1 INT),
+    MEMBER PROCEDURE member_proc(param1 INT)
+END ClassWithStaticAndMemberMethods;
+CREATE CLASS test_schema.ClassWithMapAndDeterministicFunction AS
+    MAP FUNCTION map_func(param1 INT) RETURN INT DETERMINISTIC
+END ClassWithMapAndDeterministicFunction;
+CREATE CLASS test_schema.ClassWithPipelinedAndDeterministicFunction AS
+    FUNCTION pipelined_func(param1 INT) RETURN INT PIPELINED DETERMINISTIC
+END ClassWithPipelinedAndDeterministicFunction;
+CREATE CLASS test_schema.ClassWithMultipleTypes AS
+    TYPE type1 IS INT,
+    TYPE type2 IS VARCHAR(50)
+END ClassWithMultipleTypes;
+CREATE CLASS test_schema.ClassWithMultipleInheritanceAttributes AS
+    OVERRIDING FINAL PROCEDURE proc1(param1 INT)
+END ClassWithMultipleInheritanceAttributes;
+CREATE CLASS test_schema.ClassWithNotOverridingMethod AS
+    NOT OVERRIDING PROCEDURE proc1(param1 INT)
+END ClassWithNotOverridingMethod;
+CREATE CLASS test_schema.ClassWithInstantiableMethod AS
+    INSTANTIABLE PROCEDURE instantiable_proc(param1 INT)
+END ClassWithInstantiableMethod;
+CREATE CLASS test_schema.ClassWithNotFinalAndNotInstantiableMethod AS
+    NOT FINAL NOT INSTANTIABLE PROCEDURE not_final_not_instantiable_proc(param1 INT)
+END ClassWithNotFinalAndNotInstantiableMethod;
+CREATE CLASS test_schema.ClassWithMultipleVariables AS
+    var1 INT,
+    var2 VARCHAR(50),
+    var3 DATE,
+    var4 BOOLEAN
+END ClassWithMultipleVariables;
+CREATE CLASS test_schema.ClassWithMultipleMethods AS
+    PROCEDURE proc1(param1 INT),
+    FUNCTION func1(param1 INT) RETURN INT,
+    STATIC PROCEDURE static_proc(param1 INT),
+    MEMBER FUNCTION member_func(param1 INT) RETURN INT
+END ClassWithMultipleMethods;
+CREATE CLASS test_schema.ClassWithMultipleTypeDeclarations AS
+    TYPE type1 IS INT,
+    TYPE type2 IS VARCHAR(50),
+    TYPE type3 IS DATE
+END ClassWithMultipleTypeDeclarations;
+CREATE CLASS test_schema.ClassWithMultipleInheritanceAttributes AS
+    OVERRIDING FINAL PROCEDURE proc1(param1 INT),
+    NOT OVERRIDING PROCEDURE proc2(param1 INT)
+END ClassWithMultipleInheritanceAttributes;
+CREATE CLASS test_schema.ClassWithMultipleNotInstantiableMethods AS
+    NOT INSTANTIABLE PROCEDURE not_instantiable_proc1(param1 INT),
+    NOT INSTANTIABLE PROCEDURE not_instantiable_proc2(param1 INT)
+END ClassWithMultipleNotInstantiableMethods;
+CREATE CLASS test_schema.ClassWithMultipleFinalMethods AS
+    FINAL PROCEDURE final_proc1(param1 INT),
+    FINAL PROCEDURE final_proc2(param1 INT)
+END ClassWithMultipleFinalMethods;
+CREATE CLASS test_schema.ClassWithMultipleDeterministicFunctions AS
+    FUNCTION deterministic_func1(param1 INT) RETURN INT DETERMINISTIC,
+    FUNCTION deterministic_func2(param1 INT) RETURN INT DETERMINISTIC
+END ClassWithMultipleDeterministicFunctions;
+CREATE CLASS test_schema.ClassWithMultiplePipelinedFunctions AS
+    FUNCTION pipelined_func1(param1 INT) RETURN INT PIPELINED,
+    FUNCTION pipelined_func2(param1 INT) RETURN INT PIPELINED
+END ClassWithMultiplePipelinedFunctions;
+CREATE CLASS test_schema.ClassWithMultipleMapFunctions AS
+    MAP FUNCTION map_func1(param1 INT) RETURN INT,
+    MAP FUNCTION map_func2(param1 INT) RETURN INT
+END ClassWithMultipleMapFunctions;
+CREATE CLASS test_schema.ClassWithMultipleStaticMethods AS
+    STATIC PROCEDURE static_proc1(param1 INT),
+    STATIC PROCEDURE static_proc2(param1 INT)
+END ClassWithMultipleStaticMethods;
+CREATE CLASS test_schema.ClassWithMultipleMemberMethods AS
+    MEMBER PROCEDURE member_proc1(param1 INT),
+    MEMBER PROCEDURE member_proc2(param1 INT)
+END ClassWithMultipleMemberMethods;
+CREATE CLASS test_schema.ClassWithMultipleVariables AS
+    var1 INT,
+    var2 VARCHAR(50),
+    var3 DATE,
+    var4 BOOLEAN,
+    var5 FLOAT
+END ClassWithMultipleVariables;
+CREATE CLASS test_schema.ClassWithMultipleMethods AS
+    PROCEDURE proc1(param1 INT),
+    FUNCTION func1(param1 INT) RETURN INT,
+    STATIC PROCEDURE static_proc(param1 INT),
+    MEMBER FUNCTION member_func(param1 INT) RETURN INT,
+    MAP FUNCTION map_func(param1 INT) RETURN INT
+END ClassWithMultipleMethods;
+CREATE CLASS test_schema.ClassWithMultipleTypeDeclarations AS
+    TYPE type1 IS INT,
+    TYPE type2 IS VARCHAR(50),
+    TYPE type3 IS DATE,
+    TYPE type4 IS BOOLEAN
+END ClassWithMultipleTypeDeclarations;
+CREATE CLASS test_schema.ClassWithMultipleInheritanceAttributes AS
+    OVERRIDING FINAL PROCEDURE proc1(param1 INT),
+    NOT OVERRIDING PROCEDURE proc2(param1 INT),
+    INSTANTIABLE PROCEDURE instantiable_proc(param1 INT)
+END ClassWithMultipleInheritanceAttributes;
+CREATE CLASS test_schema.ClassWithMultipleNotInstantiableMethods AS
+    NOT INSTANTIABLE PROCEDURE not_instantiable_proc1(param1 INT),
+    NOT INSTANTIABLE PROCEDURE not_instantiable_proc2(param1 INT),
+    NOT INSTANTIABLE PROCEDURE not_instantiable_proc3(param1 INT)
+END ClassWithMultipleNotInstantiableMethods;
+CREATE CLASS test_schema.ClassWithMultipleFinalMethods AS
+    FINAL PROCEDURE final_proc1(param1 INT),
+    FINAL PROCEDURE final_proc2(param1 INT),
+    FINAL PROCEDURE final_proc3(param1 INT)
+END ClassWithMultipleFinalMethods;
+CREATE CLASS test_schema.ClassWithMultipleDeterministicFunctions AS
+    FUNCTION deterministic_func1(param1 INT) RETURN INT DETERMINISTIC,
+    FUNCTION deterministic_func2(param1 INT) RETURN INT DETERMINISTIC,
+    FUNCTION deterministic_func3(param1 INT) RETURN INT DETERMINISTIC
+END ClassWithMultipleDeterministicFunctions;
+CREATE CLASS test_schema.ClassWithMultiplePipelinedFunctions AS
+    FUNCTION pipelined_func1(param1 INT) RETURN INT PIPELINED,
+    FUNCTION pipelined_func2(param1 INT) RETURN INT PIPELINED,
+    FUNCTION pipelined_func3(param1 INT) RETURN INT PIPELINED
+END ClassWithMultiplePipelinedFunctions;
+CREATE CLASS test_schema.ClassWithMultipleMapFunctions AS
+    MAP FUNCTION map_func1(param1 INT) RETURN INT,
+    MAP FUNCTION map_func2(param1 INT) RETURN INT,
+    MAP FUNCTION map_func3(param1 INT) RETURN INT
+END ClassWithMultipleMapFunctions;
+CREATE CLASS test_schema.ClassWithMultipleStaticMethods AS
+    STATIC PROCEDURE static_proc1(param1 INT),
+    STATIC PROCEDURE static_proc2(param1 INT),
+    STATIC PROCEDURE static_proc3(param1 INT)
+END ClassWithMultipleStaticMethods;
+CREATE CLASS test_schema.ClassWithMultipleMemberMethods AS
+    MEMBER PROCEDURE member_proc1(param1 INT),
+    MEMBER PROCEDURE member_proc2(param1 INT),
+    MEMBER PROCEDURE member_proc3(param1 INT)
+END ClassWithMultipleMemberMethods;
+CREATE CLASS test_schema.ClassWithMultipleVariables AS
+    var1 INT,
+    var2 VARCHAR(50),
+    var3 DATE,
+    var4 BOOLEAN,
+    var5 FLOAT,
+    var6 DOUBLE
+END ClassWithMultipleVariables;
+CREATE CLASS test_schema.ClassWithMultipleMethods AS
+    PROCEDURE proc1(param1 INT),
+    FUNCTION func1(param1 INT) RETURN INT,
+    STATIC PROCEDURE static_proc(param1 INT),
+    MEMBER FUNCTION member_func(param1 INT) RETURN INT,
+    MAP FUNCTION map_func(param1 INT) RETURN INT,
+    DETERMINISTIC FUNCTION deterministic_func(param1 INT) RETURN INT
+END ClassWithMultipleMethods;
+CREATE CLASS test_schema.ClassWithMultipleTypeDeclarations AS
+    TYPE type1 IS INT,
+    TYPE type2 IS VARCHAR(50),
+    TYPE type3 IS DATE,
+    TYPE type4 IS BOOLEAN,
+    TYPE type5 IS FLOAT
+END ClassWithMultipleTypeDeclarations;
+CREATE CLASS test_schema.ClassWithMultipleInheritanceAttributes AS
+    OVERRIDING FINAL PROCEDURE proc1(param1 INT),
+    NOT OVERRIDING PROCEDURE proc2(param1 INT),
+    INSTANTIABLE PROCEDURE instantiable_proc(param1 INT),
+    NOT INSTANTIABLE PROCEDURE not_instantiable_proc(param1 INT)
+END ClassWithMultipleInheritanceAttributes;
+CREATE CLASS test_schema.ClassWithMultipleNotInstantiableMethods AS
+    NOT INSTANTIABLE PROCEDURE not_instantiable_proc1(param1 INT),
+    NOT INSTANTIABLE PROCEDURE not_instantiable_proc2(param1 INT),
+    NOT INSTANTIABLE PROCEDURE not_instantiable_proc3(param1 INT),
+    NOT INSTANTIABLE PROCEDURE not_instantiable_proc4(param1 INT)
+END ClassWithMultipleNotInstantiableMethods

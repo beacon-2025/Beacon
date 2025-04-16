@@ -1,0 +1,5 @@
+```
+S -> HIERARCHICAL_QUERY_CLAUSE
+HIERARCHICAL_QUERY_CLAUSE -> '层次查询子句' HIERARCHICAL_QUERY_INFO
+HIERARCHICAL_QUERY_INFO -> '层次查询相关的伪列' | '层次查询相关的函数' | '层次查询相关的操作符'
+```

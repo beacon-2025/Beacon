@@ -1,0 +1,16 @@
+```plaintext
+IS_OF_TYPE -> EXPRESSION 'IS' NOT_OPTION 'OF' TYPE_OPTION '(' TYPE_LIST ')'
+NOT_OPTION -> 'NOT' | ''
+TYPE_OPTION -> 'TYPE' | ''
+TYPE_LIST -> 'type_name_1' | 'type_name_1' ',' 'type_name_2'
+
+CREATE_TYPE -> 'CREATE' 'OR' 'REPLACE' 'TYPE' 'type_name_1' 'AS' 'OBJECT' '(' 'NAME' 'VARCHAR2' '(' 'int_value' ')' ')' 'NOT' 'FINAL'
+CREATE_TABLE -> 'CREATE' 'TABLE' 'table_name_1' '(' 'column_name_1' 'INT' ',' 'column_name_2' 'type_name_1' ')'
+INSERT_INTO -> 'INSERT' 'INTO' 'table_name_1' 'VALUES' '(' 'int_value' ',' 'type_name_1' '(' 'string_value' ')' ')'
+COMMIT -> 'COMMIT'
+SELECT -> 'SELECT' '*' 'FROM' 'table_name_1' 'WHERE' 'column_name_1' 'IS' 'OF' '(' 'type_name_1' ')'
+
+TRIGGER -> 'TRIGGER' 'trigger_name_1' 'ON' 'table_name_1' 'FOR' 'INSERT' 'DELETE' 'UPDATE' 'AS' 'BEGIN' 'DMSQL' 'END'
+TRIGGER_DEFINITION -> 'DEFINE' 'TRIGGER' 'trigger_name_1' 'ON' 'table_name_1' 'FOR' 'INSERT' 'DELETE' 'UPDATE' 'AS' 'BEGIN' 'DMSQL' 'END'
+TRIGGER_EXAMPLE -> 'TRIGGER' 'trigger_name_1' 'ON' 'table_name_1' 'FOR' 'INSERT' 'DELETE' 'UPDATE' 'AS' 'BEGIN' 'DMSQL' 'END'
+```

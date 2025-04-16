@@ -1,0 +1,160 @@
+-- 创建测试表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT
+);
+-- 插入测试数据
+INSERT INTO test_table1 (id, name, age) VALUES (1, 'Alice', 25);
+INSERT INTO test_table1 (id, name, age) VALUES (2, 'Bob', 30);
+INSERT INTO test_table1 (id, name, age) VALUES (3, 'Charlie', 35);
+SELECT * FROM test_table1;
+SELECT name, age FROM test_table1;
+SELECT * FROM test_table1 WHERE age > 30;
+UPDATE test_table1 SET age = 40 WHERE name = 'Bob';
+DELETE FROM test_table1 WHERE id = 3;
+INSERT INTO test_table1 (id, name, age) VALUES (4, 'David', 28);
+CREATE TABLE test_table2 (
+    id INT PRIMARY KEY,
+    description TEXT,
+    created_at TIMESTAMP
+);
+INSERT INTO test_table2 (id, description, created_at) VALUES (1, 'First record', NOW());
+SELECT * FROM test_table2;
+DROP TABLE test_table2;
+CREATE INDEX idx_name ON test_table1 (name);
+DROP INDEX idx_name;
+CREATE VIEW view_test AS SELECT id, name FROM test_table1 WHERE age > 25;
+SELECT * FROM view_test;
+DROP VIEW view_test;
+CREATE PROCEDURE get_older_than(IN age_limit INT)
+BEGIN
+    SELECT * FROM test_table1 WHERE age > age_limit;
+END;
+CALL get_older_than(30);
+DROP PROCEDURE get_older_than;
+CREATE TRIGGER before_insert_test_table1
+BEFORE INSERT ON test_table1
+FOR EACH ROW
+BEGIN
+    SET NEW.age = NEW.age + 1;
+END;
+DROP TRIGGER before_insert_test_table1;
+BACKUP DATABASE TO '/backup/db_backup.bak';
+RESTORE DATABASE FROM '/backup/db_backup.bak';
+CREATE FUNCTION external_function() RETURNS INT
+EXTERNAL NAME 'libexternal.so';
+SELECT external_function();
+DROP FUNCTION external_function;
+CREATE USER 'test_user' IDENTIFIED BY 'password';
+GRANT SELECT ON test_table1 TO 'test_user';
+REVOKE SELECT ON test_table1 FROM 'test_user';
+DROP USER 'test_user';
+CREATE ROLE 'test_role';
+GRANT SELECT ON test_table1 TO 'test_role';
+GRANT 'test_role' TO 'test_user';
+REVOKE 'test_role' FROM 'test_user';
+DROP ROLE 'test_role';
+CREATE DATABASE test_db;
+USE test_db;
+DROP DATABASE test_db;
+CREATE TABLESPACE test_tablespace LOCATION '/data/tablespace';
+DROP TABLESPACE test_tablespace;
+CREATE TABLE test_partitioned_table (
+    id INT,
+    name VARCHAR(50),
+    age INT
+) PARTITION BY RANGE (age) (
+    PARTITION p0 VALUES LESS THAN (30),
+    PARTITION p1 VALUES LESS THAN (40),
+    PARTITION p2 VALUES LESS THAN (50)
+);
+INSERT INTO test_partitioned_table (id, name, age) VALUES (1, 'Alice', 25);
+INSERT INTO test_partitioned_table (id, name, age) VALUES (2, 'Bob', 35);
+INSERT INTO test_partitioned_table (id, name, age) VALUES (3, 'Charlie', 45);
+SELECT * FROM test_partitioned_table;
+DROP TABLE test_partitioned_table;
+CREATE SEQUENCE test_seq START WITH 1 INCREMENT BY 1;
+INSERT INTO test_table1 (id, name, age) VALUES (NEXTVAL('test_seq'), 'Eve', 22);
+DROP SEQUENCE test_seq;
+CREATE TEMPORARY TABLE temp_table (
+    id INT,
+    name VARCHAR(50)
+);
+INSERT INTO temp_table (id, name) VALUES (1, 'Frank');
+SELECT * FROM temp_table;
+DROP TABLE temp_table;
+CREATE MATERIALIZED VIEW mat_view AS SELECT * FROM test_table1;
+REFRESH MATERIALIZED VIEW mat_view;
+SELECT * FROM mat_view;
+DROP MATERIALIZED VIEW mat_view;
+CREATE FULLTEXT INDEX ft_index ON test_table1 (name);
+DROP INDEX ft_index;
+CREATE INDEX comp_index ON test_table1 (name, age);
+DROP INDEX comp_index;
+ALTER TABLE test_table1 ADD CONSTRAINT unique_name UNIQUE (name);
+ALTER TABLE test_table1 DROP CONSTRAINT unique_name;
+ALTER TABLE test_table2 ADD CONSTRAINT fk_test_table1 FOREIGN KEY (id) REFERENCES test_table1 (id);
+ALTER TABLE test_table2 DROP CONSTRAINT fk_test_table1;
+ALTER TABLE test_table1 ADD CONSTRAINT check_age CHECK (age > 0);
+ALTER TABLE test_table1 DROP CONSTRAINT check_age;
+ALTER TABLE test_table1 ALTER COLUMN age SET DEFAULT 18;
+ALTER TABLE test_table1 ALTER COLUMN age DROP DEFAULT;
+ALTER TABLE test_table1 MODIFY COLUMN id INT AUTO_INCREMENT;
+ALTER TABLE test_table1 MODIFY COLUMN id INT;
+CREATE TRIGGER after_insert_test_table1
+AFTER INSERT ON test_table1
+FOR EACH ROW
+BEGIN
+    INSERT INTO test_table2 (id, description, created_at) VALUES (NEW.id, 'New record', NOW());
+END;
+DROP TRIGGER after_insert_test_table1;
+CREATE EVENT test_event
+ON SCHEDULE EVERY 1 HOUR
+DO
+    INSERT INTO test_table2 (id, description, created_at) VALUES (1, 'Event triggered', NOW());
+DROP EVENT test_event;
+DECLARE cur CURSOR FOR SELECT * FROM test_table1;
+OPEN cur;
+FETCH cur INTO @id, @name, @age;
+CLOSE cur;
+DEALLOCATE cur;
+CREATE TEMPORARY FILE '/tmp/temp_file.txt';
+DROP TEMPORARY FILE '/tmp/temp_file.txt';
+CREATE TEMPORARY DIRECTORY '/tmp/temp_dir';
+DROP TEMPORARY DIRECTORY '/tmp/temp_dir';
+CREATE TEMPORARY TABLESPACE temp_tablespace LOCATION '/tmp/tablespace';
+DROP TEMPORARY TABLESPACE temp_tablespace;
+CREATE TEMPORARY SEQUENCE temp_seq START WITH 1 INCREMENT BY 1;
+INSERT INTO test_table1 (id, name, age) VALUES (NEXTVAL('temp_seq'), 'Grace', 27);
+DROP TEMPORARY SEQUENCE temp_seq;
+CREATE TEMPORARY VIEW temp_view AS SELECT * FROM test_table1;
+SELECT * FROM temp_view;
+DROP TEMPORARY VIEW temp_view;
+CREATE TEMPORARY PROCEDURE temp_proc()
+BEGIN
+    SELECT * FROM test_table1;
+END;
+CALL temp_proc();
+DROP TEMPORARY PROCEDURE temp_proc;
+CREATE TEMPORARY TRIGGER temp_trigger
+BEFORE INSERT ON test_table1
+FOR EACH ROW
+BEGIN
+    SET NEW.age = NEW.age + 1;
+END;
+DROP TEMPORARY TRIGGER temp_trigger;
+CREATE TEMPORARY EVENT temp_event
+ON SCHEDULE EVERY 1 HOUR
+DO
+    INSERT INTO test_table2 (id, description, created_at) VALUES (1, 'Event triggered', NOW());
+DROP TEMPORARY EVENT temp_event;
+DECLARE temp_cur CURSOR FOR SELECT * FROM test_table1;
+OPEN temp_cur;
+FETCH temp_cur INTO @id, @name, @age;
+CLOSE temp_cur;
+DEALLOCATE temp_cur;
+CREATE TEMPORARY INDEX temp_index ON test_table1 (name);
+DROP TEMPORARY INDEX temp_index;
+ALTER TABLE test_table1 ADD TEMPORARY CONSTRAINT temp_unique UNIQUE (name);
+ALTER TABLE test_table1 DROP TEMPORARY CONSTRAINT temp_unique

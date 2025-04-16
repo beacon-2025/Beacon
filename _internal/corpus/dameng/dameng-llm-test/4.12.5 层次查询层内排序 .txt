@@ -1,0 +1,78 @@
+-- 创建测试表
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    employee_name VARCHAR(50),
+    manager_id INT
+);
+-- 插入测试数据
+INSERT INTO employees (employee_id, employee_name, manager_id) VALUES
+(1, 'Alice', NULL),
+(2, 'Bob', 1),
+(3, 'Charlie', 1),
+(4, 'David', 2),
+(5, 'Eve', 2),
+(6, 'Frank', 3),
+(7, 'Grace', 3),
+(8, 'Hank', 4),
+(9, 'Ivy', 4),
+(10, 'Jack', 5);
+-- 测试用例 1: 基本层次查询，按 employee_name 排序
+SELECT employee_id, employee_name, manager_id
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id
+ORDER SIBLINGS BY employee_name;
+-- 测试用例 2: 层次查询，按 employee_id 降序排序
+SELECT employee_id, employee_name, manager_id
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id
+ORDER SIBLINGS BY employee_id DESC;
+-- 测试用例 3: 层次查询，按 employee_name 升序排序
+SELECT employee_id, employee_name, manager_id
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id
+ORDER SIBLINGS BY employee_name ASC;
+-- 测试用例 4: 层次查询，按 employee_id 和 employee_name 排序
+SELECT employee_id, employee_name, manager_id
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id
+ORDER SIBLINGS BY employee_id, employee_name;
+-- 测试用例 5: 层次查询，按 employee_name 降序排序
+SELECT employee_id, employee_name, manager_id
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id
+ORDER SIBLINGS BY employee_name DESC;
+-- 测试用例 6: 层次查询，按 manager_id 和 employee_name 排序
+SELECT employee_id, employee_name, manager_id
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id
+ORDER SIBLINGS BY manager_id, employee_name;
+-- 测试用例 7: 层次查询，按 employee_name 和 employee_id 排序
+SELECT employee_id, employee_name, manager_id
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id
+ORDER SIBLINGS BY employee_name, employee_id;
+-- 测试用例 8: 层次查询，按 employee_id 升序排序
+SELECT employee_id, employee_name, manager_id
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id
+ORDER SIBLINGS BY employee_id ASC;
+-- 测试用例 9: 层次查询，按 employee_name 和 manager_id 排序
+SELECT employee_id, employee_name, manager_id
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id
+ORDER SIBLINGS BY employee_name, manager_id;
+-- 测试用例 10: 层次查询，按 manager_id 和 employee_id 排序
+SELECT employee_id, employee_name, manager_id
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id
+ORDER SIBLINGS BY manager_id, employee_id

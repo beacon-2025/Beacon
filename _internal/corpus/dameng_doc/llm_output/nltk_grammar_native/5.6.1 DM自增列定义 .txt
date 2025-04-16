@@ -1,0 +1,11 @@
+```plaintext
+IDENTITY -> 'IDENTITY' '(' SEED ',' INCREMENT ')' | 'IDENTITY'
+SEED -> 'seed_value'
+INCREMENT -> 'increment_value'
+
+IDENT_SEED -> 'IDENT_SEED' '(' TABLENAME ')'
+IDENT_INCR -> 'IDENT_INCR' '(' TABLENAME ')'
+TABLENAME -> 'tablename_value'
+
+SELECT -> 'SELECT' IDENT_SEED '(' 'tablename_value' ')' | 'SELECT' IDENT_INCR '(' 'tablename_value' ')'
+```

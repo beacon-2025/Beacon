@@ -1,0 +1,38 @@
+-- 创建目录对象
+CREATE DIRECTORY test_dir1 AS '/tmp/test_dir1';
+CREATE DIRECTORY test_dir2 AS '/tmp/test_dir2';
+CREATE DIRECTORY test_dir3 AS '/tmp/test_dir3';
+-- 测试用例 1: 删除存在的目录
+DROP DIRECTORY test_dir1;
+-- 测试用例 2: 删除不存在的目录（不使用 IF EXISTS）
+-- 预期结果：报错
+DROP DIRECTORY non_existent_dir;
+-- 测试用例 3: 删除不存在的目录（使用 IF EXISTS）
+-- 预期结果：不报错
+DROP DIRECTORY IF EXISTS non_existent_dir;
+-- 测试用例 4: 删除存在的目录（使用 IF EXISTS）
+DROP DIRECTORY IF EXISTS test_dir2;
+-- 测试用例 5: 删除多个目录
+DROP DIRECTORY test_dir3;
+DROP DIRECTORY IF EXISTS test_dir4;
+-- 测试用例 6: 删除目录后尝试再次删除（不使用 IF EXISTS）
+-- 预期结果：报错
+DROP DIRECTORY test_dir1;
+DROP DIRECTORY test_dir1;
+-- 测试用例 7: 删除目录后尝试再次删除（使用 IF EXISTS）
+-- 预期结果：不报错
+DROP DIRECTORY IF EXISTS test_dir2;
+DROP DIRECTORY IF EXISTS test_dir2;
+-- 测试用例 8: 删除目录后创建同名目录并再次删除
+DROP DIRECTORY test_dir3;
+CREATE DIRECTORY test_dir3 AS '/tmp/test_dir3';
+DROP DIRECTORY test_dir3;
+-- 测试用例 9: 删除目录后创建同名目录并再次删除（使用 IF EXISTS）
+DROP DIRECTORY IF EXISTS test_dir3;
+CREATE DIRECTORY test_dir3 AS '/tmp/test_dir3';
+DROP DIRECTORY IF EXISTS test_dir3;
+-- 测试用例 10: 删除目录后创建同名目录并再次删除（不使用 IF EXISTS）
+-- 预期结果：报错
+DROP DIRECTORY test_dir3;
+CREATE DIRECTORY test_dir3 AS '/tmp/test_dir3';
+DROP DIRECTORY test_dir3

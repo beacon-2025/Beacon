@@ -1,0 +1,5 @@
+
+
+# Set replica_net_timeout to lower value so that the master(M2) detects
+# that the slave host(M1) has gone sooner.
+SET @@global.replica_net_timeout=20

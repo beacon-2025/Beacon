@@ -1,0 +1,21 @@
+-- 无需要公共前置语句，因为测试用例不依赖于任何表或数据;
+-- 测试用例 1: 忽略JSON对象中值为NULL的名称/值对
+SELECT jsonb_strip_nulls('[1, null, "str", [1,2,null], {"a":null}, {"b":2, "c":null}]') FROM dual;
+-- 测试用例 2: 当参数为NULL时，返回NULL
+SELECT jsonb_strip_nulls(NULL) FROM dual;
+-- 测试用例 3: 处理包含嵌套JSON对象的JSON字符串
+SELECT jsonb_strip_nulls('{"a": 1, "b": null, "c": {"d": null, "e": 2}}') FROM dual;
+-- 测试用例 4: 处理包含数组的JSON字符串
+SELECT jsonb_strip_nulls('[1, null, {"a": null, "b": 2}, [1, null, 3]]') FROM dual;
+-- 测试用例 5: 处理包含多个嵌套JSON对象的JSON字符串
+SELECT jsonb_strip_nulls('{"a": {"b": null, "c": 1}, "d": {"e": null, "f": 2}}') FROM dual;
+-- 测试用例 6: 处理包含多个数组的JSON字符串
+SELECT jsonb_strip_nulls('[1, [2, null, 3], {"a": null, "b": 4}]') FROM dual;
+-- 测试用例 7: 处理包含复杂嵌套结构的JSON字符串
+SELECT jsonb_strip_nulls('{"a": [1, null, {"b": null, "c": 2}], "d": {"e": null, "f": [3, null, 4]}}') FROM dual;
+-- 测试用例 8: 处理包含多个NULL值的JSON字符串
+SELECT jsonb_strip_nulls('{"a": null, "b": null, "c": null}') FROM dual;
+-- 测试用例 9: 处理包含非NULL值的JSON字符串
+SELECT jsonb_strip_nulls('{"a": 1, "b": 2, "c": 3}') FROM dual;
+-- 测试用例 10: 处理包含混合类型的JSON字符串
+SELECT jsonb_strip_nulls('[1, "str", null, {"a": null, "b": 2}, [1, null, 3]]') FROM dual

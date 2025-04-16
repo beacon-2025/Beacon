@@ -1,0 +1,247 @@
+15.7.6 SET Statements
+The SET statement has several forms. Descriptions for those forms that are not associated with a
+specific server capability appear in subsections of this section:
+• SET var_name = value enables you to assign values to variables that affect the operation of the
+server or clients. See Section 15.7.6.1, “SET Syntax for Variable Assignment”.
+• SET CHARACTER SET and SET NAMES assign values to character set and collation variables
+associated with the current connection to the server. See Section 15.7.6.2, “SET CHARACTER SET
+Statement”, and Section 15.7.6.3, “SET NAMES Statement”.
+Descriptions for the other forms appear elsewhere, grouped with other statements related to the
+capability they help implement:
+• SET DEFAULT ROLE and SET ROLE set the default role and current role for user accounts. See
+Section 15.7.1.9, “SET DEFAULT ROLE Statement”, and Section 15.7.1.11, “SET ROLE Statement”.
+• SET PASSWORD assigns account passwords. See Section 15.7.1.10, “SET PASSWORD Statement”.
+• SET RESOURCE GROUP assigns threads to a resource group. See Section 15.7.2.4, “SET
+RESOURCE GROUP Statement”.
+• SET TRANSACTION ISOLATION LEVEL sets the isolation level for transaction processing. See
+Section 15.3.7, “SET TRANSACTION Statement”.
+15.7.6.1 SET Syntax for Variable Assignment
+SET variable = expr [, variable = expr] ...
+variable: {
+    user_var_name
+  | param_name
+  | local_var_name
+  | {GLOBAL | @@GLOBAL.} system_var_name
+  | {PERSIST | @@PERSIST.} system_var_name
+  | {PERSIST_ONLY | @@PERSIST_ONLY.} system_var_name
+  | [SESSION | @@SESSION. | @@] system_var_name
+}
+SET syntax for variable assignment enables you to assign values to different types of variables that
+affect the operation of the server or clients:
+• User-defined variables. See Section 11.4, “User-Defined Variables”.
+• Stored procedure and function parameters, and stored program local variables. See Section 15.6.4,
+“Variables in Stored Programs”.
+• System variables. See Section 7.1.8, “Server System Variables”. System variables also can be set at
+server startup, as described in Section 7.1.9, “Using System Variables”.
+A SET statement that assigns variable values is not written to the binary log, so in replication scenarios
+it affects only the host on which you execute it. To affect all replication hosts, execute the statement on
+each host.
+The following sections describe SET syntax for setting variables. They use the = assignment operator,
+but the := assignment operator is also permitted for this purpose.
+• User-Defined Variable Assignment
+• Parameter and Local Variable Assignment
+• System Variable Assignment
+• SET Error Handling
+• Multiple Variable Assignment
+• System Variable References in Expressions
+User-Defined Variable Assignment
+User-defined variables are created locally within a session and exist only within the context of that
+session; see Section 11.4, “User-Defined Variables”.
+A user-defined variable is written as @var_name and is assigned an expression value as follows:
+SET @var_name = expr;
+Examples:
+SET @name = 43;
+SET @total_tax = (SELECT SUM(tax) FROM taxable_transactions);
+As demonstrated by those statements, expr can range from simple (a literal value) to more complex
+(the value returned by a scalar subquery).
+The Performance Schema user_variables_by_thread table contains information about user-
+defined variables. See Section 29.12.10, “Performance Schema User-Defined Variable Tables”.
+Parameter and Local Variable Assignment
+SET applies to parameters and local variables in the context of the stored object within which they
+are defined. The following procedure uses the increment procedure parameter and counter local
+variable:
+CREATE PROCEDURE p(increment INT)
+BEGIN
+  DECLARE counter INT DEFAULT 0;
+  WHILE counter < 10 DO
+    -- ... do work ...
+    SET counter = counter + increment;
+  END WHILE;
+END;
+System Variable Assignment
+The MySQL server maintains system variables that configure its operation. A system variable can
+have a global value that affects server operation as a whole, a session value that affects the current
+session, or both. Many system variables are dynamic and can be changed at runtime using the SET
+statement to affect operation of the current server instance. SET can also be used to persist certain
+system variables to the mysqld-auto.cnf file in the data directory, to affect server operation for
+subsequent startups.
+If a SET statement is issued for a sensitive system variable, the query is rewritten to replace the value
+with “<redacted>” before it is logged to the general log and audit log. This takes place even if secure
+storage through a keyring component is not available on the server instance.
+If you change a session system variable, the value remains in effect within your session until you
+change the variable to a different value or the session ends. The change has no effect on other
+sessions.
+If you change a global system variable, the value is remembered and used to initialize the session
+value for new sessions until you change the variable to a different value or the server exits. The change
+is visible to any client that accesses the global value. However, the change affects the corresponding
+session value only for clients that connect after the change. The global variable change does not affect
+the session value for any current client sessions (not even the session within which the global value
+change occurs).
+To make a global system variable setting permanent so that it applies across server restarts, you can
+persist it to the mysqld-auto.cnf file in the data directory. It is also possible to make persistent
+configuration changes by manually modifying a my.cnf option file, but that is more cumbersome,
+and an error in a manually entered setting might not be discovered until much later. SET statements
+that persist system variables are more convenient and avoid the possibility of malformed settings
+because settings with syntax errors do not succeed and do not change server configuration. For more
+information about persisting system variables and the mysqld-auto.cnf file, see Section 7.1.9.3,
+“Persisted System Variables”.
+Note
+Setting or persisting a global system variable value always requires special
+privileges. Setting a session system variable value normally requires no special
+privileges and can be done by any user, although there are exceptions. For
+more information, see Section 7.1.9.1, “System Variable Privileges”.
+The following discussion describes the syntax options for setting and persisting system variables:
+• To assign a value to a global system variable, precede the variable name by the GLOBAL keyword or
+the @@GLOBAL. qualifier:
+SET GLOBAL max_connections = 1000;
+SET @@GLOBAL.max_connections = 1000;
+• To assign a value to a session system variable, precede the variable name by the SESSION or
+LOCAL keyword, by the @@SESSION., @@LOCAL., or @@ qualifier, or by no keyword or no modifier at
+all:
+SET SESSION sql_mode = 'TRADITIONAL';
+SET LOCAL sql_mode = 'TRADITIONAL';
+SET @@SESSION.sql_mode = 'TRADITIONAL';
+SET @@LOCAL.sql_mode = 'TRADITIONAL';
+SET @@sql_mode = 'TRADITIONAL';
+SET sql_mode = 'TRADITIONAL';
+A client can change its own session variables, but not those of any other client.
+• To persist a global system variable to the mysqld-auto.cnf option file in the data directory,
+precede the variable name by the PERSIST keyword or the @@PERSIST. qualifier:
+SET PERSIST max_connections = 1000;
+SET @@PERSIST.max_connections = 1000;
+This SET syntax enables you to make configuration changes at runtime that also persist across
+server restarts. Like SET GLOBAL, SET PERSIST sets the global variable runtime value, but also
+writes the variable setting to the mysqld-auto.cnf file (replacing any existing variable setting if
+there is one).
+• To persist a global system variable to the mysqld-auto.cnf file without setting the global
+variable runtime value, precede the variable name by the PERSIST_ONLY keyword or the
+@@PERSIST_ONLY. qualifier:
+SET PERSIST_ONLY back_log = 100;
+SET @@PERSIST_ONLY.back_log = 100;
+Like PERSIST, PERSIST_ONLY writes the variable setting to mysqld-auto.cnf. However,
+unlike PERSIST, PERSIST_ONLY does not modify the global variable runtime value. This makes
+PERSIST_ONLY suitable for configuring read-only system variables that can be set only at server
+startup.
+To set a global system variable value to the compiled-in MySQL default value or a session system
+variable to the current corresponding global value, set the variable to the value DEFAULT. For example,
+the following two statements are identical in setting the session value of max_join_size to the
+current global value:
+SET @@SESSION.max_join_size = DEFAULT;
+SET @@SESSION.max_join_size = @@GLOBAL.max_join_size;
+Using SET to persist a global system variable to a value of DEFAULT or to its literal default value
+assigns the variable its default value and adds a setting for the variable to mysqld-auto.cnf. To
+remove the variable from the file, use RESET PERSIST.
+Some system variables cannot be persisted or are persist-restricted. See Section 7.1.9.4,
+“Nonpersistible and Persist-Restricted System Variables”.
+A system variable implemented by a plugin can be persisted if the plugin is installed when the SET
+statement is executed. Assignment of the persisted plugin variable takes effect for subsequent server
+restarts if the plugin is still installed. If the plugin is no longer installed, the plugin variable no longer
+exists when the server reads the mysqld-auto.cnf file. In this case, the server writes a warning to
+the error log and continues:
+currently unknown variable 'var_name'
+was read from the persisted config file
+To display system variable names and values:
+• Use the SHOW VARIABLES statement; see Section 15.7.7.40, “SHOW VARIABLES Statement”.
+• Several Performance Schema tables provide system variable information. See Section 29.12.14,
+“Performance Schema System Variable Tables”.
+• The Performance Schema variables_info table contains information showing when and by
+which user each system variable was most recently set. See Section 29.12.14.3, “Performance
+Schema variables_info Table”.
+• The Performance Schema persisted_variables table provides an SQL interface to the
+mysqld-auto.cnf file, enabling its contents to be inspected at runtime using SELECT statements.
+See Section 29.12.14.2, “Performance Schema persisted_variables Table”.
+SET Error Handling
+If any variable assignment in a SET statement fails, the entire statement fails and no variables are
+changed, nor is the mysqld-auto.cnf file changed.
+SET produces an error under the circumstances described here. Most of the examples show SET
+statements that use keyword syntax (for example, GLOBAL or SESSION), but the principles are also
+true for statements that use the corresponding modifiers (for example, @@GLOBAL. or @@SESSION.).
+• Use of SET (any variant) to set a read-only variable:
+mysql> SET GLOBAL version = 'abc';
+ERROR 1238 (HY000): Variable 'version' is a read only variable
+• Use of GLOBAL, PERSIST, or PERSIST_ONLY to set a variable that has only a session value:
+mysql> SET GLOBAL sql_log_bin = ON;
+ERROR 1228 (HY000): Variable 'sql_log_bin' is a SESSION
+variable and can't be used with SET GLOBAL
+• Use of SESSION to set a variable that has only a global value:
+mysql> SET SESSION max_connections = 1000;
+ERROR 1229 (HY000): Variable 'max_connections' is a
+GLOBAL variable and should be set with SET GLOBAL
+• Omission of GLOBAL, PERSIST, or PERSIST_ONLY to set a variable that has only a global value:
+mysql> SET max_connections = 1000;
+ERROR 1229 (HY000): Variable 'max_connections' is a
+GLOBAL variable and should be set with SET GLOBAL
+• Use of PERSIST or PERSIST_ONLY to set a variable that cannot be persisted:
+mysql> SET PERSIST port = 3307;
+ERROR 1238 (HY000): Variable 'port' is a read only variable
+mysql> SET PERSIST_ONLY port = 3307;
+ERROR 1238 (HY000): Variable 'port' is a non persistent read only variable
+• The @@GLOBAL., @@PERSIST., @@PERSIST_ONLY., @@SESSION., and @@ modifiers apply only
+to system variables. An error occurs for attempts to apply them to user-defined variables, stored
+procedure or function parameters, or stored program local variables.
+• Not all system variables can be set to DEFAULT. In such cases, assigning DEFAULT results in an
+error.
+• An error occurs for attempts to assign DEFAULT to user-defined variables, stored procedure or
+function parameters, or stored program local variables.
+Multiple Variable Assignment
+A SET statement can contain multiple variable assignments, separated by commas. This statement
+assigns values to a user-defined variable and a system variable:
+SET @x = 1, SESSION sql_mode = '';
+If you set multiple system variables in a single statement, the most recent GLOBAL, PERSIST,
+PERSIST_ONLY, or SESSION keyword in the statement is used for following assignments that have no
+keyword specified.
+Examples of multiple-variable assignment:
+SET GLOBAL sort_buffer_size = 1000000, SESSION sort_buffer_size = 1000000;
+SET @@GLOBAL.sort_buffer_size = 1000000, @@LOCAL.sort_buffer_size = 1000000;
+SET GLOBAL max_connections = 1000, sort_buffer_size = 1000000;
+The @@GLOBAL., @@PERSIST., @@PERSIST_ONLY., @@SESSION., and @@ modifiers apply only to
+the immediately following system variable, not any remaining system variables. This statement sets the
+sort_buffer_size global value to 50000 and the session value to 1000000:
+SET @@GLOBAL.sort_buffer_size = 50000, sort_buffer_size = 1000000;
+System Variable References in Expressions
+To refer to the value of a system variable in expressions, use one of the @@-modifiers (except
+@@PERSIST. and @@PERSIST_ONLY., which are not permitted in expressions). For example, you can
+retrieve system variable values in a SELECT statement like this:
+SELECT @@GLOBAL.sql_mode, @@SESSION.sql_mode, @@sql_mode;
+Note
+A reference to a system variable in an expression as @@var_name (with @@
+rather than @@GLOBAL. or @@SESSION.) returns the session value if it exists
+and the global value otherwise. This differs from SET @@var_name = expr,
+which always refers to the session value.
+15.7.6.2 SET CHARACTER SET Statement
+SET {CHARACTER SET | CHARSET}
+    {'charset_name' | DEFAULT}
+This statement maps all strings sent between the server and the current client with the given mapping.
+SET CHARACTER SET sets three session system variables: character_set_client and
+character_set_results are set to the given character set, and character_set_connection
+to the value of character_set_database. See Section 12.4, “Connection Character Sets and
+Collations”.
+charset_name may be quoted or unquoted.
+The default character set mapping can be restored by using the value DEFAULT. The default depends
+on the server configuration.
+Some character sets cannot be used as the client character set. Attempting to use them with SET
+CHARACTER SET produces an error. See Impermissible Client Character Sets.
+15.7.6.3 SET NAMES Statement
+SET NAMES {'charset_name'
+    [COLLATE 'collation_name'] | DEFAULT}
+This statement sets the three session system variables character_set_client,
+character_set_connection, and character_set_results to the given character set. Setting
+character_set_connection to charset_name also sets collation_connection to the default
+collation for charset_name. See Section 12.4, “Connection Character Sets and Collations”.
+The optional COLLATE clause may be used to specify a collation explicitly. If given, the collation must
+one of the permitted collations for charset_name.
+charset_name and collation_name may be quoted or unquoted.
+The default mapping can be restored by using a value of DEFAULT. The default depends on the server
+configuration.
+Some character sets cannot be used as the client character set. Attempting to use them with SET
+NAMES produces an error. See Impermissible Client Character Sets.

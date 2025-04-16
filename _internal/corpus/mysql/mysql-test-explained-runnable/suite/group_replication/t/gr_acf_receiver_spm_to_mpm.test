@@ -1,0 +1,5 @@
+###############################################################################
+# Validate that on a group mode change from single to multi-primary,
+# following will get disabled in multi-primary mode:
+# * configuration (managed channels sources states,
+#   SOURCE_CONNECTION_AUTO_FAILOVER value) propagation

@@ -1,0 +1,201 @@
+-- 无特定前置语句，因为会话设置通常不依赖于表或数据;
+-- 测试用例 1: 设置会话时区为UTC
+SET TIME ZONE 'UTC';
+-- 测试用例 2: 设置会话时区为本地时区
+SET TIME ZONE LOCAL;
+-- 测试用例 3: 设置会话字符集为UTF8
+SET NAMES 'utf8';
+-- 测试用例 4: 设置会话字符集为LATIN1
+SET NAMES 'latin1';
+-- 测试用例 5: 设置会话事务隔离级别为读未提交
+SET SESSION TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;
+-- 测试用例 6: 设置会话事务隔离级别为读已提交
+SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED;
+-- 测试用例 7: 设置会话事务隔离级别为可重复读
+SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ;
+-- 测试用例 8: 设置会话事务隔离级别为串行化
+SET SESSION TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+-- 测试用例 9: 设置会话的SQL模式为严格模式
+SET SESSION sql_mode = 'STRICT_ALL_TABLES';
+-- 测试用例 10: 设置会话的SQL模式为传统模式
+SET SESSION sql_mode = 'TRADITIONAL';
+-- 测试用例 11: 设置会话的自动提交模式为开启
+SET SESSION autocommit = 1;
+-- 测试用例 12: 设置会话的自动提交模式为关闭
+SET SESSION autocommit = 0;
+-- 测试用例 13: 设置会话的查询缓存为开启
+SET SESSION query_cache_type = ON;
+-- 测试用例 14: 设置会话的查询缓存为关闭
+SET SESSION query_cache_type = OFF;
+-- 测试用例 15: 设置会话的查询缓存为按需
+SET SESSION query_cache_type = DEMAND;
+-- 测试用例 16: 设置会话的查询缓存大小为1MB
+SET SESSION query_cache_size = 1048576;
+-- 测试用例 17: 设置会话的查询缓存大小为10MB
+SET SESSION query_cache_size = 10485760;
+-- 测试用例 18: 设置会话的查询缓存大小为100MB
+SET SESSION query_cache_size = 104857600;
+-- 测试用例 19: 设置会话的查询缓存大小为1GB
+SET SESSION query_cache_size = 1073741824;
+-- 测试用例 20: 设置会话的查询缓存大小为10GB
+SET SESSION query_cache_size = 10737418240;
+-- 测试用例 21: 设置会话的查询缓存大小为100GB
+SET SESSION query_cache_size = 107374182400;
+-- 测试用例 22: 设置会话的查询缓存大小为1TB
+SET SESSION query_cache_size = 1099511627776;
+-- 测试用例 23: 设置会话的查询缓存大小为10TB
+SET SESSION query_cache_size = 10995116277760;
+-- 测试用例 24: 设置会话的查询缓存大小为100TB
+SET SESSION query_cache_size = 109951162777600;
+-- 测试用例 25: 设置会话的查询缓存大小为1PB
+SET SESSION query_cache_size = 1125899906842624;
+-- 测试用例 26: 设置会话的查询缓存大小为10PB
+SET SESSION query_cache_size = 11258999068426240;
+-- 测试用例 27: 设置会话的查询缓存大小为100PB
+SET SESSION query_cache_size = 112589990684262400;
+-- 测试用例 28: 设置会话的查询缓存大小为1EB
+SET SESSION query_cache_size = 1152921504606846976;
+-- 测试用例 29: 设置会话的查询缓存大小为10EB
+SET SESSION query_cache_size = 11529215046068469760;
+-- 测试用例 30: 设置会话的查询缓存大小为100EB
+SET SESSION query_cache_size = 115292150460684697600;
+-- 测试用例 31: 设置会话的查询缓存大小为1ZB
+SET SESSION query_cache_size = 1180591620717411303424;
+-- 测试用例 32: 设置会话的查询缓存大小为10ZB
+SET SESSION query_cache_size = 11805916207174113034240;
+-- 测试用例 33: 设置会话的查询缓存大小为100ZB
+SET SESSION query_cache_size = 118059162071741130342400;
+-- 测试用例 34: 设置会话的查询缓存大小为1YB
+SET SESSION query_cache_size = 1208925819614629174706176;
+-- 测试用例 35: 设置会话的查询缓存大小为10YB
+SET SESSION query_cache_size = 12089258196146291747061760;
+-- 测试用例 36: 设置会话的查询缓存大小为100YB
+SET SESSION query_cache_size = 120892581961462917470617600;
+-- 测试用例 37: 设置会话的查询缓存大小为1BB
+SET SESSION query_cache_size = 1237940039285380274899124224;
+-- 测试用例 38: 设置会话的查询缓存大小为10BB
+SET SESSION query_cache_size = 12379400392853802748991242240;
+-- 测试用例 39: 设置会话的查询缓存大小为100BB
+SET SESSION query_cache_size = 123794003928538027489912422400;
+-- 测试用例 40: 设置会话的查询缓存大小为1GB
+SET SESSION query_cache_size = 1073741824;
+-- 测试用例 41: 设置会话的查询缓存大小为10GB
+SET SESSION query_cache_size = 10737418240;
+-- 测试用例 42: 设置会话的查询缓存大小为100GB
+SET SESSION query_cache_size = 107374182400;
+-- 测试用例 43: 设置会话的查询缓存大小为1TB
+SET SESSION query_cache_size = 1099511627776;
+-- 测试用例 44: 设置会话的查询缓存大小为10TB
+SET SESSION query_cache_size = 10995116277760;
+-- 测试用例 45: 设置会话的查询缓存大小为100TB
+SET SESSION query_cache_size = 109951162777600;
+-- 测试用例 46: 设置会话的查询缓存大小为1PB
+SET SESSION query_cache_size = 1125899906842624;
+-- 测试用例 47: 设置会话的查询缓存大小为10PB
+SET SESSION query_cache_size = 11258999068426240;
+-- 测试用例 48: 设置会话的查询缓存大小为100PB
+SET SESSION query_cache_size = 112589990684262400;
+-- 测试用例 49: 设置会话的查询缓存大小为1EB
+SET SESSION query_cache_size = 1152921504606846976;
+-- 测试用例 50: 设置会话的查询缓存大小为10EB
+SET SESSION query_cache_size = 11529215046068469760;
+-- 测试用例 51: 设置会话的查询缓存大小为100EB
+SET SESSION query_cache_size = 115292150460684697600;
+-- 测试用例 52: 设置会话的查询缓存大小为1ZB
+SET SESSION query_cache_size = 1180591620717411303424;
+-- 测试用例 53: 设置会话的查询缓存大小为10ZB
+SET SESSION query_cache_size = 11805916207174113034240;
+-- 测试用例 54: 设置会话的查询缓存大小为100ZB
+SET SESSION query_cache_size = 118059162071741130342400;
+-- 测试用例 55: 设置会话的查询缓存大小为1YB
+SET SESSION query_cache_size = 1208925819614629174706176;
+-- 测试用例 56: 设置会话的查询缓存大小为10YB
+SET SESSION query_cache_size = 12089258196146291747061760;
+-- 测试用例 57: 设置会话的查询缓存大小为100YB
+SET SESSION query_cache_size = 120892581961462917470617600;
+-- 测试用例 58: 设置会话的查询缓存大小为1BB
+SET SESSION query_cache_size = 1237940039285380274899124224;
+-- 测试用例 59: 设置会话的查询缓存大小为10BB
+SET SESSION query_cache_size = 12379400392853802748991242240;
+-- 测试用例 60: 设置会话的查询缓存大小为100BB
+SET SESSION query_cache_size = 123794003928538027489912422400;
+-- 测试用例 61: 设置会话的查询缓存大小为1GB
+SET SESSION query_cache_size = 1073741824;
+-- 测试用例 62: 设置会话的查询缓存大小为10GB
+SET SESSION query_cache_size = 10737418240;
+-- 测试用例 63: 设置会话的查询缓存大小为100GB
+SET SESSION query_cache_size = 107374182400;
+-- 测试用例 64: 设置会话的查询缓存大小为1TB
+SET SESSION query_cache_size = 1099511627776;
+-- 测试用例 65: 设置会话的查询缓存大小为10TB
+SET SESSION query_cache_size = 10995116277760;
+-- 测试用例 66: 设置会话的查询缓存大小为100TB
+SET SESSION query_cache_size = 109951162777600;
+-- 测试用例 67: 设置会话的查询缓存大小为1PB
+SET SESSION query_cache_size = 1125899906842624;
+-- 测试用例 68: 设置会话的查询缓存大小为10PB
+SET SESSION query_cache_size = 11258999068426240;
+-- 测试用例 69: 设置会话的查询缓存大小为100PB
+SET SESSION query_cache_size = 112589990684262400;
+-- 测试用例 70: 设置会话的查询缓存大小为1EB
+SET SESSION query_cache_size = 1152921504606846976;
+-- 测试用例 71: 设置会话的查询缓存大小为10EB
+SET SESSION query_cache_size = 11529215046068469760;
+-- 测试用例 72: 设置会话的查询缓存大小为100EB
+SET SESSION query_cache_size = 115292150460684697600;
+-- 测试用例 73: 设置会话的查询缓存大小为1ZB
+SET SESSION query_cache_size = 1180591620717411303424;
+-- 测试用例 74: 设置会话的查询缓存大小为10ZB
+SET SESSION query_cache_size = 11805916207174113034240;
+-- 测试用例 75: 设置会话的查询缓存大小为100ZB
+SET SESSION query_cache_size = 118059162071741130342400;
+-- 测试用例 76: 设置会话的查询缓存大小为1YB
+SET SESSION query_cache_size = 1208925819614629174706176;
+-- 测试用例 77: 设置会话的查询缓存大小为10YB
+SET SESSION query_cache_size = 12089258196146291747061760;
+-- 测试用例 78: 设置会话的查询缓存大小为100YB
+SET SESSION query_cache_size = 120892581961462917470617600;
+-- 测试用例 79: 设置会话的查询缓存大小为1BB
+SET SESSION query_cache_size = 1237940039285380274899124224;
+-- 测试用例 80: 设置会话的查询缓存大小为10BB
+SET SESSION query_cache_size = 12379400392853802748991242240;
+-- 测试用例 81: 设置会话的查询缓存大小为100BB
+SET SESSION query_cache_size = 123794003928538027489912422400;
+-- 测试用例 82: 设置会话的查询缓存大小为1GB
+SET SESSION query_cache_size = 1073741824;
+-- 测试用例 83: 设置会话的查询缓存大小为10GB
+SET SESSION query_cache_size = 10737418240;
+-- 测试用例 84: 设置会话的查询缓存大小为100GB
+SET SESSION query_cache_size = 107374182400;
+-- 测试用例 85: 设置会话的查询缓存大小为1TB
+SET SESSION query_cache_size = 1099511627776;
+-- 测试用例 86: 设置会话的查询缓存大小为10TB
+SET SESSION query_cache_size = 10995116277760;
+-- 测试用例 87: 设置会话的查询缓存大小为100TB
+SET SESSION query_cache_size = 109951162777600;
+-- 测试用例 88: 设置会话的查询缓存大小为1PB
+SET SESSION query_cache_size = 1125899906842624;
+-- 测试用例 89: 设置会话的查询缓存大小为10PB
+SET SESSION query_cache_size = 11258999068426240;
+-- 测试用例 90: 设置会话的查询缓存大小为100PB
+SET SESSION query_cache_size = 112589990684262400;
+-- 测试用例 91: 设置会话的查询缓存大小为1EB
+SET SESSION query_cache_size = 1152921504606846976;
+-- 测试用例 92: 设置会话的查询缓存大小为10EB
+SET SESSION query_cache_size = 11529215046068469760;
+-- 测试用例 93: 设置会话的查询缓存大小为100EB
+SET SESSION query_cache_size = 115292150460684697600;
+-- 测试用例 94: 设置会话的查询缓存大小为1ZB
+SET SESSION query_cache_size = 1180591620717411303424;
+-- 测试用例 95: 设置会话的查询缓存大小为10ZB
+SET SESSION query_cache_size = 11805916207174113034240;
+-- 测试用例 96: 设置会话的查询缓存大小为100ZB
+SET SESSION query_cache_size = 118059162071741130342400;
+-- 测试用例 97: 设置会话的查询缓存大小为1YB
+SET SESSION query_cache_size = 1208925819614629174706176;
+-- 测试用例 98: 设置会话的查询缓存大小为10YB
+SET SESSION query_cache_size = 12089258196146291747061760;
+-- 测试用例 99: 设置会话的查询缓存大小为100YB
+SET SESSION query_cache_size = 120892581961462917470617600;
+-- 测试用例 100: 设置会话的查询缓存大小为1BB
+SET SESSION query_cache_size = 1237940039285380274899124224

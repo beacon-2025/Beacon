@@ -1,0 +1,80 @@
+-- 创建对象类型
+CREATE TYPE AddressType AS OBJECT (
+    street VARCHAR2(100),
+    city VARCHAR2(50),
+    state VARCHAR2(50),
+    zip_code VARCHAR2(10)
+);
+-- 创建包含对象类型的表
+CREATE TABLE Customers (
+    customer_id NUMBER PRIMARY KEY,
+    name VARCHAR2(100),
+    address AddressType
+);
+INSERT INTO Customers (customer_id, name, address)
+VALUES (1, 'John Doe', AddressType('123 Main St', 'Anytown', 'CA', '12345'));
+SELECT c.customer_id, c.name, c.address.street, c.address.city
+FROM Customers c
+WHERE c.address.city = 'Anytown';
+UPDATE Customers
+SET address = AddressType('456 Elm St', 'Othertown', 'NY', '67890')
+WHERE customer_id = 1;
+DELETE FROM Customers
+WHERE customer_id = 1;
+CREATE TYPE PhoneType AS OBJECT (
+    area_code VARCHAR2(3),
+    number VARCHAR2(8)
+);
+CREATE TYPE ContactInfoType AS OBJECT (
+    phone PhoneType,
+    email VARCHAR2(100)
+);
+CREATE TABLE Employees (
+    employee_id NUMBER PRIMARY KEY,
+    name VARCHAR2(100),
+    contact_info ContactInfoType
+);
+INSERT INTO Employees (employee_id, name, contact_info)
+VALUES (1, 'Jane Smith', ContactInfoType(PhoneType('123', '4567890'), 'jane.smith@example.com'));
+SELECT e.employee_id, e.name, e.contact_info.phone.area_code, e.contact_info.phone.number
+FROM Employees e
+WHERE e.contact_info.email = 'jane.smith@example.com';
+UPDATE Employees
+SET contact_info = ContactInfoType(PhoneType('987', '6543210'), 'jane.doe@example.com')
+WHERE employee_id = 1;
+DELETE FROM Employees
+WHERE employee_id = 1;
+CREATE TYPE StringArray AS VARRAY(10) OF VARCHAR2(100);
+CREATE TABLE Projects (
+    project_id NUMBER PRIMARY KEY,
+    project_name VARCHAR2(100),
+    team_members StringArray
+);
+INSERT INTO Projects (project_id, project_name, team_members)
+VALUES (1, 'Project Alpha', StringArray('Alice', 'Bob', 'Charlie'));
+SELECT p.project_id, p.project_name, p.team_members
+FROM Projects p
+WHERE 'Alice' MEMBER OF p.team_members;
+UPDATE Projects
+SET team_members = StringArray('Alice', 'Bob', 'David')
+WHERE project_id = 1;
+DELETE FROM Projects
+WHERE project_id = 1;
+CREATE TYPE StringSet AS TABLE OF VARCHAR2(100);
+CREATE TABLE Departments (
+    department_id NUMBER PRIMARY KEY,
+    department_name VARCHAR2(100),
+    employees StringSet
+) NESTED TABLE employees STORE AS employees_table;
+INSERT INTO Departments (department_id, department_name, employees)
+VALUES (1, 'Engineering', StringSet('Alice', 'Bob', 'Charlie'));
+SELECT d.department_id, d.department_name, e.COLUMN_VALUE
+FROM Departments d, TABLE(d.employees) e
+WHERE e.COLUMN_VALUE = 'Alice';
+UPDATE TABLE(SELECT employees FROM Departments WHERE department_id = 1) e
+SET e.COLUMN_VALUE = 'David'
+WHERE e.COLUMN_VALUE = 'Charlie';
+DELETE FROM TABLE(SELECT employees FROM Departments WHERE department_id = 1) e
+WHERE e.COLUMN_VALUE = 'Bob';
+DELETE FROM Departments
+WHERE department_id = 1

@@ -1,0 +1,68 @@
+-- 创建包规范
+CREATE OR REPLACE PACKAGE test_package_spec AS
+    PROCEDURE test_procedure;
+FUNCTION test_function RETURN VARCHAR2;
+END test_package_spec;
+/
+
+-- 创建包主体
+CREATE OR REPLACE PACKAGE BODY test_package_spec AS
+    PROCEDURE test_procedure IS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('This is a test procedure.');
+END test_procedure;
+FUNCTION test_function RETURN VARCHAR2 IS
+    BEGIN
+        RETURN 'This is a test function.';
+END test_function;
+END test_package_spec;
+/;
+-- 测试用例 1: 调用包中的过程
+BEGIN
+    test_package_spec.test_procedure;
+END;
+/
+
+-- 测试用例 2: 调用包中的函数并输出结果
+DECLARE
+    result VARCHAR2(100);
+BEGIN
+    result := test_package_spec.test_function;
+DBMS_OUTPUT.PUT_LINE(result);
+END;
+/
+
+-- 测试用例 3: 创建另一个包规范
+CREATE OR REPLACE PACKAGE another_package_spec AS
+    PROCEDURE another_procedure;
+FUNCTION another_function RETURN VARCHAR2;
+END another_package_spec;
+/
+
+-- 测试用例 4: 创建另一个包主体
+CREATE OR REPLACE PACKAGE BODY another_package_spec AS
+    PROCEDURE another_procedure IS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('This is another test procedure.');
+END another_procedure;
+FUNCTION another_function RETURN VARCHAR2 IS
+    BEGIN
+        RETURN 'This is another test function.';
+END another_function;
+END another_package_spec;
+/
+
+-- 测试用例 5: 调用另一个包中的过程
+BEGIN
+    another_package_spec.another_procedure;
+END;
+/
+
+-- 测试用例 6: 调用另一个包中的函数并输出结果
+DECLARE
+    result VARCHAR2(100);
+BEGIN
+    result := another_package_spec.another_function;
+DBMS_OUTPUT.PUT_LINE(result);
+END;
+/

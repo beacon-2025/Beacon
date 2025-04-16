@@ -1,0 +1,5 @@
+
+
+# thread
+update performance_schema.setup_consumers
+  set enabled='NO' where name like 'event%'

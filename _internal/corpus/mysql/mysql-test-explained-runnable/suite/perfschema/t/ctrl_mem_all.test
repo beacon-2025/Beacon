@@ -1,0 +1,4 @@
+
+UPDATE performance_schema.setup_instruments
+  SET FLAGS = 'controlled', ENABLED='YES'
+  WHERE NAME LIKE 'memory/%'

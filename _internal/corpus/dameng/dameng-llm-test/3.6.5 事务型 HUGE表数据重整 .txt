@@ -1,0 +1,55 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 创建事务型HUGE表
+CREATE TABLE schema1.orders (
+    order_id INT PRIMARY KEY,
+    order_date DATE,
+    customer_id INT
+) WITH DELTA;
+CREATE TABLE schema2.products (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(100),
+    price DECIMAL(10, 2)
+) WITH DELTA;
+-- 插入一些数据
+INSERT INTO schema1.orders (order_id, order_date, customer_id) VALUES (1, '2023-01-01', 101);
+INSERT INTO schema1.orders (order_id, order_date, customer_id) VALUES (2, '2023-01-02', 102);
+INSERT INTO schema2.products (product_id, product_name, price) VALUES (1, 'Product A', 99.99);
+INSERT INTO schema2.products (product_id, product_name, price) VALUES (2, 'Product B', 199.99);
+-- 测试用例1: 对默认模式下的HUGE表进行重整
+ALTER TABLE schema1.orders REBUILD SECTION;
+-- 测试用例2: 对指定模式下的HUGE表进行重整
+ALTER TABLE schema2.products REBUILD SECTION;
+-- 测试用例3: 对默认模式下的HUGE表进行重整（省略模式名）
+-- 假设当前模式为schema1
+SET SCHEMA schema1;
+ALTER TABLE orders REBUILD SECTION;
+-- 测试用例4: 对指定模式下的HUGE表进行重整（省略模式名）
+-- 假设当前模式为schema2
+SET SCHEMA schema2;
+ALTER TABLE products REBUILD SECTION;
+-- 测试用例5: 对默认模式下的HUGE表进行重整（省略模式名，且当前模式为默认模式）
+-- 假设当前模式为schema1
+SET SCHEMA schema1;
+ALTER TABLE orders REBUILD SECTION;
+-- 测试用例6: 对指定模式下的HUGE表进行重整（省略模式名，且当前模式为默认模式）
+-- 假设当前模式为schema2
+SET SCHEMA schema2;
+ALTER TABLE products REBUILD SECTION;
+-- 测试用例7: 对默认模式下的HUGE表进行重整（省略模式名，且当前模式为默认模式）
+-- 假设当前模式为schema1
+SET SCHEMA schema1;
+ALTER TABLE orders REBUILD SECTION;
+-- 测试用例8: 对指定模式下的HUGE表进行重整（省略模式名，且当前模式为默认模式）
+-- 假设当前模式为schema2
+SET SCHEMA schema2;
+ALTER TABLE products REBUILD SECTION;
+-- 测试用例9: 对默认模式下的HUGE表进行重整（省略模式名，且当前模式为默认模式）
+-- 假设当前模式为schema1
+SET SCHEMA schema1;
+ALTER TABLE orders REBUILD SECTION;
+-- 测试用例10: 对指定模式下的HUGE表进行重整（省略模式名，且当前模式为默认模式）
+-- 假设当前模式为schema2
+SET SCHEMA schema2;
+ALTER TABLE products REBUILD SECTION

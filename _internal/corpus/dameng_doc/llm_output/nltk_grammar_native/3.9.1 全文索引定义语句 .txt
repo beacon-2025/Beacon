@@ -1,0 +1,9 @@
+```plaintext
+CREATE_CONTEXT_INDEX -> 'CREATE' 'CONTEXT' 'INDEX' 'index_name_1' 'ON' 'schemaname_1' '.' 'tablename_1' '(' 'index_column_1' ')' 'LEXER' 'lexer_option' 'SYNC' 'sync_option'
+index_name_1 -> 'indexname'
+schemaname_1 -> 'schemaname'
+tablename_1 -> 'tablename'
+index_column_1 -> 'index_column'
+lexer_option -> 'CHINESE_LEXER' | 'CHINESE_VGRAM_LEXER' | 'CHINESE_FP_LEXER' | 'ENGLISH_LEXER' | 'DEFAULT_LEXER'
+sync_option -> 'TRANSACTION' | ''
+```

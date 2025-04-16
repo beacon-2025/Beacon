@@ -1,0 +1,3 @@
+
+
+create table test.t1(i int primary key) engine=ndb

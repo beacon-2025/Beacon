@@ -1,0 +1,65 @@
+-- 创建一个包含数组类型的表
+CREATE TABLE test_array_table (
+    id SERIAL PRIMARY KEY,
+    data_array JSON
+);
+-- 测试用例 1: 插入一个空数组
+INSERT INTO test_array_table (data_array) VALUES ('[]');
+-- 测试用例 2: 插入一个包含单个整数的数组
+INSERT INTO test_array_table (data_array) VALUES ('[1]');
+-- 测试用例 3: 插入一个包含多个整数的数组
+INSERT INTO test_array_table (data_array) VALUES ('[1, 2, 3]');
+-- 测试用例 4: 插入一个包含单个字符串的数组
+INSERT INTO test_array_table (data_array) VALUES ('["hello"]');
+-- 测试用例 5: 插入一个包含多个字符串的数组
+INSERT INTO test_array_table (data_array) VALUES ('["hello", "world"]');
+-- 测试用例 6: 插入一个包含混合数据类型的数组
+INSERT INTO test_array_table (data_array) VALUES ('[1, "hello", true]');
+-- 测试用例 7: 插入一个包含嵌套数组的数组
+INSERT INTO test_array_table (data_array) VALUES ('[[1, 2], [3, 4]]');
+-- 测试用例 8: 插入一个包含空值的数组
+INSERT INTO test_array_table (data_array) VALUES ('[null]');
+-- 测试用例 9: 插入一个包含布尔值的数组
+INSERT INTO test_array_table (data_array) VALUES ('[true, false]');
+-- 测试用例 10: 插入一个包含浮点数的数组
+INSERT INTO test_array_table (data_array) VALUES ('[1.23, 4.56]');
+-- 测试用例 11: 插入一个包含对象的数组
+INSERT INTO test_array_table (data_array) VALUES ('[{"key": "value"}]');
+-- 测试用例 12: 插入一个包含多个对象的数组
+INSERT INTO test_array_table (data_array) VALUES ('[{"key1": "value1"}, {"key2": "value2"}]');
+-- 测试用例 13: 插入一个包含混合类型和嵌套结构的数组
+INSERT INTO test_array_table (data_array) VALUES ('[1, "hello", {"key": "value"}, [true, false]]');
+-- 测试用例 14: 查询包含空数组的记录
+SELECT * FROM test_array_table WHERE data_array = '[]';
+-- 测试用例 15: 查询包含特定整数的数组的记录
+SELECT * FROM test_array_table WHERE data_array @> '[1]';
+-- 测试用例 16: 查询包含特定字符串的数组的记录
+SELECT * FROM test_array_table WHERE data_array @> '["hello"]';
+-- 测试用例 17: 查询包含特定布尔值的数组的记录
+SELECT * FROM test_array_table WHERE data_array @> '[true]';
+-- 测试用例 18: 查询包含特定浮点数的数组的记录
+SELECT * FROM test_array_table WHERE data_array @> '[1.23]';
+-- 测试用例 19: 查询包含特定对象的数组的记录
+SELECT * FROM test_array_table WHERE data_array @> '[{"key": "value"}]';
+-- 测试用例 20: 查询包含嵌套数组的记录
+SELECT * FROM test_array_table WHERE data_array @> '[[1, 2]]';
+-- 测试用例 21: 更新数组中的值
+UPDATE test_array_table SET data_array = '[1, 2, 3, 4]' WHERE id = 1;
+-- 测试用例 22: 更新数组中的嵌套值
+UPDATE test_array_table SET data_array = '[[1, 2], [3, 4, 5]]' WHERE id = 2;
+-- 测试用例 23: 删除包含特定数组的记录
+DELETE FROM test_array_table WHERE data_array = '[1, 2, 3]';
+-- 测试用例 24: 删除包含空数组的记录
+DELETE FROM test_array_table WHERE data_array = '[]';
+-- 测试用例 25: 删除包含特定字符串的数组的记录
+DELETE FROM test_array_table WHERE data_array @> '["hello"]';
+-- 测试用例 26: 删除包含特定布尔值的数组的记录
+DELETE FROM test_array_table WHERE data_array @> '[true]';
+-- 测试用例 27: 删除包含特定浮点数的数组的记录
+DELETE FROM test_array_table WHERE data_array @> '[1.23]';
+-- 测试用例 28: 删除包含特定对象的数组的记录
+DELETE FROM test_array_table WHERE data_array @> '[{"key": "value"}]';
+-- 测试用例 29: 删除包含嵌套数组的记录
+DELETE FROM test_array_table WHERE data_array @> '[[1, 2]]';
+-- 测试用例 30: 删除所有记录
+DELETE FROM test_array_table

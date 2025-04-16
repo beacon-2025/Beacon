@@ -1,0 +1,120 @@
+-- 创建测试表
+CREATE TABLE j_purchaseorder (
+    id NUMBER PRIMARY KEY,
+    po_document CLOB
+);
+-- 插入测试数据
+INSERT INTO j_purchaseorder (id, po_document) VALUES (1, '{
+    "ShippingInstructions": {
+        "name": "Alexis Bull",
+        "Address": {
+            "street": "200 Sporting Green",
+            "city": "South San Francisco",
+            "state": "CA",
+            "zipCode": 99236,
+            "country": "United States of America"
+        },
+        "Phone": [
+            {
+                "type": "Office",
+                "number": "909-555-7307"
+            },
+            {
+                "type": "Mobile",
+                "number": "415-555-1234"
+            }
+        ]
+    }
+}');
+INSERT INTO j_purchaseorder (id, po_document) VALUES (2, '{
+    "ShippingInstructions": {
+        "name": "John Doe",
+        "Address": {
+            "street": "123 Main St",
+            "city": "San Francisco",
+            "state": "CA",
+            "zipCode": 94107,
+            "country": "United States of America"
+        },
+        "Phone": [
+            {
+                "type": "Home",
+                "number": "415-555-6789"
+            },
+            {
+                "type": "Mobile",
+                "number": "415-555-9876"
+            }
+        ]
+    }
+}');
+-- 测试路径表达式：查询Phone数组中的第一个元素的type
+SELECT json_query(po_document, '$.ShippingInstructions.Phone[0].type') 
+FROM j_purchaseorder 
+WHERE id = 1;
+-- 测试路径表达式：查询Phone数组中的所有type
+SELECT json_query(po_document, '$.ShippingInstructions.Phone[*].type') 
+FROM j_purchaseorder 
+WHERE id = 1;
+-- 测试路径表达式：查询Address对象中的city
+SELECT json_query(po_document, '$.ShippingInstructions.Address.city') 
+FROM j_purchaseorder 
+WHERE id = 1;
+-- 测试路径表达式：查询Phone数组中的第二个元素的number
+SELECT json_query(po_document, '$.ShippingInstructions.Phone[1].number') 
+FROM j_purchaseorder 
+WHERE id = 1;
+-- 测试路径表达式：查询Phone数组中的所有number
+SELECT json_query(po_document, '$.ShippingInstructions.Phone[*].number') 
+FROM j_purchaseorder 
+WHERE id = 1;
+-- 测试PRETTY和ASCII：使用PRETTY显示ShippingInstructions
+SELECT json_query(po_document, '$.ShippingInstructions' RETURNING VARCHAR PRETTY) 
+FROM j_purchaseorder 
+WHERE id = 1;
+-- 测试PRETTY和ASCII：使用ASCII显示ShippingInstructions
+SELECT json_query(po_document, '$.ShippingInstructions' RETURNING VARCHAR ASCII) 
+FROM j_purchaseorder 
+WHERE id = 1;
+-- 测试PRETTY和ASCII：同时使用PRETTY和ASCII显示ShippingInstructions
+SELECT json_query(po_document, '$.ShippingInstructions' RETURNING VARCHAR PRETTY ASCII) 
+FROM j_purchaseorder 
+WHERE id = 1;
+-- 测试WRAPPER项：使用WITH WRAPPER返回Phone数组中的所有type
+SELECT json_query(po_document, '$.ShippingInstructions.Phone[*].type' WITH WRAPPER) 
+FROM j_purchaseorder 
+WHERE id = 1;
+-- 测试WRAPPER项：使用WITHOUT WRAPPER返回Phone数组中的第一个type
+SELECT json_query(po_document, '$.ShippingInstructions.Phone[0].type' WITHOUT WRAPPER) 
+FROM j_purchaseorder 
+WHERE id = 1;
+-- 测试WRAPPER项：使用WITH CONDITIONAL WRAPPER返回Phone数组中的所有type
+SELECT json_query(po_document, '$.ShippingInstructions.Phone[*].type' WITH CONDITIONAL WRAPPER) 
+FROM j_purchaseorder 
+WHERE id = 1;
+-- 测试ERROR项：使用ERROR ON ERROR处理错误
+SELECT JSON_VALUE('[1,2]', '$[0,1]' ERROR ON ERROR) FROM DUAL;
+-- 测试ERROR项：使用NULL ON ERROR处理错误
+SELECT JSON_VALUE('[1,2]', '$[0,1]' NULL ON ERROR) FROM DUAL;
+-- 测试ERROR项：使用EMPTY ON ERROR处理错误
+SELECT JSON_VALUE('[1,2]', '$[0,1]' EMPTY ON ERROR) FROM DUAL;
+-- 测试ERROR项：使用DEFAULT '<value>' ON ERROR处理错误
+SELECT JSON_VALUE('[1]', '$[1]' RETURNING VARCHAR DEFAULT 'Not Found' ON ERROR) FROM DUAL;
+-- 测试ERROR项：使用DEFAULT '<value>' ON ERROR处理错误，类型不匹配
+SELECT JSON_VALUE('[aa]', '$[0]' RETURNING NUMBER DEFAULT '1' ON ERROR) FROM DUAL;
+-- 测试路径表达式：查询非数组数据的第一个元素
+SELECT json_query(po_document, '$[0]') 
+FROM j_purchaseorder 
+WHERE id = 1;
+-- 测试路径表达式：查询数组范围
+SELECT json_query(po_document, '$.ShippingInstructions.Phone[0 to 1].type') 
+FROM j_purchaseorder 
+WHERE id = 1;
+-- 测试路径表达式：查询数组范围，包含重复索引
+SELECT json_query(po_document, '$.ShippingInstructions.Phone[0,1,1].type') 
+FROM j_purchaseorder 
+WHERE id = 1;
+-- 测试路径表达式：查询数组范围，包含非递减范围
+SELECT json_query(po_document, '$.ShippingInstructions.Phone[0,1 to 1,1].type') 
+FROM j_purchaseorder 
+WHERE id = 1

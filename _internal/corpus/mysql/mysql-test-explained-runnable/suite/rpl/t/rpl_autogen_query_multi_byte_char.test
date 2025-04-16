@@ -1,0 +1,8 @@
+
+  #}
+  #if ($iter == 4)
+  #{
+    # --echo Test case 4:- table name and database names with 64 Euro(Ã¢ÂÂ¬) characters.
+    # --let $tblname= REPEAT(CHAR(226,130,172),64),"`.`", REPEAT(CHAR(226,130,172),64)
+    # --eval SET @s:=CONCAT("CREATE DATABASE `",REPEAT(CHAR(226,130,172),64),"`")
+    # PREPARE STMT FROM @s

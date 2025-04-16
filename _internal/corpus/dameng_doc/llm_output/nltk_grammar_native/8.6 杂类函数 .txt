@@ -1,0 +1,31 @@
+```plaintext
+DECODE -> 'DECODE' '(' exp ',' search1 ',' result1 ',' search2 ',' result2 ',' default ')'
+exp -> 'exp_value'
+search1 -> 'search_value_1'
+result1 -> 'result_value_1'
+search2 -> 'search_value_2'
+result2 -> 'result_value_2'
+default -> 'default_value'
+
+ISDATE -> 'ISDATE' '(' exp ')'
+
+ISNUMERIC -> 'ISNUMERIC' '(' exp ')'
+
+DM_HASH -> 'DM_HASH' '(' exp ')'
+
+LNNVL -> 'LNNVL' '(' condition ')'
+condition -> 'condition_value'
+
+LENGTHB -> 'LENGTHB' '(' value ')'
+value -> 'value_value'
+
+FIELD -> 'FIELD' '(' value ',' e1 ',' e2 ',' e3 ',' e4 ')'
+e1 -> 'e1_value'
+e2 -> 'e2_value'
+e3 -> 'e3_value'
+e4 -> 'e4_value'
+
+ORA_HASH -> 'ORA_HASH' '(' exp ',' max_bucket ',' seed_value ')'
+max_bucket -> 'max_bucket_value'
+seed_value -> 'seed_value_value'
+```

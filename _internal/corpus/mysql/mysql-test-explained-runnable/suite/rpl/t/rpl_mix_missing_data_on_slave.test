@@ -1,0 +1,10 @@
+###############################################################################
+# Bug#21630907: MISSING DATA DETECTED WHEN MAX_BINLOG_SIZE SMALLER ON SLAVE
+# FOR 3 NODE TOPOLOGY
+#
+# Bug#21053163: MIXED BASED REPLICATION LOOSES EVENTS WHEN
+# RELAY_LOG_INFO_REPOSITORY=TABLE
+#
+# Problem:
+# =======
+# 2 level replication M1 -> S1 ->S2 ( S1 is slave of M1

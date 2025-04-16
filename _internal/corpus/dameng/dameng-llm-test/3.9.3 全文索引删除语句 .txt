@@ -1,0 +1,68 @@
+-- 创建模式和表
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+CREATE TABLE schema1.table1 (
+    id INT PRIMARY KEY,
+    content TEXT
+);
+CREATE TABLE schema2.table2 (
+    id INT PRIMARY KEY,
+    description TEXT
+);
+-- 创建全文索引
+CREATE CONTEXT INDEX index1 ON schema1.table1(content);
+CREATE CONTEXT INDEX index2 ON schema2.table2(description);
+-- 测试用例 1: 删除存在的全文索引
+DROP CONTEXT INDEX index1 ON schema1.table1;
+-- 测试用例 2: 删除不存在的全文索引（不使用 IF EXISTS）
+-- 预期结果：报错
+DROP CONTEXT INDEX non_existent_index ON schema1.table1;
+-- 测试用例 3: 删除不存在的全文索引（使用 IF EXISTS）
+-- 预期结果：不报错
+DROP CONTEXT INDEX IF EXISTS non_existent_index ON schema1.table1;
+-- 测试用例 4: 删除默认模式下的全文索引
+DROP CONTEXT INDEX index2 ON schema2.table2;
+-- 测试用例 5: 删除默认模式下的全文索引（省略模式名）
+-- 假设当前模式为 schema2
+SET SCHEMA schema2;
+DROP CONTEXT INDEX index2 ON table2;
+-- 测试用例 6: 删除表时自动删除全文索引
+-- 创建表和全文索引
+CREATE TABLE schema1.table3 (
+    id INT PRIMARY KEY,
+    content TEXT
+);
+CREATE CONTEXT INDEX index3 ON schema1.table3(content);
+-- 删除表，自动删除全文索引
+DROP TABLE schema1.table3;
+-- 测试用例 7: 删除列时自动删除全文索引
+-- 创建表和全文索引
+CREATE TABLE schema1.table4 (
+    id INT PRIMARY KEY,
+    content TEXT
+);
+CREATE CONTEXT INDEX index4 ON schema1.table4(content);
+-- 删除列，自动删除全文索引
+ALTER TABLE schema1.table4 DROP COLUMN content;
+-- 测试用例 8: 尝试修改建有全文索引的列
+-- 创建表和全文索引
+CREATE TABLE schema1.table5 (
+    id INT PRIMARY KEY,
+    content TEXT
+);
+CREATE CONTEXT INDEX index5 ON schema1.table5(content);
+-- 尝试修改列类型，预期结果：报错
+ALTER TABLE schema1.table5 ALTER COLUMN content TYPE VARCHAR(255);
+-- 测试用例 9: 删除不同模式下的全文索引
+-- 创建表和全文索引
+CREATE TABLE schema2.table6 (
+    id INT PRIMARY KEY,
+    description TEXT
+);
+CREATE CONTEXT INDEX index6 ON schema2.table6(description);
+-- 删除全文索引
+DROP CONTEXT INDEX index6 ON schema2.table6;
+-- 测试用例 10: 删除默认模式下的全文索引（省略模式名）
+-- 假设当前模式为 schema2
+SET SCHEMA schema2;
+DROP CONTEXT INDEX index6 ON table6

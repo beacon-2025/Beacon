@@ -1,0 +1,5 @@
+
+
+SET @sys.debug                        = 'OFF',
+    @sys.diagnostics.allow_i_s_tables = 'OFF',
+    @sys.diagnostics.include_raw      = 'OFF'

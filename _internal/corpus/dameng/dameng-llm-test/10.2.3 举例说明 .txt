@@ -1,0 +1,171 @@
+-- 创建外部函数所需的JAR文件路径
+-- 假设JAR文件已经放置在指定路径
+-- 以下语句为创建外部函数的前置条件
+CREATE OR REPLACE FUNCTION MY_INT(a int, b int)  
+RETURN int 
+EXTERNAL '/dmdbms/bin/external_jar/test.jar' 
+"com.test.package1.test.testAdd" USING java;
+CREATE OR REPLACE FUNCTION MY_chr(s varchar)  
+RETURN varchar 
+EXTERNAL '/dmdbms/bin/external_jar/test.jar' 
+"com.test.package1.test.testStr" USING java;
+-- 调用MY_INT函数，计算两个整数的和
+SELECT MY_INT(10, 20);
+-- 调用MY_chr函数，在字符串后添加"hello"
+SELECT MY_chr('test');
+-- 调用MY_INT函数，检查结果是否为预期值
+SELECT MY_INT(5, 7) = 12;
+-- 调用MY_chr函数，检查结果是否为预期值
+SELECT MY_chr('world') = 'world hello';
+-- 调用MY_INT函数，处理NULL值
+SELECT MY_INT(NULL, 10);
+-- 调用MY_chr函数，处理NULL值
+SELECT MY_chr(NULL);
+-- 调用MY_INT函数，处理负数
+SELECT MY_INT(-5, -10);
+-- 调用MY_chr函数，处理空字符串
+SELECT MY_chr('');
+-- 调用MY_INT函数，处理大整数
+SELECT MY_INT(2147483647, 1);
+-- 调用MY_chr函数，处理长字符串
+SELECT MY_chr('This is a very long string to test the function');
+-- 调用MY_INT函数，处理零值
+SELECT MY_INT(0, 0);
+-- 调用MY_chr函数，处理特殊字符
+SELECT MY_chr('!@#$%^&*()');
+-- 调用MY_INT函数，处理小数（应返回错误）
+SELECT MY_INT(1.5, 2.5);
+-- 调用MY_chr函数，处理数字字符串
+SELECT MY_chr('12345');
+-- 调用MY_INT函数，处理最大整数值
+SELECT MY_INT(2147483647, 2147483647);
+-- 调用MY_chr函数，处理Unicode字符
+SELECT MY_chr('你好');
+-- 调用MY_INT函数，处理最小整数值
+SELECT MY_INT(-2147483648, -2147483648);
+-- 调用MY_chr函数，处理混合字符
+SELECT MY_chr('abc123!@#');
+-- 调用MY_INT函数，处理溢出情况
+SELECT MY_INT(2147483647, 1);
+-- 调用MY_chr函数，处理换行符
+SELECT MY_chr('line1\nline2');
+-- 调用MY_INT函数，处理边界值
+SELECT MY_INT(2147483647, -2147483648);
+-- 调用MY_chr函数，处理制表符
+SELECT MY_chr('tab\tcharacter');
+-- 调用MY_INT函数，处理零和负数
+SELECT MY_INT(0, -10);
+-- 调用MY_chr函数，处理多行字符串
+SELECT MY_chr('line1\nline2\nline3');
+-- 调用MY_INT函数，处理正数和零
+SELECT MY_INT(10, 0);
+-- 调用MY_chr函数，处理空字符串和NULL
+SELECT MY_chr(''), MY_chr(NULL);
+-- 调用MY_INT函数，处理正数和负数
+SELECT MY_INT(10, -5);
+-- 调用MY_chr函数，处理长字符串和NULL
+SELECT MY_chr('This is a very long string to test the function'), MY_chr(NULL);
+-- 调用MY_INT函数，处理边界值和零
+SELECT MY_INT(2147483647, 0);
+-- 调用MY_chr函数，处理特殊字符和NULL
+SELECT MY_chr('!@#$%^&*()'), MY_chr(NULL);
+-- 调用MY_INT函数，处理最小值和最大值
+SELECT MY_INT(-2147483648, 2147483647);
+-- 调用MY_chr函数，处理Unicode字符和NULL
+SELECT MY_chr('你好'), MY_chr(NULL);
+-- 调用MY_INT函数，处理零和最大值
+SELECT MY_INT(0, 2147483647);
+-- 调用MY_chr函数，处理混合字符和NULL
+SELECT MY_chr('abc123!@#'), MY_chr(NULL);
+-- 调用MY_INT函数，处理负数和最大值
+SELECT MY_INT(-10, 2147483647);
+-- 调用MY_chr函数，处理换行符和NULL
+SELECT MY_chr('line1\nline2'), MY_chr(NULL);
+-- 调用MY_INT函数，处理零和最小值
+SELECT MY_INT(0, -2147483648);
+-- 调用MY_chr函数，处理制表符和NULL
+SELECT MY_chr('tab\tcharacter'), MY_chr(NULL);
+-- 调用MY_INT函数，处理正数和最小值
+SELECT MY_INT(10, -2147483648);
+-- 调用MY_chr函数，处理多行字符串和NULL
+SELECT MY_chr('line1\nline2\nline3'), MY_chr(NULL);
+-- 调用MY_INT函数，处理负数和零
+SELECT MY_INT(-10, 0);
+-- 调用MY_chr函数，处理空字符串和NULL
+SELECT MY_chr(''), MY_chr(NULL);
+-- 调用MY_INT函数，处理正数和负数
+SELECT MY_INT(10, -5);
+-- 调用MY_chr函数，处理长字符串和NULL
+SELECT MY_chr('This is a very long string to test the function'), MY_chr(NULL);
+-- 调用MY_INT函数，处理边界值和零
+SELECT MY_INT(2147483647, 0);
+-- 调用MY_chr函数，处理特殊字符和NULL
+SELECT MY_chr('!@#$%^&*()'), MY_chr(NULL);
+-- 调用MY_INT函数，处理最小值和最大值
+SELECT MY_INT(-2147483648, 2147483647);
+-- 调用MY_chr函数，处理Unicode字符和NULL
+SELECT MY_chr('你好'), MY_chr(NULL);
+-- 调用MY_INT函数，处理零和最大值
+SELECT MY_INT(0, 2147483647);
+-- 调用MY_chr函数，处理混合字符和NULL
+SELECT MY_chr('abc123!@#'), MY_chr(NULL);
+-- 调用MY_INT函数，处理负数和最大值
+SELECT MY_INT(-10, 2147483647);
+-- 调用MY_chr函数，处理换行符和NULL
+SELECT MY_chr('line1\nline2'), MY_chr(NULL);
+-- 调用MY_INT函数，处理零和最小值
+SELECT MY_INT(0, -2147483648);
+-- 调用MY_chr函数，处理制表符和NULL
+SELECT MY_chr('tab\tcharacter'), MY_chr(NULL);
+-- 调用MY_INT函数，处理正数和最小值
+SELECT MY_INT(10, -2147483648);
+-- 调用MY_chr函数，处理多行字符串和NULL
+SELECT MY_chr('line1\nline2\nline3'), MY_chr(NULL);
+-- 调用MY_INT函数，处理负数和零
+SELECT MY_INT(-10, 0);
+-- 调用MY_chr函数，处理空字符串和NULL
+SELECT MY_chr(''), MY_chr(NULL);
+-- 调用MY_INT函数，处理正数和负数
+SELECT MY_INT(10, -5);
+-- 调用MY_chr函数，处理长字符串和NULL
+SELECT MY_chr('This is a very long string to test the function'), MY_chr(NULL);
+-- 调用MY_INT函数，处理边界值和零
+SELECT MY_INT(2147483647, 0);
+-- 调用MY_chr函数，处理特殊字符和NULL
+SELECT MY_chr('!@#$%^&*()'), MY_chr(NULL);
+-- 调用MY_INT函数，处理最小值和最大值
+SELECT MY_INT(-2147483648, 2147483647);
+-- 调用MY_chr函数，处理Unicode字符和NULL
+SELECT MY_chr('你好'), MY_chr(NULL);
+-- 调用MY_INT函数，处理零和最大值
+SELECT MY_INT(0, 2147483647);
+-- 调用MY_chr函数，处理混合字符和NULL
+SELECT MY_chr('abc123!@#'), MY_chr(NULL);
+-- 调用MY_INT函数，处理负数和最大值
+SELECT MY_INT(-10, 2147483647);
+-- 调用MY_chr函数，处理换行符和NULL
+SELECT MY_chr('line1\nline2'), MY_chr(NULL);
+-- 调用MY_INT函数，处理零和最小值
+SELECT MY_INT(0, -2147483648);
+-- 调用MY_chr函数，处理制表符和NULL
+SELECT MY_chr('tab\tcharacter'), MY_chr(NULL);
+-- 调用MY_INT函数，处理正数和最小值
+SELECT MY_INT(10, -2147483648);
+-- 调用MY_chr函数，处理多行字符串和NULL
+SELECT MY_chr('line1\nline2\nline3'), MY_chr(NULL);
+-- 调用MY_INT函数，处理负数和零
+SELECT MY_INT(-10, 0);
+-- 调用MY_chr函数，处理空字符串和NULL
+SELECT MY_chr(''), MY_chr(NULL);
+-- 调用MY_INT函数，处理正数和负数
+SELECT MY_INT(10, -5);
+-- 调用MY_chr函数，处理长字符串和NULL
+SELECT MY_chr('This is a very long string to test the function'), MY_chr(NULL);
+-- 调用MY_INT函数，处理边界值和零
+SELECT MY_INT(2147483647, 0);
+-- 调用MY_chr函数，处理特殊字符和NULL
+SELECT MY_chr('!@#$%^&*()'), MY_chr(NULL);
+-- 调用MY_INT函数，处理最小值和最大值
+SELECT MY_INT(-2147483648, 2147483647);
+-- 调用MY_chr函数，处理Unicode字符和NULL
+SELECT MY_chr('你好'), MY_chr(NULL)

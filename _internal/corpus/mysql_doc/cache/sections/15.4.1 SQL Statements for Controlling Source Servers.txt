@@ -1,0 +1,135 @@
+15.4.1 SQL Statements for Controlling Source Servers
+This section discusses statements for managing replication source servers. Section 15.4.2, “SQL
+Statements for Controlling Replica Servers”, discusses statements for managing replica servers.
+In addition to the statements described here, the following SHOW statements are used with source
+servers in replication. For information about these statements, see Section 15.7.7, “SHOW
+Statements”.
+• SHOW BINARY LOGS
+• SHOW BINLOG EVENTS
+• SHOW BINARY LOG STATUS
+• SHOW REPLICAS
+15.4.1.1 PURGE BINARY LOGS Statement
+PURGE BINARY LOGS {
+    TO 'log_name'
+  | BEFORE datetime_expr
+}
+The binary log is a set of files that contain information about data modifications made by the MySQL
+server. The log consists of a set of binary log files, plus an index file (see Section 7.4.4, “The Binary
+Log”).
+The PURGE BINARY LOGS statement deletes all the binary log files listed in the log index file prior to
+the specified log file name or date. Deleted log files also are removed from the list recorded in the index
+file, so that the given log file becomes the first in the list.
+PURGE BINARY LOGS requires the BINLOG_ADMIN privilege. This statement has no effect if the
+server was not started with the --log-bin option to enable binary logging.
+Examples:
+PURGE BINARY LOGS TO 'mysql-bin.010';
+PURGE BINARY LOGS BEFORE '2019-04-02 22:46:26';
+The BEFORE variant's datetime_expr argument should evaluate to a DATETIME value (a value in
+'YYYY-MM-DD hh:mm:ss' format).
+PURGE BINARY LOGS is safe to run while replicas are replicating. You need not stop them. If you have
+an active replica that currently is reading one of the log files you are trying to delete, this statement
+does not delete the log file that is in use or any log files later than that one, but it deletes any earlier
+log files. A warning message is issued in this situation. However, if a replica is not connected and you
+happen to purge one of the log files it has yet to read, the replica cannot replicate after it reconnects.
+PURGE BINARY LOGS cannot be issued while a LOCK INSTANCE FOR BACKUP statement is in effect
+for the instance, because it contravenes the rules of the backup lock by removing files from the server.
+To safely purge binary log files, follow this procedure:
+1. On each replica, use SHOW REPLICA STATUS to check which log file it is reading.
+2. Obtain a listing of the binary log files on the source with SHOW BINARY LOGS.
+3. Determine the earliest log file among all the replicas. This is the target file. If all the replicas are up
+to date, this is the last log file on the list.
+4. Make a backup of all the log files you are about to delete. (This step is optional, but always
+advisable.)
+5. Purge all log files up to but not including the target file.
+PURGE BINARY LOGS TO and PURGE BINARY LOGS BEFORE both fail with an error when binary log
+files listed in the .index file had been removed from the system by some other means (such as using
+rm on Linux). (Bug #18199, Bug #18453) To handle such errors, edit the .index file (which is a simple
+text file) manually to ensure that it lists only the binary log files that are actually present, then run again
+the PURGE BINARY LOGS statement that failed.
+Binary log files are automatically removed after the server's binary log expiration period. Removal
+of the files can take place at startup and when the binary log is flushed. The default binary
+log expiration period is 30 days. You can specify an alternative expiration period using the
+binlog_expire_logs_seconds system variable. If you are using replication, you should specify an
+expiration period that is no lower than the maximum amount of time your replicas might lag behind the
+source.
+15.4.1.2 RESET BINARY LOGS AND GTIDS Statement
+RESET BINARY LOGS AND GTIDS [TO binary_log_file_index_number]
+Warning
+Use this statement with caution to ensure you do not lose any wanted binary log
+file data and GTID execution history.
+RESET BINARY LOGS AND GTIDS requires the RELOAD privilege.
+For a server where binary logging is enabled (log_bin is ON), RESET BINARY LOGS AND GTIDS
+deletes all existing binary log files and resets the binary log index file, resetting the server to its state
+before binary logging was started. A new empty binary log file is created so that binary logging can be
+restarted.
+For a server where GTIDs are in use (gtid_mode is ON), issuing RESET BINARY LOGS AND GTIDS
+resets the GTID execution history. The value of the gtid_purged system variable is set to an empty
+string (''), the global value (but not the session value) of the gtid_executed system variable is set
+to an empty string, and the mysql.gtid_executed table is cleared (see mysql.gtid_executed Table).
+If the GTID-enabled server has binary logging enabled, RESET BINARY LOGS AND GTIDS also
+resets the binary log as described above. Note that RESET BINARY LOGS AND GTIDS is the method
+to reset the GTID execution history even if the GTID-enabled server is a replica where binary logging
+is disabled; RESET REPLICA has no effect on the GTID execution history. For more information on
+resetting the GTID execution history, see Resetting the GTID Execution History.
+Issuing RESET BINARY LOGS AND GTIDS without the optional TO clause deletes all binary log files
+listed in the index file, resets the binary log index file to be empty, and creates a new binary log file
+starting at 1. Use the optional TO clause to start the binary log file index from a number other than 1
+after the reset.
+Check that you are using a reasonable value for the index number. If you enter an incorrect value, you
+can correct this by issuing another RESET BINARY LOGS AND GTIDS statement with or without the
+TO clause. If you do not correct a value that is out of range, the server cannot be restarted.
+The following example demonstrates TO clause usage:
+RESET BINARY LOGS AND GTIDS TO 1234;
+SHOW BINARY LOGS;
++-------------------+-----------+-----------+
+| Log_name          | File_size | Encrypted |
++-------------------+-----------+-----------+
+| source-bin.001234 |       154 | No        |
++-------------------+-----------+-----------+
+Important
+The effects of RESET BINARY LOGS AND GTIDS without the TO clause differ
+from those of PURGE BINARY LOGS in 2 key ways:
+1. RESET BINARY LOGS AND GTIDS removes all binary log files that are
+listed in the index file, leaving only a single, empty binary log file with a
+numeric suffix of .000001, whereas the numbering is not reset by PURGE
+BINARY LOGS.
+2. RESET BINARY LOGS AND GTIDS is not intended to be used while any
+replicas are running. The behavior of RESET BINARY LOGS AND GTIDS
+when used while replicas are running is undefined (and thus unsupported),
+whereas PURGE BINARY LOGS may be safely used while replicas are
+running.
+See also Section 15.4.1.1, “PURGE BINARY LOGS Statement”.
+RESET BINARY LOGS AND GTIDS without the TO clause can prove useful when you first set up a
+source and replica, so that you can verify the setup as follows:
+1. Start the source and replica, and start replication (see Section 19.1.2, “Setting Up Binary Log File
+Position Based Replication”).
+2. Execute a few test queries on the source.
+3. Check that the queries were replicated to the replica.
+4. When replication is running correctly, issue STOP REPLICA followed by RESET REPLICA (both on
+the replica), then verify that no unwanted data from the test queries exists on the replica. Following
+this, issue RESET BINARY LOGS AND GTIDS (also on the replica) to remove binary logs and and
+associated transaction IDs.
+5. Remove the unwanted data from the source, then issue RESET BINARY LOGS AND GTIDS to
+purge any binary log entries and identifiers associated with it.
+After verifying the setup, resetting the source and replica and ensuring that no unwanted data or binary
+log files generated by testing remain on the source or replica, you can start the replica and begin
+replicating.
+15.4.1.3 SET sql_log_bin Statement
+SET sql_log_bin = {OFF|ON}
+The sql_log_bin variable controls whether logging to the binary log is enabled for the current
+session (assuming that the binary log itself is enabled). The default value is ON. To disable or enable
+binary logging for the current session, set the session sql_log_bin variable to OFF or ON.
+Set this variable to OFF for a session to temporarily disable binary logging while making changes to the
+source that you do not want replicated to the replica.
+Setting the session value of this system variable is a restricted operation. The session user must
+have privileges sufficient to set restricted session variables. See Section 7.1.9.1, “System Variable
+Privileges”.
+It is not possible to set the session value of sql_log_bin within a transaction or subquery.
+Setting this variable to OFF prevents new GTIDs from being assigned to transactions in the binary log.
+If you are using GTIDs for replication, this means that even when binary logging is later enabled again,
+the GTIDs written into the log from this point do not account for any transactions that occurred in the
+meantime, so in effect those transactions are lost.
+mysqldump adds a SET @@SESSION.sql_log_bin=0 statement to a dump file from a server where
+GTIDs are in use, which disables binary logging while the dump file is being reloaded. The statement
+prevents new GTIDs from being generated and assigned to the transactions in the dump file as they
+are executed, so that the original GTIDs for the transactions are used.

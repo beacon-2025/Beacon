@@ -1,0 +1,3 @@
+```plaintext
+MANAGE_SEQUENCE -> '3.12' '管理序列'
+```

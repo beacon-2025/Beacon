@@ -1,0 +1,4 @@
+#
+# Bug58747 breaks secure_file_priv+not secure yet+still accesses other folders
+#
+CREATE TABLE t1 (c1 INT)

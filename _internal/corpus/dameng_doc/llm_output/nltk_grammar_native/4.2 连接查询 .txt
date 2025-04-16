@@ -1,0 +1,5 @@
+```nltk
+S -> CONNECTION_QUERY
+CONNECTION_QUERY -> 'FROM' 'table_name_1' 'table_name_2' JOIN_TYPE
+JOIN_TYPE -> 'CROSS JOIN' | 'NATURAL JOIN' | 'INNER JOIN' | 'OUTER JOIN'
+```

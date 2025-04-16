@@ -1,0 +1,48 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 创建外部链接
+CREATE LINK schema1.link1;
+CREATE LINK schema2.link2;
+CREATE PUBLIC LINK public_link1;
+CREATE PUBLIC LINK public_link2;
+-- 测试用例 1: 删除一个外部链接
+DROP LINK schema1.link1;
+-- 测试用例 2: 删除一个外部链接，使用 IF EXISTS 关键字
+DROP LINK IF EXISTS schema1.link1;
+-- 测试用例 3: 删除一个不存在的外部链接（会报错）
+DROP LINK schema1.nonexistent_link;
+-- 测试用例 4: 删除一个不存在的外部链接，使用 IF EXISTS 关键字（不会报错）
+DROP LINK IF EXISTS schema1.nonexistent_link;
+-- 测试用例 5: 删除一个 PUBLIC 外部链接
+DROP PUBLIC LINK public_link1;
+-- 测试用例 6: 删除一个 PUBLIC 外部链接，使用 IF EXISTS 关键字
+DROP PUBLIC LINK IF EXISTS public_link1;
+-- 测试用例 7: 删除一个不存在的外部链接，使用 IF EXISTS 关键字（不会报错）
+DROP PUBLIC LINK IF EXISTS public_link1;
+-- 测试用例 8: 删除一个模式下的外部链接
+DROP LINK schema2.link2;
+-- 测试用例 9: 删除一个模式下的外部链接，使用 IF EXISTS 关键字
+DROP LINK IF EXISTS schema2.link2;
+-- 测试用例 10: 删除一个模式下的不存在的外部链接（会报错）
+DROP LINK schema2.nonexistent_link;
+-- 测试用例 11: 删除一个模式下的不存在的外部链接，使用 IF EXISTS 关键字（不会报错）
+DROP LINK IF EXISTS schema2.nonexistent_link;
+-- 测试用例 12: 删除一个 PUBLIC 外部链接，使用模式名
+DROP PUBLIC LINK IF EXISTS schema1.public_link1;
+-- 测试用例 13: 删除一个 PUBLIC 外部链接，使用模式名和 IF EXISTS 关键字
+DROP PUBLIC LINK IF EXISTS schema1.public_link1;
+-- 测试用例 14: 删除一个 PUBLIC 外部链接，使用模式名和 IF EXISTS 关键字（不存在）
+DROP PUBLIC LINK IF EXISTS schema1.nonexistent_public_link;
+-- 测试用例 15: 删除一个 PUBLIC 外部链接，使用模式名（不存在）
+DROP PUBLIC LINK schema1.nonexistent_public_link;
+-- 测试用例 16: 删除一个 PUBLIC 外部链接，使用模式名（不存在）
+DROP PUBLIC LINK schema1.nonexistent_public_link;
+-- 测试用例 17: 删除一个 PUBLIC 外部链接，使用模式名和 IF EXISTS 关键字（不存在）
+DROP PUBLIC LINK IF EXISTS schema1.nonexistent_public_link;
+-- 测试用例 18: 删除一个 PUBLIC 外部链接，使用模式名和 IF EXISTS 关键字（不存在）
+DROP PUBLIC LINK IF EXISTS schema1.nonexistent_public_link;
+-- 测试用例 19: 删除一个 PUBLIC 外部链接，使用模式名和 IF EXISTS 关键字（不存在）
+DROP PUBLIC LINK IF EXISTS schema1.nonexistent_public_link;
+-- 测试用例 20: 删除一个 PUBLIC 外部链接，使用模式名和 IF EXISTS 关键字（不存在）
+DROP PUBLIC LINK IF EXISTS schema1.nonexistent_public_link

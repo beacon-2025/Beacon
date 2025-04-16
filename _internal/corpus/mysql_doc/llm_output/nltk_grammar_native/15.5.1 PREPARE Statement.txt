@@ -1,0 +1,11 @@
+```
+S -> PREPARE_STATEMENT
+PREPARE_STATEMENT -> 'PREPARE' STATEMENT_NAME 'FROM' PREPARABLE_STATEMENT
+
+STATEMENT_NAME -> 'stmt_name_unknown'
+PREPARABLE_STATEMENT -> 'preparable_stmt_unknown' 
+
+# Explanation notes:
+# - 'stmt_name_unknown' represents a placeholder for the SQL statement's name.
+# - 'preparable_stmt_unknown' indicates the content being prepared, which could be a string literal or a variable containing an SQL statement.
+```

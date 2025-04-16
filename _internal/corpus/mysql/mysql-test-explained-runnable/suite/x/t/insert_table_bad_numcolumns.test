@@ -1,0 +1,2 @@
+
+create table mytable (i int NOT NULL, ui int unsigned, vc varchar(100), f float, d double, dt datetime, ts timestamp(5), j json)

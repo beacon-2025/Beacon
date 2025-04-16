@@ -1,0 +1,77 @@
+-- 公共前置语句
+CREATE TABLE Person(Id INT IDENTITY, Name VARCHAR(100), City VARCHAR(100));
+INSERT INTO Person(Name, City) VALUES('Tom','武汉');
+INSERT INTO Person(Name, City) VALUES('Jack','北京');
+INSERT INTO Person(Name, City) VALUES('Mary','上海');
+CREATE OR REPLACE PACKAGE PersonPackage AS 
+    E_NoPerson EXCEPTION;
+PersonCount INT;
+Pcur CURSOR;
+PROCEDURE AddPerson(Pname VARCHAR(100), Pcity varchar(100));
+PROCEDURE RemovePerson(Pname VARCHAR(100), Pcity varchar(100));
+PROCEDURE RemovePerson(Pid INT);
+FUNCTION GetPersonCount RETURN INT;
+PROCEDURE PersonList;
+END PersonPackage;
+CREATE OR REPLACE PACKAGE BODY PersonPackage AS 
+    PROCEDURE AddPerson(Pname VARCHAR(100), Pcity varchar(100)) AS 
+    BEGIN 
+        INSERT INTO Person(Name, City) VALUES(Pname, Pcity);
+PersonCount = PersonCount + SQL%ROWCOUNT;
+END AddPerson;
+PROCEDURE RemovePerson(Pname VARCHAR(100), Pcity varchar(100)) AS 
+    BEGIN 
+        DELETE FROM Person WHERE NAME LIKE Pname AND City like Pcity;
+PersonCount = PersonCount - SQL%ROWCOUNT;
+END RemovePerson;
+PROCEDURE RemovePerson(Pid INT) AS 
+    BEGIN 
+        DELETE FROM Person WHERE Id = Pid;
+PersonCount = PersonCount - SQL%ROWCOUNT;
+END RemovePerson;
+FUNCTION GetPersonCount RETURN INT AS 
+    BEGIN 
+        RETURN PersonCount;
+END GetPersonCount;
+PROCEDURE PersonList AS 
+    DECLARE 
+        V_id INT;
+V_name VARCHAR(100);
+V_city VARCHAR(100);
+BEGIN 
+        IF PersonCount = 0 THEN 
+            RAISE E_NoPerson;
+END IF;
+OPEN Pcur FOR SELECT Id, Name, City FROM Person;
+LOOP 
+            FETCH Pcur INTO V_id,V_name,V_city;
+EXIT WHEN Pcur%NOTFOUND;
+PRINT ('No.' || (cast (V_id as varchar(100))) || '  ' || V_name || '来自' || V_city );
+END LOOP;
+CLOSE Pcur;
+END PersonList;
+BEGIN 
+    SELECT COUNT(*) INTO PersonCount FROM Person;
+END PersonPackage;
+-- 测试用例1: 调用AddPerson过程添加新记录
+CALL PersonPackage.AddPerson('BLACK', '南京');
+-- 测试用例2: 调用RemovePerson过程删除记录（通过Name和City）
+CALL PersonPackage.RemovePerson('Jack', '北京');
+-- 测试用例3: 调用RemovePerson过程删除记录（通过Id）
+CALL PersonPackage.RemovePerson(2);
+-- 测试用例4: 引用包中的变量PersonCount
+SELECT PersonPackage.PersonCount;
+-- 测试用例5: 调用GetPersonCount函数获取记录数
+SELECT PersonPackage.GetPersonCount();
+-- 测试用例6: 调用PersonList过程查看所有记录
+CALL PersonPackage.PersonList;
+-- 测试用例7: 重新编译包
+ALTER PACKAGE PersonPackage COMPILE;
+-- 测试用例8: 尝试删除不存在的记录，触发异常
+CALL PersonPackage.RemovePerson('Nonexistent', 'Nowhere');
+-- 测试用例9: 添加多条记录并检查PersonCount
+CALL PersonPackage.AddPerson('Alice', '广州');
+CALL PersonPackage.AddPerson('Bob', '深圳');
+SELECT PersonPackage.GetPersonCount();
+-- 测试用例10: 调用PersonList过程查看所有记录
+CALL PersonPackage.PersonList

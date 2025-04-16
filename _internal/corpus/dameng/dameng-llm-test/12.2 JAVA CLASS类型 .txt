@@ -1,0 +1,195 @@
+-- 创建一个包含JAVA类类型的表
+CREATE TABLE java_classes (
+    class_id INT PRIMARY KEY,
+    class_name VARCHAR(100),
+    class_definition TEXT
+);
+-- 插入一个简单的JAVA类定义
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (1, 'SimpleClass', 'public class SimpleClass { }');
+-- 插入一个包含类型定义的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (2, 'TypeDefClass', 'public class TypeDefClass { 
+    CURSOR my_cursor IS SELECT * FROM my_table;
+EXCEPTION my_exception;
+TYPE my_record IS RECORD (id INT, name VARCHAR(100));
+TYPE my_array IS TABLE OF INT INDEX BY PLS_INTEGER;
+}');
+-- 插入一个包含属性的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (3, 'PropertyClass', 'public class PropertyClass { 
+    public int id;
+public String name;
+}');
+-- 插入一个包含成员方法的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (4, 'MethodClass', 'public class MethodClass { 
+    public void printMessage() { 
+        System.out.println("Hello, World!");
+} 
+}');
+-- 插入一个包含构造函数的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (5, 'ConstructorClass', 'public class ConstructorClass { 
+    public int id;
+public String name;
+public ConstructorClass() { 
+        this.id = 0;
+this.name = "Default";
+} 
+
+    public ConstructorClass(int id, String name) { 
+        this.id = id;
+this.name = name;
+} 
+}');
+-- 插入一个覆盖默认构造函数的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (6, 'OverrideConstructorClass', 'public class OverrideConstructorClass { 
+    public int id;
+public String name;
+public OverrideConstructorClass() { 
+        this.id = 1;
+this.name = "Overridden";
+} 
+}');
+-- 插入一个包含多个构造函数的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (7, 'MultipleConstructorClass', 'public class MultipleConstructorClass { 
+    public int id;
+public String name;
+public MultipleConstructorClass() { 
+        this.id = 0;
+this.name = "Default";
+} 
+
+    public MultipleConstructorClass(int id) { 
+        this.id = id;
+this.name = "SingleParam";
+} 
+
+    public MultipleConstructorClass(int id, String name) { 
+        this.id = id;
+this.name = name;
+} 
+}');
+-- 插入一个包含自定义数据类型的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (8, 'CustomTypeClass', 'public class CustomTypeClass { 
+    public CustomType myCustomType;
+public class CustomType { 
+        public int customId;
+public String customName;
+} 
+}');
+-- 插入一个包含异常处理的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (9, 'ExceptionClass', 'public class ExceptionClass { 
+    public void riskyMethod() throws Exception { 
+        throw new Exception("Something went wrong!");
+} 
+}');
+-- 插入一个包含数组类型的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (10, 'ArrayClass', 'public class ArrayClass { 
+    public int[] numbers = new int[10];
+public void initializeArray() { 
+        for (int i = 0;
+i < numbers.length;
+i++) { 
+            numbers[i] = i;
+} 
+    } 
+}');
+-- 插入一个包含结构体类型的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (11, 'StructClass', 'public class StructClass { 
+    public struct MyStruct { 
+        public int id;
+public String name;
+} 
+
+    public MyStruct myStruct;
+}');
+-- 插入一个包含内存索引表的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (12, 'IndexTableClass', 'public class IndexTableClass { 
+    public Map<Integer, String> indexTable = new HashMap<>();
+public void addEntry(int key, String value) { 
+        indexTable.put(key, value);
+} 
+}');
+-- 插入一个包含游标的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (13, 'CursorClass', 'public class CursorClass { 
+    CURSOR my_cursor IS SELECT * FROM my_table;
+public void fetchData() { 
+        FOR rec IN my_cursor LOOP 
+            System.out.println(rec.id);
+END LOOP;
+} 
+}');
+-- 插入一个包含记录类型的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (14, 'RecordClass', 'public class RecordClass { 
+    TYPE my_record IS RECORD (id INT, name VARCHAR(100));
+public my_record myRecord;
+}');
+-- 插入一个包含数组类型的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (15, 'ArrayTypeClass', 'public class ArrayTypeClass { 
+    public int[] numbers = new int[10];
+public void initializeArray() { 
+        for (int i = 0;
+i < numbers.length;
+i++) { 
+            numbers[i] = i;
+} 
+    } 
+}');
+-- 插入一个包含结构体类型的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (16, 'StructTypeClass', 'public class StructTypeClass { 
+    public struct MyStruct { 
+        public int id;
+public String name;
+} 
+
+    public MyStruct myStruct;
+}');
+-- 插入一个包含内存索引表的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (17, 'IndexTableTypeClass', 'public class IndexTableTypeClass { 
+    public Map<Integer, String> indexTable = new HashMap<>();
+public void addEntry(int key, String value) { 
+        indexTable.put(key, value);
+} 
+}');
+-- 插入一个包含游标的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (18, 'CursorTypeClass', 'public class CursorTypeClass { 
+    CURSOR my_cursor IS SELECT * FROM my_table;
+public void fetchData() { 
+        FOR rec IN my_cursor LOOP 
+            System.out.println(rec.id);
+END LOOP;
+} 
+}');
+-- 插入一个包含记录类型的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (19, 'RecordTypeClass', 'public class RecordTypeClass { 
+    TYPE my_record IS RECORD (id INT, name VARCHAR(100));
+public my_record myRecord;
+}');
+-- 插入一个包含数组类型的JAVA类
+INSERT INTO java_classes (class_id, class_name, class_definition)
+VALUES (20, 'ArrayTypeClass2', 'public class ArrayTypeClass2 { 
+    public int[] numbers = new int[10];
+public void initializeArray() { 
+        for (int i = 0;
+i < numbers.length;
+i++) { 
+            numbers[i] = i;
+} 
+    } 
+}')

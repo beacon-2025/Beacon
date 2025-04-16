@@ -1,0 +1,2 @@
+
+show variables like 'replica_transaction_retries'

@@ -1,0 +1,30 @@
+-- 假设表空间 'MAIN' 已经存在，并且已经调用了 SP_TABLESPACE_PREPARE_RECOVER 并在 OS 系统内完成了数据文件的复制;
+-- 测试用例 1: 恢复表空间 'MAIN'
+SP_TABLESPACE_RECOVER('MAIN');
+-- 测试用例 2: 恢复表空间 'USER_DATA'
+-- 假设表空间 'USER_DATA' 已经存在，并且已经调用了 SP_TABLESPACE_PREPARE_RECOVER 并在 OS 系统内完成了数据文件的复制
+SP_TABLESPACE_RECOVER('USER_DATA');
+-- 测试用例 3: 恢复表空间 'TEMP_DATA'
+-- 假设表空间 'TEMP_DATA' 已经存在，并且已经调用了 SP_TABLESPACE_PREPARE_RECOVER 并在 OS 系统内完成了数据文件的复制
+SP_TABLESPACE_RECOVER('TEMP_DATA');
+-- 测试用例 4: 恢复表空间 'BACKUP_DATA'
+-- 假设表空间 'BACKUP_DATA' 已经存在，并且已经调用了 SP_TABLESPACE_PREPARE_RECOVER 并在 OS 系统内完成了数据文件的复制
+SP_TABLESPACE_RECOVER('BACKUP_DATA');
+-- 测试用例 5: 恢复表空间 'ARCHIVE_DATA'
+-- 假设表空间 'ARCHIVE_DATA' 已经存在，并且已经调用了 SP_TABLESPACE_PREPARE_RECOVER 并在 OS 系统内完成了数据文件的复制
+SP_TABLESPACE_RECOVER('ARCHIVE_DATA');
+-- 测试用例 6: 恢复表空间 'LOG_DATA'
+-- 假设表空间 'LOG_DATA' 已经存在，并且已经调用了 SP_TABLESPACE_PREPARE_RECOVER 并在 OS 系统内完成了数据文件的复制
+SP_TABLESPACE_RECOVER('LOG_DATA');
+-- 测试用例 7: 恢复表空间 'INDEX_DATA'
+-- 假设表空间 'INDEX_DATA' 已经存在，并且已经调用了 SP_TABLESPACE_PREPARE_RECOVER 并在 OS 系统内完成了数据文件的复制
+SP_TABLESPACE_RECOVER('INDEX_DATA');
+-- 测试用例 8: 恢复表空间 'SYSTEM_DATA'
+-- 假设表空间 'SYSTEM_DATA' 已经存在，并且已经调用了 SP_TABLESPACE_PREPARE_RECOVER 并在 OS 系统内完成了数据文件的复制
+SP_TABLESPACE_RECOVER('SYSTEM_DATA');
+-- 测试用例 9: 恢复表空间 'TEST_DATA'
+-- 假设表空间 'TEST_DATA' 已经存在，并且已经调用了 SP_TABLESPACE_PREPARE_RECOVER 并在 OS 系统内完成了数据文件的复制
+SP_TABLESPACE_RECOVER('TEST_DATA');
+-- 测试用例 10: 恢复表空间 'DEMO_DATA'
+-- 假设表空间 'DEMO_DATA' 已经存在，并且已经调用了 SP_TABLESPACE_PREPARE_RECOVER 并在 OS 系统内完成了数据文件的复制
+SP_TABLESPACE_RECOVER('DEMO_DATA')

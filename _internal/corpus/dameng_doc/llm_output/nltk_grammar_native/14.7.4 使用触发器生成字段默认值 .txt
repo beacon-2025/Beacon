@@ -1,0 +1,7 @@
+```plaintext
+S -> SET_SCHEMA | CREATE_TRIGGER | SET_SCHEMA_SYSDBA | SYNONYM_DESCRIPTION
+SET_SCHEMA -> 'SET' 'SCHEMA' 'OTHER'
+CREATE_TRIGGER -> 'CREATE' 'OR' 'REPLACE' 'TRIGGER' 'Emp_auto_value' 'BEFORE' 'INSERT' 'ON' 'OTHER.EMPTAB' 'FOR' 'EACH' 'ROW' 'BEGIN' ':new.Sal' '=' '999.99' 'END'
+SET_SCHEMA_SYSDBA -> 'SET' 'SCHEMA' 'SYSDBA'
+SYNONYM_DESCRIPTION -> '同义词(Synonym)让用户能够为数据库的一个模式下的对象提供别名。同义词通过掩盖一个对象真实的名字和拥有者，并且对远程分布式的数据库对象给予了位置透明特性以此来提供了一定的安全性。同时使用同义词可以简化复杂的 SQL 语句。同义词可以替换模式下的表、视图、序列、函数、存储过程等对象。'
+```

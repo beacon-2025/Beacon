@@ -1,0 +1,4 @@
+
+
+# Add a source.
+SELECT asynchronous_connection_failover_add_source('ch1', '127.0.0.1', 3100)

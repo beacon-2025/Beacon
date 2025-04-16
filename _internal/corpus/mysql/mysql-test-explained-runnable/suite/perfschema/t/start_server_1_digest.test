@@ -1,0 +1,4 @@
+
+
+select SCHEMA_NAME, DIGEST, DIGEST_TEXT
+  from performance_schema.events_statements_summary_by_digest

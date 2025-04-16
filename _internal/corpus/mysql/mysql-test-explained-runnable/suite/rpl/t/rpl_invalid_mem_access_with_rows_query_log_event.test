@@ -1,0 +1,2 @@
+
+SET @@session.binlog_rows_query_log_events=ON

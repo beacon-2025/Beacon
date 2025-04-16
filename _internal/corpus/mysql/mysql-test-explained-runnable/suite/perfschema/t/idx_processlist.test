@@ -1,0 +1,3 @@
+
+
+select connection_id() into @conid

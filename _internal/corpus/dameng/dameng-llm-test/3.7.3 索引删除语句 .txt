@@ -1,0 +1,35 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 创建表
+CREATE TABLE schema1.table1 (id INT, name VARCHAR(50));
+CREATE TABLE schema2.table2 (id INT, name VARCHAR(50));
+-- 创建索引
+CREATE INDEX idx1 ON schema1.table1 (id);
+CREATE INDEX idx2 ON schema2.table2 (id);
+CREATE INDEX idx3 ON schema1.table1 (name);
+CREATE INDEX idx4 ON schema2.table2 (name);
+-- 测试用例 1: 删除当前模式下的索引
+DROP INDEX idx1;
+-- 测试用例 2: 删除指定模式下的索引
+DROP INDEX schema2.idx2;
+-- 测试用例 3: 删除不存在的索引（会报错）
+DROP INDEX schema1.nonexistent_index;
+-- 测试用例 4: 使用 IF EXISTS 删除不存在的索引（不会报错）
+DROP INDEX IF EXISTS schema1.nonexistent_index;
+-- 测试用例 5: 删除当前模式下的索引（使用 IF EXISTS）
+DROP INDEX IF EXISTS idx3;
+-- 测试用例 6: 删除指定模式下的索引（使用 IF EXISTS）
+DROP INDEX IF EXISTS schema2.idx4;
+-- 测试用例 7: 删除当前模式下的索引（索引名包含特殊字符）
+CREATE INDEX "idx_special" ON schema1.table1 (id);
+DROP INDEX "idx_special";
+-- 测试用例 8: 删除指定模式下的索引（索引名包含特殊字符）
+CREATE INDEX "idx_special2" ON schema2.table2 (id);
+DROP INDEX schema2."idx_special2";
+-- 测试用例 9: 删除当前模式下的索引（索引名包含数字）
+CREATE INDEX idx123 ON schema1.table1 (id);
+DROP INDEX idx123;
+-- 测试用例 10: 删除指定模式下的索引（索引名包含数字）
+CREATE INDEX idx456 ON schema2.table2 (id);
+DROP INDEX schema2.idx456

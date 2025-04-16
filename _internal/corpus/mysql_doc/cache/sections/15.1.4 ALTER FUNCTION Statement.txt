@@ -1,0 +1,15 @@
+15.1.4 ALTER FUNCTION Statement
+ALTER FUNCTION func_name [characteristic ...]
+characteristic: {
+    COMMENT 'string'
+  | LANGUAGE SQL
+  | { CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA }
+  | SQL SECURITY { DEFINER | INVOKER }
+}
+This statement can be used to change the characteristics of a stored function. More than one change
+may be specified in an ALTER FUNCTION statement. However, you cannot change the parameters or
+body of a stored function using this statement; to make such changes, you must drop and re-create the
+function using DROP FUNCTION and CREATE FUNCTION.
+You must have the ALTER ROUTINE privilege for the function. (That privilege is granted automatically
+to the function creator.) If binary logging is enabled, the ALTER FUNCTION statement might also
+require the SUPER privilege, as described in Section 27.8, “Stored Program Binary Logging”.

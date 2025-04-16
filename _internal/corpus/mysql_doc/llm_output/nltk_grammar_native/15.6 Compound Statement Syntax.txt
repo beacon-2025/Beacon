@@ -1,0 +1,1 @@
+I'm sorry, but the text you provided doesn't contain any explicit grammar rules that can be directly converted into NLTK grammar. If you have a more detailed grammar specification or rule set for compound statements, or specific examples of syntax rules, please provide that section so I can assist you in converting it.

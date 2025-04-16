@@ -1,0 +1,19 @@
+```plaintext
+S -> CREATE_INDEX
+CREATE_INDEX -> 'CREATE' OR_REPLACE_OPTION INDEX_TYPE_OPTION 'INDEX' 'index_name_1' 'ON' SCHEMA_TABLE_NAME '(' INDEX_COLUMN_DEFINITION ')' STORAGE_OPTION CLUSTER_OPTION GLOBAL_OPTION NOT_PARTIAL_OPTION NOSORT_OPTION SPATIAL_OPTION REVERSE_OPTION ONLINE_OPTION UNUSABLE_OPTION
+OR_REPLACE_OPTION -> 'OR' 'REPLACE' | ''
+INDEX_TYPE_OPTION -> 'UNIQUE' | 'BITMAP' | 'SPATIAL' | ''
+SCHEMA_TABLE_NAME -> 'schema_name_1' '.' 'table_name_1' | 'table_name_1'
+INDEX_COLUMN_DEFINITION -> 'index_column_1' ',' 'index_column_2' | 'index_column_1'
+STORAGE_OPTION -> 'STORAGE' '(' STORAGE_ITEMS ')' | ''
+STORAGE_ITEMS -> STORAGE_ITEM | STORAGE_ITEM ',' STORAGE_ITEMS
+STORAGE_ITEM -> 'INITIAL' 'initial_size_value' | 'NEXT' 'next_size_value' | 'MINEXTENTS' 'minextents_size_value' | 'ON' 'tablespace_name_1' | 'FILLFACTOR' 'fillfactor_value' | 'BRANCH' 'branch_count_value' | 'BRANCH' '(' 'branch_count_value' ',' 'nobranch_count_value' ')' | 'NOBRANCH' | 'CLUSTERBTR' | 'SECTION' 'section_count_value' | 'STAT' 'NONE'
+CLUSTER_OPTION -> 'CLUSTER' | ''
+GLOBAL_OPTION -> 'GLOBAL' | ''
+NOT_PARTIAL_OPTION -> 'NOT' 'PARTIAL' | ''
+NOSORT_OPTION -> 'NOSORT' | ''
+SPATIAL_OPTION -> 'SPATIAL' | ''
+REVERSE_OPTION -> 'REVERSE' | ''
+ONLINE_OPTION -> 'ONLINE' | ''
+UNUSABLE_OPTION -> 'UNUSABLE' | ''
+```

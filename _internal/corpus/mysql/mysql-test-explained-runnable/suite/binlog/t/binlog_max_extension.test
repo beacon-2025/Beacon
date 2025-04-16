@@ -1,0 +1,8 @@
+
+###########
+# Assertion
+###########
+
+# assertion: should raise error
+-- error ER_NO_UNIQUE_LOGFILE
+FLUSH LOGS

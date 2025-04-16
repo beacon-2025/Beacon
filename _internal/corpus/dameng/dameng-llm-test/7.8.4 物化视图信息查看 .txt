@@ -1,0 +1,216 @@
+-- 创建示例表
+CREATE TABLE test_table1 (
+    id INTEGER PRIMARY KEY,
+    name VARCHAR(128),
+    age INTEGER,
+    salary DECIMAL(10, 2),
+    join_date DATE
+);
+-- 插入示例数据
+INSERT INTO test_table1 (id, name, age, salary, join_date) VALUES
+(1, 'Alice', 25, 5000.00, '2020-01-01'),
+(2, 'Bob', 30, 6000.00, '2019-05-15'),
+(3, 'Charlie', 35, 7000.00, '2018-10-20');
+-- 创建物化视图
+CREATE MATERIALIZED VIEW test_mview1 AS
+SELECT id, name, age FROM test_table1 WHERE age > 25;
+-- 测试用例 1: 查看物化视图信息
+SELECT * FROM SYS.USER_MVIEWS WHERE MVIEW_NAME = 'TEST_MVIEW1';
+-- 测试用例 2: 使用数值函数 ABS
+SELECT ABS(-10) AS absolute_value FROM DUAL;
+-- 测试用例 3: 使用数值函数 CEIL
+SELECT CEIL(10.5) AS ceil_value FROM DUAL;
+-- 测试用例 4: 使用数值函数 FLOOR
+SELECT FLOOR(10.5) AS floor_value FROM DUAL;
+-- 测试用例 5: 使用数值函数 ROUND
+SELECT ROUND(10.567, 2) AS rounded_value FROM DUAL;
+-- 测试用例 6: 使用字符串函数 CONCAT
+SELECT CONCAT('Hello', 'World') AS concatenated_string FROM DUAL;
+-- 测试用例 7: 使用字符串函数 LOWER
+SELECT LOWER('HELLO WORLD') AS lower_case_string FROM DUAL;
+-- 测试用例 8: 使用字符串函数 UPPER
+SELECT UPPER('hello world') AS upper_case_string FROM DUAL;
+-- 测试用例 9: 使用字符串函数 SUBSTR
+SELECT SUBSTR('Hello World', 1, 5) AS substring FROM DUAL;
+-- 测试用例 10: 使用日期时间函数 ADD_DAYS
+SELECT ADD_DAYS('2023-10-01', 5) AS new_date FROM DUAL;
+-- 测试用例 11: 使用日期时间函数 ADD_MONTHS
+SELECT ADD_MONTHS('2023-10-01', 2) AS new_date FROM DUAL;
+-- 测试用例 12: 使用日期时间函数 CURDATE
+SELECT CURDATE() AS current_date FROM DUAL;
+-- 测试用例 13: 使用日期时间函数 CURTIME
+SELECT CURTIME() AS current_time FROM DUAL;
+-- 测试用例 14: 使用日期时间函数 DAY
+SELECT DAY('2023-10-01') AS day_of_month FROM DUAL;
+-- 测试用例 15: 使用日期时间函数 MONTH
+SELECT MONTH('2023-10-01') AS month_of_year FROM DUAL;
+-- 测试用例 16: 使用日期时间函数 YEAR
+SELECT YEAR('2023-10-01') AS year FROM DUAL;
+-- 测试用例 17: 使用空值判断函数 COALESCE
+SELECT COALESCE(NULL, 'Default Value') AS coalesced_value FROM DUAL;
+-- 测试用例 18: 使用空值判断函数 NVL
+SELECT NVL(NULL, 'Default Value') AS nvl_value FROM DUAL;
+-- 测试用例 19: 使用类型转换函数 CAST
+SELECT CAST('123' AS INTEGER) AS casted_value FROM DUAL;
+-- 测试用例 20: 使用类型转换函数 CONVERT
+SELECT CONVERT(VARCHAR, 123) AS converted_value FROM DUAL;
+-- 测试用例 21: 使用杂类函数 DECODE
+SELECT DECODE(1, 1, 'One', 2, 'Two', 'Default') AS decoded_value FROM DUAL;
+-- 测试用例 22: 使用杂类函数 ISDATE
+SELECT ISDATE('2023-10-01') AS is_date FROM DUAL;
+-- 测试用例 23: 使用杂类函数 ISNUMERIC
+SELECT ISNUMERIC('123') AS is_numeric FROM DUAL;
+-- 测试用例 24: 使用杂类函数 DM_HASH
+SELECT DM_HASH('Hello World') AS hash_value FROM DUAL;
+-- 测试用例 25: 使用数值函数 POWER
+SELECT POWER(2, 3) AS power_value FROM DUAL;
+-- 测试用例 26: 使用数值函数 SQRT
+SELECT SQRT(16) AS sqrt_value FROM DUAL;
+-- 测试用例 27: 使用数值函数 MOD
+SELECT MOD(10, 3) AS mod_value FROM DUAL;
+-- 测试用例 28: 使用数值函数 RAND
+SELECT RAND() AS random_value FROM DUAL;
+-- 测试用例 29: 使用字符串函数 REPLACE
+SELECT REPLACE('Hello World', 'World', 'Universe') AS replaced_string FROM DUAL;
+-- 测试用例 30: 使用字符串函数 REVERSE
+SELECT REVERSE('Hello World') AS reversed_string FROM DUAL;
+-- 测试用例 31: 使用字符串函数 LENGTH
+SELECT LENGTH('Hello World') AS string_length FROM DUAL;
+-- 测试用例 32: 使用字符串函数 CHAR_LENGTH
+SELECT CHAR_LENGTH('Hello World') AS char_length FROM DUAL;
+-- 测试用例 33: 使用字符串函数 ASCII
+SELECT ASCII('A') AS ascii_value FROM DUAL;
+-- 测试用例 34: 使用字符串函数 CHR
+SELECT CHR(65) AS character FROM DUAL;
+-- 测试用例 35: 使用字符串函数 INITCAP
+SELECT INITCAP('hello world') AS initcap_string FROM DUAL;
+-- 测试用例 36: 使用字符串函数 LPAD
+SELECT LPAD('Hello', 10, '*') AS lpad_string FROM DUAL;
+-- 测试用例 37: 使用字符串函数 RPAD
+SELECT RPAD('Hello', 10, '*') AS rpad_string FROM DUAL;
+-- 测试用例 38: 使用字符串函数 LTRIM
+SELECT LTRIM('   Hello World') AS ltrim_string FROM DUAL;
+-- 测试用例 39: 使用字符串函数 RTRIM
+SELECT RTRIM('Hello World   ') AS rtrim_string FROM DUAL;
+-- 测试用例 40: 使用字符串函数 SOUNDEX
+SELECT SOUNDEX('Hello') AS soundex_value FROM DUAL;
+-- 测试用例 41: 使用字符串函数 SPACE
+SELECT SPACE(5) AS space_string FROM DUAL;
+-- 测试用例 42: 使用字符串函数 STRPOSDEC
+SELECT STRPOSDEC('ABC') AS strposdec_value FROM DUAL;
+-- 测试用例 43: 使用字符串函数 STRPOSINC
+SELECT STRPOSINC('ABC') AS strposinc_value FROM DUAL;
+-- 测试用例 44: 使用字符串函数 STUFF
+SELECT STUFF('Hello World', 7, 5, 'Universe') AS stuffed_string FROM DUAL;
+-- 测试用例 45: 使用字符串函数 TRANSLATE
+SELECT TRANSLATE('Hello World', 'o', '*') AS translated_string FROM DUAL;
+-- 测试用例 46: 使用字符串函数 TRIM
+SELECT TRIM('   Hello World   ') AS trimmed_string FROM DUAL;
+-- 测试用例 47: 使用字符串函数 UCASE
+SELECT UCASE('hello world') AS ucase_string FROM DUAL;
+-- 测试用例 48: 使用字符串函数 UNISTR
+SELECT UNISTR('Hello \0057orld') AS unistr_string FROM DUAL;
+-- 测试用例 49: 使用字符串函数 CONCAT_WS
+SELECT CONCAT_WS(',', 'Hello', 'World') AS concat_ws_string FROM DUAL;
+-- 测试用例 50: 使用字符串函数 SUBSTRING_INDEX
+SELECT SUBSTRING_INDEX('Hello,World,Universe', ',', 2) AS substring_index_value FROM DUAL;
+-- 测试用例 51: 使用日期时间函数 DAYNAME
+SELECT DAYNAME('2023-10-01') AS day_name FROM DUAL;
+-- 测试用例 52: 使用日期时间函数 DAYOFWEEK
+SELECT DAYOFWEEK('2023-10-01') AS day_of_week FROM DUAL;
+-- 测试用例 53: 使用日期时间函数 DAYOFYEAR
+SELECT DAYOFYEAR('2023-10-01') AS day_of_year FROM DUAL;
+-- 测试用例 54: 使用日期时间函数 LAST_DAY
+SELECT LAST_DAY('2023-10-01') AS last_day_of_month FROM DUAL;
+-- 测试用例 55: 使用日期时间函数 MONTHNAME
+SELECT MONTHNAME('2023-10-01') AS month_name FROM DUAL;
+-- 测试用例 56: 使用日期时间函数 QUARTER
+SELECT QUARTER('2023-10-01') AS quarter FROM DUAL;
+-- 测试用例 57: 使用日期时间函数 WEEK
+SELECT WEEK('2023-10-01') AS week_of_year FROM DUAL;
+-- 测试用例 58: 使用日期时间函数 WEEKDAY
+SELECT WEEKDAY('2023-10-01') AS weekday FROM DUAL;
+-- 测试用例 59: 使用日期时间函数 WEEKS_BETWEEN
+SELECT WEEKS_BETWEEN('2023-10-01', '2023-09-01') AS weeks_between FROM DUAL;
+-- 测试用例 60: 使用日期时间函数 YEARS_BETWEEN
+SELECT YEARS_BETWEEN('2023-10-01', '2020-10-01') AS years_between FROM DUAL;
+-- 测试用例 61: 使用日期时间函数 LOCALTIME
+SELECT LOCALTIME() AS local_time FROM DUAL;
+-- 测试用例 62: 使用日期时间函数 LOCALTIMESTAMP
+SELECT LOCALTIMESTAMP() AS local_timestamp FROM DUAL;
+-- 测试用例 63: 使用日期时间函数 SYSTIMESTAMP
+SELECT SYSTIMESTAMP() AS system_timestamp FROM DUAL;
+-- 测试用例 64: 使用日期时间函数 UNIX_TIMESTAMP
+SELECT UNIX_TIMESTAMP('2023-10-01 00:00:00') AS unix_timestamp FROM DUAL;
+-- 测试用例 65: 使用日期时间函数 FROM_UNIXTIME
+SELECT FROM_UNIXTIME(1696118400) AS from_unix_time FROM DUAL;
+-- 测试用例 66: 使用日期时间函数 SESSIONTIMEZONE
+SELECT SESSIONTIMEZONE() AS session_timezone FROM DUAL;
+-- 测试用例 67: 使用日期时间函数 DBTIMEZONE
+SELECT DBTIMEZONE() AS db_timezone FROM DUAL;
+-- 测试用例 68: 使用日期时间函数 DATE_FORMAT
+SELECT DATE_FORMAT('2023-10-01', '%Y-%m-%d') AS formatted_date FROM DUAL;
+-- 测试用例 69: 使用日期时间函数 TIME_TO_SEC
+SELECT TIME_TO_SEC('12:34:56') AS time_in_seconds FROM DUAL;
+-- 测试用例 70: 使用日期时间函数 SEC_TO_TIME
+SELECT SEC_TO_TIME(45296) AS time_from_seconds FROM DUAL;
+-- 测试用例 71: 使用日期时间函数 TO_DAYS
+SELECT TO_DAYS('2023-10-01') AS days_since_epoch FROM DUAL;
+-- 测试用例 72: 使用日期时间函数 DATE_ADD
+SELECT DATE_ADD('2023-10-01', INTERVAL 5 DAY) AS date_added FROM DUAL;
+-- 测试用例 73: 使用日期时间函数 DATE_SUB
+SELECT DATE_SUB('2023-10-01', INTERVAL 5 DAY) AS date_subtracted FROM DUAL;
+-- 测试用例 74: 使用空值判断函数 IFNULL
+SELECT IFNULL(NULL, 'Default Value') AS ifnull_value FROM DUAL;
+-- 测试用例 75: 使用空值判断函数 NULLIF
+SELECT NULLIF(10, 10) AS nullif_value FROM DUAL;
+-- 测试用例 76: 使用类型转换函数 HEXTORAW
+SELECT HEXTORAW('48656C6C6F') AS hex_to_raw FROM DUAL;
+-- 测试用例 77: 使用类型转换函数 RAWTOHEX
+SELECT RAWTOHEX(HEXTORAW('48656C6C6F')) AS raw_to_hex FROM DUAL;
+-- 测试用例 78: 使用类型转换函数 BINTOCHAR
+SELECT BINTOCHAR('01001000') AS bin_to_char FROM DUAL;
+-- 测试用例 79: 使用类型转换函数 TO_BLOB
+SELECT TO_BLOB('Hello World') AS to_blob FROM DUAL;
+-- 测试用例 80: 使用类型转换函数 UNHEX
+SELECT UNHEX('48656C6C6F') AS unhex_value FROM DUAL;
+-- 测试用例 81: 使用类型转换函数 HEX
+SELECT HEX('Hello') AS hex_value FROM DUAL;
+-- 测试用例 82: 使用杂类函数 LNNVL
+SELECT LNNVL(1 = 2) AS lnnvl_value FROM DUAL;
+-- 测试用例 83: 使用杂类函数 LENGTHB
+SELECT LENGTHB('Hello World') AS length_in_bytes FROM DUAL;
+-- 测试用例 84: 使用杂类函数 FIELD
+SELECT FIELD('B', 'A', 'B', 'C') AS field_value FROM DUAL;
+-- 测试用例 85: 使用杂类函数 ORA_HASH
+SELECT ORA_HASH('Hello World') AS ora_hash_value FROM DUAL;
+-- 测试用例 86: 使用数值函数 GREATEST
+SELECT GREATEST(10, 20, 30) AS greatest_value FROM DUAL;
+-- 测试用例 87: 使用数值函数 LEAST
+SELECT LEAST(10, 20, 30) AS least_value FROM DUAL;
+-- 测试用例 88: 使用数值函数 LN
+SELECT LN(10) AS natural_log FROM DUAL;
+-- 测试用例 89: 使用数值函数 LOG
+SELECT LOG(2, 8) AS log_value FROM DUAL;
+-- 测试用例 90: 使用数值函数 LOG10
+SELECT LOG10(100) AS log10_value FROM DUAL;
+-- 测试用例 91: 使用数值函数 PI
+SELECT PI() AS pi_value FROM DUAL;
+-- 测试用例 92: 使用数值函数 RADIANS
+SELECT RADIANS(180) AS radians_value FROM DUAL;
+-- 测试用例 93: 使用数值函数 SIGN
+SELECT SIGN(-10) AS sign_value FROM DUAL;
+-- 测试用例 94: 使用数值函数 SIN
+SELECT SIN(1) AS sin_value FROM DUAL;
+-- 测试用例 95: 使用数值函数 COS
+SELECT COS(1) AS cos_value FROM DUAL;
+-- 测试用例 96: 使用数值函数 TAN
+SELECT TAN(1) AS tan_value FROM DUAL;
+-- 测试用例 97: 使用数值函数 COT
+SELECT COT(1) AS cot_value FROM DUAL;
+-- 测试用例 98: 使用数值函数 DEGREES
+SELECT DEGREES(1.5708) AS degrees_value FROM DUAL;
+-- 测试用例 99: 使用数值函数 EXP
+SELECT EXP(1) AS exp_value FROM DUAL;
+-- 测试用例 100: 使用数值函数 ATAN2
+SELECT ATAN2(1, 1) AS atan2_value FROM DUAL

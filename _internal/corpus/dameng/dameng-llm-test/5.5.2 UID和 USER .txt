@@ -1,0 +1,28 @@
+-- 创建一个测试表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+-- 插入一些测试数据
+INSERT INTO test_table1 (id, name) VALUES (1, 'Alice');
+INSERT INTO test_table1 (id, name) VALUES (2, 'Bob');
+-- 测试用例 1: 查询当前用户的用户名和用户标识
+SELECT USER, UID FROM test_table1 WHERE id = 1;
+-- 测试用例 2: 在WHERE子句中使用USER伪列
+SELECT * FROM test_table1 WHERE name = USER;
+-- 测试用例 3: 在SELECT子句中使用UID伪列
+SELECT id, name, UID FROM test_table1;
+-- 测试用例 4: 在ORDER BY子句中使用USER伪列
+SELECT * FROM test_table1 ORDER BY USER;
+-- 测试用例 5: 在GROUP BY子句中使用UID伪列
+SELECT UID, COUNT(*) FROM test_table1 GROUP BY UID;
+-- 测试用例 6: 在HAVING子句中使用USER伪列
+SELECT UID, COUNT(*) FROM test_table1 GROUP BY UID HAVING USER = 'Alice';
+-- 测试用例 7: 在INSERT语句中使用USER伪列
+INSERT INTO test_table1 (id, name) VALUES (3, USER);
+-- 测试用例 8: 在UPDATE语句中使用UID伪列
+UPDATE test_table1 SET name = 'Charlie' WHERE UID = 1001;
+-- 测试用例 9: 在DELETE语句中使用USER伪列
+DELETE FROM test_table1 WHERE name = USER;
+-- 测试用例 10: 在子查询中使用USER伪列
+SELECT * FROM test_table1 WHERE id IN (SELECT id FROM test_table1 WHERE name = USER)

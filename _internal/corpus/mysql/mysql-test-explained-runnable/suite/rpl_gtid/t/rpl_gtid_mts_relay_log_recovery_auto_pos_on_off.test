@@ -1,0 +1,2 @@
+
+  SET @@global.replica_parallel_workers=4

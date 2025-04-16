@@ -1,0 +1,54 @@
+-- 公共前置语句：创建测试表
+CREATE TABLE json_test_table1 (
+    id INT PRIMARY KEY,
+    json_data VARCHAR(100)
+);
+CREATE TABLE json_test_table2 (
+    id INT PRIMARY KEY,
+    json_data CLOB
+);
+-- 插入测试数据
+INSERT INTO json_test_table1 (id, json_data) VALUES (1, '[1,2,3]');
+INSERT INTO json_test_table1 (id, json_data) VALUES (2, '{"a":[1,2,3],"b":2}');
+INSERT INTO json_test_table2 (id, json_data) VALUES (1, '[10,20,30]');
+INSERT INTO json_test_table2 (id, json_data) VALUES (2, '{"x":[10,20,30],"y":20}');
+-- 测试用例1：查询数组指定索引号的值
+SELECT '[1,2,3]'->>2;
+-- 测试用例2：查询JSON对象指定名称的值
+SELECT '{"a":[1,2,3],"b":2}'->>'a';
+-- 测试用例3：从表中查询数组指定索引号的值
+SELECT json_data->>2 FROM json_test_table1 WHERE id = 1;
+-- 测试用例4：从表中查询JSON对象指定名称的值
+SELECT json_data->>'a' FROM json_test_table1 WHERE id = 2;
+-- 测试用例5：从CLOB类型的列中查询数组指定索引号的值
+SELECT json_data->>2 FROM json_test_table2 WHERE id = 1;
+-- 测试用例6：从CLOB类型的列中查询JSON对象指定名称的值
+SELECT json_data->>'x' FROM json_test_table2 WHERE id = 2;
+-- 测试用例7：查询嵌套JSON数组中的值
+SELECT '{"a":[1,2,3],"b":2}'->>'a'->>1;
+-- 测试用例8：查询嵌套JSON对象中的值
+SELECT '{"a":{"b":2,"c":3},"d":4}'->>'a'->>'b';
+-- 测试用例9：查询不存在的JSON数组索引
+SELECT '[1,2,3]'->>5;
+-- 测试用例10：查询不存在的JSON对象名称
+SELECT '{"a":[1,2,3],"b":2}'->>'c';
+-- 测试用例11：查询空JSON数组
+SELECT '[]'->>0;
+-- 测试用例12：查询空JSON对象
+SELECT '{}'->>'a';
+-- 测试用例13：查询JSON数组中的非数字索引
+SELECT '[1,2,3]'->>'1';
+-- 测试用例14：查询JSON对象中的非字符串名称
+SELECT '{"a":[1,2,3],"b":2}'->>1;
+-- 测试用例15：查询JSON数组中的负索引
+SELECT '[1,2,3]'->>-1;
+-- 测试用例16：查询JSON对象中的空名称
+SELECT '{"a":[1,2,3],"b":2}'->>'';
+-- 测试用例17：查询JSON数组中的NULL值
+SELECT '[1,NULL,3]'->>1;
+-- 测试用例18：查询JSON对象中的NULL值
+SELECT '{"a":NULL,"b":2}'->>'a';
+-- 测试用例19：查询JSON数组中的布尔值
+SELECT '[true,false,true]'->>1;
+-- 测试用例20：查询JSON对象中的布尔值
+SELECT '{"a":true,"b":false}'->>'a'

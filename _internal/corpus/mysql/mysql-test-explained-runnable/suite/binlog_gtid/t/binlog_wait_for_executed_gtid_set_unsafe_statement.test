@@ -1,0 +1,4 @@
+
+
+# WAIT_FOR_EXECUTED_GTID_SET is unsafe since
+CREATE TABLE wait_for_executed_gtid_set(i INT)

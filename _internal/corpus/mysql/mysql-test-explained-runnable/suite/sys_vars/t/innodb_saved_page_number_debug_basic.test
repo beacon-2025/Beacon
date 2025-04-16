@@ -1,0 +1,3 @@
+
+select space from information_schema.innodb_tables
+where name = 'test/t1' into @space_id

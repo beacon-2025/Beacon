@@ -1,0 +1,6 @@
+
+
+# Example of resulting binlog content (not deterministic):
+#
+# ## Table creation
+# master-bin.000001	1364	Query	1	1529	use `test`

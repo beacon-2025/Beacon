@@ -1,0 +1,8 @@
+```plaintext
+JSONB_SET_FUNCTION -> 'jsonb_set' '(' JSON_EXP1 ',' PATH_EXP2 ',' JSON_EXP3 ',' EXP4 ')'
+JSON_EXP1 -> 'json_string_value'
+PATH_EXP2 -> '{' PATH_IDENTIFIER '}'
+PATH_IDENTIFIER -> 'path_identifier_value'
+JSON_EXP3 -> 'json_string_value'
+EXP4 -> 'TRUE' | 'FALSE'
+```

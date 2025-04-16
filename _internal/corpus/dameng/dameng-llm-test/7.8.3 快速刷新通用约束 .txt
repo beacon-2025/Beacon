@@ -1,0 +1,103 @@
+-- 创建基表1
+CREATE TABLE base_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT
+);
+-- 创建基表2
+CREATE TABLE base_table2 (
+    id INT PRIMARY KEY,
+    address VARCHAR(100),
+    salary DECIMAL(10, 2)
+);
+-- 创建物化视图日志1
+CREATE MATERIALIZED VIEW LOG ON base_table1 WITH PRIMARY KEY;
+-- 创建物化视图日志2
+CREATE MATERIALIZED VIEW LOG ON base_table2 WITH PRIMARY KEY;
+-- 创建单表物化视图
+CREATE MATERIALIZED VIEW mv_single_table
+AS
+SELECT id, name, age
+FROM base_table1;
+-- 快速刷新物化视图
+ALTER MATERIALIZED VIEW mv_single_table REFRESH FAST;
+-- 创建多表物化视图
+CREATE MATERIALIZED VIEW mv_multi_table
+AS
+SELECT b1.id, b1.name, b2.address
+FROM base_table1 b1
+JOIN base_table2 b2 ON b1.id = b2.id;
+-- 快速刷新物化视图
+ALTER MATERIALIZED VIEW mv_multi_table REFRESH FAST;
+-- 创建物化视图日志1 WITH ROWID
+CREATE MATERIALIZED VIEW LOG ON base_table1 WITH ROWID;
+-- 创建物化视图日志2 WITH ROWID
+CREATE MATERIALIZED VIEW LOG ON base_table2 WITH ROWID;
+-- 创建使用WITH ROWID的物化视图
+CREATE MATERIALIZED VIEW mv_with_rowid
+AS
+SELECT b1.id, b1.name, b2.address, b1.ROWID AS rowid1, b2.ROWID AS rowid2
+FROM base_table1 b1
+JOIN base_table2 b2 ON b1.id = b2.id;
+-- 快速刷新物化视图
+ALTER MATERIALIZED VIEW mv_with_rowid REFRESH FAST;
+-- 创建使用WITH PRIMARY KEY的物化视图
+CREATE MATERIALIZED VIEW mv_with_pk
+AS
+SELECT b1.id, b1.name, b2.address
+FROM base_table1 b1
+JOIN base_table2 b2 ON b1.id = b2.id;
+-- 快速刷新物化视图
+ALTER MATERIALIZED VIEW mv_with_pk REFRESH FAST;
+-- 创建物化视图日志1 WITH PRIMARY KEY
+CREATE MATERIALIZED VIEW LOG ON base_table1 WITH PRIMARY KEY (id);
+-- 创建物化视图日志2 WITH PRIMARY KEY
+CREATE MATERIALIZED VIEW LOG ON base_table2 WITH PRIMARY KEY (id);
+-- 创建物化视图
+CREATE MATERIALIZED VIEW mv_with_extended_pk
+AS
+SELECT b1.id, b1.name, b2.address
+FROM base_table1 b1
+JOIN base_table2 b2 ON b1.id = b2.id;
+-- 快速刷新物化视图
+ALTER MATERIALIZED VIEW mv_with_extended_pk REFRESH FAST;
+-- 创建不支持GROUP BY的物化视图
+CREATE MATERIALIZED VIEW mv_no_group_by
+AS
+SELECT b1.id, b1.name, b2.address
+FROM base_table1 b1
+JOIN base_table2 b2 ON b1.id = b2.id;
+-- 尝试快速刷新物化视图（应失败）
+ALTER MATERIALIZED VIEW mv_no_group_by REFRESH FAST;
+-- 创建不支持HAVING子句的物化视图
+CREATE MATERIALIZED VIEW mv_no_having
+AS
+SELECT b1.id, b1.name, b2.address
+FROM base_table1 b1
+JOIN base_table2 b2 ON b1.id = b2.id;
+-- 尝试快速刷新物化视图（应失败）
+ALTER MATERIALIZED VIEW mv_no_having REFRESH FAST;
+-- 创建不支持子查询的物化视图
+CREATE MATERIALIZED VIEW mv_no_subquery
+AS
+SELECT b1.id, b1.name, b2.address
+FROM base_table1 b1
+JOIN base_table2 b2 ON b1.id = b2.id;
+-- 尝试快速刷新物化视图（应失败）
+ALTER MATERIALIZED VIEW mv_no_subquery REFRESH FAST;
+-- 创建不支持UNION操作的物化视图
+CREATE MATERIALIZED VIEW mv_no_union
+AS
+SELECT b1.id, b1.name, b2.address
+FROM base_table1 b1
+JOIN base_table2 b2 ON b1.id = b2.id;
+-- 尝试快速刷新物化视图（应失败）
+ALTER MATERIALIZED VIEW mv_no_union REFRESH FAST;
+-- 创建不支持外连接的物化视图
+CREATE MATERIALIZED VIEW mv_no_outer_join
+AS
+SELECT b1.id, b1.name, b2.address
+FROM base_table1 b1
+LEFT JOIN base_table2 b2 ON b1.id = b2.id;
+-- 尝试快速刷新物化视图（应失败）
+ALTER MATERIALIZED VIEW mv_no_outer_join REFRESH FAST

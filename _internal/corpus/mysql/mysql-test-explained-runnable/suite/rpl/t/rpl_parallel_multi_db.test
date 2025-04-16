@@ -1,0 +1,2 @@
+
+set @save.replica_parallel_workers= @@global.replica_parallel_workers

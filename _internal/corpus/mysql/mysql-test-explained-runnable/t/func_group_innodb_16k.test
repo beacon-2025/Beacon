@@ -1,0 +1,4 @@
+
+
+-- disable_result_log
+ANALYZE TABLE t1

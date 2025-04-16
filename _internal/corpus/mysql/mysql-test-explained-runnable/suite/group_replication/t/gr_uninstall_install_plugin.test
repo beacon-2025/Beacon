@@ -1,0 +1,9 @@
+################################################################################
+# This test does basic check around UNINSTALL and INSTALL PLUGIN commands.
+#
+# Test:
+# 0. The test requires one server.
+# 1. Bootstrap start GR.
+#  - Verify that GR specific two P_S tables are not empty.
+# 2. Uninstall plugin.
+#  - Then uninstall it again twice

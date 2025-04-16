@@ -1,0 +1,6 @@
+```
+S -> CREATE_STORED_FUNCTION | CREATE_LOADABLE_FUNCTION
+
+CREATE_STORED_FUNCTION -> 'create_stored_function_unknown'
+CREATE_LOADABLE_FUNCTION -> 'create_loadable_function_unknown'
+```

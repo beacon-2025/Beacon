@@ -1,0 +1,15 @@
+```plaintext
+DELETE_STATEMENT -> 'DELETE' FROM_OPTION TABLE_REF WHERE_OPTION RETURN_OPTION
+FROM_OPTION -> 'FROM' | ''
+TABLE_REF -> SCHEMA_NAME '.' TABLE_NAME | TABLE_NAME | QUERY_EXPRESSION
+SCHEMA_NAME -> 'schema_name_1'
+TABLE_NAME -> 'table_name_1' | 'view_name_1'
+QUERY_EXPRESSION -> '(' QUERY_EXPR ')' ALIAS_OPTION
+QUERY_EXPR -> 'query_expression_1'
+ALIAS_OPTION -> 'AS' 'alias_name_1' NEW_COLUMN_OPTION | ''
+NEW_COLUMN_OPTION -> 'new_column_1' | ''
+WHERE_OPTION -> 'WHERE' 'condition_expression_1' | ''
+RETURN_OPTION -> 'RETURN' COLUMN_LIST 'INTO' RESULT_OBJECT | ''
+COLUMN_LIST -> 'column_name_1' | 'column_name_1' ',' 'column_name_2'
+RESULT_OBJECT -> 'array_name_1' | 'variable_name_1'
+```

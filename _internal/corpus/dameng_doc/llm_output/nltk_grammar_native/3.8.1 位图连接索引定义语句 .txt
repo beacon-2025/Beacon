@@ -1,0 +1,10 @@
+```plaintext
+S -> CREATE_BITMAP_INDEX
+CREATE_BITMAP_INDEX -> 'CREATE' OR_REPLACE 'BITMAP' 'INDEX' 'index_name_1' 'ON' BITMAP_JOIN_INDEX_CLAUSE STORAGE_CLAUSE
+OR_REPLACE -> 'OR REPLACE' | ''
+BITMAP_JOIN_INDEX_CLAUSE -> SCHEMA_NAME '.' 'table_name_1' '(' INDEX_COLUMN_DEFINITION ',' INDEX_COLUMN_DEFINITION ')' 'FROM' SCHEMA_NAME '.' 'base_table_name_1' 'table_alias_1' ',' SCHEMA_NAME '.' 'base_table_name_2' 'table_alias_2' 'WHERE' 'condition_exp_1'
+SCHEMA_NAME -> 'schemaname_1' | ''
+INDEX_COLUMN_DEFINITION -> SCHEMA_NAME '.' 'table_name_2' 'index_exp_1' ASC_DESC
+ASC_DESC -> 'ASC' | 'DESC'
+STORAGE_CLAUSE -> 'STORAGE' '(' 'storage_option_1' ')' | ''
+```

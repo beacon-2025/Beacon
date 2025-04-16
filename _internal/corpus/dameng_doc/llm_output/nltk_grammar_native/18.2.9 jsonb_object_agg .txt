@@ -1,0 +1,6 @@
+```plaintext
+JSONB_OBJECT_AGG_FUNCTION -> 'jsonb_object_agg' '(' NAME ',' VALUE IS_JSONB_OPTION ')'
+NAME -> 'name_value'
+VALUE -> 'varchar_value' | 'clob_value' | 'varbinary_value' | 'blob_value' | 'int_value' | 'bigint_value' | 'dec_value' | 'json_value'
+IS_JSONB_OPTION -> 'IS_JSONB' | ''
+```

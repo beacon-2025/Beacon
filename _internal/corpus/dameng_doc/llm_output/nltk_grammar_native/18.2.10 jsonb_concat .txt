@@ -1,0 +1,5 @@
+```plaintext
+JSONB_CONCAT_FUNCTION -> 'jsonb_concat' '(' JSONB_EXP1 ',' JSONB_EXP2 ')'
+JSONB_EXP1 -> 'jsonb_exp1_value'
+JSONB_EXP2 -> 'jsonb_exp2_value'
+```

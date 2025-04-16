@@ -1,0 +1,23 @@
+################## mysql-test/t/innodb_temp_tablespaces_dir_basic.test ##############
+#                                                                             #
+# Variable Name: innodb_temp_tablespaces_dir                                        #
+# Scope: Global                                                               #
+# Access Type: Static                                                         #
+# Data Type: string                                                           #
+#                                                                             #
+#                                                                             #
+# Creation Date: 2018-02-09                                                   #
+# Author : Satya Bodapati
+#                                                                             #
+#                                                                             #
+# Description: Read-only config global variable innodb_temp_tablespaces_dir         #
+#              * Value check                                                  #
+#              * Scope check                                                  #
+#                                                                             #
+###############################################################################
+
+
+####################################################################
+#   Display the default value                                      #
+####################################################################
+SELECT COUNT(@@GLOBAL.innodb_temp_tablespaces_dir)

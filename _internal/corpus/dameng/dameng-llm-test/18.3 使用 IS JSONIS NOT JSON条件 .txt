@@ -1,0 +1,83 @@
+-- 创建用于测试的表
+DROP TABLE IF EXISTS json_is_json;
+CREATE TABLE json_is_json (
+    id INT NOT NULL,
+    po_document CLOB,
+    CONSTRAINT ensure_json_unique CHECK (po_document IS JSON)
+);
+DROP TABLE IF EXISTS j_purchaseorder_insert;
+CREATE TABLE j_purchaseorder_insert (
+    c1 INT NOT NULL,
+    c2 TIMESTAMP(6) WITH TIME ZONE,
+    c3 VARCHAR(100)
+);
+DROP TABLE IF EXISTS t_json_s;
+CREATE TABLE t_json_s (
+    c1 INT,
+    c2 VARCHAR2(100),
+    CONSTRAINT c2_json CHECK (c2 IS JSON (STRICT))
+);
+DROP TABLE IF EXISTS t_json_l;
+CREATE TABLE t_json_l (
+    c1 INT,
+    c2 VARCHAR2(100),
+    CONSTRAINT l_c2_json CHECK (c2 IS JSON (LAX))
+);
+DROP TABLE IF EXISTS json_unique;
+CREATE TABLE json_unique (
+    id INT NOT NULL,
+    date_loaded TIMESTAMP(6) WITH TIME ZONE,
+    po_document CLOB,
+    CONSTRAINT ensure_json_unique CHECK (po_document IS JSON WITH UNIQUE KEYS)
+);
+-- 插入符合 JSON 标准的数据
+INSERT INTO json_is_json VALUES (1, '{"PONumber": 1600}');
+-- 插入不符合 JSON 标准的数据（会报错）
+INSERT INTO json_is_json VALUES (2, 'OK');
+-- 插入 NULL 值
+INSERT INTO json_is_json VALUES (3, NULL);
+-- 插入数据到 j_purchaseorder_insert 表
+INSERT INTO j_purchaseorder_insert VALUES (1, SYSTIMESTAMP, '{"PONumber": 1600}');
+-- 从 j_purchaseorder_insert 表中选择符合 JSON 标准的数据插入到 json_is_json 表
+INSERT INTO json_is_json SELECT c1, c3 FROM j_purchaseorder_insert WHERE c3 IS JSON;
+-- 插入符合 LAX 标准的数据
+INSERT INTO t_json_l VALUES (1, '{"dmdatabase":29}');
+INSERT INTO t_json_l VALUES (2, '{"2dmdatabase":29}');
+INSERT INTO t_json_l VALUES (3, '{"dmdatabase":.29}');
+INSERT INTO t_json_l VALUES (4, '{"dmdatabase":NULL}');
+INSERT INTO t_json_l VALUES (5, '{"dmdatabase":False}');
+INSERT INTO t_json_l VALUES (6, '{"dmdatabase":29,"dmdatabase":30}');
+INSERT INTO t_json_l VALUES (7, '{"dm data base":29}');
+INSERT INTO t_json_l VALUES (8, '{"dmdatabase":dmdatabase}');
+INSERT INTO t_json_l VALUES (9, '{dmdatabase: "dmdatabase"}');
+INSERT INTO t_json_l VALUES (10, '{"dmdatabase":2s}');
+INSERT INTO t_json_l VALUES (11, '{"dmdatabase":''2s''}');
+INSERT INTO t_json_l VALUES (12, '{dmdatabase:29 }');
+-- 插入符合 STRICT 标准的数据
+INSERT INTO t_json_s VALUES (1, '{"2dmdatabase":29}');
+INSERT INTO t_json_s VALUES (2, '{"dmdatabase":29,"dmdatabase":30}');
+INSERT INTO t_json_s VALUES (3, '{"dm data base":29}');
+-- 插入符合 WITH UNIQUE KEYS 标准的数据
+INSERT INTO json_unique VALUES (111, SYSTIMESTAMP, '{"PONumber": 1600}');
+-- 插入不符合 WITH UNIQUE KEYS 标准的数据（会报错）
+INSERT INTO json_unique VALUES (112, SYSTIMESTAMP, '{"PONumber": 1600, "PONumber": 1800}');
+-- 查询 t_json_l 表中的数据
+SELECT * FROM t_json_l ORDER BY c1;
+-- 查询 t_json_s 表中的数据
+SELECT * FROM t_json_s ORDER BY c1;
+-- 插入 NULL 值
+INSERT INTO json_unique VALUES (113, SYSTIMESTAMP, NULL);
+-- 插入符合 WITHOUT UNIQUE KEYS 标准的数据
+INSERT INTO json_unique VALUES (114, SYSTIMESTAMP, '{"PONumber": 1600, "PONumber": 1800}');
+-- 插入不符合 STRICT 标准的数据（会报错）
+INSERT INTO t_json_s VALUES (4, '{"dmdatabase":.29}');
+INSERT INTO t_json_s VALUES (5, '{"dmdatabase":NULL}');
+INSERT INTO t_json_s VALUES (6, '{"dmdatabase":False}');
+-- 插入符合 LAX 标准的数据
+INSERT INTO t_json_l VALUES (13, '{"dmdatabase":29.0}');
+INSERT INTO t_json_l VALUES (14, '{"dmdatabase":29.}');
+INSERT INTO t_json_l VALUES (15, '{"dmdatabase":29,}');
+-- 插入不符合 LAX 标准的数据（会报错）
+INSERT INTO t_json_l VALUES (16, '{"dmdatabase":dmdatabase}');
+INSERT INTO t_json_l VALUES (17, '{dmdatabase: "dmdatabase"}');
+INSERT INTO t_json_l VALUES (18, '{"dmdatabase":2s}')

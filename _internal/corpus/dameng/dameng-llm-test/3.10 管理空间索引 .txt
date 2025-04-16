@@ -1,0 +1,66 @@
+-- 创建空间数据表
+CREATE TABLE testgeo1 (
+    id INT PRIMARY KEY,
+    geo GEOMETRY
+);
+-- 插入空间数据
+INSERT INTO testgeo1 (id, geo) VALUES (1, DMGEO.ST_GEOMFromText('point (10 10)', 4269));
+INSERT INTO testgeo1 (id, geo) VALUES (2, DMGEO.ST_GEOMFromText('point (15 15)', 4269));
+INSERT INTO testgeo1 (id, geo) VALUES (3, DMGEO.ST_GEOMFromText('point (20 20)', 4269));
+-- 创建空间索引
+CREATE SPATIAL INDEX idx_geo1 ON testgeo1(geo);
+-- 用例1: 使用DMGEO.ST_WITHIN函数查询被指定空间对象包含的数据
+SELECT * FROM testgeo1 WHERE DMGEO.ST_WITHIN(geo, DMGEO.ST_GEOMFromText('polygon ((10 10, 10 20, 20 20, 20 15, 10 10))', 4269)) = 1;
+-- 用例2: 使用DMGEO.ST_WITHIN函数查询被指定空间对象包含的数据（省略=1）
+SELECT * FROM testgeo1 WHERE DMGEO.ST_WITHIN(geo, DMGEO.ST_GEOMFromText('polygon ((10 10, 10 20, 20 20, 20 15, 10 10))', 4269));
+-- 用例3: 使用DMGEO.ST_DISTANCE函数查询距离小于10的数据
+SELECT * FROM testgeo1 WHERE DMGEO.ST_DISTANCE(geo, DMGEO.ST_GEOMFromText('polygon ((10 10, 10 20, 20 20, 20 15, 10 10))', 4269)) < 10;
+-- 用例4: 使用DMGEO.ST_DISTANCE函数查询距离小于等于10的数据
+SELECT * FROM testgeo1 WHERE DMGEO.ST_DISTANCE(geo, DMGEO.ST_GEOMFromText('polygon ((10 10, 10 20, 20 20, 20 15, 10 10))', 4269)) <= 10;
+-- 用例5: 使用DMGEO.ST_DISJOINT函数查询不相交的数据
+SELECT * FROM testgeo1 WHERE DMGEO.ST_DISJOINT(geo, DMGEO.ST_GEOMFromText('polygon ((30 30, 30 40, 40 40, 40 35, 30 30))', 4269)) = 1;
+-- 用例6: 使用DMGEO.ST_EQUALS函数查询相等的数据
+SELECT * FROM testgeo1 WHERE DMGEO.ST_EQUALS(geo, DMGEO.ST_GEOMFromText('point (10 10)', 4269)) = 1;
+-- 用例7: 使用DMGEO.ST_TOUCHES函数查询接触的数据
+SELECT * FROM testgeo1 WHERE DMGEO.ST_TOUCHES(geo, DMGEO.ST_GEOMFromText('polygon ((10 10, 10 20, 20 20, 20 15, 10 10))', 4269)) = 1;
+-- 用例8: 使用DMGEO.ST_OVERLAPS函数查询重叠的数据
+SELECT * FROM testgeo1 WHERE DMGEO.ST_OVERLAPS(geo, DMGEO.ST_GEOMFromText('polygon ((15 15, 15 25, 25 25, 25 20, 15 15))', 4269)) = 1;
+-- 用例9: 使用DMGEO.ST_CROSSES函数查询交叉的数据
+SELECT * FROM testgeo1 WHERE DMGEO.ST_CROSSES(geo, DMGEO.ST_GEOMFromText('linestring (10 10, 20 20)', 4269)) = 1;
+-- 用例10: 使用DMGEO.ST_INTERSECTS函数查询相交的数据
+SELECT * FROM testgeo1 WHERE DMGEO.ST_INTERSECTS(geo, DMGEO.ST_GEOMFromText('polygon ((10 10, 10 20, 20 20, 20 15, 10 10))', 4269)) = 1;
+-- 用例11: 使用DMGEO.ST_CONTAINS函数查询包含的数据
+SELECT * FROM testgeo1 WHERE DMGEO.ST_CONTAINS(DMGEO.ST_GEOMFromText('polygon ((10 10, 10 20, 20 20, 20 15, 10 10))', 4269), geo) = 1;
+-- 用例12: 使用DMGEO.ST_RELATE函数查询符合特定关系的数据
+SELECT * FROM testgeo1 WHERE DMGEO.ST_RELATE(geo, DMGEO.ST_GEOMFromText('polygon ((10 10, 10 20, 20 20, 20 15, 10 10))', 4269), 'T*****FF*') = 1;
+-- 创建另一个空间数据表
+CREATE TABLE testgeo2 (
+    id INT PRIMARY KEY,
+    geo GEOMETRY
+);
+-- 插入空间数据
+INSERT INTO testgeo2 (id, geo) VALUES (1, DMGEO.ST_GEOMFromText('point (30 30)', 4269));
+INSERT INTO testgeo2 (id, geo) VALUES (2, DMGEO.ST_GEOMFromText('point (35 35)', 4269));
+INSERT INTO testgeo2 (id, geo) VALUES (3, DMGEO.ST_GEOMFromText('point (40 40)', 4269));
+-- 创建空间索引
+CREATE SPATIAL INDEX idx_geo2 ON testgeo2(geo);
+-- 用例13: 使用DMGEO.ST_WITHIN函数查询被指定空间对象包含的数据
+SELECT * FROM testgeo2 WHERE DMGEO.ST_WITHIN(geo, DMGEO.ST_GEOMFromText('polygon ((30 30, 30 40, 40 40, 40 35, 30 30))', 4269)) = 1;
+-- 用例14: 使用DMGEO.ST_DISTANCE函数查询距离小于10的数据
+SELECT * FROM testgeo2 WHERE DMGEO.ST_DISTANCE(geo, DMGEO.ST_GEOMFromText('polygon ((30 30, 30 40, 40 40, 40 35, 30 30))', 4269)) < 10;
+-- 用例15: 使用DMGEO.ST_DISJOINT函数查询不相交的数据
+SELECT * FROM testgeo2 WHERE DMGEO.ST_DISJOINT(geo, DMGEO.ST_GEOMFromText('polygon ((10 10, 10 20, 20 20, 20 15, 10 10))', 4269)) = 1;
+-- 用例16: 使用DMGEO.ST_EQUALS函数查询相等的数据
+SELECT * FROM testgeo2 WHERE DMGEO.ST_EQUALS(geo, DMGEO.ST_GEOMFromText('point (30 30)', 4269)) = 1;
+-- 用例17: 使用DMGEO.ST_TOUCHES函数查询接触的数据
+SELECT * FROM testgeo2 WHERE DMGEO.ST_TOUCHES(geo, DMGEO.ST_GEOMFromText('polygon ((30 30, 30 40, 40 40, 40 35, 30 30))', 4269)) = 1;
+-- 用例18: 使用DMGEO.ST_OVERLAPS函数查询重叠的数据
+SELECT * FROM testgeo2 WHERE DMGEO.ST_OVERLAPS(geo, DMGEO.ST_GEOMFromText('polygon ((35 35, 35 45, 45 45, 45 40, 35 35))', 4269)) = 1;
+-- 用例19: 使用DMGEO.ST_CROSSES函数查询交叉的数据
+SELECT * FROM testgeo2 WHERE DMGEO.ST_CROSSES(geo, DMGEO.ST_GEOMFromText('linestring (30 30, 40 40)', 4269)) = 1;
+-- 用例20: 使用DMGEO.ST_INTERSECTS函数查询相交的数据
+SELECT * FROM testgeo2 WHERE DMGEO.ST_INTERSECTS(geo, DMGEO.ST_GEOMFromText('polygon ((30 30, 30 40, 40 40, 40 35, 30 30))', 4269)) = 1;
+-- 用例21: 使用DMGEO.ST_CONTAINS函数查询包含的数据
+SELECT * FROM testgeo2 WHERE DMGEO.ST_CONTAINS(DMGEO.ST_GEOMFromText('polygon ((30 30, 30 40, 40 40, 40 35, 30 30))', 4269), geo) = 1;
+-- 用例22: 使用DMGEO.ST_RELATE函数查询符合特定关系的数据
+SELECT * FROM testgeo2 WHERE DMGEO.ST_RELATE(geo, DMGEO.ST_GEOMFromText('polygon ((30 30, 30 40, 40 40, 40 35, 30 30))', 4269), 'T*****FF*') = 1

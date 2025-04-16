@@ -1,0 +1,2 @@
+
+SELECT OBJECT_INSTANCE_BEGIN into @my_oib FROM `performance_schema`.`socket_instances` WHERE THREAD_ID=@my_tid

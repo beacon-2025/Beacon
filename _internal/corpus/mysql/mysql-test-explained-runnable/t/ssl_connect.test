@@ -1,0 +1,5 @@
+
+
+##  This test file is for testing encrypted communication only, not other
+##  encryption routines that the SSL library happens to provide!
+

@@ -1,0 +1,2 @@
+
+SELECT asynchronous_connection_failover_add_source('ch1', '10.0.0.2', 3306, '', 50)

@@ -1,0 +1,2 @@
+
+SET SESSION binlog_row_value_options= PARTIAL_JSON

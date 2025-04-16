@@ -1,0 +1,27 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 创建表
+CREATE TABLE schema1.table1 (id INT, name VARCHAR(50));
+CREATE TABLE schema1.table2 (id INT, name VARCHAR(50));
+CREATE TABLE schema2.table3 (id INT, name VARCHAR(50));
+-- 测试用例 1: 为当前模式下的表生成统计信息
+STAT ON schema1.table1;
+-- 测试用例 2: 为指定模式下的表生成统计信息
+STAT ON schema2.table3;
+-- 测试用例 3: 为当前模式下的表生成统计信息（省略模式名）
+STAT ON table1;
+-- 测试用例 4: 为当前模式下的表生成统计信息（使用GLOBAL选项）
+STAT ON schema1.table2 GLOBAL;
+-- 测试用例 5: 为当前模式下的表生成统计信息（省略模式名，使用GLOBAL选项）
+STAT ON table2 GLOBAL;
+-- 测试用例 6: 为指定模式下的表生成统计信息（使用GLOBAL选项）
+STAT ON schema2.table3 GLOBAL;
+-- 测试用例 7: 为当前模式下的表生成统计信息（省略模式名，使用GLOBAL选项）
+STAT ON table1 GLOBAL;
+-- 测试用例 8: 为当前模式下的表生成统计信息（省略模式名，使用GLOBAL选项）
+STAT ON table2 GLOBAL;
+-- 测试用例 9: 为当前模式下的表生成统计信息（省略模式名，使用GLOBAL选项）
+STAT ON table3 GLOBAL;
+-- 测试用例 10: 为当前模式下的表生成统计信息（省略模式名，使用GLOBAL选项）
+STAT ON table1 GLOBAL

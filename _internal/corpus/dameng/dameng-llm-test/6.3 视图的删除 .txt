@@ -1,0 +1,86 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 创建基表
+CREATE TABLE schema1.table1 (id INT, name VARCHAR(50));
+CREATE TABLE schema2.table2 (id INT, name VARCHAR(50));
+-- 插入数据
+INSERT INTO schema1.table1 (id, name) VALUES (1, 'Alice');
+INSERT INTO schema2.table2 (id, name) VALUES (2, 'Bob');
+-- 测试用例 1: 删除一个存在的视图，不使用 IF EXISTS
+CREATE VIEW schema1.view1 AS SELECT * FROM schema1.table1;
+DROP VIEW schema1.view1;
+-- 测试用例 2: 删除一个不存在的视图，不使用 IF EXISTS，预期报错
+DROP VIEW schema1.nonexistent_view;
+-- 测试用例 3: 删除一个不存在的视图，使用 IF EXISTS
+DROP VIEW IF EXISTS schema1.nonexistent_view;
+-- 测试用例 4: 删除一个存在的视图，使用 RESTRICT 方式
+CREATE VIEW schema1.view2 AS SELECT * FROM schema1.table1;
+DROP VIEW schema1.view2 RESTRICT;
+-- 测试用例 5: 删除一个存在的视图，使用 CASCADE 方式
+CREATE VIEW schema1.view3 AS SELECT * FROM schema1.table1;
+CREATE VIEW schema1.view4 AS SELECT * FROM schema1.view3;
+DROP VIEW schema1.view3 CASCADE;
+-- 测试用例 6: 删除一个存在的视图，使用 CASCADE 方式，且该视图被其他视图依赖
+CREATE VIEW schema2.view5 AS SELECT * FROM schema2.table2;
+CREATE VIEW schema2.view6 AS SELECT * FROM schema2.view5;
+DROP VIEW schema2.view5 CASCADE;
+-- 测试用例 7: 删除一个存在的视图，使用 RESTRICT 方式，且该视图被其他视图依赖，预期报错
+CREATE VIEW schema1.view7 AS SELECT * FROM schema1.table1;
+CREATE VIEW schema1.view8 AS SELECT * FROM schema1.view7;
+DROP VIEW schema1.view7 RESTRICT;
+-- 测试用例 8: 删除一个存在的视图，使用默认方式（RESTRICT）
+CREATE VIEW schema2.view9 AS SELECT * FROM schema2.table2;
+DROP VIEW schema2.view9;
+-- 测试用例 9: 删除一个存在的视图，使用 CASCADE 方式，且该视图没有被其他视图依赖
+CREATE VIEW schema1.view10 AS SELECT * FROM schema1.table1;
+DROP VIEW schema1.view10 CASCADE;
+-- 测试用例 10: 删除一个存在的视图，使用 IF EXISTS 和 CASCADE 方式
+CREATE VIEW schema2.view11 AS SELECT * FROM schema2.table2;
+DROP VIEW IF EXISTS schema2.view11 CASCADE;
+-- 测试用例 11: 删除一个存在的视图，使用 IF EXISTS 和 RESTRICT 方式
+CREATE VIEW schema1.view12 AS SELECT * FROM schema1.table1;
+DROP VIEW IF EXISTS schema1.view12 RESTRICT;
+-- 测试用例 12: 删除一个存在的视图，使用 IF EXISTS 和默认方式（RESTRICT）
+CREATE VIEW schema2.view13 AS SELECT * FROM schema2.table2;
+DROP VIEW IF EXISTS schema2.view13;
+-- 测试用例 13: 删除一个存在的视图，使用 CASCADE 方式，且该视图被多个视图依赖
+CREATE VIEW schema1.view14 AS SELECT * FROM schema1.table1;
+CREATE VIEW schema1.view15 AS SELECT * FROM schema1.view14;
+CREATE VIEW schema1.view16 AS SELECT * FROM schema1.view14;
+DROP VIEW schema1.view14 CASCADE;
+-- 测试用例 14: 删除一个存在的视图，使用 RESTRICT 方式，且该视图被多个视图依赖，预期报错
+CREATE VIEW schema2.view17 AS SELECT * FROM schema2.table2;
+CREATE VIEW schema2.view18 AS SELECT * FROM schema2.view17;
+CREATE VIEW schema2.view19 AS SELECT * FROM schema2.view17;
+DROP VIEW schema2.view17 RESTRICT;
+-- 测试用例 15: 删除一个存在的视图，使用 CASCADE 方式，且该视图被多个视图依赖，且这些视图也被其他视图依赖
+CREATE VIEW schema1.view20 AS SELECT * FROM schema1.table1;
+CREATE VIEW schema1.view21 AS SELECT * FROM schema1.view20;
+CREATE VIEW schema1.view22 AS SELECT * FROM schema1.view21;
+DROP VIEW schema1.view20 CASCADE;
+-- 测试用例 16: 删除一个存在的视图，使用 RESTRICT 方式，且该视图被多个视图依赖，且这些视图也被其他视图依赖，预期报错
+CREATE VIEW schema2.view23 AS SELECT * FROM schema2.table2;
+CREATE VIEW schema2.view24 AS SELECT * FROM schema2.view23;
+CREATE VIEW schema2.view25 AS SELECT * FROM schema2.view24;
+DROP VIEW schema2.view23 RESTRICT;
+-- 测试用例 17: 删除一个存在的视图，使用 IF EXISTS 和 CASCADE 方式，且该视图被多个视图依赖
+CREATE VIEW schema1.view26 AS SELECT * FROM schema1.table1;
+CREATE VIEW schema1.view27 AS SELECT * FROM schema1.view26;
+CREATE VIEW schema1.view28 AS SELECT * FROM schema1.view26;
+DROP VIEW IF EXISTS schema1.view26 CASCADE;
+-- 测试用例 18: 删除一个存在的视图，使用 IF EXISTS 和 RESTRICT 方式，且该视图被多个视图依赖，预期报错
+CREATE VIEW schema2.view29 AS SELECT * FROM schema2.table2;
+CREATE VIEW schema2.view30 AS SELECT * FROM schema2.view29;
+CREATE VIEW schema2.view31 AS SELECT * FROM schema2.view29;
+DROP VIEW IF EXISTS schema2.view29 RESTRICT;
+-- 测试用例 19: 删除一个存在的视图，使用 IF EXISTS 和默认方式（RESTRICT），且该视图被多个视图依赖，预期报错
+CREATE VIEW schema1.view32 AS SELECT * FROM schema1.table1;
+CREATE VIEW schema1.view33 AS SELECT * FROM schema1.view32;
+CREATE VIEW schema1.view34 AS SELECT * FROM schema1.view32;
+DROP VIEW IF EXISTS schema1.view32;
+-- 测试用例 20: 删除一个存在的视图，使用 CASCADE 方式，且该视图被多个视图依赖，且这些视图也被其他视图依赖
+CREATE VIEW schema2.view35 AS SELECT * FROM schema2.table2;
+CREATE VIEW schema2.view36 AS SELECT * FROM schema2.view35;
+CREATE VIEW schema2.view37 AS SELECT * FROM schema2.view36;
+DROP VIEW schema2.view35 CASCADE

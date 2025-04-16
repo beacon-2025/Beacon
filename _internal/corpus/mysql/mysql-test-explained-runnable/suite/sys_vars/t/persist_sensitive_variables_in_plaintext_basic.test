@@ -1,0 +1,6 @@
+#
+# exists as global
+#
+
+# just to show that global.persist_sensitive_variables_in_plaintext exists
+select @@global.persist_sensitive_variables_in_plaintext

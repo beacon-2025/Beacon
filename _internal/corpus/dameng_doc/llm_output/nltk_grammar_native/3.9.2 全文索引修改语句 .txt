@@ -1,0 +1,7 @@
+```plaintext
+ALTER_CONTEXT_INDEX -> 'ALTER' 'CONTEXT' 'INDEX' 'index_name_1' 'ON' SCHEMA_TABLE ACTION ONLINE_OPTION LEXER_OPTION
+SCHEMA_TABLE -> 'schema_name_1' '.' 'table_name_1' | 'table_name_1'
+ACTION -> 'REBUILD' | 'INCREMENT' | 'OPTIMIZE'
+ONLINE_OPTION -> 'ONLINE' | ''
+LEXER_OPTION -> 'LEXER' 'lexer_option' | ''
+```

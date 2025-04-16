@@ -1,0 +1,4 @@
+
+
+# Put back to the original server state after the above experiments.
+RESET BINARY LOGS AND GTIDS

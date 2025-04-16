@@ -1,0 +1,9 @@
+```
+S -> HELP_STATEMENT
+HELP_STATEMENT -> 'HELP' SEARCH_STRING
+
+SEARCH_STRING -> SEARCH_CONTENTS | SEARCH_CATEGORY | SEARCH_TOPIC
+SEARCH_CONTENTS -> "'contents'"
+SEARCH_CATEGORY -> "'data types'"
+SEARCH_TOPIC -> 'ascii_search' | 'create_table_search'
+```

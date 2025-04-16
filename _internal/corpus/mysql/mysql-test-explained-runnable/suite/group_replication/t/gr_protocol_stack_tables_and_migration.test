@@ -1,0 +1,4 @@
+################################################################################
+# This test fits two purposes:
+# - Make sure that P_S tables will report values of the communication stack
+#   that are coherent with the specified design

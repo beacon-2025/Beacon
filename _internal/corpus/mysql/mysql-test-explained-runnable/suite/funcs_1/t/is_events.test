@@ -1,0 +1,14 @@
+
+
+# Note: Retrieval of information within information_schema.columns about
+#       information_schema.events is in is_columns_is.test.
+
+# Check event_catalog event_body, event_type, event_type, status, on_completion
+SELECT event_catalog, event_name, event_body, event_type, event_type,
+       status, on_completion
+FROM information_schema.events
+WHERE event_catalog IS NOT NULL or
+      event_body NOT IN ('SQL') or
+      event_type NOT IN ('ONE TIME','RECURRING') or
+      status NOT IN ('ENABLED','DISABLED','REPLICA_SIDE_DISABLED') or
+      on_completion NOT IN ('PRESERVE','NOT PRESERVE')

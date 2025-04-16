@@ -1,0 +1,1 @@
+SELECT COUNT(@@GLOBAL.innodb_doublewrite_batch_size)

@@ -1,0 +1,63 @@
+-- 创建一个包含类型体的对象类型
+CREATE TYPE employee_type AS OBJECT (
+    emp_id NUMBER,
+    emp_name VARCHAR2(100)
+) NOT FINAL;
+-- 创建类型体
+CREATE TYPE BODY employee_type AS
+    MEMBER FUNCTION get_emp_name RETURN VARCHAR2 IS
+    BEGIN
+        RETURN self.emp_name;
+END;
+END;
+-- 删除类型，类型体也会被删除
+DROP TYPE employee_type;
+-- 删除类型体，类型本身仍然存在
+DROP TYPE BODY employee_type;
+-- 删除类型体
+DROP TYPE BODY employee_type;
+-- 删除类型
+DROP TYPE employee_type;
+-- 尝试删除不存在的类型
+DROP TYPE non_existent_type;
+-- 尝试删除不存在的类型体
+DROP TYPE BODY non_existent_type;
+-- 删除类型
+DROP TYPE employee_type;
+-- 尝试删除类型体（类型已被删除，类型体也不存在）
+DROP TYPE BODY employee_type;
+-- 删除类型体
+DROP TYPE BODY employee_type;
+-- 再次尝试删除类型体（类型体已被删除）
+DROP TYPE BODY employee_type;
+-- 删除类型
+DROP TYPE employee_type;
+-- 尝试使用已删除的类型
+DECLARE
+    emp employee_type;
+BEGIN
+    emp := employee_type(1, 'John Doe');
+END;
+-- 删除类型体
+DROP TYPE BODY employee_type;
+-- 尝试使用已删除的类型体
+DECLARE
+    emp employee_type;
+BEGIN
+    emp := employee_type(1, 'John Doe');
+DBMS_OUTPUT.PUT_LINE(emp.get_emp_name);
+END;
+-- 删除类型
+DROP TYPE employee_type;
+-- 重新创建类型
+CREATE TYPE employee_type AS OBJECT (
+    emp_id NUMBER,
+    emp_name VARCHAR2(100)
+) NOT FINAL;
+-- 重新创建类型体
+CREATE TYPE BODY employee_type AS
+    MEMBER FUNCTION get_emp_name RETURN VARCHAR2 IS
+    BEGIN
+        RETURN self.emp_name;
+END;
+END

@@ -1,0 +1,64 @@
+-- 创建测试表
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    manager_id INT,
+    name VARCHAR(50)
+);
+-- 插入测试数据
+INSERT INTO employees (employee_id, manager_id, name) VALUES (1, NULL, 'Alice');
+INSERT INTO employees (employee_id, manager_id, name) VALUES (2, 1, 'Bob');
+INSERT INTO employees (employee_id, manager_id, name) VALUES (3, 1, 'Charlie');
+INSERT INTO employees (employee_id, manager_id, name) VALUES (4, 2, 'David');
+INSERT INTO employees (employee_id, manager_id, name) VALUES (5, 2, 'Eve');
+INSERT INTO employees (employee_id, manager_id, name) VALUES (6, 3, 'Frank');
+INSERT INTO employees (employee_id, manager_id, name) VALUES (7, 3, 'Grace');
+-- 查询所有员工及其直接下属
+SELECT employee_id, manager_id, name
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id;
+-- 查询所有员工及其直接下属，忽略循环
+SELECT employee_id, manager_id, name
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY NOCYCLE PRIOR employee_id = manager_id;
+-- 查询以Bob为根的所有下属
+SELECT employee_id, manager_id, name
+FROM employees
+START WITH name = 'Bob'
+CONNECT BY PRIOR employee_id = manager_id;
+-- 查询所有员工及其上级
+SELECT employee_id, manager_id, name
+FROM employees
+START WITH employee_id = 4
+CONNECT BY PRIOR manager_id = employee_id;
+-- 查询以Charlie为根的所有下属，忽略循环
+SELECT employee_id, manager_id, name
+FROM employees
+START WITH name = 'Charlie'
+CONNECT BY NOCYCLE PRIOR employee_id = manager_id;
+-- 查询以David或Eve为根的所有下属
+SELECT employee_id, manager_id, name
+FROM employees
+START WITH name IN ('David', 'Eve')
+CONNECT BY PRIOR employee_id = manager_id;
+-- 查询所有员工及其直接下属，连接条件为manager_id小于employee_id
+SELECT employee_id, manager_id, name
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id AND manager_id < employee_id;
+-- 查询所有员工及其直接下属，连接条件为manager_id小于employee_id，忽略循环
+SELECT employee_id, manager_id, name
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY NOCYCLE PRIOR employee_id = manager_id AND manager_id < employee_id;
+-- 查询所有员工及其所有下属（多级）
+SELECT employee_id, manager_id, name
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id;
+-- 查询所有员工及其所有下属（多级），忽略循环
+SELECT employee_id, manager_id, name
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY NOCYCLE PRIOR employee_id = manager_id

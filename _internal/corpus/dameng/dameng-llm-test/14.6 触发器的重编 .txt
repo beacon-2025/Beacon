@@ -1,0 +1,45 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 创建表
+CREATE TABLE schema1.table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+CREATE TABLE schema2.table2 (
+    id INT PRIMARY KEY,
+    description VARCHAR(100)
+);
+-- 创建触发器
+CREATE TRIGGER schema1.trigger1
+AFTER INSERT ON schema1.table1
+FOR EACH ROW
+BEGIN
+    -- 触发器逻辑
+END;
+CREATE TRIGGER schema2.trigger2
+AFTER UPDATE ON schema2.table2
+FOR EACH ROW
+BEGIN
+    -- 触发器逻辑
+END;
+-- 测试用例 1: 重编译触发器，不带DEBUG选项
+ALTER TRIGGER schema1.trigger1 COMPILE;
+-- 测试用例 2: 重编译触发器，带DEBUG选项
+ALTER TRIGGER schema2.trigger2 COMPILE DEBUG;
+-- 测试用例 3: 重编译触发器，不带模式名
+ALTER TRIGGER trigger1 COMPILE;
+-- 测试用例 4: 重编译触发器，带模式名和DEBUG选项
+ALTER TRIGGER schema1.trigger1 COMPILE DEBUG;
+-- 测试用例 5: 重编译触发器，不带模式名和DEBUG选项
+ALTER TRIGGER trigger2 COMPILE;
+-- 测试用例 6: 重编译触发器，带模式名
+ALTER TRIGGER schema2.trigger2 COMPILE;
+-- 测试用例 7: 重编译触发器，不带模式名和DEBUG选项
+ALTER TRIGGER trigger1 COMPILE;
+-- 测试用例 8: 重编译触发器，带模式名和DEBUG选项
+ALTER TRIGGER schema2.trigger2 COMPILE DEBUG;
+-- 测试用例 9: 重编译触发器，不带模式名
+ALTER TRIGGER trigger2 COMPILE;
+-- 测试用例 10: 重编译触发器，带模式名
+ALTER TRIGGER schema1.trigger1 COMPILE

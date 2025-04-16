@@ -1,0 +1,51 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 创建类型
+CREATE TYPE schema1.type1 AS OBJECT (attr1 NUMBER);
+CREATE TYPE schema2.type2 AS OBJECT (attr2 VARCHAR2(100));
+-- 创建类型体
+CREATE TYPE BODY schema1.type1 AS 
+BEGIN
+    MEMBER FUNCTION func1 RETURN NUMBER IS
+    BEGIN
+        RETURN 1;
+END;
+END;
+/
+
+CREATE TYPE BODY schema2.type2 AS 
+BEGIN
+    MEMBER FUNCTION func2 RETURN VARCHAR2 IS
+    BEGIN
+        RETURN 'test';
+END;
+END;
+/;
+-- 测试用例1: 删除当前模式下的类型体
+DROP TYPE BODY schema1.type1;
+-- 测试用例2: 删除其他模式下的类型体
+DROP TYPE BODY schema2.type2;
+-- 测试用例3: 使用IF EXISTS删除存在的类型体
+DROP TYPE BODY IF EXISTS schema1.type1;
+-- 测试用例4: 使用IF EXISTS删除不存在的类型体
+DROP TYPE BODY IF EXISTS schema1.nonexistent_type;
+-- 测试用例5: 使用RESTRICT删除类型体
+DROP TYPE BODY schema1.type1 RESTRICT;
+-- 测试用例6: 使用CASCADE删除类型体
+DROP TYPE BODY schema1.type1 CASCADE;
+-- 测试用例7: 删除不存在的类型体（不使用IF EXISTS，预期报错）
+-- 注意：此测试用例预期会报错，因此在实际执行时应谨慎
+DROP TYPE BODY schema1.nonexistent_type;
+-- 测试用例8: 删除当前模式下的类型体，不指定模式名
+-- 假设当前模式为schema1
+ALTER SESSION SET CURRENT_SCHEMA = schema1;
+DROP TYPE BODY type1;
+-- 测试用例9: 删除其他模式下的类型体，不指定模式名（预期报错）
+-- 假设当前模式为schema1
+ALTER SESSION SET CURRENT_SCHEMA = schema1;
+-- 注意：此测试用例预期会报错，因此在实际执行时应谨慎
+DROP TYPE BODY type2;
+-- 测试用例10: 删除类型体后尝试再次删除（使用IF EXISTS）
+DROP TYPE BODY IF EXISTS schema1.type1;
+DROP TYPE BODY IF EXISTS schema1.type1

@@ -1,0 +1,4 @@
+```nltk
+S -> SP_TABLESPACE_RECOVER
+SP_TABLESPACE_RECOVER -> 'SP_TABLESPACE_RECOVER' '(' 'tablespace_name_1' ')'
+```

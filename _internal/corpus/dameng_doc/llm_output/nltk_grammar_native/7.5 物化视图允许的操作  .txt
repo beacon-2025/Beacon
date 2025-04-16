@@ -1,0 +1,5 @@
+```text
+S -> QUERY_OR_INDEX | REFRESH_ONLY
+QUERY_OR_INDEX -> 'QUERY' 'materialized_view_name_1' | 'CREATE' 'INDEX' 'ON' 'materialized_view_name_1'
+REFRESH_ONLY -> 'REFRESH' 'materialized_view_name_1'
+```

@@ -1,0 +1,44 @@
+-- 创建模式和表
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 在schema1中创建表
+CREATE TABLE schema1.table1 (
+    id INT PRIMARY KEY,
+    content TEXT
+);
+-- 在schema2中创建表
+CREATE TABLE schema2.table2 (
+    id INT PRIMARY KEY,
+    description TEXT
+);
+-- 创建全文索引
+CREATE CONTEXT INDEX index1 ON schema1.table1(content);
+CREATE CONTEXT INDEX index2 ON schema2.table2(description);
+-- 用例1: 完全填充全文索引
+ALTER CONTEXT INDEX index1 ON schema1.table1 REBUILD;
+-- 用例2: 增量填充全文索引
+ALTER CONTEXT INDEX index1 ON schema1.table1 INCREMENT;
+-- 用例3: 优化全文索引
+ALTER CONTEXT INDEX index1 ON schema1.table1 OPTIMIZE;
+-- 用例4: 完全填充全文索引并指定分词参数
+ALTER CONTEXT INDEX index1 ON schema1.table1 REBUILD LEXER lexer1;
+-- 用例5: 增量填充全文索引并允许在线操作
+ALTER CONTEXT INDEX index1 ON schema1.table1 INCREMENT ONLINE;
+-- 用例6: 完全填充全文索引并允许在线操作
+ALTER CONTEXT INDEX index1 ON schema1.table1 REBUILD ONLINE;
+-- 用例7: 完全填充全文索引并指定分词参数，允许在线操作
+ALTER CONTEXT INDEX index1 ON schema1.table1 REBUILD ONLINE LEXER lexer1;
+-- 用例8: 完全填充另一个模式下的全文索引
+ALTER CONTEXT INDEX index2 ON schema2.table2 REBUILD;
+-- 用例9: 增量填充另一个模式下的全文索引
+ALTER CONTEXT INDEX index2 ON schema2.table2 INCREMENT;
+-- 用例10: 优化另一个模式下的全文索引
+ALTER CONTEXT INDEX index2 ON schema2.table2 OPTIMIZE;
+-- 用例11: 完全填充另一个模式下的全文索引并指定分词参数
+ALTER CONTEXT INDEX index2 ON schema2.table2 REBUILD LEXER lexer2;
+-- 用例12: 增量填充另一个模式下的全文索引并允许在线操作
+ALTER CONTEXT INDEX index2 ON schema2.table2 INCREMENT ONLINE;
+-- 用例13: 完全填充另一个模式下的全文索引并允许在线操作
+ALTER CONTEXT INDEX index2 ON schema2.table2 REBUILD ONLINE;
+-- 用例14: 完全填充另一个模式下的全文索引并指定分词参数，允许在线操作
+ALTER CONTEXT INDEX index2 ON schema2.table2 REBUILD ONLINE LEXER lexer2

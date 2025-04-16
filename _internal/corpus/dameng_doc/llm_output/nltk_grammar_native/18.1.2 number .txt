@@ -1,0 +1,6 @@
+```plaintext
+NUMBER -> DIGIT | '-' DIGIT | DIGIT '.' DIGIT | DIGIT 'e' SIGN DIGIT | DIGIT 'E' SIGN DIGIT
+DIGIT -> '0' | NON_ZERO_DIGIT
+NON_ZERO_DIGIT -> '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+SIGN -> '+' | '-'
+```

@@ -1,0 +1,3 @@
+
+
+SET @start_log_capacity = @@GLOBAL.innodb_redo_log_capacity

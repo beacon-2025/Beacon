@@ -1,0 +1,6 @@
+
+
+select OBJECT_INSTANCE_BEGIN, THREAD_ID, SOCKET_ID, IP, PORT
+  from performance_schema.socket_instances
+  limit 1
+  into @oib, @tid, @sid, @ip, @port

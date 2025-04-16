@@ -1,0 +1,7 @@
+########### suite/json/t/json_insert_innodb.test                     #
+# Tests insert into json columns using the innodb storage engine     #
+#                                                                    #
+# This test copies some tests originally in json.test                #
+######################################################################
+# Set the session storage engine
+set default_storage_engine=innodb

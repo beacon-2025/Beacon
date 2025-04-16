@@ -1,0 +1,4 @@
+```
+S -> USE_STATEMENT
+USE_STATEMENT -> 'USE' 'db_name_1'
+```

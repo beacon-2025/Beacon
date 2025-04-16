@@ -1,0 +1,81 @@
+-- 公共前置语句：创建测试表
+CREATE TABLE employees (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    salary INT,
+    department_id INT
+);
+CREATE TABLE departments (
+    id INT PRIMARY KEY,
+    name VARCHAR(100)
+);
+-- 插入测试数据
+INSERT INTO departments (id, name) VALUES (1, 'HR');
+INSERT INTO departments (id, name) VALUES (2, 'Engineering');
+INSERT INTO departments (id, name) VALUES (3, 'Sales');
+INSERT INTO employees (id, name, salary, department_id) VALUES (1, 'Alice', 50000, 1);
+INSERT INTO employees (id, name, salary, department_id) VALUES (2, 'Bob', 60000, 2);
+INSERT INTO employees (id, name, salary, department_id) VALUES (3, 'Charlie', 70000, 2);
+INSERT INTO employees (id, name, salary, department_id) VALUES (4, 'David', 80000, 3);
+-- 测试用例 1: 标量子查询，返回单个值
+SELECT name 
+FROM employees 
+WHERE salary = (SELECT MAX(salary) FROM employees);
+-- 测试用例 2: 表子查询，返回多行多列
+SELECT name, salary 
+FROM employees 
+WHERE department_id IN (SELECT id FROM departments WHERE name = 'Engineering');
+-- 测试用例 3: 嵌套子查询
+SELECT name 
+FROM employees 
+WHERE salary > (SELECT AVG(salary) FROM employees WHERE department_id = (SELECT id FROM departments WHERE name = 'HR'));
+-- 测试用例 4: 子查询与TEXT类型比较
+CREATE TABLE text_table (
+    id INT PRIMARY KEY,
+    description TEXT
+);
+INSERT INTO text_table (id, description) VALUES (1, 'This is a long text description');
+INSERT INTO text_table (id, description) VALUES (2, 'Another text description');
+SELECT id 
+FROM text_table 
+WHERE description = (SELECT description FROM text_table WHERE id = 1);
+-- 测试用例 5: 子查询与CHAR类型比较
+CREATE TABLE char_table (
+    id INT PRIMARY KEY,
+    description CHAR(100)
+);
+INSERT INTO char_table (id, description) VALUES (1, 'This is a short description');
+INSERT INTO char_table (id, description) VALUES (2, 'Another short description');
+SELECT id 
+FROM char_table 
+WHERE description = (SELECT description FROM char_table WHERE id = 1);
+-- 测试用例 6: 子查询与TEXT类型比较，超过8188字节
+CREATE TABLE long_text_table (
+    id INT PRIMARY KEY,
+    description TEXT
+);
+INSERT INTO long_text_table (id, description) VALUES (1, REPEAT('a', 8189));
+SELECT id 
+FROM long_text_table 
+WHERE description = (SELECT description FROM long_text_table WHERE id = 1);
+-- 测试用例 7: 子查询与TEXT类型比较，超过300*1024字节
+CREATE TABLE very_long_text_table (
+    id INT PRIMARY KEY,
+    description TEXT
+);
+INSERT INTO very_long_text_table (id, description) VALUES (1, REPEAT('a', 300*1024 + 1));
+SELECT id 
+FROM very_long_text_table 
+WHERE description = (SELECT description FROM very_long_text_table WHERE id = 1);
+-- 测试用例 8: 子查询在WHERE子句中使用
+SELECT name 
+FROM employees 
+WHERE department_id = (SELECT id FROM departments WHERE name = 'Sales');
+-- 测试用例 9: 子查询在SELECT子句中使用
+SELECT name, (SELECT name FROM departments WHERE id = employees.department_id) AS department_name 
+FROM employees;
+-- 测试用例 10: 子查询在FROM子句中使用
+SELECT e.name, d.department_name 
+FROM (SELECT name, department_id FROM employees) e 
+JOIN (SELECT id, name AS department_name FROM departments) d 
+ON e.department_id = d.id

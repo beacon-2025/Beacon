@@ -1,0 +1,7 @@
+
+
+# 
+# Run subquery.inc without semi-join optimization and subquery materialization
+#
+
+set optimizer_switch='index_condition_pushdown=on,mrr=on,mrr_cost_based=off'

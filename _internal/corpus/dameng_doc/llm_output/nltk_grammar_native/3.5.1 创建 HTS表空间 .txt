@@ -1,0 +1,4 @@
+```plaintext
+CREATE_HUGE_TABLESPACE -> 'CREATE' 'HUGE' 'TABLESPACE' 'tablespace_name_1' 'PATH' 'path_value' DFS_REPLICA_CLAUSE
+DFS_REPLICA_CLAUSE -> 'dfs_replica_clause' | ''
+```

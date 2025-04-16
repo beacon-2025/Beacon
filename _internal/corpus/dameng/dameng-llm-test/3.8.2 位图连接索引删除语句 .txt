@@ -1,0 +1,40 @@
+-- 创建模式和表以供后续测试使用
+CREATE SCHEMA test_schema1;
+CREATE SCHEMA test_schema2;
+CREATE TABLE test_schema1.table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+CREATE TABLE test_schema2.table2 (
+    id INT PRIMARY KEY,
+    description VARCHAR(100)
+);
+-- 创建位图连接索引
+CREATE BITMAP INDEX test_schema1.index1 ON test_schema1.table1(name);
+CREATE BITMAP INDEX test_schema2.index2 ON test_schema2.table2(description);
+-- 测试用例1: 删除存在的位图连接索引
+DROP INDEX test_schema1.index1;
+-- 测试用例2: 删除不存在的位图连接索引（不使用IF EXISTS）
+-- 预期结果：报错
+DROP INDEX test_schema1.non_existent_index;
+-- 测试用例3: 删除不存在的位图连接索引（使用IF EXISTS）
+DROP INDEX IF EXISTS test_schema1.non_existent_index;
+-- 测试用例4: 删除另一个模式下的位图连接索引
+DROP INDEX test_schema2.index2;
+-- 测试用例5: 删除不指定模式名的位图连接索引（假设当前模式为test_schema1）
+SET search_path TO test_schema1;
+DROP INDEX index1;
+-- 测试用例6: 删除不指定模式名的位图连接索引（假设当前模式为test_schema2）
+SET search_path TO test_schema2;
+DROP INDEX index2;
+-- 测试用例7: 删除不存在的模式下的位图连接索引
+DROP INDEX non_existent_schema.non_existent_index;
+-- 测试用例8: 删除不存在的模式下的位图连接索引（使用IF EXISTS）
+DROP INDEX IF EXISTS non_existent_schema.non_existent_index;
+-- 测试用例9: 删除位图连接索引后再次删除（使用IF EXISTS）
+DROP INDEX IF EXISTS test_schema1.index1;
+DROP INDEX IF EXISTS test_schema1.index1;
+-- 测试用例10: 删除位图连接索引后再次删除（不使用IF EXISTS）
+DROP INDEX test_schema2.index2;
+-- 预期结果：报错
+DROP INDEX test_schema2.index2

@@ -1,0 +1,80 @@
+-- 公共前置语句：创建测试表
+CREATE TABLE test_table1 (
+    id INTEGER PRIMARY KEY,
+    value NUMERIC(10, 2),
+    text_value VARCHAR(50),
+    binary_value BINARY(10),
+    date_value DATE,
+    time_value TIME,
+    timestamp_value TIMESTAMP,
+    interval_value INTERVAL YEAR TO MONTH
+);
+CREATE TABLE test_table2 (
+    id INTEGER PRIMARY KEY,
+    value FLOAT,
+    text_value CHAR(50),
+    binary_value VARBINARY(20),
+    date_value DATE,
+    time_value TIME WITH TIME ZONE,
+    timestamp_value TIMESTAMP WITH TIME ZONE,
+    interval_value INTERVAL DAY TO SECOND
+);
+-- 插入一些测试数据
+INSERT INTO test_table1 (id, value, text_value, binary_value, date_value, time_value, timestamp_value, interval_value)
+VALUES (1, 100.5678, '100.5678', X'61626364', '2023-10-01', '12:34:56', '2023-10-01 12:34:56', INTERVAL '1-1' YEAR TO MONTH);
+INSERT INTO test_table2 (id, value, text_value, binary_value, date_value, time_value, timestamp_value, interval_value)
+VALUES (1, 200.1234, '200.1234', X'65666768', '2023-10-02', '14:56:23+02:00', '2023-10-02 14:56:23+02:00', INTERVAL '2 12:34:56' DAY TO SECOND);
+-- 测试用例 1: CAST 数值类型转换
+SELECT CAST(100.5678 AS NUMERIC(10,2)) FROM dual;
+-- 测试用例 2: CAST 字符串类型转换
+SELECT CAST(100.5678 AS VARCHAR(8)) FROM dual;
+-- 测试用例 3: CAST 字符串转整数
+SELECT CAST('100.5678' AS INTEGER) FROM dual;
+-- 测试用例 4: CAST 时间间隔转字符串
+SELECT CAST(INTERVAL '01-01' YEAR TO MONTH AS CHAR(50)) FROM dual;
+-- 测试用例 5: CONVERT 数值类型转换
+SELECT CONVERT(VARCHAR(8), 100.5678) FROM dual;
+-- 测试用例 6: CONVERT 字符串转整数
+SELECT CONVERT(INTEGER, '100.5678') FROM dual;
+-- 测试用例 7: CONVERT 时间间隔转字符串
+SELECT CONVERT(CHAR(50), INTERVAL '100-5' YEAR(3) TO MONTH) FROM dual;
+-- 测试用例 8: HEXTORAW 二进制字符串转换
+SELECT HEXTORAW('abcdef') FROM dual;
+-- 测试用例 9: HEXTORAW 长二进制字符串转换
+SELECT HEXTORAW('B4EFC3CECAFDBEDDBFE2D3D0CFDEB9ABCBBE') FROM dual;
+-- 测试用例 10: RAWTOHEX 二进制转十六进制字符串
+SELECT RAWTOHEX('达梦数据库有限公司') FROM dual;
+-- 测试用例 11: RAWTOHEX 短二进制转十六进制字符串
+SELECT RAWTOHEX('13') FROM dual;
+-- 测试用例 12: BINTOCHAR 二进制转字符串
+SELECT BINTOCHAR('0x61626364') FROM dual;
+-- 测试用例 13: TO_BLOB 二进制转BLOB
+SELECT TO_BLOB(utl_raw.cast_to_raw('abcd')) FROM dual;
+-- 测试用例 14: UNHEX 十六进制转字符串
+SELECT UNHEX('616263') FROM dual;
+-- 测试用例 15: HEX 字符串转十六进制
+SELECT HEX('abc') FROM dual;
+-- 测试用例 16: CAST 数值类型转换（从表中读取）
+SELECT CAST(value AS VARCHAR(10)) FROM test_table1 WHERE id = 1;
+-- 测试用例 17: CAST 字符串转整数（从表中读取）
+SELECT CAST(text_value AS INTEGER) FROM test_table1 WHERE id = 1;
+-- 测试用例 18: CAST 时间间隔转字符串（从表中读取）
+SELECT CAST(interval_value AS CHAR(50)) FROM test_table1 WHERE id = 1;
+-- 测试用例 19: CONVERT 数值类型转换（从表中读取）
+SELECT CONVERT(VARCHAR(10), value) FROM test_table2 WHERE id = 1;
+-- 测试用例 20: CONVERT 字符串转整数（从表中读取）
+SELECT CONVERT(INTEGER, text_value) FROM test_table2 WHERE id = 1;
+-- 测试用例 21: CONVERT 时间间隔转字符串（从表中读取）
+SELECT CONVERT(CHAR(50), interval_value) FROM test_table2 WHERE id = 1;
+-- 测试用例 22: HEXTORAW 二进制字符串转换（从表中读取）
+SELECT HEXTORAW(text_value) FROM test_table1 WHERE id = 1;
+-- 测试用例 23: RAWTOHEX 二进制转十六进制字符串（从表中读取）
+SELECT RAWTOHEX(binary_value) FROM test_table1 WHERE id = 1;
+-- 测试用例 24: BINTOCHAR 二进制转字符串（从表中读取）
+SELECT BINTOCHAR(binary_value) FROM test_table2 WHERE id = 1;
+-- 测试用例 25: TO_BLOB 二进制转BLOB（从表中读取）
+SELECT TO_BLOB(binary_value) FROM test_table2 WHERE id = 1;
+-- 测试用例 26: UNHEX 十六进制转字符串（从表中读取）
+SELECT UNHEX(text_value) FROM test_table1 WHERE id = 1;
+-- 测试用例 27: HEX 字符串转十六进制（从表中读取）
+SELECT HEX(text_value) FROM test_table2 WHERE id = 1

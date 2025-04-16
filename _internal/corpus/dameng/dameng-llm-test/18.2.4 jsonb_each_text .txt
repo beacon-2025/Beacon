@@ -1,0 +1,52 @@
+-- 创建一个表用于存储JSON数据
+CREATE TABLE json_data (
+    id SERIAL PRIMARY KEY,
+    json_content VARCHAR
+);
+-- 插入一些JSON数据
+INSERT INTO json_data (json_content) VALUES 
+('{"a":1,"b":true,"c":null,"d":"str\ttest","e":[1,2,3],"f":{"name1":"aaa\ttest","name2":"bbb\ttest"}}'),
+('{"name":"John","age":30,"city":"New York"}'),
+('{"product":"Laptop","price":1200,"specs":{"ram":"16GB","storage":"512GB"}}'),
+('{"fruit":"Apple","color":"Red","taste":"Sweet"}'),
+('{"animal":"Dog","breed":"Golden Retriever","age":5}');
+-- 测试用例 1: 使用jsonb_each_text函数处理简单的JSON对象
+SELECT * FROM jsonb_each_text('{"a":1,"b":true,"c":null,"d":"str\ttest","e":[1,2,3],"f":{"name1":"aaa\ttest","name2":"bbb\ttest"}}');
+-- 测试用例 2: 使用jsonb_each_text函数处理包含嵌套JSON对象的JSON
+SELECT * FROM jsonb_each_text('{"product":"Laptop","price":1200,"specs":{"ram":"16GB","storage":"512GB"}}');
+-- 测试用例 3: 使用jsonb_each_text函数处理包含数组的JSON
+SELECT * FROM jsonb_each_text('{"fruit":"Apple","color":"Red","taste":"Sweet"}');
+-- 测试用例 4: 使用jsonb_each_text函数处理包含转义字符的JSON
+SELECT * FROM jsonb_each_text('{"animal":"Dog","breed":"Golden Retriever","age":5}');
+-- 测试用例 5: 使用jsonb_each_text函数处理从表中查询的JSON数据
+SELECT * FROM jsonb_each_text((SELECT json_content FROM json_data WHERE id = 1));
+-- 测试用例 6: 使用jsonb_each_text函数处理从表中查询的JSON数据，并过滤特定键
+SELECT * FROM jsonb_each_text((SELECT json_content FROM json_data WHERE id = 2)) WHERE key = 'name';
+-- 测试用例 7: 使用jsonb_each_text函数处理从表中查询的JSON数据，并过滤特定值
+SELECT * FROM jsonb_each_text((SELECT json_content FROM json_data WHERE id = 3)) WHERE value = 'Laptop';
+-- 测试用例 8: 使用jsonb_each_text函数处理从表中查询的JSON数据，并返回特定键的值
+SELECT value FROM jsonb_each_text((SELECT json_content FROM json_data WHERE id = 4)) WHERE key = 'color';
+-- 测试用例 9: 使用jsonb_each_text函数处理从表中查询的JSON数据，并返回特定键的值
+SELECT value FROM jsonb_each_text((SELECT json_content FROM json_data WHERE id = 5)) WHERE key = 'breed';
+-- 测试用例 10: 使用jsonb_each_text函数处理从表中查询的JSON数据，并返回所有键
+SELECT key FROM jsonb_each_text((SELECT json_content FROM json_data WHERE id = 1));
+-- 测试用例 11: 使用jsonb_each_text函数处理从表中查询的JSON数据，并返回所有值
+SELECT value FROM jsonb_each_text((SELECT json_content FROM json_data WHERE id = 2));
+-- 测试用例 12: 使用jsonb_each_text函数处理从表中查询的JSON数据，并返回所有键值对
+SELECT key, value FROM jsonb_each_text((SELECT json_content FROM json_data WHERE id = 3));
+-- 测试用例 13: 使用jsonb_each_text函数处理从表中查询的JSON数据，并返回特定键的值
+SELECT value FROM jsonb_each_text((SELECT json_content FROM json_data WHERE id = 4)) WHERE key = 'taste';
+-- 测试用例 14: 使用jsonb_each_text函数处理从表中查询的JSON数据，并返回特定键的值
+SELECT value FROM jsonb_each_text((SELECT json_content FROM json_data WHERE id = 5)) WHERE key = 'age';
+-- 测试用例 15: 使用jsonb_each_text函数处理从表中查询的JSON数据，并返回特定键的值
+SELECT value FROM jsonb_each_text((SELECT json_content FROM json_data WHERE id = 1)) WHERE key = 'd';
+-- 测试用例 16: 使用jsonb_each_text函数处理从表中查询的JSON数据，并返回特定键的值
+SELECT value FROM jsonb_each_text((SELECT json_content FROM json_data WHERE id = 2)) WHERE key = 'city';
+-- 测试用例 17: 使用jsonb_each_text函数处理从表中查询的JSON数据，并返回特定键的值
+SELECT value FROM jsonb_each_text((SELECT json_content FROM json_data WHERE id = 3)) WHERE key = 'price';
+-- 测试用例 18: 使用jsonb_each_text函数处理从表中查询的JSON数据，并返回特定键的值
+SELECT value FROM jsonb_each_text((SELECT json_content FROM json_data WHERE id = 4)) WHERE key = 'fruit';
+-- 测试用例 19: 使用jsonb_each_text函数处理从表中查询的JSON数据，并返回特定键的值
+SELECT value FROM jsonb_each_text((SELECT json_content FROM json_data WHERE id = 5)) WHERE key = 'animal';
+-- 测试用例 20: 使用jsonb_each_text函数处理从表中查询的JSON数据，并返回特定键的值
+SELECT value FROM jsonb_each_text((SELECT json_content FROM json_data WHERE id = 1)) WHERE key = 'f'

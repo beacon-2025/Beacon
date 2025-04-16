@@ -1,0 +1,288 @@
+-- 创建一个用户用于测试
+CREATE USER test_user1 IDENTIFIED BY 'password1';
+CREATE USER test_user2 IDENTIFIED BY 'password2';
+-- 创建模式 schema1，并指定用户 test_user1 为拥有者
+CREATE SCHEMA schema1 AUTHORIZATION test_user1;
+-- 创建模式 schema2，并指定用户 test_user2 为拥有者，同时创建一个表
+CREATE SCHEMA schema2 AUTHORIZATION test_user2
+    CREATE TABLE table1 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    );
+-- 创建模式 schema3，并指定用户 test_user1 为拥有者，同时创建一个视图
+CREATE SCHEMA schema3 AUTHORIZATION test_user1
+    CREATE VIEW view1 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema4，并指定用户 test_user2 为拥有者，同时创建一个索引
+CREATE SCHEMA schema4 AUTHORIZATION test_user2
+    CREATE INDEX idx1 ON schema2.table1 (name);
+-- 创建模式 schema5，并指定用户 test_user1 为拥有者，同时创建一个序列
+CREATE SCHEMA schema5 AUTHORIZATION test_user1
+    CREATE SEQUENCE seq1 START WITH 1 INCREMENT BY 1;
+-- 创建模式 schema6，并指定用户 test_user2 为拥有者，同时创建一个存储过程
+CREATE SCHEMA schema6 AUTHORIZATION test_user2
+    CREATE PROCEDURE proc1 AS
+    BEGIN
+        INSERT INTO schema2.table1 (id, name) VALUES (1, 'test');
+END;
+-- 创建模式 schema7，并指定用户 test_user1 为拥有者，同时创建一个触发器
+CREATE SCHEMA schema7 AUTHORIZATION test_user1
+    CREATE TRIGGER trig1 AFTER INSERT ON schema2.table1
+    FOR EACH ROW
+    BEGIN
+        INSERT INTO schema2.table1 (id, name) VALUES (NEW.id, NEW.name);
+END;
+-- 创建模式 schema8，并指定用户 test_user2 为拥有者，同时创建一个同义词
+CREATE SCHEMA schema8 AUTHORIZATION test_user2
+    CREATE SYNONYM syn1 FOR schema2.table1;
+-- 创建模式 schema9，并指定用户 test_user1 为拥有者，同时创建一个物化视图
+CREATE SCHEMA schema9 AUTHORIZATION test_user1
+    CREATE MATERIALIZED VIEW mat_view1 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema10，并指定用户 test_user2 为拥有者，同时创建一个物化视图日志
+CREATE SCHEMA schema10 AUTHORIZATION test_user2
+    CREATE MATERIALIZED VIEW LOG ON schema2.table1;
+-- 创建模式 schema11，并指定用户 test_user1 为拥有者，同时创建一个注释
+CREATE SCHEMA schema11 AUTHORIZATION test_user1
+    COMMENT ON TABLE schema2.table1 IS 'This is a test table';
+-- 创建模式 schema12，并指定用户 test_user2 为拥有者，同时创建一个外部链接
+CREATE SCHEMA schema12 AUTHORIZATION test_user2
+    CREATE EXTERNAL LINK ext_link1 TO 'http://example.com';
+-- 创建模式 schema13，并指定用户 test_user1 为拥有者，同时创建一个包
+CREATE SCHEMA schema13 AUTHORIZATION test_user1
+    CREATE PACKAGE pkg1 AS
+    PROCEDURE proc1;
+END;
+-- 创建模式 schema14，并指定用户 test_user2 为拥有者，同时创建一个包体
+CREATE SCHEMA schema14 AUTHORIZATION test_user2
+    CREATE PACKAGE BODY pkg1 AS
+    PROCEDURE proc1 IS
+    BEGIN
+        INSERT INTO schema2.table1 (id, name) VALUES (1, 'test');
+END;
+END;
+-- 创建模式 schema15，并指定用户 test_user1 为拥有者，同时创建一个类
+CREATE SCHEMA schema15 AUTHORIZATION test_user1
+    CREATE CLASS cls1 AS
+    BEGIN
+        id INT;
+name VARCHAR(50);
+END;
+-- 创建模式 schema16，并指定用户 test_user2 为拥有者，同时创建一个类体
+CREATE SCHEMA schema16 AUTHORIZATION test_user2
+    CREATE CLASS BODY cls1 AS
+    BEGIN
+        PROCEDURE proc1 IS
+        BEGIN
+            INSERT INTO schema2.table1 (id, name) VALUES (1, 'test');
+END;
+END;
+-- 创建模式 schema17，并指定用户 test_user1 为拥有者，同时创建一个全文索引
+CREATE SCHEMA schema17 AUTHORIZATION test_user1
+    CREATE FULLTEXT INDEX ft_idx1 ON schema2.table1 (name);
+-- 创建模式 schema18，并指定用户 test_user2 为拥有者，同时创建一个特权
+CREATE SCHEMA schema18 AUTHORIZATION test_user2
+    GRANT SELECT ON schema2.table1 TO test_user1;
+-- 创建模式 schema19，并指定用户 test_user1 为拥有者，同时创建一个域
+CREATE SCHEMA schema19 AUTHORIZATION test_user1
+    CREATE DOMAIN domain1 AS INT;
+-- 创建模式 schema20，并指定用户 test_user2 为拥有者，同时创建一个基表修改
+CREATE SCHEMA schema20 AUTHORIZATION test_user2
+    ALTER TABLE schema2.table1 ADD CONSTRAINT pk1 PRIMARY KEY (id);
+-- 创建模式 schema21，并指定用户 test_user1 为拥有者，同时创建多个对象
+CREATE SCHEMA schema21 AUTHORIZATION test_user1
+    CREATE TABLE table2 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE VIEW view2 AS
+    SELECT * FROM schema2.table1,
+    CREATE INDEX idx2 ON schema2.table1 (name);
+-- 创建模式 schema22，并指定用户 test_user2 为拥有者，同时创建多个对象并授权
+CREATE SCHEMA schema22 AUTHORIZATION test_user2
+    CREATE TABLE table3 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE VIEW view3 AS
+    SELECT * FROM schema2.table1,
+    GRANT SELECT ON schema2.table1 TO test_user1;
+-- 创建模式 schema23，并指定用户 test_user1 为拥有者，同时创建多个对象并添加注释
+CREATE SCHEMA schema23 AUTHORIZATION test_user1
+    CREATE TABLE table4 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE VIEW view4 AS
+    SELECT * FROM schema2.table1,
+    COMMENT ON TABLE schema2.table1 IS 'This is a test table';
+-- 创建模式 schema24，并指定用户 test_user2 为拥有者，同时创建多个对象并创建序列
+CREATE SCHEMA schema24 AUTHORIZATION test_user2
+    CREATE TABLE table5 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE SEQUENCE seq2 START WITH 1 INCREMENT BY 1,
+    CREATE VIEW view5 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema25，并指定用户 test_user1 为拥有者，同时创建多个对象并创建存储过程
+CREATE SCHEMA schema25 AUTHORIZATION test_user1
+    CREATE TABLE table6 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE PROCEDURE proc2 AS
+    BEGIN
+        INSERT INTO schema2.table1 (id, name) VALUES (1, 'test');
+END,
+    CREATE VIEW view6 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema26，并指定用户 test_user2 为拥有者，同时创建多个对象并创建触发器
+CREATE SCHEMA schema26 AUTHORIZATION test_user2
+    CREATE TABLE table7 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE TRIGGER trig2 AFTER INSERT ON schema2.table1
+    FOR EACH ROW
+    BEGIN
+        INSERT INTO schema2.table1 (id, name) VALUES (NEW.id, NEW.name);
+END,
+    CREATE VIEW view7 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema27，并指定用户 test_user1 为拥有者，同时创建多个对象并创建同义词
+CREATE SCHEMA schema27 AUTHORIZATION test_user1
+    CREATE TABLE table8 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE SYNONYM syn2 FOR schema2.table1,
+    CREATE VIEW view8 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema28，并指定用户 test_user2 为拥有者，同时创建多个对象并创建物化视图
+CREATE SCHEMA schema28 AUTHORIZATION test_user2
+    CREATE TABLE table9 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE MATERIALIZED VIEW mat_view2 AS
+    SELECT * FROM schema2.table1,
+    CREATE VIEW view9 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema29，并指定用户 test_user1 为拥有者，同时创建多个对象并创建物化视图日志
+CREATE SCHEMA schema29 AUTHORIZATION test_user1
+    CREATE TABLE table10 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE MATERIALIZED VIEW LOG ON schema2.table1,
+    CREATE VIEW view10 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema30，并指定用户 test_user2 为拥有者，同时创建多个对象并创建外部链接
+CREATE SCHEMA schema30 AUTHORIZATION test_user2
+    CREATE TABLE table11 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE EXTERNAL LINK ext_link2 TO 'http://example.com',
+    CREATE VIEW view11 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema31，并指定用户 test_user1 为拥有者，同时创建多个对象并创建包
+CREATE SCHEMA schema31 AUTHORIZATION test_user1
+    CREATE TABLE table12 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE PACKAGE pkg2 AS
+    PROCEDURE proc2;
+END,
+    CREATE VIEW view12 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema32，并指定用户 test_user2 为拥有者，同时创建多个对象并创建包体
+CREATE SCHEMA schema32 AUTHORIZATION test_user2
+    CREATE TABLE table13 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE PACKAGE BODY pkg2 AS
+    PROCEDURE proc2 IS
+    BEGIN
+        INSERT INTO schema2.table1 (id, name) VALUES (1, 'test');
+END;
+END,
+    CREATE VIEW view13 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema33，并指定用户 test_user1 为拥有者，同时创建多个对象并创建类
+CREATE SCHEMA schema33 AUTHORIZATION test_user1
+    CREATE TABLE table14 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE CLASS cls2 AS
+    BEGIN
+        id INT;
+name VARCHAR(50);
+END,
+    CREATE VIEW view14 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema34，并指定用户 test_user2 为拥有者，同时创建多个对象并创建类体
+CREATE SCHEMA schema34 AUTHORIZATION test_user2
+    CREATE TABLE table15 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE CLASS BODY cls2 AS
+    BEGIN
+        PROCEDURE proc2 IS
+        BEGIN
+            INSERT INTO schema2.table1 (id, name) VALUES (1, 'test');
+END;
+END,
+    CREATE VIEW view15 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema35，并指定用户 test_user1 为拥有者，同时创建多个对象并创建全文索引
+CREATE SCHEMA schema35 AUTHORIZATION test_user1
+    CREATE TABLE table16 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE FULLTEXT INDEX ft_idx2 ON schema2.table1 (name),
+    CREATE VIEW view16 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema36，并指定用户 test_user2 为拥有者，同时创建多个对象并创建特权
+CREATE SCHEMA schema36 AUTHORIZATION test_user2
+    CREATE TABLE table17 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    GRANT SELECT ON schema2.table1 TO test_user1,
+    CREATE VIEW view17 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema37，并指定用户 test_user1 为拥有者，同时创建多个对象并创建域
+CREATE SCHEMA schema37 AUTHORIZATION test_user1
+    CREATE TABLE table18 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE DOMAIN domain2 AS INT,
+    CREATE VIEW view18 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema38，并指定用户 test_user2 为拥有者，同时创建多个对象并创建基表修改
+CREATE SCHEMA schema38 AUTHORIZATION test_user2
+    CREATE TABLE table19 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    ALTER TABLE schema2.table1 ADD CONSTRAINT pk2 PRIMARY KEY (id),
+    CREATE VIEW view19 AS
+    SELECT * FROM schema2.table1;
+-- 创建模式 schema39，并指定用户 test_user1 为拥有者，同时创建多个对象并创建多个对象
+CREATE SCHEMA schema39 AUTHORIZATION test_user1
+    CREATE TABLE table20 (
+        id INT PRIMARY KEY,
+        name VARCHAR(50)
+    ),
+    CREATE VIEW view20 AS
+    SELECT * FROM schema2.table1,
+    CREATE INDEX idx3 ON schema2.table1 (name),
+    CREATE SEQUENCE seq3 START WITH 1 INCREMENT BY 1

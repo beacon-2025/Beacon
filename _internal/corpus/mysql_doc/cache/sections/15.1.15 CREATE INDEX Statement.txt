@@ -1,0 +1,821 @@
+15.1.15 CREATE INDEX Statement
+CREATE [UNIQUE | FULLTEXT | SPATIAL] INDEX index_name
+    [index_type]
+    ON tbl_name (key_part,...)
+    [index_option]
+    [algorithm_option | lock_option] ...
+key_part: {col_name [(length)] | (expr)} [ASC | DESC]
+index_option: {
+    KEY_BLOCK_SIZE [=] value
+  | index_type
+  | WITH PARSER parser_name
+  | COMMENT 'string'
+  | {VISIBLE | INVISIBLE}
+  | ENGINE_ATTRIBUTE [=] 'string'
+  | SECONDARY_ENGINE_ATTRIBUTE [=] 'string'
+}
+index_type:
+    USING {BTREE | HASH}
+algorithm_option:
+    ALGORITHM [=] {DEFAULT | INPLACE | COPY}
+lock_option:
+    LOCK [=] {DEFAULT | NONE | SHARED | EXCLUSIVE}
+Normally, you create all indexes on a table at the time the table itself is created with CREATE TABLE.
+See Section 15.1.20, “CREATE TABLE Statement”. This guideline is especially important for InnoDB
+tables, where the primary key determines the physical layout of rows in the data file. CREATE INDEX
+enables you to add indexes to existing tables.
+CREATE INDEX is mapped to an ALTER TABLE statement to create indexes. See Section 15.1.9,
+“ALTER TABLE Statement”. CREATE INDEX cannot be used to create a PRIMARY KEY; use ALTER
+TABLE instead. For more information about indexes, see Section 10.3.1, “How MySQL Uses Indexes”.
+InnoDB supports secondary indexes on virtual columns. For more information, see Section 15.1.20.9,
+“Secondary Indexes and Generated Columns”.
+When the innodb_stats_persistent setting is enabled, run the ANALYZE TABLE statement for an
+InnoDB table after creating an index on that table.
+The expr for a key_part specification can also take the form (CAST json_expression AS type
+ARRAY) to create a multi-valued index on a JSON column. See Multi-Valued Indexes.
+An index specification of the form (key_part1, key_part2, ...) creates an index with multiple
+key parts. Index key values are formed by concatenating the values of the given key parts. For
+example (col1, col2, col3) specifies a multiple-column index with index keys consisting of
+values from col1, col2, and col3.
+A key_part specification can end with ASC or DESC to specify whether index values are stored in
+ascending or descending order. The default is ascending if no order specifier is given.
+ASC and DESC are not supported for HASH indexes, multi-valued indexes or SPATIAL indexes.
+The following sections describe different aspects of the CREATE INDEX statement:
+• Column Prefix Key Parts
+• Functional Key Parts
+• Unique Indexes
+• Full-Text Indexes
+• Multi-Valued Indexes
+• Spatial Indexes
+• Index Options
+• Table Copying and Locking Options
+Column Prefix Key Parts
+For string columns, indexes can be created that use only the leading part of column values, using
+col_name(length) syntax to specify an index prefix length:
+• Prefixes can be specified for CHAR, VARCHAR, BINARY, and VARBINARY key parts.
+• Prefixes must be specified for BLOB and TEXT key parts. Additionally, BLOB and TEXT columns can
+be indexed only for InnoDB, MyISAM, and BLACKHOLE tables.
+• Prefix limits are measured in bytes. However, prefix lengths for index specifications in CREATE
+TABLE, ALTER TABLE, and CREATE INDEX statements are interpreted as number of characters for
+nonbinary string types (CHAR, VARCHAR, TEXT) and number of bytes for binary string types (BINARY,
+VARBINARY, BLOB). Take this into account when specifying a prefix length for a nonbinary string
+column that uses a multibyte character set.
+Prefix support and lengths of prefixes (where supported) are storage engine dependent. For
+example, a prefix can be up to 767 bytes long for InnoDB tables that use the REDUNDANT or
+COMPACT row format. The prefix length limit is 3072 bytes for InnoDB tables that use the DYNAMIC
+or COMPRESSED row format. For MyISAM tables, the prefix length limit is 1000 bytes. The NDB
+storage engine does not support prefixes (see Section 25.2.7.6, “Unsupported or Missing Features in
+NDB Cluster”).
+If a specified index prefix exceeds the maximum column data type size, CREATE INDEX handles the
+index as follows:
+• For a nonunique index, either an error occurs (if strict SQL mode is enabled), or the index length is
+reduced to lie within the maximum column data type size and a warning is produced (if strict SQL
+mode is not enabled).
+• For a unique index, an error occurs regardless of SQL mode because reducing the index length
+might enable insertion of nonunique entries that do not meet the specified uniqueness requirement.
+The statement shown here creates an index using the first 10 characters of the name column
+(assuming that name has a nonbinary string type):
+CREATE INDEX part_of_name ON customer (name(10));
+If names in the column usually differ in the first 10 characters, lookups performed using this index
+should not be much slower than using an index created from the entire name column. Also, using
+column prefixes for indexes can make the index file much smaller, which could save a lot of disk space
+and might also speed up INSERT operations.
+Functional Key Parts
+A “normal” index indexes column values or prefixes of column values. For example, in the following
+table, the index entry for a given t1 row includes the full col1 value and a prefix of the col2 value
+consisting of its first 10 characters:
+CREATE TABLE t1 (
+  col1 VARCHAR(10),
+  col2 VARCHAR(20),
+  INDEX (col1, col2(10))
+);
+Functional key parts that index expression values canalso be used in place of column or column
+prefix values. Use of functional key parts enables indexing of values not stored directly in the table.
+Examples:
+CREATE TABLE t1 (col1 INT, col2 INT, INDEX func_index ((ABS(col1))));
+CREATE INDEX idx1 ON t1 ((col1 + col2));
+CREATE INDEX idx2 ON t1 ((col1 + col2), (col1 - col2), col1);
+ALTER TABLE t1 ADD INDEX ((col1 * 40) DESC);
+An index with multiple key parts can mix nonfunctional and functional key parts.
+ASC and DESC are supported for functional key parts.
+Functional key parts must adhere to the following rules. An error occurs if a key part definition contains
+disallowed constructs.
+• In index definitions, enclose expressions within parentheses to distinguish them from columns or
+column prefixes. For example, this is permitted; the expressions are enclosed within parentheses:
+INDEX ((col1 + col2), (col3 - col4))
+This produces an error; the expressions are not enclosed within parentheses:
+INDEX (col1 + col2, col3 - col4)
+• A functional key part cannot consist solely of a column name. For example, this is not permitted:
+INDEX ((col1), (col2))
+Instead, write the key parts as nonfunctional key parts, without parentheses:
+INDEX (col1, col2)
+• A functional key part expression cannot refer to column prefixes. For a workaround, see the
+discussion of SUBSTRING() and CAST() later in this section.
+• Functional key parts are not permitted in foreign key specifications.
+For CREATE TABLE ... LIKE, the destination table preserves functional key parts from the original
+table.
+Functional indexes are implemented as hidden virtual generated columns, which has these
+implications:
+• Each functional key part counts against the limit on total number of table columns; see
+Section 10.4.7, “Limits on Table Column Count and Row Size”.
+• Functional key parts inherit all restrictions that apply to generated columns. Examples:
+• Only functions permitted for generated columns are permitted for functional key parts.
+• Subqueries, parameters, variables, stored functions, and loadable functions are not permitted.
+For more information about applicable restrictions, see Section 15.1.20.8, “CREATE TABLE and
+Generated Columns”, and Section 15.1.9.2, “ALTER TABLE and Generated Columns”.
+• The virtual generated column itself requires no storage. The index itself takes up storage space as
+any other index.
+UNIQUE is supported for indexes that include functional key parts. However, primary keys cannot
+include functional key parts. A primary key requires the generated column to be stored, but functional
+key parts are implemented as virtual generated columns, not stored generated columns.
+SPATIAL and FULLTEXT indexes cannot have functional key parts.
+If a table contains no primary key, InnoDB automatically promotes the first UNIQUE NOT NULL index
+to the primary key. This is not supported for UNIQUE NOT NULL indexes that have functional key
+parts.
+Nonfunctional indexes raise a warning if there are duplicate indexes. Indexes that contain functional
+key parts do not have this feature.
+To remove a column that is referenced by a functional key part, the index must be removed first.
+Otherwise, an error occurs.
+Although nonfunctional key parts support a prefix length specification, this is not possible for functional
+key parts. The solution is to use SUBSTRING() (or CAST(), as described later in this section).
+For a functional key part containing the SUBSTRING() function to be used in a query, the WHERE
+clause must contain SUBSTRING() with the same arguments. In the following example, only the
+second SELECT is able to use the index because that is the only query in which the arguments to
+SUBSTRING() match the index specification:
+CREATE TABLE tbl (
+  col1 LONGTEXT,
+  INDEX idx1 ((SUBSTRING(col1, 1, 10)))
+);
+SELECT * FROM tbl WHERE SUBSTRING(col1, 1, 9) = '123456789';
+SELECT * FROM tbl WHERE SUBSTRING(col1, 1, 10) = '1234567890';
+Functional key parts enable indexing of values that cannot be indexed otherwise, such as JSON values.
+However, this must be done correctly to achieve the desired effect. For example, this syntax does not
+work:
+CREATE TABLE employees (
+  data JSON,
+  INDEX ((data->>'$.name'))
+);
+The syntax fails because:
+• The ->> operator translates into JSON_UNQUOTE(JSON_EXTRACT(...)).
+• JSON_UNQUOTE() returns a value with a data type of LONGTEXT, and the hidden generated column
+thus is assigned the same data type.
+• MySQL cannot index LONGTEXT columns specified without a prefix length on the key part, and prefix
+lengths are not permitted in functional key parts.
+To index the JSON column, you could try using the CAST() function as follows:
+CREATE TABLE employees (
+  data JSON,
+  INDEX ((CAST(data->>'$.name' AS CHAR(30))))
+);
+The hidden generated column is assigned the VARCHAR(30) data type, which can be indexed. But this
+approach produces a new issue when trying to use the index:
+• CAST() returns a string with the collation utf8mb4_0900_ai_ci (the server default collation).
+• JSON_UNQUOTE() returns a string with the collation utf8mb4_bin (hard coded).
+As a result, there is a collation mismatch between the indexed expression in the preceding table
+definition and the WHERE clause expression in the following query:
+SELECT * FROM employees WHERE data->>'$.name' = 'James';
+The index is not used because the expressions in the query and the index differ. To support this kind of
+scenario for functional key parts, the optimizer automatically strips CAST() when looking for an index
+to use, but only if the collation of the indexed expression matches that of the query expression. For an
+index with a functional key part to be used, either of the following two solutions work (although they
+differ somewhat in effect):
+• Solution 1. Assign the indexed expression the same collation as JSON_UNQUOTE():
+CREATE TABLE employees (
+  data JSON,
+  INDEX idx ((CAST(data->>"$.name" AS CHAR(30)) COLLATE utf8mb4_bin))
+);
+INSERT INTO employees VALUES
+  ('{ "name": "james", "salary": 9000 }'),
+  ('{ "name": "James", "salary": 10000 }'),
+  ('{ "name": "Mary", "salary": 12000 }'),
+  ('{ "name": "Peter", "salary": 8000 }');
+SELECT * FROM employees WHERE data->>'$.name' = 'James';
+The ->> operator is the same as JSON_UNQUOTE(JSON_EXTRACT(...)), and JSON_UNQUOTE()
+returns a string with collation utf8mb4_bin. The comparison is thus case-sensitive, and only one
+row matches:
++------------------------------------+
+| data                               |
++------------------------------------+
+| {"name": "James", "salary": 10000} |
++------------------------------------+
+• Solution 2. Specify the full expression in the query:
+CREATE TABLE employees (
+  data JSON,
+  INDEX idx ((CAST(data->>"$.name" AS CHAR(30))))
+);
+INSERT INTO employees VALUES
+  ('{ "name": "james", "salary": 9000 }'),
+  ('{ "name": "James", "salary": 10000 }'),
+  ('{ "name": "Mary", "salary": 12000 }'),
+  ('{ "name": "Peter", "salary": 8000 }');
+SELECT * FROM employees WHERE CAST(data->>'$.name' AS CHAR(30)) = 'James';
+CAST() returns a string with collation utf8mb4_0900_ai_ci, so the comparison case-insensitive
+and two rows match:
++------------------------------------+
+| data                               |
++------------------------------------+
+| {"name": "james", "salary": 9000}  |
+| {"name": "James", "salary": 10000} |
++------------------------------------+
+Be aware that although the optimizer supports automatically stripping CAST() with indexed generated
+columns, the following approach does not work because it produces a different result with and without
+an index (Bug#27337092):
+mysql> CREATE TABLE employees (
+         data JSON,
+         generated_col VARCHAR(30) AS (CAST(data->>'$.name' AS CHAR(30)))
+       );
+Query OK, 0 rows affected, 1 warning (0.03 sec)
+mysql> INSERT INTO employees (data)
+       VALUES ('{"name": "james"}'), ('{"name": "James"}');
+Query OK, 2 rows affected, 1 warning (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 1
+mysql> SELECT * FROM employees WHERE data->>'$.name' = 'James';
++-------------------+---------------+
+| data              | generated_col |
++-------------------+---------------+
+| {"name": "James"} | James         |
++-------------------+---------------+
+1 row in set (0.00 sec)
+mysql> ALTER TABLE employees ADD INDEX idx (generated_col);
+Query OK, 0 rows affected, 1 warning (0.03 sec)
+Records: 0  Duplicates: 0  Warnings: 1
+mysql> SELECT * FROM employees WHERE data->>'$.name' = 'James';
++-------------------+---------------+
+| data              | generated_col |
++-------------------+---------------+
+| {"name": "james"} | james         |
+| {"name": "James"} | James         |
++-------------------+---------------+
+2 rows in set (0.01 sec)
+Unique Indexes
+A UNIQUE index creates a constraint such that all values in the index must be distinct. An error occurs
+if you try to add a new row with a key value that matches an existing row. If you specify a prefix value
+for a column in a UNIQUE index, the column values must be unique within the prefix length. A UNIQUE
+index permits multiple NULL values for columns that can contain NULL.
+If a table has a PRIMARY KEY or UNIQUE NOT NULL index that consists of a single column that has
+an integer type, you can use _rowid to refer to the indexed column in SELECT statements, as follows:
+• _rowid refers to the PRIMARY KEY column if there is a PRIMARY KEY consisting of a single integer
+column. If there is a PRIMARY KEY but it does not consist of a single integer column, _rowid cannot
+be used.
+• Otherwise, _rowid refers to the column in the first UNIQUE NOT NULL index if that index consists
+of a single integer column. If the first UNIQUE NOT NULL index does not consist of a single integer
+column, _rowid cannot be used.
+Full-Text Indexes
+FULLTEXT indexes are supported only for InnoDB and MyISAM tables and can include only CHAR,
+VARCHAR, and TEXT columns. Indexing always happens over the entire column; column prefix indexing
+is not supported and any prefix length is ignored if specified. See Section 14.9, “Full-Text Search
+Functions”, for details of operation.
+Multi-Valued Indexes
+InnoDB supports multi-valued indexes. A multi-valued index is a secondary index defined on a column
+that stores an array of values. A “normal” index has one index record for each data record (1:1). A
+multi-valued index can have multiple index records for a single data record (N:1). Multi-valued indexes
+are intended for indexing JSON arrays. For example, a multi-valued index defined on the array of zip
+codes in the following JSON document creates an index record for each zip code, with each index
+record referencing the same data record.
+{
+    "user":"Bob",
+    "user_id":31,
+    "zipcode":[94477,94536]
+}
+Creating multi-valued Indexes
+You can create a multi-valued index in a CREATE TABLE, ALTER TABLE, or CREATE INDEX
+statement. This requires using CAST(... AS ... ARRAY) in the index definition, which casts same-
+typed scalar values in a JSON array to an SQL data type array. A virtual column is then generated
+transparently with the values in the SQL data type array; finally, a functional index (also referred to as a
+virtual index) is created on the virtual column. It is the functional index defined on the virtual column of
+values from the SQL data type array that forms the multi-valued index.
+The examples in the following list show the three different ways in which a multi-valued index zips can
+be created on an array $.zipcode on a JSON column custinfo in a table named customers. In
+each case, the JSON array is cast to an SQL data type array of UNSIGNED integer values.
+• CREATE TABLE only:
+CREATE TABLE customers (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    modified DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    custinfo JSON,
+    INDEX zips( (CAST(custinfo->'$.zipcode' AS UNSIGNED ARRAY)) )
+    );
+• CREATE TABLE plus ALTER TABLE:
+CREATE TABLE customers (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    modified DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    custinfo JSON
+    );
+ALTER TABLE customers ADD INDEX zips( (CAST(custinfo->'$.zipcode' AS UNSIGNED ARRAY)) );
+• CREATE TABLE plus CREATE INDEX:
+CREATE TABLE customers (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    modified DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    custinfo JSON
+    );
+CREATE INDEX zips ON customers ( (CAST(custinfo->'$.zipcode' AS UNSIGNED ARRAY)) );
+A multi-valued index can also be defined as part of a composite index. This example shows a
+composite index that includes two single-valued parts (for the id and modified columns), and one
+multi-valued part (for the custinfo column):
+CREATE TABLE customers (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    modified DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    custinfo JSON
+    );
+ALTER TABLE customers ADD INDEX comp(id, modified,
+    (CAST(custinfo->'$.zipcode' AS UNSIGNED ARRAY)) );
+Only one multi-valued key part can be used in a composite index. The multi-valued key part may be
+used in any order relative to the other parts of the key. In other words, the ALTER TABLE statement
+just shown could have used comp(id, (CAST(custinfo->'$.zipcode' AS UNSIGNED
+ARRAY), modified)) (or any other ordering) and still have been valid.
+Using multi-valued Indexes
+The optimizer uses a multi-valued index to fetch records when the following functions are specified in a
+WHERE clause:
+• MEMBER OF()
+• JSON_CONTAINS()
+• JSON_OVERLAPS()
+We can demonstrate this by creating and populating the customers table using the following CREATE
+TABLE and INSERT statements:
+mysql> CREATE TABLE customers (
+    ->     id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    ->     modified DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    ->     custinfo JSON
+    ->     );
+Query OK, 0 rows affected (0.51 sec)
+mysql> INSERT INTO customers VALUES
+    ->     (NULL, NOW(), '{"user":"Jack","user_id":37,"zipcode":[94582,94536]}'),
+    ->     (NULL, NOW(), '{"user":"Jill","user_id":22,"zipcode":[94568,94507,94582]}'),
+    ->     (NULL, NOW(), '{"user":"Bob","user_id":31,"zipcode":[94477,94507]}'),
+    ->     (NULL, NOW(), '{"user":"Mary","user_id":72,"zipcode":[94536]}'),
+    ->     (NULL, NOW(), '{"user":"Ted","user_id":56,"zipcode":[94507,94582]}');
+Query OK, 5 rows affected (0.07 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+First we execute three queries on the customers table, one each using MEMBER OF(),
+JSON_CONTAINS(), and JSON_OVERLAPS(), with the result from each query shown here:
+mysql> SELECT * FROM customers
+    ->     WHERE 94507 MEMBER OF(custinfo->'$.zipcode');
++----+---------------------+-------------------------------------------------------------------+
+| id | modified            | custinfo                                                          |
++----+---------------------+-------------------------------------------------------------------+
+|  2 | 2019-06-29 22:23:12 | {"user": "Jill", "user_id": 22, "zipcode": [94568, 94507, 94582]} |
+|  3 | 2019-06-29 22:23:12 | {"user": "Bob", "user_id": 31, "zipcode": [94477, 94507]}         |
+|  5 | 2019-06-29 22:23:12 | {"user": "Ted", "user_id": 56, "zipcode": [94507, 94582]}         |
++----+---------------------+-------------------------------------------------------------------+
+3 rows in set (0.00 sec)
+mysql> SELECT * FROM customers
+    ->     WHERE JSON_CONTAINS(custinfo->'$.zipcode', CAST('[94507,94582]' AS JSON));
++----+---------------------+-------------------------------------------------------------------+
+| id | modified            | custinfo                                                          |
++----+---------------------+-------------------------------------------------------------------+
+|  2 | 2019-06-29 22:23:12 | {"user": "Jill", "user_id": 22, "zipcode": [94568, 94507, 94582]} |
+|  5 | 2019-06-29 22:23:12 | {"user": "Ted", "user_id": 56, "zipcode": [94507, 94582]}         |
++----+---------------------+-------------------------------------------------------------------+
+2 rows in set (0.00 sec)
+mysql> SELECT * FROM customers
+    ->     WHERE JSON_OVERLAPS(custinfo->'$.zipcode', CAST('[94507,94582]' AS JSON));
++----+---------------------+-------------------------------------------------------------------+
+| id | modified            | custinfo                                                          |
++----+---------------------+-------------------------------------------------------------------+
+|  1 | 2019-06-29 22:23:12 | {"user": "Jack", "user_id": 37, "zipcode": [94582, 94536]}        |
+|  2 | 2019-06-29 22:23:12 | {"user": "Jill", "user_id": 22, "zipcode": [94568, 94507, 94582]} |
+|  3 | 2019-06-29 22:23:12 | {"user": "Bob", "user_id": 31, "zipcode": [94477, 94507]}         |
+|  5 | 2019-06-29 22:23:12 | {"user": "Ted", "user_id": 56, "zipcode": [94507, 94582]}         |
++----+---------------------+-------------------------------------------------------------------+
+4 rows in set (0.00 sec)
+Next, we run EXPLAIN on each of the previous three queries:
+mysql> EXPLAIN SELECT * FROM customers
+    ->     WHERE 94507 MEMBER OF(custinfo->'$.zipcode');
++----+-------------+-----------+------------+------+---------------+------+---------+------+------+----
+| id | select_type | table     | partitions | type | possible_keys | key  | key_len | ref  | rows | fil
++----+-------------+-----------+------------+------+---------------+------+---------+------+------+----
+|  1 | SIMPLE      | customers | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    5 |   1
++----+-------------+-----------+------------+------+---------------+------+---------+------+------+----
+1 row in set, 1 warning (0.00 sec)
+mysql> EXPLAIN SELECT * FROM customers
+    ->     WHERE JSON_CONTAINS(custinfo->'$.zipcode', CAST('[94507,94582]' AS JSON));
++----+-------------+-----------+------------+------+---------------+------+---------+------+------+----
+| id | select_type | table     | partitions | type | possible_keys | key  | key_len | ref  | rows | fil
++----+-------------+-----------+------------+------+---------------+------+---------+------+------+----
+|  1 | SIMPLE      | customers | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    5 |   1
++----+-------------+-----------+------------+------+---------------+------+---------+------+------+----
+1 row in set, 1 warning (0.00 sec)
+mysql> EXPLAIN SELECT * FROM customers
+    ->     WHERE JSON_OVERLAPS(custinfo->'$.zipcode', CAST('[94507,94582]' AS JSON));
++----+-------------+-----------+------------+------+---------------+------+---------+------+------+----
+| id | select_type | table     | partitions | type | possible_keys | key  | key_len | ref  | rows | fil
++----+-------------+-----------+------------+------+---------------+------+---------+------+------+----
+|  1 | SIMPLE      | customers | NULL       | ALL  | NULL          | NULL | NULL    | NULL |    5 |   1
++----+-------------+-----------+------------+------+---------------+------+---------+------+------+----
+1 row in set, 1 warning (0.01 sec)
+None of the three queries just shown are able to use any keys. To solve this problem, we can add a
+multi-valued index on the zipcode array in the JSON column (custinfo), like this:
+mysql> ALTER TABLE customers
+    ->     ADD INDEX zips( (CAST(custinfo->'$.zipcode' AS UNSIGNED ARRAY)) );
+Query OK, 0 rows affected (0.47 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+When we run the previous EXPLAIN statements again, we can now observe that the queries can (and
+do) use the index zips that was just created:
+mysql> EXPLAIN SELECT * FROM customers
+    ->     WHERE 94507 MEMBER OF(custinfo->'$.zipcode');
++----+-------------+-----------+------------+------+---------------+------+---------+-------+------+-------
+| id | select_type | table     | partitions | type | possible_keys | key  | key_len | ref   | rows | filter
++----+-------------+-----------+------------+------+---------------+------+---------+-------+------+-------
+|  1 | SIMPLE      | customers | NULL       | ref  | zips          | zips | 9       | const |    1 |   100.
++----+-------------+-----------+------------+------+---------------+------+---------+-------+------+-------
+1 row in set, 1 warning (0.00 sec)
+mysql> EXPLAIN SELECT * FROM customers
+    ->     WHERE JSON_CONTAINS(custinfo->'$.zipcode', CAST('[94507,94582]' AS JSON));
++----+-------------+-----------+------------+-------+---------------+------+---------+------+------+-------
+| id | select_type | table     | partitions | type  | possible_keys | key  | key_len | ref  | rows | filter
++----+-------------+-----------+------------+-------+---------------+------+---------+------+------+-------
+|  1 | SIMPLE      | customers | NULL       | range | zips          | zips | 9       | NULL |    6 |   100.
++----+-------------+-----------+------------+-------+---------------+------+---------+------+------+-------
+1 row in set, 1 warning (0.00 sec)
+mysql> EXPLAIN SELECT * FROM customers
+    ->     WHERE JSON_OVERLAPS(custinfo->'$.zipcode', CAST('[94507,94582]' AS JSON));
++----+-------------+-----------+------------+-------+---------------+------+---------+------+------+-------
+| id | select_type | table     | partitions | type  | possible_keys | key  | key_len | ref  | rows | filter
++----+-------------+-----------+------------+-------+---------------+------+---------+------+------+-------
+|  1 | SIMPLE      | customers | NULL       | range | zips          | zips | 9       | NULL |    6 |   100.
++----+-------------+-----------+------------+-------+---------------+------+---------+------+------+-------
+1 row in set, 1 warning (0.01 sec)
+A multi-valued index can be defined as a unique key. If defined as a unique key, attempting to insert
+a value already present in the multi-valued index returns a duplicate key error. If duplicate values are
+already present, attempting to add a unique multi-valued index fails, as shown here:
+mysql> ALTER TABLE customers DROP INDEX zips;
+Query OK, 0 rows affected (0.55 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+mysql> ALTER TABLE customers
+    ->     ADD UNIQUE INDEX zips((CAST(custinfo->'$.zipcode' AS UNSIGNED ARRAY)));
+ERROR 1062 (23000): Duplicate entry '[94507, ' for key 'customers.zips'
+mysql> ALTER TABLE customers
+    ->     ADD INDEX zips((CAST(custinfo->'$.zipcode' AS UNSIGNED ARRAY)));
+Query OK, 0 rows affected (0.36 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+Characteristics of Multi-Valued Indexes
+Multi-valued indexes have the additional characteristics listed here:
+• DML operations that affect multi-valued indexes are handled in the same way as DML operations
+that affect a normal index, with the only difference being that there may be more than one insert or
+update for a single clustered index record.
+• Nullability and multi-valued indexes:
+• If a multi-valued key part has an empty array, no entries are added to the index, and the data
+record is not accessible by an index scan.
+• If multi-valued key part generation returns a NULL value, a single entry containing NULL is added
+to the multi-valued index. If the key part is defined as NOT NULL, an error is reported.
+• If the typed array column is set to NULL, the storage engine stores a single record containing NULL
+that points to the data record.
+• JSON null values are not permitted in indexed arrays. If any returned value is NULL, it is treated as
+a JSON null and an Invalid JSON value error is reported.
+• Because multi-valued indexes are virtual indexes on virtual columns, they must adhere to the same
+rules as secondary indexes on virtual generated columns.
+• Index records are not added for empty arrays.
+Limitations and Restrictions on Multi-valued Indexes
+Multi-valued indexes are subject to the limitations and restrictions listed here:
+• Only one multi-valued key part is permitted per multi-valued index. However, the CAST(...
+AS ... ARRAY) expression can refer to multiple arrays within a JSON document, as shown here:
+CAST(data->'$.arr[*][*]' AS UNSIGNED ARRAY)
+In this case, all values matching the JSON expression are stored in the index as a single flat array.
+• An index with a multi-valued key part does not support ordering and therefore cannot be used as a
+primary key. For the same reason, a multi-valued index cannot be defined using the ASC or DESC
+keyword.
+• A multi-valued index cannot be a covering index.
+• The maximum number of values per record for a multi-valued index is determined by the amount
+of data than can be stored on a single undo log page, which is 65221 bytes (64K minus 315 bytes
+for overhead), which means that the maximum total length of key values is also 65221 bytes. The
+maximum number of keys depends on various factors, which prevents defining a specific limit. Tests
+have shown a multi-valued index to permit as many as 1604 integer keys per record, for example.
+When the limit is reached, an error similar to the following is reported: ERROR 3905 (HY000):
+Exceeded max number of values per record for multi-valued index 'idx' by 1
+value(s).
+• The only type of expression that is permitted in a multi-valued key part is a JSON expression. The
+expression need not reference an existing element in a JSON document inserted into the indexed
+column, but must itself be syntactically valid.
+• Because index records for the same clustered index record are dispersed throughout a multi-valued
+index, a multi-valued index does not support range scans or index-only scans.
+• Multi-valued indexes are not permitted in foreign key specifications.
+• Index prefixes cannot be defined for multi-valued indexes.
+• Multi-valued indexes cannot be defined on data cast as BINARY (see the description of the CAST()
+function).
+• Online creation of a multi-value index is not supported, which means the operation uses
+ALGORITHM=COPY. See Performance and Space Requirements.
+• Character sets and collations other than the following two combinations of character set and collation
+are not supported for multi-valued indexes:
+1. The binary character set with the default binary collation
+2. The utf8mb4 character set with the default utf8mb4_0900_as_cs collation.
+• As with other indexes on columns of InnoDB tables, a multi-valued index cannot be created with
+USING HASH; attempting to do so results in a warning: This storage engine does not
+support the HASH index algorithm, storage engine default was used instead.
+(USING BTREE is supported as usual.)
+Spatial Indexes
+The MyISAM, InnoDB, NDB, and ARCHIVE storage engines support spatial columns such as POINT
+and GEOMETRY. (Section 13.4, “Spatial Data Types”, describes the spatial data types.) However,
+support for spatial column indexing varies among engines. Spatial and nonspatial indexes on spatial
+columns are available according to the following rules.
+Spatial indexes on spatial columns have these characteristics:
+• Available only for InnoDB and MyISAM tables. Specifying SPATIAL INDEX for other storage
+engines results in an error.
+• An index on a spatial column must be a SPATIAL index. The SPATIAL keyword is thus optional but
+implicit for creating an index on a spatial column.
+• Available for single spatial columns only. A spatial index cannot be created over multiple spatial
+columns.
+• Indexed columns must be NOT NULL.
+• Column prefix lengths are prohibited. The full width of each column is indexed.
+• Not permitted for a primary key or unique index.
+Nonspatial indexes on spatial columns (created with INDEX, UNIQUE, or PRIMARY KEY) have these
+characteristics:
+• Permitted for any storage engine that supports spatial columns except ARCHIVE.
+• Columns can be NULL unless the index is a primary key.
+• The index type for a non-SPATIAL index depends on the storage engine. Currently, B-tree is used.
+• Permitted for a column that can have NULL values only for InnoDB, MyISAM, and MEMORY tables.
+Index Options
+Following the key part list, index options can be given. An index_option value can be any of the
+following:
+• KEY_BLOCK_SIZE [=] value
+For MyISAM tables, KEY_BLOCK_SIZE optionally specifies the size in bytes to use for index
+key blocks. The value is treated as a hint; a different size could be used if necessary. A
+KEY_BLOCK_SIZE value specified for an individual index definition overrides a table-level
+KEY_BLOCK_SIZE value.
+KEY_BLOCK_SIZE is not supported at the index level for InnoDB tables. See Section 15.1.20,
+“CREATE TABLE Statement”.
+• index_type
+Some storage engines permit you to specify an index type when creating an index. For example:
+CREATE TABLE lookup (id INT) ENGINE = MEMORY;
+CREATE INDEX id_index ON lookup (id) USING BTREE;
+Table 15.1, “Index Types Per Storage Engine” shows the permissible index type values supported by
+different storage engines. Where multiple index types are listed, the first one is the default when no
+index type specifier is given. Storage engines not listed in the table do not support an index_type
+clause in index definitions.
+Table 15.1 Index Types Per Storage Engine
+Storage Engine
+Permissible Index Types
+InnoDB
+BTREE
+MyISAM
+BTREE
+MEMORY/HEAP
+HASH, BTREE
+NDB
+HASH, BTREE (see note in text)
+The index_type clause cannot be used for FULLTEXT INDEX specifications. Full-text index
+implementation is storage-engine dependent. Spatial indexes are implemented as R-tree indexes.
+If you specify an index type that is not valid for a given storage engine, but another index type is
+available that the engine can use without affecting query results, the engine uses the available type.
+The parser recognizes RTREE as a type name. This is permitted only for SPATIAL indexes.
+BTREE indexes are implemented by the NDB storage engine as T-tree indexes.
+Note
+For indexes on NDB table columns, the USING option can be specified only
+for a unique index or primary key. USING HASH prevents the creation of an
+ordered index; otherwise, creating a unique index or primary key on an NDB
+table automatically results in the creation of both an ordered index and a hash
+index, each of which indexes the same set of columns.
+For unique indexes that include one or more NULL columns of an NDB table,
+the hash index can be used only to look up literal values, which means that
+IS [NOT] NULL conditions require a full scan of the table. One workaround
+is to make sure that a unique index using one or more NULL columns on such
+a table is always created in such a way that it includes the ordered index; that
+is, avoid employing USING HASH when creating the index.
+If you specify an index type that is not valid for a given storage engine, but another index type is
+available that the engine can use without affecting query results, the engine uses the available type.
+The parser recognizes RTREE as a type name, but currently this cannot be specified for any storage
+engine.
+Note
+Use of the index_type option before the ON tbl_name clause is
+deprecated; expect support for use of the option in this position to be
+removed in a future MySQL release. If an index_type option is given in
+both the earlier and later positions, the final option applies.
+TYPE type_name is recognized as a synonym for USING type_name. However, USING is the
+preferred form.
+The following tables show index characteristics for the storage engines that support the
+index_type option.
+Table 15.2 InnoDB Storage Engine Index Characteristics
+Index Class
+Index Type
+Stores NULL
+VALUES
+Permits
+Multiple NULL
+Values
+IS NULL Scan
+Type
+IS NOT NULL
+Scan Type
+Primary key
+BTREE
+No
+No
+N/A
+N/A
+Unique
+BTREE
+Yes
+Yes
+Index
+Index
+Key
+BTREE
+Yes
+Yes
+Index
+Index
+FULLTEXT
+N/A
+Yes
+Yes
+Table
+Table
+Index Class
+Index Type
+Stores NULL
+VALUES
+Permits
+Multiple NULL
+Values
+IS NULL Scan
+Type
+IS NOT NULL
+Scan Type
+SPATIAL
+N/A
+No
+No
+N/A
+N/A
+Table 15.3 MyISAM Storage Engine Index Characteristics
+Index Class
+Index Type
+Stores NULL
+VALUES
+Permits
+Multiple NULL
+Values
+IS NULL Scan
+Type
+IS NOT NULL
+Scan Type
+Primary key
+BTREE
+No
+No
+N/A
+N/A
+Unique
+BTREE
+Yes
+Yes
+Index
+Index
+Key
+BTREE
+Yes
+Yes
+Index
+Index
+FULLTEXT
+N/A
+Yes
+Yes
+Table
+Table
+SPATIAL
+N/A
+No
+No
+N/A
+N/A
+Table 15.4 MEMORY Storage Engine Index Characteristics
+Index Class
+Index Type
+Stores NULL
+VALUES
+Permits
+Multiple NULL
+Values
+IS NULL Scan
+Type
+IS NOT NULL
+Scan Type
+Primary key
+BTREE
+No
+No
+N/A
+N/A
+Unique
+BTREE
+Yes
+Yes
+Index
+Index
+Key
+BTREE
+Yes
+Yes
+Index
+Index
+Primary key
+HASH
+No
+No
+N/A
+N/A
+Unique
+HASH
+Yes
+Yes
+Index
+Index
+Key
+HASH
+Yes
+Yes
+Index
+Index
+Table 15.5 NDB Storage Engine Index Characteristics
+Index Class
+Index Type
+Stores NULL
+VALUES
+Permits
+Multiple NULL
+Values
+IS NULL Scan
+Type
+IS NOT NULL
+Scan Type
+Primary key
+BTREE
+No
+No
+Index
+Index
+Unique
+BTREE
+Yes
+Yes
+Index
+Index
+Key
+BTREE
+Yes
+Yes
+Index
+Index
+Primary key
+HASH
+No
+No
+Table (see note
+1)
+Table (see note
+1)
+Unique
+HASH
+Yes
+Yes
+Table (see note
+1)
+Table (see note
+1)
+Key
+HASH
+Yes
+Yes
+Table (see note
+1)
+Table (see note
+1)
+Table note:
+1. USING HASH prevents creation of an implicit ordered index.
+• WITH PARSER parser_name
+This option can be used only with FULLTEXT indexes. It associates a parser plugin with the index if
+full-text indexing and searching operations need special handling. InnoDB and MyISAM support full-
+text parser plugins. If you have a MyISAM table with an associated full-text parser plugin, you can
+convert the table to InnoDB using ALTER TABLE. See Full-Text Parser Plugins and Writing Full-Text
+Parser Plugins for more information.
+• COMMENT 'string'
+Index definitions can include an optional comment of up to 1024 characters.
+The MERGE_THRESHOLD for index pages can be configured for individual indexes using the
+index_option COMMENT clause of the CREATE INDEX statement. For example:
+CREATE TABLE t1 (id INT);
+CREATE INDEX id_index ON t1 (id) COMMENT 'MERGE_THRESHOLD=40';
+If the page-full percentage for an index page falls below the MERGE_THRESHOLD value when a
+row is deleted or when a row is shortened by an update operation, InnoDB attempts to merge the
+index page with a neighboring index page. The default MERGE_THRESHOLD value is 50, which is the
+previously hardcoded value.
+MERGE_THRESHOLD can also be defined at the index level and table level using CREATE TABLE
+and ALTER TABLE statements. For more information, see Section 17.8.11, “Configuring the Merge
+Threshold for Index Pages”.
+• VISIBLE, INVISIBLE
+Specify index visibility. Indexes are visible by default. An invisible index is not used by the optimizer.
+Specification of index visibility applies to indexes other than primary keys (either explicit or implicit).
+For more information, see Section 10.3.12, “Invisible Indexes”.
+• The ENGINE_ATTRIBUTE and SECONDARY_ENGINE_ATTRIBUTE are used to specify index
+attributes for primary and secondary storage engines. The options are reserved for future use.
+The value assigned to this option is a string literal containing a valid JSON document or an empty
+string (''). Invalid JSON is rejected.
+CREATE INDEX i1 ON t1 (c1) ENGINE_ATTRIBUTE='{"key":"value"}';
+ENGINE_ATTRIBUTE and SECONDARY_ENGINE_ATTRIBUTE values can be repeated without error.
+In this case, the last specified value is used.
+ENGINE_ATTRIBUTE and SECONDARY_ENGINE_ATTRIBUTE values are not checked by the server,
+nor are they cleared when the table's storage engine is changed.
+Table Copying and Locking Options
+ALGORITHM and LOCK clauses may be given to influence the table copying method and level of
+concurrency for reading and writing the table while its indexes are being modified. They have the
+same meaning as for the ALTER TABLE statement. For more information, see Section 15.1.9, “ALTER
+TABLE Statement”
+NDB Cluster supports online operations using the same ALGORITHM=INPLACE syntax used with
+the standard MySQL Server. See Section 25.6.12, “Online Operations with ALTER TABLE in NDB
+Cluster”, for more information.

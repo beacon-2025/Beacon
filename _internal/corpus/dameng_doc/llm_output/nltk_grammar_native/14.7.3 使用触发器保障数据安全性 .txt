@@ -1,0 +1,9 @@
+```plaintext
+S -> TRIGGER_DEFINITION
+TRIGGER_DEFINITION -> 'CREATE' 'OR' 'REPLACE' 'TRIGGER' 'Emp_permit_changes' 'BEFORE' 'INSERT' 'OR' 'DELETE' 'OR' 'UPDATE' 'ON' 'OTHER.EMPTAB' 'DECLARE' DECLARATIONS 'BEGIN' TRIGGER_BODY 'END'
+DECLARATIONS -> 'Dummy' 'INTEGER' ';' 'Invalid_Operate_time' 'EXCEPTION' 'FOR' '-20002' ';'
+TRIGGER_BODY -> WEEKEND_CHECK HOLIDAY_CHECK WORK_HOURS_CHECK
+WEEKEND_CHECK -> 'IF' '(' 'DAYNAME' '(' 'Sysdate' ')' '=' "'Saturday'" 'OR' 'DAYNAME' '(' 'Sysdate' ')' '=' "'Sunday'" ')' 'THEN' 'RAISE' 'Invalid_Operate_time' ';' 'END' 'IF' ';'
+HOLIDAY_CHECK -> 'IF' '(' 'SELECT' 'COUNT' '(' '*' ')' 'INTO' 'Dummy' 'FROM' 'OTHER.COMPANYHOLIDAYS' 'WHERE' 'Holiday' '=' 'Current_date' ')' 'THEN' 'RAISE' 'Invalid_Operate_time' ';' 'END' 'IF' ';'
+WORK_HOURS_CHECK -> 'IF' '(' 'EXTRACT' '(' 'HOUR' 'FROM' 'Current_time' ')' '<' '8' 'OR' 'EXTRACT' '(' 'HOUR' 'FROM' 'Current_time' ')' '>=' '18' ')' 'THEN' 'RAISE' 'Invalid_Operate_time' ';' 'END' 'IF' ';'
+```

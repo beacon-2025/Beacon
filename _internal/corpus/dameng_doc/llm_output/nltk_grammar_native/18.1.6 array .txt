@@ -1,0 +1,4 @@
+```plaintext
+JSON_ARRAY -> '[' VALUE ']'
+VALUE -> 'value_1' | 'value_1' ',' 'value_2'
+```

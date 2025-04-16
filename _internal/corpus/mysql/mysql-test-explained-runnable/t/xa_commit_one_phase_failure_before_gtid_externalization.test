@@ -1,0 +1,34 @@
+# ==== Purpose ====
+#
+# This script tests server behavior when a crash occurs during the
+# execution of `XA COMMIT ... ONE PHASE`, just before the GTID is added to
+# GTID_EXECUTED.
+#
+# ==== Requirements ====
+#
+# After server restart:
+# R1. The GTID_EXECUTED variable should be updated.
+# R2. There shouldn't be any pending XA transactions visible with `XA
+#     RECOVER`.
+#
+# ==== Implementation ====
+#
+# 1. Setup scenario: create table and insert some records.
+# 2. Start and execute an XA transaction containing an insert until before
+#    `XA COMMIT ... ONE PHASE`.
+# 3. Take the `GTID_EXECUTED` state.
+# 4. Crash the server during `XA COMMIT ... ONE PHASE` execution before the
+#    GTID is added to GTID_EXECUTED.
+# 5. Restart server and check:
+#    a. Error log for messages stating that recovery process didn't find
+#       any transaction needing recovery.
+#    b. The GTID_EXECUTED variable was updated.
+#    c. There aren't any pending XA transaction listed in the output of `XA
+#       RECOVER`.
+#    d. The table has been updated.
+#
+# ==== References ====
+#
+# WL#11300: Crash-safe XA + binary log
+#
+# Related tests

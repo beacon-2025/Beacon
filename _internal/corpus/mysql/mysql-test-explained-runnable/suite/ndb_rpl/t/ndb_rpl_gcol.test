@@ -1,0 +1,11 @@
+
+
+## test_gcol_virtual_hidden_pk is known not to work
+##
+#CREATE TABLE test_gcol_virtual_hidden_pk
+#   (id MEDIUMINT,
+#    gcol_int int GENERATED ALWAYS AS (100 + id),
+#    misc int,
+#    gcol_str varchar(20) GENERATED ALWAYS AS (concat("User ", id)),
+#    index(id)
+#   ) engine = ndb

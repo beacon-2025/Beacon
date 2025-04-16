@@ -1,0 +1,6 @@
+```
+S -> DESCRIBE_STATEMENT | EXPLAIN_STATEMENT
+DESCRIBE_STATEMENT -> 'DESCRIBE' TABLE_OR_QUERY
+EXPLAIN_STATEMENT -> 'EXPLAIN' TABLE_OR_QUERY
+TABLE_OR_QUERY -> 'table_structure_unknown' | 'query_execution_plan_unknown'
+```

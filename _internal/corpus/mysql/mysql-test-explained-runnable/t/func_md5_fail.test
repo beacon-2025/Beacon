@@ -1,0 +1,2 @@
+
+explain select md5('hello')

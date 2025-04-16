@@ -1,0 +1,3 @@
+
+
+SET GLOBAL innodb_segment_reserve_factor = DEFAULT

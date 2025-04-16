@@ -1,0 +1,6 @@
+```plaintext
+S -> ALTER_VIEW_COMPILE
+ALTER_VIEW_COMPILE -> 'ALTER' 'VIEW' VIEW_NAME 'COMPILE'
+VIEW_NAME -> SCHEMA_NAME '.' 'view_name_1' | 'view_name_1'
+SCHEMA_NAME -> 'schemaname_value'
+```

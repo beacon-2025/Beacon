@@ -1,0 +1,2 @@
+
+SET @global.component_connection_control.max_connection_delay = 1000

@@ -1,0 +1,2 @@
+
+SET @@SESSION.group_replication_consistency= AFTER

@@ -1,0 +1,5 @@
+
+
+##### Number of rows for the INSERT/UPDATE/DELETE/SELECT experiments #####
+#     on partioned tables
+SET @max_row = 20

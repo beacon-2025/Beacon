@@ -1,0 +1,1 @@
+SELECT bt_index_check('bttest_a_expr_idx', true);

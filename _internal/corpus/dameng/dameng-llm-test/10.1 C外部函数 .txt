@@ -1,0 +1,88 @@
+-- 创建测试表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+-- 插入测试数据
+INSERT INTO test_table1 (id, name) VALUES (1, 'Alice');
+INSERT INTO test_table1 (id, name) VALUES (2, 'Bob');
+-- 测试用例 1: 调用C外部函数
+-- 假设共享库路径为 /usr/local/lib/libtest.so，函数名为 test_function
+CREATE OR REPLACE FUNCTION test_function_external()
+RETURNS INT
+AS '/usr/local/lib/libtest.so', 'test_function'
+LANGUAGE C;
+-- 调用C外部函数
+SELECT test_function_external();
+-- 测试用例 2: 调用C外部函数并传入参数
+-- 假设共享库路径为 /usr/local/lib/libtest.so，函数名为 test_function_with_param
+CREATE OR REPLACE FUNCTION test_function_with_param_external(param INT)
+RETURNS INT
+AS '/usr/local/lib/libtest.so', 'test_function_with_param'
+LANGUAGE C;
+-- 调用C外部函数并传入参数
+SELECT test_function_with_param_external(10);
+-- 测试用例 3: 调用C外部函数并返回字符串
+-- 假设共享库路径为 /usr/local/lib/libtest.so，函数名为 test_function_return_string
+CREATE OR REPLACE FUNCTION test_function_return_string_external()
+RETURNS VARCHAR(100)
+AS '/usr/local/lib/libtest.so', 'test_function_return_string'
+LANGUAGE C;
+-- 调用C外部函数并返回字符串
+SELECT test_function_return_string_external();
+-- 测试用例 4: 调用C外部函数并返回浮点数
+-- 假设共享库路径为 /usr/local/lib/libtest.so，函数名为 test_function_return_float
+CREATE OR REPLACE FUNCTION test_function_return_float_external()
+RETURNS FLOAT
+AS '/usr/local/lib/libtest.so', 'test_function_return_float'
+LANGUAGE C;
+-- 调用C外部函数并返回浮点数
+SELECT test_function_return_float_external();
+-- 测试用例 5: 调用C外部函数并返回布尔值
+-- 假设共享库路径为 /usr/local/lib/libtest.so，函数名为 test_function_return_bool
+CREATE OR REPLACE FUNCTION test_function_return_bool_external()
+RETURNS BOOLEAN
+AS '/usr/local/lib/libtest.so', 'test_function_return_bool'
+LANGUAGE C;
+-- 调用C外部函数并返回布尔值
+SELECT test_function_return_bool_external();
+-- 测试用例 6: 调用C外部函数并返回日期
+-- 假设共享库路径为 /usr/local/lib/libtest.so，函数名为 test_function_return_date
+CREATE OR REPLACE FUNCTION test_function_return_date_external()
+RETURNS DATE
+AS '/usr/local/lib/libtest.so', 'test_function_return_date'
+LANGUAGE C;
+-- 调用C外部函数并返回日期
+SELECT test_function_return_date_external();
+-- 测试用例 7: 调用C外部函数并返回时间戳
+-- 假设共享库路径为 /usr/local/lib/libtest.so，函数名为 test_function_return_timestamp
+CREATE OR REPLACE FUNCTION test_function_return_timestamp_external()
+RETURNS TIMESTAMP
+AS '/usr/local/lib/libtest.so', 'test_function_return_timestamp'
+LANGUAGE C;
+-- 调用C外部函数并返回时间戳
+SELECT test_function_return_timestamp_external();
+-- 测试用例 8: 调用C外部函数并返回数组
+-- 假设共享库路径为 /usr/local/lib/libtest.so，函数名为 test_function_return_array
+CREATE OR REPLACE FUNCTION test_function_return_array_external()
+RETURNS INT[]
+AS '/usr/local/lib/libtest.so', 'test_function_return_array'
+LANGUAGE C;
+-- 调用C外部函数并返回数组
+SELECT test_function_return_array_external();
+-- 测试用例 9: 调用C外部函数并返回复合类型
+-- 假设共享库路径为 /usr/local/lib/libtest.so，函数名为 test_function_return_composite
+CREATE OR REPLACE FUNCTION test_function_return_composite_external()
+RETURNS TABLE (id INT, name VARCHAR(50))
+AS '/usr/local/lib/libtest.so', 'test_function_return_composite'
+LANGUAGE C;
+-- 调用C外部函数并返回复合类型
+SELECT * FROM test_function_return_composite_external();
+-- 测试用例 10: 调用C外部函数并返回JSON
+-- 假设共享库路径为 /usr/local/lib/libtest.so，函数名为 test_function_return_json
+CREATE OR REPLACE FUNCTION test_function_return_json_external()
+RETURNS JSON
+AS '/usr/local/lib/libtest.so', 'test_function_return_json'
+LANGUAGE C;
+-- 调用C外部函数并返回JSON
+SELECT test_function_return_json_external()

@@ -1,0 +1,36 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 创建包规范
+CREATE PACKAGE schema1.package1 AS
+BEGIN
+    NULL;
+END;
+CREATE PACKAGE schema2.package2 AS
+BEGIN
+    NULL;
+END;
+CREATE PACKAGE package3 AS
+BEGIN
+    NULL;
+END;
+-- 测试用例 1: 删除当前模式下的包规范
+DROP PACKAGE package3;
+-- 测试用例 2: 删除指定模式下的包规范
+DROP PACKAGE schema1.package1;
+-- 测试用例 3: 删除指定模式下的包规范，使用 IF EXISTS 关键字
+DROP PACKAGE IF EXISTS schema2.package2;
+-- 测试用例 4: 删除不存在的包规范，不使用 IF EXISTS 关键字（预期报错）
+DROP PACKAGE non_existent_package;
+-- 测试用例 5: 删除不存在的包规范，使用 IF EXISTS 关键字（预期不报错）
+DROP PACKAGE IF EXISTS non_existent_package;
+-- 测试用例 6: 删除当前模式下的包规范，使用 IF EXISTS 关键字
+DROP PACKAGE IF EXISTS package3;
+-- 测试用例 7: 删除指定模式下的包规范，使用 IF EXISTS 关键字
+DROP PACKAGE IF EXISTS schema1.package1;
+-- 测试用例 8: 删除指定模式下的包规范，不使用 IF EXISTS 关键字
+DROP PACKAGE schema2.package2;
+-- 测试用例 9: 删除当前模式下的包规范，不使用 IF EXISTS 关键字
+DROP PACKAGE package3;
+-- 测试用例 10: 删除不存在的包规范，使用 IF EXISTS 关键字，且指定模式
+DROP PACKAGE IF EXISTS schema1.non_existent_package

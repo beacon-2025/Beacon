@@ -1,0 +1,31 @@
+-- 创建一些表空间用于测试
+CREATE TABLESPACE TS1;
+CREATE TABLESPACE TS2;
+CREATE TABLESPACE TS3;
+-- 测试用例 1: 删除存在的表空间
+DROP TABLESPACE TS1;
+-- 测试用例 2: 删除不存在的表空间（不使用IF EXISTS）
+-- 预期结果：报错
+DROP TABLESPACE NON_EXISTENT_TS;
+-- 测试用例 3: 删除不存在的表空间（使用IF EXISTS）
+-- 预期结果：不报错
+DROP TABLESPACE IF EXISTS NON_EXISTENT_TS;
+-- 测试用例 4: 删除存在的表空间（使用IF EXISTS）
+DROP TABLESPACE IF EXISTS TS2;
+-- 测试用例 5: 尝试删除系统表空间（SYSTEM）
+-- 预期结果：报错
+DROP TABLESPACE SYSTEM;
+-- 测试用例 6: 尝试删除系统表空间（RLOG）
+-- 预期结果：报错
+DROP TABLESPACE RLOG;
+-- 测试用例 7: 尝试删除系统表空间（ROLL）
+-- 预期结果：报错
+DROP TABLESPACE ROLL;
+-- 测试用例 8: 尝试删除系统表空间（TEMP）
+-- 预期结果：报错
+DROP TABLESPACE TEMP;
+-- 测试用例 9: 删除存在的表空间（TS3）
+DROP TABLESPACE TS3;
+-- 测试用例 10: 删除不存在的表空间（使用IF EXISTS，且表空间名包含特殊字符）
+-- 预期结果：不报错
+DROP TABLESPACE IF EXISTS `TS_SPECIAL@#`

@@ -1,0 +1,2 @@
+
+SET @@session.max_join_size = DEFAULT

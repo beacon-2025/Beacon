@@ -1,0 +1,12 @@
+```
+STAT -> 'STAT' PERCENT 'ON' STAT_OBJECT GLOBAL_OPTION
+PERCENT -> 'percent_value'
+STAT_OBJECT -> TABLE_STAT | INDEX_STAT
+TABLE_STAT -> SCHEMA_NAME '.' TABLE_NAME '(' COLUMN_NAME ')'
+INDEX_STAT -> 'INDEX' SCHEMA_NAME '.' INDEX_NAME
+SCHEMA_NAME -> 'schemaname_1'
+TABLE_NAME -> 'tablename_1'
+COLUMN_NAME -> 'column_name_1' | 'column_name_1' ',' 'column_name_2'
+INDEX_NAME -> 'index_name_1'
+GLOBAL_OPTION -> 'GLOBAL' | ''
+```

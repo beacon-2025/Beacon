@@ -1,0 +1,5 @@
+
+#
+# as well as the action list for DEBUG_SYNC
+#    
+#    let $debug_sync_action= 'now signal signal_name'

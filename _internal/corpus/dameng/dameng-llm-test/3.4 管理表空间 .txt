@@ -1,0 +1,229 @@
+-- 创建一个公共的表空间，供后续测试用例使用
+CREATE TABLESPACE common_tablespace
+DATAFILE '/var/lib/db/common_tablespace.dbf'
+SIZE 100M;
+CREATE TABLESPACE test_tablespace_1
+DATAFILE '/var/lib/db/test_tablespace_1.dbf'
+SIZE 50M;
+CREATE TABLESPACE test_tablespace_2
+DATAFILE '/var/lib/db/test_tablespace_2.dbf'
+SIZE 50M
+AUTOEXTEND ON NEXT 10M MAXSIZE 200M;
+CREATE TABLESPACE test_tablespace_3
+DATAFILE '/var/lib/db/test_tablespace_3_1.dbf' SIZE 20M,
+         '/var/lib/db/test_tablespace_3_2.dbf' SIZE 30M;
+DROP TABLESPACE test_tablespace_1
+INCLUDING CONTENTS AND DATAFILES;
+ALTER TABLESPACE test_tablespace_2
+ADD DATAFILE '/var/lib/db/test_tablespace_2_2.dbf'
+SIZE 50M;
+ALTER TABLESPACE test_tablespace_3 READ ONLY;
+ALTER TABLESPACE test_tablespace_3 READ WRITE;
+CREATE TABLESPACE test_tablespace_4
+DATAFILE '/var/lib/db/test_tablespace_4.dbf'
+SIZE 50M
+LOGGING;
+CREATE TABLESPACE test_tablespace_5
+DATAFILE '/var/lib/db/test_tablespace_5.dbf'
+SIZE 50M
+NOLOGGING;
+CREATE TABLESPACE test_tablespace_6
+DATAFILE '/var/lib/db/test_tablespace_6.dbf'
+SIZE 50M
+BLOCKSIZE 8K;
+CREATE TABLESPACE test_tablespace_7
+DATAFILE '/var/lib/db/test_tablespace_7.dbf'
+SIZE 50M
+SEGMENT SPACE MANAGEMENT AUTO;
+CREATE TABLESPACE test_tablespace_8
+DATAFILE '/var/lib/db/test_tablespace_8.dbf'
+SIZE 50M
+EXTENT MANAGEMENT LOCAL;
+CREATE TABLESPACE test_tablespace_9
+DATAFILE '/var/lib/db/test_tablespace_9.dbf'
+SIZE 50M
+UNIFORM SIZE 1M;
+CREATE TABLESPACE test_tablespace_10
+DATAFILE '/var/lib/db/test_tablespace_10.dbf'
+SIZE 50M
+EXTENT MANAGEMENT LOCAL AUTOALLOCATE;
+CREATE TABLESPACE test_tablespace_11
+DATAFILE '/var/lib/db/test_tablespace_11.dbf'
+SIZE 50M
+DEFAULT STORAGE (INITIAL 1M NEXT 1M);
+CREATE TABLESPACE test_tablespace_12
+DATAFILE '/var/lib/db/test_tablespace_12.dbf'
+SIZE 50M
+COMPRESS;
+CREATE TABLESPACE test_tablespace_13
+DATAFILE '/var/lib/db/test_tablespace_13.dbf'
+SIZE 50M
+ENCRYPTION USING 'AES256';
+CREATE TABLESPACE test_tablespace_14
+DATAFILE '/var/lib/db/test_tablespace_14.dbf'
+SIZE 50M
+DEFAULT TABLE COMPRESS;
+CREATE TABLESPACE test_tablespace_15
+DATAFILE '/var/lib/db/test_tablespace_15.dbf'
+SIZE 50M
+DEFAULT INDEX COMPRESS;
+CREATE TABLESPACE test_tablespace_16
+DATAFILE '/var/lib/db/test_tablespace_16.dbf'
+SIZE 50M
+DEFAULT LOB COMPRESS;
+CREATE TABLESPACE test_tablespace_17
+DATAFILE '/var/lib/db/test_tablespace_17.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_18
+DATAFILE '/var/lib/db/test_tablespace_18.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_19
+DATAFILE '/var/lib/db/test_tablespace_19.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_20
+DATAFILE '/var/lib/db/test_tablespace_20.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_21
+DATAFILE '/var/lib/db/test_tablespace_21.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_22
+DATAFILE '/var/lib/db/test_tablespace_22.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_23
+DATAFILE '/var/lib/db/test_tablespace_23.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_24
+DATAFILE '/var/lib/db/test_tablespace_24.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_25
+DATAFILE '/var/lib/db/test_tablespace_25.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_26
+DATAFILE '/var/lib/db/test_tablespace_26.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_27
+DATAFILE '/var/lib/db/test_tablespace_27.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_28
+DATAFILE '/var/lib/db/test_tablespace_28.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_29
+DATAFILE '/var/lib/db/test_tablespace_29.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_30
+DATAFILE '/var/lib/db/test_tablespace_30.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_31
+DATAFILE '/var/lib/db/test_tablespace_31.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_32
+DATAFILE '/var/lib/db/test_tablespace_32.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_33
+DATAFILE '/var/lib/db/test_tablespace_33.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_34
+DATAFILE '/var/lib/db/test_tablespace_34.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_35
+DATAFILE '/var/lib/db/test_tablespace_35.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_36
+DATAFILE '/var/lib/db/test_tablespace_36.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_37
+DATAFILE '/var/lib/db/test_tablespace_37.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_38
+DATAFILE '/var/lib/db/test_tablespace_38.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_39
+DATAFILE '/var/lib/db/test_tablespace_39.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_40
+DATAFILE '/var/lib/db/test_tablespace_40.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_41
+DATAFILE '/var/lib/db/test_tablespace_41.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_42
+DATAFILE '/var/lib/db/test_tablespace_42.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_43
+DATAFILE '/var/lib/db/test_tablespace_43.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_44
+DATAFILE '/var/lib/db/test_tablespace_44.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_45
+DATAFILE '/var/lib/db/test_tablespace_45.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_46
+DATAFILE '/var/lib/db/test_tablespace_46.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_47
+DATAFILE '/var/lib/db/test_tablespace_47.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_48
+DATAFILE '/var/lib/db/test_tablespace_48.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_49
+DATAFILE '/var/lib/db/test_tablespace_49.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_50
+DATAFILE '/var/lib/db/test_tablespace_50.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_51
+DATAFILE '/var/lib/db/test_tablespace_51.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_52
+DATAFILE '/var/lib/db/test_tablespace_52.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_53
+DATAFILE '/var/lib/db/test_tablespace_53.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_54
+DATAFILE '/var/lib/db/test_tablespace_54.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (DISABLE STORAGE IN ROW);
+CREATE TABLESPACE test_tablespace_55
+DATAFILE '/var/lib/db/test_tablespace_55.dbf'
+SIZE 50M
+DEFAULT LOB STORAGE (ENABLE STORAGE IN ROW)

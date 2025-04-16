@@ -1,0 +1,9 @@
+```plaintext
+MATERIALIZED_VIEW_TYPE -> 'SIMPLE' | 'AGGREGATE' | 'JOIN' | 'SUB_QUERY' | 'SETS' | 'COMPLEX'
+SIMPLE -> '无GROUP BY，无聚集函数，无连接操作'
+AGGREGATE -> '仅包含有GROUP BY和聚集函数'
+JOIN -> '仅包含有多表连接'
+SUB_QUERY -> '仅包含有子查询'
+SETS -> '包含UNION ALL'
+COMPLEX -> '除上述五种外的物化视图类型'
+```

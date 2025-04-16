@@ -1,0 +1,180 @@
+-- 创建模式
+CREATE SCHEMA test_schema;
+-- 创建类型
+CREATE TYPE test_schema.type1 AS OBJECT (
+    attr1 NUMBER,
+    attr2 VARCHAR2(50)
+);
+CREATE TYPE test_schema.type2 AS OBJECT (
+    attr1 NUMBER,
+    attr2 VARCHAR2(50)
+);
+-- 测试用例 1: 创建类型体，包含一个简单的过程
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    MEMBER PROCEDURE proc1 AS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('Procedure proc1 executed');
+END proc1;
+END;
+-- 测试用例 2: 创建类型体，包含一个简单的函数
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    MEMBER FUNCTION func1 RETURN NUMBER AS
+    BEGIN
+        RETURN 1;
+END func1;
+END;
+-- 测试用例 3: 创建类型体，包含一个静态过程
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    STATIC PROCEDURE static_proc1 AS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('Static procedure static_proc1 executed');
+END static_proc1;
+END;
+-- 测试用例 4: 创建类型体，包含一个静态函数
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    STATIC FUNCTION static_func1 RETURN NUMBER AS
+    BEGIN
+        RETURN 2;
+END static_func1;
+END;
+-- 测试用例 5: 创建类型体，包含一个构造函数
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    CONSTRUCTOR FUNCTION type1 RETURN SELF AS RESULT AS
+    BEGIN
+        SELF.attr1 := 10;
+SELF.attr2 := 'Constructor';
+RETURN SELF;
+END type1;
+END;
+-- 测试用例 6: 创建类型体，包含一个重载过程
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    OVERRIDING MEMBER PROCEDURE proc1 AS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('Overriding procedure proc1 executed');
+END proc1;
+END;
+-- 测试用例 7: 创建类型体，包含一个重载函数
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    OVERRIDING MEMBER FUNCTION func1 RETURN NUMBER AS
+    BEGIN
+        RETURN 3;
+END func1;
+END;
+-- 测试用例 8: 创建类型体，包含一个最终过程
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    FINAL MEMBER PROCEDURE final_proc1 AS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('Final procedure final_proc1 executed');
+END final_proc1;
+END;
+-- 测试用例 9: 创建类型体，包含一个最终函数
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    FINAL MEMBER FUNCTION final_func1 RETURN NUMBER AS
+    BEGIN
+        RETURN 4;
+END final_func1;
+END;
+-- 测试用例 10: 创建类型体，包含一个不可实例化的过程
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    NOT INSTANTIABLE MEMBER PROCEDURE non_instantiable_proc1 AS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('Non-instantiable procedure non_instantiable_proc1 executed');
+END non_instantiable_proc1;
+END;
+-- 测试用例 11: 创建类型体，包含一个不可实例化的函数
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    NOT INSTANTIABLE MEMBER FUNCTION non_instantiable_func1 RETURN NUMBER AS
+    BEGIN
+        RETURN 5;
+END non_instantiable_func1;
+END;
+-- 测试用例 12: 创建类型体，包含一个管道函数
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    PIPELINED FUNCTION pipelined_func1 RETURN NUMBER AS
+    BEGIN
+        PIPE ROW(6);
+RETURN;
+END pipelined_func1;
+END;
+-- 测试用例 13: 创建类型体，包含一个确定性函数
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    DETERMINISTIC FUNCTION deterministic_func1 RETURN NUMBER AS
+    BEGIN
+        RETURN 7;
+END deterministic_func1;
+END;
+-- 测试用例 14: 创建类型体，包含一个带有参数的过程
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    MEMBER PROCEDURE proc_with_params(param1 NUMBER, param2 VARCHAR2) AS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('Procedure with params executed: ' || param1 || ', ' || param2);
+END proc_with_params;
+END;
+-- 测试用例 15: 创建类型体，包含一个带有参数的函数
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    MEMBER FUNCTION func_with_params(param1 NUMBER, param2 VARCHAR2) RETURN NUMBER AS
+    BEGIN
+        RETURN param1;
+END func_with_params;
+END;
+-- 测试用例 16: 创建类型体，包含一个带有加密的类型体
+CREATE OR REPLACE TYPE BODY test_schema.type1 WITH ENCRYPTION AS
+    MEMBER PROCEDURE encrypted_proc1 AS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('Encrypted procedure encrypted_proc1 executed');
+END encrypted_proc1;
+END;
+-- 测试用例 17: 创建类型体，包含多个过程
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    MEMBER PROCEDURE proc1 AS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('Procedure proc1 executed');
+END proc1;
+MEMBER PROCEDURE proc2 AS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('Procedure proc2 executed');
+END proc2;
+END;
+-- 测试用例 18: 创建类型体，包含多个函数
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    MEMBER FUNCTION func1 RETURN NUMBER AS
+    BEGIN
+        RETURN 1;
+END func1;
+MEMBER FUNCTION func2 RETURN NUMBER AS
+    BEGIN
+        RETURN 2;
+END func2;
+END;
+-- 测试用例 19: 创建类型体，包含多个构造函数
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    CONSTRUCTOR FUNCTION type1 RETURN SELF AS RESULT AS
+    BEGIN
+        SELF.attr1 := 10;
+SELF.attr2 := 'Constructor1';
+RETURN SELF;
+END type1;
+CONSTRUCTOR FUNCTION type1(param1 NUMBER) RETURN SELF AS RESULT AS
+    BEGIN
+        SELF.attr1 := param1;
+SELF.attr2 := 'Constructor2';
+RETURN SELF;
+END type1;
+END;
+-- 测试用例 20: 创建类型体，包含多个不同类型的定义
+CREATE OR REPLACE TYPE BODY test_schema.type1 AS
+    MEMBER PROCEDURE proc1 AS
+    BEGIN
+        DBMS_OUTPUT.PUT_LINE('Procedure proc1 executed');
+END proc1;
+MEMBER FUNCTION func1 RETURN NUMBER AS
+    BEGIN
+        RETURN 1;
+END func1;
+CONSTRUCTOR FUNCTION type1 RETURN SELF AS RESULT AS
+    BEGIN
+        SELF.attr1 := 10;
+SELF.attr2 := 'Constructor';
+RETURN SELF;
+END type1;
+END

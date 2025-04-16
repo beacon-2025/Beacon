@@ -1,0 +1,25 @@
+```plaintext
+OBJECT_TYPE -> CLASS_TYPE | RECORD_TYPE | ARRAY_TYPE | COLLECTION_TYPE
+CLASS_TYPE -> '类类型'
+RECORD_TYPE -> '记录类型'
+ARRAY_TYPE -> '数组类型'
+COLLECTION_TYPE -> '集合类型'
+
+USER_DEFINED_TYPE -> '用户自定义数据类型'
+ELEMENT_TYPE -> '元素类型'
+MEMBER_VARIABLE_TYPE -> '成员变量类型'
+
+TABLE_COLUMN_TYPE -> OBJECT_TYPE
+NESTED_TYPE -> '嵌套使用的数据类型'
+INDEX_TABLE_TYPE -> '索引表类型'
+CURSOR_TYPE -> '游标类型'
+
+OBJECT_TYPE_USAGE -> '对象类型可以直接作为表中列的数据类型'
+OTHER_TYPE_USAGE -> '其他类型只能作为对象类型中成员变量的类型或类型中嵌套使用的数据类型'
+RESTRICTED_OBJECT_TYPE -> '含有索引表类型和游标类型的对象类型也不能作为表中列的数据类型'
+
+USAGE_RULE_1 -> '对象类型与类等价，类的使用规则可详见第12章《类类型》'
+USAGE_RULE_2 -> '创建的记录类型、数组类型和集合类型，可以直接在 DMSQL程序语句块中使用，不必在语句块中声明类型'
+USAGE_RULE_3 -> '用户自定义数据类型可以作为其他用户自定义数据类型的元素类型或成员变量类型'
+USAGE_RULE_4 -> '只有对象类型可以直接作为表中列的数据类型；其他类型只能作为对象类型中成员变量的类型或类型中嵌套使用的数据类型。但含有索引表类型和游标类型的对象类型也不能作为表中列的数据类型'
+```

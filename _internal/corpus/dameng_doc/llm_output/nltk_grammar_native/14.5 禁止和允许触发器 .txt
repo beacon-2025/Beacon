@@ -1,0 +1,5 @@
+```nltk
+ALTER_TRIGGER -> 'ALTER' 'TRIGGER' TRIGGER_NAME TRIGGER_STATE
+TRIGGER_NAME -> 'schemaname_1' '.' 'triggername_1'
+TRIGGER_STATE -> 'DISABLE' | 'ENABLE'
+```

@@ -1,0 +1,4 @@
+
+
+# Make sure we found the metadata lock to test.
+select @oib is not null, @o_tid is not null, @o_eid is not null

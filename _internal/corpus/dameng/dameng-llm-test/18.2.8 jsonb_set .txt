@@ -1,0 +1,51 @@
+-- 公共前置语句：创建测试表
+CREATE TABLE test_json_table (
+    id INT PRIMARY KEY,
+    json_data VARCHAR(1000)
+);
+-- 插入一些初始数据
+INSERT INTO test_json_table (id, json_data) VALUES (1, '[{"f1":{"a":1}}]');
+INSERT INTO test_json_table (id, json_data) VALUES (2, '{"key1":"value1","key2":"value2"}');
+INSERT INTO test_json_table (id, json_data) VALUES (3, '[1, 2, 3]');
+INSERT INTO test_json_table (id, json_data) VALUES (4, '{"nested":{"a":1,"b":2}}');
+INSERT INTO test_json_table (id, json_data) VALUES (5, NULL);
+-- 测试用例 1: 替换JSON字符串中的一项，替换为NUMBER类型
+SELECT jsonb_set(json_data, '{0,f1,a}', '15') FROM test_json_table WHERE id = 1;
+-- 测试用例 2: 替换JSON字符串中的一项，替换为STRING类型
+SELECT jsonb_set(json_data, '{0,f1,a}', '"str"') FROM test_json_table WHERE id = 1;
+-- 测试用例 3: <path_exp2>指定项不存在，且<exp4>为TRUE，新增一项
+SELECT jsonb_set(json_data, '{0,f1,b}', '15', true) FROM test_json_table WHERE id = 1;
+-- 测试用例 4: <path_exp2>指定项不存在，且<exp4>为FALSE，保持不变
+SELECT jsonb_set(json_data, '{0,f1,b}', '15', false) FROM test_json_table WHERE id = 1;
+-- 测试用例 5: 当参数<JSON_exp1>为NULL时，返回NULL
+SELECT jsonb_set(json_data, '{0,f1,a}', '15') FROM test_json_table WHERE id = 5;
+-- 测试用例 6: 当参数<JSON_exp1>对应的JSON数据类型不是OBJECT或ARRAY时，报错
+SELECT jsonb_set('1', '{}', '15') FROM dual;
+-- 测试用例 7: 替换嵌套JSON对象中的值
+SELECT jsonb_set(json_data, '{nested,a}', '10') FROM test_json_table WHERE id = 4;
+-- 测试用例 8: 替换JSON数组中的值
+SELECT jsonb_set(json_data, '{1}', '20') FROM test_json_table WHERE id = 3;
+-- 测试用例 9: 替换JSON对象中的值，路径标识符为字符串
+SELECT jsonb_set(json_data, '{key1}', '"new_value"') FROM test_json_table WHERE id = 2;
+-- 测试用例 10: 替换JSON数组中的值，路径标识符为负整数
+SELECT jsonb_set(json_data, '{-1}', '30') FROM test_json_table WHERE id = 3;
+-- 测试用例 11: 替换JSON对象中的值，路径标识符包含转义字符
+SELECT jsonb_set('{"a\tb":"value"}', '{a b}', '"new_value"') FROM dual;
+-- 测试用例 12: 替换JSON数组中的值，路径标识符为多个
+SELECT jsonb_set(json_data, '{0,f1,a}', '100') FROM test_json_table WHERE id = 1;
+-- 测试用例 13: 替换JSON对象中的值，路径标识符为多个
+SELECT jsonb_set(json_data, '{nested,b}', '200') FROM test_json_table WHERE id = 4;
+-- 测试用例 14: 替换JSON数组中的值，路径标识符为多个
+SELECT jsonb_set(json_data, '{0,1}', '300') FROM test_json_table WHERE id = 3;
+-- 测试用例 15: 替换JSON对象中的值，路径标识符为多个
+SELECT jsonb_set(json_data, '{key1,key2}', '"new_value"') FROM test_json_table WHERE id = 2;
+-- 测试用例 16: 替换JSON数组中的值，路径标识符为多个
+SELECT jsonb_set(json_data, '{0,1,2}', '400') FROM test_json_table WHERE id = 3;
+-- 测试用例 17: 替换JSON对象中的值，路径标识符为多个
+SELECT jsonb_set(json_data, '{nested,a,b}', '500') FROM test_json_table WHERE id = 4;
+-- 测试用例 18: 替换JSON数组中的值，路径标识符为多个
+SELECT jsonb_set(json_data, '{0,1,2,3}', '600') FROM test_json_table WHERE id = 3;
+-- 测试用例 19: 替换JSON对象中的值，路径标识符为多个
+SELECT jsonb_set(json_data, '{key1,key2,key3}', '"new_value"') FROM test_json_table WHERE id = 2;
+-- 测试用例 20: 替换JSON数组中的值，路径标识符为多个
+SELECT jsonb_set(json_data, '{0,1,2,3,4}', '700') FROM test_json_table WHERE id = 3

@@ -1,0 +1,13 @@
+```
+S -> CURSOR_DECLARATION | CURSOR_OPEN | CURSOR_FETCH | CURSOR_CLOSE
+
+CURSOR_DECLARATION -> 'DECLARE' 'cursor_name_1' 'CURSOR' 'FOR' SELECT_STATEMENT
+SELECT_STATEMENT -> 'select_statement_unknown'
+
+CURSOR_OPEN -> 'OPEN' 'cursor_name_1'
+
+CURSOR_FETCH -> 'FETCH' 'NEXT' 'FROM' 'cursor_name_1' 'INTO' VAR_LIST
+VAR_LIST -> 'var_name_1' | 'var_name_1' ',' VAR_LIST
+
+CURSOR_CLOSE -> 'CLOSE' 'cursor_name_1'
+```

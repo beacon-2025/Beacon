@@ -1,0 +1,4 @@
+
+
+# Expect no setup_objects
+select count(*) from performance_schema.setup_objects

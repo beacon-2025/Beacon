@@ -1,0 +1,93 @@
+-- 公共前置语句
+SET SCHEMA OTHER;
+-- 创建被引用表 DEPTTAB
+CREATE TABLE DEPTTAB (
+    Deptno INT PRIMARY KEY,
+    Deptname VARCHAR(50)
+);
+-- 创建引用表 EMPTAB
+CREATE TABLE EMPTAB (
+    Empno INT PRIMARY KEY,
+    Empname VARCHAR(50),
+    Deptno INT,
+    FOREIGN KEY (Deptno) REFERENCES DEPTTAB(Deptno)
+);
+-- 创建工资范围表 SALGRADE
+CREATE TABLE SALGRADE (
+    Job_classification VARCHAR(50) PRIMARY KEY,
+    Losal FLOAT,
+    Hisal FLOAT
+);
+-- 设置回默认模式
+SET SCHEMA SYSDBA;
+-- 测试用例1: 创建触发器 Dept_del_upd_cascade，用于级联删除和更新
+SET SCHEMA OTHER;
+CREATE OR REPLACE TRIGGER Dept_del_upd_cascade
+AFTER DELETE OR UPDATE ON DEPTTAB FOR EACH ROW
+BEGIN
+    IF DELETING THEN
+        DELETE FROM EMPTAB
+        WHERE Deptno = :old.Deptno;
+ELSE
+        UPDATE EMPTAB SET Deptno = :new.Deptno
+        WHERE Deptno = :old.Deptno;
+END IF;
+END;
+SET SCHEMA SYSDBA;
+-- 测试用例2: 创建触发器 Salary_check，用于检查工资范围和涨幅
+SET SCHEMA OTHER;
+CREATE OR REPLACE TRIGGER Salary_check
+BEFORE INSERT OR UPDATE ON EMPTAB
+FOR EACH ROW
+DECLARE
+    Minsal FLOAT;
+Maxsal FLOAT;
+Salary_out_of_range EXCEPTION FOR -20002;
+BEGIN
+    -- 取该员工所属工种的工资范围
+    SELECT Losal, Hisal INTO Minsal, Maxsal FROM SALGRADE
+    WHERE Job_classification = :new.Job;
+-- 如果工资超出工资范围，报告异常
+    IF (:new.Sal < Minsal OR :new.Sal > Maxsal) THEN
+        RAISE Salary_out_of_range;
+END IF;
+-- 如果工资涨幅超出 25%，报告异常
+    IF UPDATING AND (:new.Sal - :old.Sal) / :old.Sal > 0.25 THEN
+        RAISE Salary_out_of_range;
+END IF;
+END;
+SET SCHEMA SYSDBA;
+-- 测试用例3: 插入数据到 DEPTTAB 和 EMPTAB，并测试触发器 Dept_del_upd_cascade
+SET SCHEMA OTHER;
+-- 插入部门数据
+INSERT INTO DEPTTAB (Deptno, Deptname) VALUES (1, 'HR');
+INSERT INTO DEPTTAB (Deptno, Deptname) VALUES (2, 'IT');
+-- 插入员工数据
+INSERT INTO EMPTAB (Empno, Empname, Deptno) VALUES (101, 'Alice', 1);
+INSERT INTO EMPTAB (Empno, Empname, Deptno) VALUES (102, 'Bob', 2);
+-- 更新部门编号，测试触发器
+UPDATE DEPTTAB SET Deptno = 3 WHERE Deptno = 1;
+-- 删除部门，测试触发器
+DELETE FROM DEPTTAB WHERE Deptno = 2;
+SET SCHEMA SYSDBA;
+-- 测试用例4: 插入数据到 SALGRADE 和 EMPTAB，并测试触发器 Salary_check
+SET SCHEMA OTHER;
+-- 插入工资范围数据
+INSERT INTO SALGRADE (Job_classification, Losal, Hisal) VALUES ('Manager', 5000, 10000);
+INSERT INTO SALGRADE (Job_classification, Losal, Hisal) VALUES ('Developer', 3000, 6000);
+-- 插入员工数据，测试触发器
+INSERT INTO EMPTAB (Empno, Empname, Deptno, Job, Sal) VALUES (103, 'Charlie', 3, 'Manager', 7000);
+-- 更新员工工资，测试触发器
+UPDATE EMPTAB SET Sal = 8000 WHERE Empno = 103;
+-- 尝试插入超出范围的工资，应触发异常
+INSERT INTO EMPTAB (Empno, Empname, Deptno, Job, Sal) VALUES (104, 'David', 3, 'Developer', 2000);
+-- 尝试更新工资涨幅超过25%，应触发异常
+UPDATE EMPTAB SET Sal = 10000 WHERE Empno = 103;
+SET SCHEMA SYSDBA;
+-- 测试用例5: 测试触发器 Salary_check 的异常处理
+SET SCHEMA OTHER;
+-- 插入员工数据，工资超出范围，应触发异常
+INSERT INTO EMPTAB (Empno, Empname, Deptno, Job, Sal) VALUES (105, 'Eve', 3, 'Developer', 7000);
+-- 更新员工工资，涨幅超过25%，应触发异常
+UPDATE EMPTAB SET Sal = 10000 WHERE Empno = 103;
+SET SCHEMA SYSDBA

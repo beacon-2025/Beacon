@@ -1,0 +1,3 @@
+
+
+set session sql_log_bin=1

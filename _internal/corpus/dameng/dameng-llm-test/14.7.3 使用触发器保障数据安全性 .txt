@@ -1,0 +1,76 @@
+-- 创建模式OTHER
+CREATE SCHEMA OTHER;
+-- 创建表OTHER.EMPTAB
+CREATE TABLE OTHER.EMPTAB (
+    EmpID INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Sal DECIMAL(10, 2)
+);
+-- 创建表OTHER.COMPANYHOLIDAYS
+CREATE TABLE OTHER.COMPANYHOLIDAYS (
+    Holiday DATE PRIMARY KEY
+);
+-- 插入一些节假日数据
+INSERT INTO OTHER.COMPANYHOLIDAYS (Holiday) VALUES ('2023-12-25');
+INSERT INTO OTHER.COMPANYHOLIDAYS (Holiday) VALUES ('2023-01-01');
+-- 创建触发器Emp_permit_changes
+CREATE OR REPLACE TRIGGER OTHER.Emp_permit_changes
+BEFORE INSERT OR DELETE OR UPDATE
+ON OTHER.EMPTAB
+DECLARE
+   Dummy  INTEGER;
+Invalid_Operate_time EXCEPTION FOR -20002;
+BEGIN
+   /* 检查是否周末 */
+   IF (DAYNAME(Sysdate) = 'Saturday' OR
+      DAYNAME(Sysdate) = 'Sunday') THEN
+      RAISE Invalid_Operate_time;
+END IF;
+/* 检查是否节假日 */
+   SELECT COUNT(*) INTO Dummy FROM OTHER.COMPANYHOLIDAYS
+      WHERE Holiday= Current_date;
+IF dummy > 0 THEN
+      RAISE Invalid_Operate_time;
+END IF;
+/* 检查是否上班时间 */
+   IF (EXTRACT(HOUR FROM Current_time) < 8 OR
+       EXTRACT(HOUR FROM Current_time) >= 18) THEN
+       RAISE Invalid_Operate_time;
+END IF;
+END;
+-- 尝试在非工作时间插入数据
+-- 假设当前时间为周末或节假日或非工作时间
+INSERT INTO OTHER.EMPTAB (EmpID, Name, Sal) VALUES (1, 'John Doe', 5000.00);
+-- 尝试在工作时间插入数据
+-- 假设当前时间为工作日且在工作时间内
+INSERT INTO OTHER.EMPTAB (EmpID, Name, Sal) VALUES (2, 'Jane Doe', 6000.00);
+-- 尝试在非工作时间更新数据
+-- 假设当前时间为周末或节假日或非工作时间
+UPDATE OTHER.EMPTAB SET Sal = 7000.00 WHERE EmpID = 2;
+-- 尝试在工作时间更新数据
+-- 假设当前时间为工作日且在工作时间内
+UPDATE OTHER.EMPTAB SET Sal = 8000.00 WHERE EmpID = 2;
+-- 尝试在非工作时间删除数据
+-- 假设当前时间为周末或节假日或非工作时间
+DELETE FROM OTHER.EMPTAB WHERE EmpID = 2;
+-- 尝试在工作时间删除数据
+-- 假设当前时间为工作日且在工作时间内
+DELETE FROM OTHER.EMPTAB WHERE EmpID = 2;
+-- 尝试在非工作时间插入节假日数据
+-- 假设当前时间为周末或节假日或非工作时间
+INSERT INTO OTHER.COMPANYHOLIDAYS (Holiday) VALUES ('2023-07-04');
+-- 尝试在工作时间插入节假日数据
+-- 假设当前时间为工作日且在工作时间内
+INSERT INTO OTHER.COMPANYHOLIDAYS (Holiday) VALUES ('2023-07-04');
+-- 尝试在非工作时间更新节假日数据
+-- 假设当前时间为周末或节假日或非工作时间
+UPDATE OTHER.COMPANYHOLIDAYS SET Holiday = '2023-07-05' WHERE Holiday = '2023-07-04';
+-- 尝试在工作时间更新节假日数据
+-- 假设当前时间为工作日且在工作时间内
+UPDATE OTHER.COMPANYHOLIDAYS SET Holiday = '2023-07-05' WHERE Holiday = '2023-07-04';
+-- 尝试在非工作时间删除节假日数据
+-- 假设当前时间为周末或节假日或非工作时间
+DELETE FROM OTHER.COMPANYHOLIDAYS WHERE Holiday = '2023-07-04';
+-- 尝试在工作时间删除节假日数据
+-- 假设当前时间为工作日且在工作时间内
+DELETE FROM OTHER.COMPANYHOLIDAYS WHERE Holiday = '2023-07-04'

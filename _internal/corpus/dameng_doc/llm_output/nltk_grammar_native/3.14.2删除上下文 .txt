@@ -1,0 +1,5 @@
+```plaintext
+DROP_CONTEXT -> 'DROP' 'CONTEXT' IF_EXISTS_OPTION NAMESPACE
+IF_EXISTS_OPTION -> 'IF' 'EXISTS' | ''
+NAMESPACE -> 'namespace_name_1'
+```

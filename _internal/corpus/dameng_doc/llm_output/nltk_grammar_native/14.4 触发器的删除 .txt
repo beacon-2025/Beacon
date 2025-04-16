@@ -1,0 +1,6 @@
+```nltk
+DROP_TRIGGER -> 'DROP' 'TRIGGER' IF_EXISTS SCHEMA_NAME '.' TRIGGER_NAME
+IF_EXISTS -> 'IF EXISTS' | ''
+SCHEMA_NAME -> 'schemaname_1'
+TRIGGER_NAME -> 'triggername_1'
+```
