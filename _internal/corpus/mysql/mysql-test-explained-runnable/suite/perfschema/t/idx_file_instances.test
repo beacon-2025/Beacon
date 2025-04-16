@@ -1,0 +1,5 @@
+
+
+select FILE_NAME, EVENT_NAME from performance_schema.file_instances
+  limit 1
+  into @fname, @ename

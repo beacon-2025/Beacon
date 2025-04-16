@@ -1,0 +1,6 @@
+```nltk
+S -> DROP_INDEX
+DROP_INDEX -> 'DROP' 'INDEX' IF_EXISTS SCHEMA_NAME_INDEX_NAME
+IF_EXISTS -> 'IF EXISTS' | ''
+SCHEMA_NAME_INDEX_NAME -> 'schema_name_1' '.' 'index_name_1' | 'index_name_1'
+```

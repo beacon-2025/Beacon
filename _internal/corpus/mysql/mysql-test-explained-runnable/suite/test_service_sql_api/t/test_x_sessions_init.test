@@ -1,0 +1,3 @@
+
+
+SHOW VARIABLES LIKE '%test_x_session%'

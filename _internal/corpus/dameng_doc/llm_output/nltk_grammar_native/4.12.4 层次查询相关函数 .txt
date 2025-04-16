@@ -1,0 +1,3 @@
+```plaintext
+SYS_CONNECT_BY_PATH -> 'SYS_CONNECT_BY_PATH' '(' 'col_name_1' ',' 'char_value' ')'
+```

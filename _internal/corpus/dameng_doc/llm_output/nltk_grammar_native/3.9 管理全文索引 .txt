@@ -1,0 +1,4 @@
+```plaintext
+S -> MANAGE_FULLTEXT_INDEX
+MANAGE_FULLTEXT_INDEX -> '管理全文索引'
+```

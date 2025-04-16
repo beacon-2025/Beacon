@@ -1,0 +1,5 @@
+
+
+# Create a new relay log so the START REPLICA SQL_THREAD tries
+# to purge the old relay logs and hits the debug point.
+FLUSH LOCAL RELAY LOGS

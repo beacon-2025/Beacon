@@ -1,0 +1,134 @@
+15.2.12 REPLACE Statement
+REPLACE [LOW_PRIORITY | DELAYED]
+    [INTO] tbl_name
+    [PARTITION (partition_name [, partition_name] ...)]
+    [(col_name [, col_name] ...)]
+    { {VALUES | VALUE} (value_list) [, (value_list)] ...
+      |
+      VALUES row_constructor_list
+    }
+REPLACE [LOW_PRIORITY | DELAYED]
+    [INTO] tbl_name
+    [PARTITION (partition_name [, partition_name] ...)]
+    SET assignment_list
+REPLACE [LOW_PRIORITY | DELAYED]
+    [INTO] tbl_name
+    [PARTITION (partition_name [, partition_name] ...)]
+    [(col_name [, col_name] ...)]
+    {SELECT ... | TABLE table_name}
+value:
+    {expr | DEFAULT}
+value_list:
+    value [, value] ...
+row_constructor_list:
+    ROW(value_list)[, ROW(value_list)][, ...]
+assignment:
+    col_name = value
+assignment_list:
+    assignment [, assignment] ...
+REPLACE works exactly like INSERT, except that if an old row in the table has the same value as a new
+row for a PRIMARY KEY or a UNIQUE index, the old row is deleted before the new row is inserted. See
+Section 15.2.7, “INSERT Statement”.
+REPLACE is a MySQL extension to the SQL standard. It either inserts, or deletes and inserts. For
+another MySQL extension to standard SQL—that either inserts or updates—see Section 15.2.7.2,
+“INSERT ... ON DUPLICATE KEY UPDATE Statement”.
+DELAYED inserts and replaces were deprecated in MySQL 5.6. In MySQL 9.1, DELAYED is not
+supported. The server recognizes but ignores the DELAYED keyword, handles the replace as a
+nondelayed replace, and generates an ER_WARN_LEGACY_SYNTAX_CONVERTED warning: REPLACE
+DELAYED is no longer supported. The statement was converted to REPLACE. The
+DELAYED keyword is scheduled for removal in a future release. release.
+Note
+REPLACE makes sense only if a table has a PRIMARY KEY or UNIQUE index.
+Otherwise, it becomes equivalent to INSERT, because there is no index to be
+used to determine whether a new row duplicates another.
+Values for all columns are taken from the values specified in the REPLACE statement. Any
+missing columns are set to their default values, just as happens for INSERT. You cannot refer to
+values from the current row and use them in the new row. If you use an assignment such as SET
+col_name = col_name + 1, the reference to the column name on the right hand side is treated as
+DEFAULT(col_name), so the assignment is equivalent to SET col_name = DEFAULT(col_name)
++ 1.
+You can specify the column values that REPLACE attempts to insert using VALUES ROW().
+To use REPLACE, you must have both the INSERT and DELETE privileges for the table.
+If a generated column is replaced explicitly, the only permitted value is DEFAULT. For information about
+generated columns, see Section 15.1.20.8, “CREATE TABLE and Generated Columns”.
+REPLACE supports explicit partition selection using the PARTITION clause with a list of comma-
+separated names of partitions, subpartitions, or both. As with INSERT, if it is not possible to insert the
+new row into any of these partitions or subpartitions, the REPLACE statement fails with the error Found
+a row not matching the given partition set. For more information and examples, see
+Section 26.5, “Partition Selection”.
+The REPLACE statement returns a count to indicate the number of rows affected. This is the sum of the
+rows deleted and inserted. If the count is 1 for a single-row REPLACE, a row was inserted and no rows
+were deleted. If the count is greater than 1, one or more old rows were deleted before the new row was
+inserted. It is possible for a single row to replace more than one old row if the table contains multiple
+unique indexes and the new row duplicates values for different old rows in different unique indexes.
+The affected-rows count makes it easy to determine whether REPLACE only added a row or whether it
+also replaced any rows: Check whether the count is 1 (added) or greater (replaced).
+If you are using the C API, the affected-rows count can be obtained using the
+mysql_affected_rows() function.
+You cannot replace into a table and select from the same table in a subquery.
+MySQL uses the following algorithm for REPLACE (and LOAD DATA ... REPLACE):
+1. Try to insert the new row into the table
+2. While the insertion fails because a duplicate-key error occurs for a primary key or unique index:
+a. Delete from the table the conflicting row that has the duplicate key value
+b. Try again to insert the new row into the table
+It is possible that in the case of a duplicate-key error, a storage engine may perform the REPLACE as
+an update rather than a delete plus insert, but the semantics are the same. There are no user-visible
+effects other than a possible difference in how the storage engine increments Handler_xxx status
+variables.
+Because the results of REPLACE ... SELECT statements depend on the ordering of rows from the
+SELECT and this order cannot always be guaranteed, it is possible when logging these statements for
+the source and the replica to diverge. For this reason, REPLACE ... SELECT statements are flagged
+as unsafe for statement-based replication. such statements produce a warning in the error log when
+using statement-based mode and are written to the binary log using the row-based format when using
+MIXED mode. See also Section 19.2.1.1, “Advantages and Disadvantages of Statement-Based and
+Row-Based Replication”.
+MySQL 9.1 supports TABLE as well as SELECT with REPLACE, just as it does with INSERT. See
+Section 15.2.7.1, “INSERT ... SELECT Statement”, for more information and examples.
+When modifying an existing table that is not partitioned to accommodate partitioning, or, when
+modifying the partitioning of an already partitioned table, you may consider altering the table's primary
+key (see Section 26.6.1, “Partitioning Keys, Primary Keys, and Unique Keys”). You should be aware
+that, if you do this, the results of REPLACE statements may be affected, just as they would be if you
+modified the primary key of a nonpartitioned table. Consider the table created by the following CREATE
+TABLE statement:
+CREATE TABLE test (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  data VARCHAR(64) DEFAULT NULL,
+  ts TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id)
+);
+When we create this table and run the statements shown in the mysql client, the result is as follows:
+mysql> REPLACE INTO test VALUES (1, 'Old', '2014-08-20 18:47:00');
+Query OK, 1 row affected (0.04 sec)
+mysql> REPLACE INTO test VALUES (1, 'New', '2014-08-20 18:47:42');
+Query OK, 2 rows affected (0.04 sec)
+mysql> SELECT * FROM test;
++----+------+---------------------+
+| id | data | ts                  |
++----+------+---------------------+
+|  1 | New  | 2014-08-20 18:47:42 |
++----+------+---------------------+
+1 row in set (0.00 sec)
+Now we create a second table almost identical to the first, except that the primary key now covers 2
+columns, as shown here (emphasized text):
+CREATE TABLE test2 (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  data VARCHAR(64) DEFAULT NULL,
+  ts TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (id, ts)
+);
+When we run on test2 the same two REPLACE statements as we did on the original test table, we
+obtain a different result:
+mysql> REPLACE INTO test2 VALUES (1, 'Old', '2014-08-20 18:47:00');
+Query OK, 1 row affected (0.05 sec)
+mysql> REPLACE INTO test2 VALUES (1, 'New', '2014-08-20 18:47:42');
+Query OK, 1 row affected (0.06 sec)
+mysql> SELECT * FROM test2;
++----+------+---------------------+
+| id | data | ts                  |
++----+------+---------------------+
+|  1 | Old  | 2014-08-20 18:47:00 |
+|  1 | New  | 2014-08-20 18:47:42 |
++----+------+---------------------+
+2 rows in set (0.00 sec)
+This is due to the fact that, when run on test2, both the id and ts column values must match those
+of an existing row for the row to be replaced; otherwise, a row is inserted.

@@ -1,0 +1,195 @@
+-- 公共前置语句：创建表和插入数据
+CREATE TABLE j_purchaseorder1 (
+    id INT PRIMARY KEY,
+    po_document JSON
+);
+INSERT INTO j_purchaseorder1 (id, po_document) VALUES
+(1, '{"PONumber": 1600, "Status": "Pending"}'),
+(2, '{"PONumber": 1601, "Status": "Shipped"}');
+CREATE TABLE j_purchaseorder2 (
+    id INT PRIMARY KEY,
+    po_document JSON
+);
+INSERT INTO j_purchaseorder2 (id, po_document) VALUES
+(1, '{"PONumber": 1700, "Status": "Pending"}'),
+(2, '{"PONumber": 1701, "Status": "Shipped"}');
+-- 测试用例 1: 使用 json_query 返回 JSON 数据的数组形式
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER) 
+FROM j_purchaseorder1;
+-- 测试用例 2: 使用 json_query 返回 JSON 数据的数组形式，并指定 PRETTY 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER PRETTY) 
+FROM j_purchaseorder1;
+-- 测试用例 3: 使用 json_query 返回 JSON 数据的数组形式，并指定 ASCII 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER ASCII) 
+FROM j_purchaseorder1;
+-- 测试用例 4: 使用 json_query 返回 JSON 数据的数组形式，并指定 ERROR 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER ERROR ON ERROR) 
+FROM j_purchaseorder1;
+-- 测试用例 5: 使用 json_query 返回 JSON 数据的数组形式，并指定 NULL ON ERROR 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER NULL ON ERROR) 
+FROM j_purchaseorder1;
+-- 测试用例 6: 使用 json_query 返回 JSON 数据的数组形式，并指定 EMPTY ON ERROR 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER EMPTY ON ERROR) 
+FROM j_purchaseorder1;
+-- 测试用例 7: 使用 json_query 返回 JSON 数据的数组形式，并指定 WITHOUT WRAPPER 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITHOUT WRAPPER) 
+FROM j_purchaseorder1;
+-- 测试用例 8: 使用 json_query 返回 JSON 数据的数组形式，并指定 CONDITIONAL ARRAY WRAPPER 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH CONDITIONAL ARRAY WRAPPER) 
+FROM j_purchaseorder1;
+-- 测试用例 9: 使用 json_query 返回 JSON 数据的数组形式，并指定 UNCONDITIONAL ARRAY WRAPPER 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH UNCONDITIONAL ARRAY WRAPPER) 
+FROM j_purchaseorder1;
+-- 测试用例 10: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING STRING 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING STRING WITH WRAPPER) 
+FROM j_purchaseorder1;
+-- 测试用例 11: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING TRUE 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING TRUE WITH WRAPPER) 
+FROM j_purchaseorder1;
+-- 测试用例 12: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING FALSE 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING FALSE WITH WRAPPER) 
+FROM j_purchaseorder1;
+-- 测试用例 13: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING NULL 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING NULL WITH WRAPPER) 
+FROM j_purchaseorder1;
+-- 测试用例 14: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING VARCHAR 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER) 
+FROM j_purchaseorder2;
+-- 测试用例 15: 使用 json_query 返回 JSON 数据的数组形式，并指定 PRETTY 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER PRETTY) 
+FROM j_purchaseorder2;
+-- 测试用例 16: 使用 json_query 返回 JSON 数据的数组形式，并指定 ASCII 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER ASCII) 
+FROM j_purchaseorder2;
+-- 测试用例 17: 使用 json_query 返回 JSON 数据的数组形式，并指定 ERROR 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER ERROR ON ERROR) 
+FROM j_purchaseorder2;
+-- 测试用例 18: 使用 json_query 返回 JSON 数据的数组形式，并指定 NULL ON ERROR 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER NULL ON ERROR) 
+FROM j_purchaseorder2;
+-- 测试用例 19: 使用 json_query 返回 JSON 数据的数组形式，并指定 EMPTY ON ERROR 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER EMPTY ON ERROR) 
+FROM j_purchaseorder2;
+-- 测试用例 20: 使用 json_query 返回 JSON 数据的数组形式，并指定 WITHOUT WRAPPER 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITHOUT WRAPPER) 
+FROM j_purchaseorder2;
+-- 测试用例 21: 使用 json_query 返回 JSON 数据的数组形式，并指定 CONDITIONAL ARRAY WRAPPER 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH CONDITIONAL ARRAY WRAPPER) 
+FROM j_purchaseorder2;
+-- 测试用例 22: 使用 json_query 返回 JSON 数据的数组形式，并指定 UNCONDITIONAL ARRAY WRAPPER 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH UNCONDITIONAL ARRAY WRAPPER) 
+FROM j_purchaseorder2;
+-- 测试用例 23: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING STRING 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING STRING WITH WRAPPER) 
+FROM j_purchaseorder2;
+-- 测试用例 24: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING TRUE 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING TRUE WITH WRAPPER) 
+FROM j_purchaseorder2;
+-- 测试用例 25: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING FALSE 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING FALSE WITH WRAPPER) 
+FROM j_purchaseorder2;
+-- 测试用例 26: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING NULL 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING NULL WITH WRAPPER) 
+FROM j_purchaseorder2;
+-- 测试用例 27: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING VARCHAR 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITH WRAPPER) 
+FROM j_purchaseorder1;
+-- 测试用例 28: 使用 json_query 返回 JSON 数据的数组形式，并指定 PRETTY 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITH WRAPPER PRETTY) 
+FROM j_purchaseorder1;
+-- 测试用例 29: 使用 json_query 返回 JSON 数据的数组形式，并指定 ASCII 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITH WRAPPER ASCII) 
+FROM j_purchaseorder1;
+-- 测试用例 30: 使用 json_query 返回 JSON 数据的数组形式，并指定 ERROR 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITH WRAPPER ERROR ON ERROR) 
+FROM j_purchaseorder1;
+-- 测试用例 31: 使用 json_query 返回 JSON 数据的数组形式，并指定 NULL ON ERROR 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITH WRAPPER NULL ON ERROR) 
+FROM j_purchaseorder1;
+-- 测试用例 32: 使用 json_query 返回 JSON 数据的数组形式，并指定 EMPTY ON ERROR 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITH WRAPPER EMPTY ON ERROR) 
+FROM j_purchaseorder1;
+-- 测试用例 33: 使用 json_query 返回 JSON 数据的数组形式，并指定 WITHOUT WRAPPER 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITHOUT WRAPPER) 
+FROM j_purchaseorder1;
+-- 测试用例 34: 使用 json_query 返回 JSON 数据的数组形式，并指定 CONDITIONAL ARRAY WRAPPER 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITH CONDITIONAL ARRAY WRAPPER) 
+FROM j_purchaseorder1;
+-- 测试用例 35: 使用 json_query 返回 JSON 数据的数组形式，并指定 UNCONDITIONAL ARRAY WRAPPER 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITH UNCONDITIONAL ARRAY WRAPPER) 
+FROM j_purchaseorder1;
+-- 测试用例 36: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING STRING 选项
+SELECT json_query(po_document, '$.Status' RETURNING STRING WITH WRAPPER) 
+FROM j_purchaseorder1;
+-- 测试用例 37: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING TRUE 选项
+SELECT json_query(po_document, '$.Status' RETURNING TRUE WITH WRAPPER) 
+FROM j_purchaseorder1;
+-- 测试用例 38: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING FALSE 选项
+SELECT json_query(po_document, '$.Status' RETURNING FALSE WITH WRAPPER) 
+FROM j_purchaseorder1;
+-- 测试用例 39: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING NULL 选项
+SELECT json_query(po_document, '$.Status' RETURNING NULL WITH WRAPPER) 
+FROM j_purchaseorder1;
+-- 测试用例 40: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING VARCHAR 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITH WRAPPER) 
+FROM j_purchaseorder2;
+-- 测试用例 41: 使用 json_query 返回 JSON 数据的数组形式，并指定 PRETTY 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITH WRAPPER PRETTY) 
+FROM j_purchaseorder2;
+-- 测试用例 42: 使用 json_query 返回 JSON 数据的数组形式，并指定 ASCII 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITH WRAPPER ASCII) 
+FROM j_purchaseorder2;
+-- 测试用例 43: 使用 json_query 返回 JSON 数据的数组形式，并指定 ERROR 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITH WRAPPER ERROR ON ERROR) 
+FROM j_purchaseorder2;
+-- 测试用例 44: 使用 json_query 返回 JSON 数据的数组形式，并指定 NULL ON ERROR 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITH WRAPPER NULL ON ERROR) 
+FROM j_purchaseorder2;
+-- 测试用例 45: 使用 json_query 返回 JSON 数据的数组形式，并指定 EMPTY ON ERROR 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITH WRAPPER EMPTY ON ERROR) 
+FROM j_purchaseorder2;
+-- 测试用例 46: 使用 json_query 返回 JSON 数据的数组形式，并指定 WITHOUT WRAPPER 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITHOUT WRAPPER) 
+FROM j_purchaseorder2;
+-- 测试用例 47: 使用 json_query 返回 JSON 数据的数组形式，并指定 CONDITIONAL ARRAY WRAPPER 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITH CONDITIONAL ARRAY WRAPPER) 
+FROM j_purchaseorder2;
+-- 测试用例 48: 使用 json_query 返回 JSON 数据的数组形式，并指定 UNCONDITIONAL ARRAY WRAPPER 选项
+SELECT json_query(po_document, '$.Status' RETURNING VARCHAR WITH UNCONDITIONAL ARRAY WRAPPER) 
+FROM j_purchaseorder2;
+-- 测试用例 49: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING STRING 选项
+SELECT json_query(po_document, '$.Status' RETURNING STRING WITH WRAPPER) 
+FROM j_purchaseorder2;
+-- 测试用例 50: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING TRUE 选项
+SELECT json_query(po_document, '$.Status' RETURNING TRUE WITH WRAPPER) 
+FROM j_purchaseorder2;
+-- 测试用例 51: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING FALSE 选项
+SELECT json_query(po_document, '$.Status' RETURNING FALSE WITH WRAPPER) 
+FROM j_purchaseorder2;
+-- 测试用例 52: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING NULL 选项
+SELECT json_query(po_document, '$.Status' RETURNING NULL WITH WRAPPER) 
+FROM j_purchaseorder2;
+-- 测试用例 53: 使用 json_query 返回 JSON 数据的数组形式，并指定 RETURNING VARCHAR 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER) 
+FROM j_purchaseorder1 WHERE id = 1;
+-- 测试用例 54: 使用 json_query 返回 JSON 数据的数组形式，并指定 PRETTY 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER PRETTY) 
+FROM j_purchaseorder1 WHERE id = 1;
+-- 测试用例 55: 使用 json_query 返回 JSON 数据的数组形式，并指定 ASCII 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER ASCII) 
+FROM j_purchaseorder1 WHERE id = 1;
+-- 测试用例 56: 使用 json_query 返回 JSON 数据的数组形式，并指定 ERROR 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER ERROR ON ERROR) 
+FROM j_purchaseorder1 WHERE id = 1;
+-- 测试用例 57: 使用 json_query 返回 JSON 数据的数组形式，并指定 NULL ON ERROR 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER NULL ON ERROR) 
+FROM j_purchaseorder1 WHERE id = 1;
+-- 测试用例 58: 使用 json_query 返回 JSON 数据的数组形式，并指定 EMPTY ON ERROR 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH WRAPPER EMPTY ON ERROR) 
+FROM j_purchaseorder1 WHERE id = 1;
+-- 测试用例 59: 使用 json_query 返回 JSON 数据的数组形式，并指定 WITHOUT WRAPPER 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITHOUT WRAPPER) 
+FROM j_purchaseorder1 WHERE id = 1;
+-- 测试用例 60: 使用 json_query 返回 JSON 数据的数组形式，并指定 CONDITIONAL ARRAY WRAPPER 选项
+SELECT json_query(po_document, '$.PONumber' RETURNING VARCHAR WITH CONDITIONAL ARRAY WRAPPER) 
+FROM j_purchaseorder1 WHERE id = 1

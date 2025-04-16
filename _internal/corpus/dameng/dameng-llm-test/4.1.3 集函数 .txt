@@ -1,0 +1,69 @@
+-- 公共前置语句：创建测试表
+CREATE TABLE test_products (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(100),
+    original_price DECIMAL(10, 2),
+    now_price DECIMAL(10, 2),
+    discount DECIMAL(5, 2),
+    publisher VARCHAR(100),
+    type VARCHAR(50)
+);
+-- 插入测试数据
+INSERT INTO test_products (product_id, product_name, original_price, now_price, discount, publisher, type) VALUES
+(1, '红楼梦', 30.00, 25.50, 5.00, '中华书局', '小说'),
+(2, '老人与海', 20.00, 18.00, 2.00, '上海出版社', '小说'),
+(3, '射雕英雄传', 50.00, 45.00, 5.00, '广州出版社', '小说'),
+(4, '鲁迅文集', 40.00, 35.00, 5.00, '人民文学出版社', '文集'),
+(5, '长征', 25.00, 22.00, 3.00, '人民文学出版社', '历史'),
+(6, '数据结构', 60.00, 55.00, 5.00, '清华大学出版社', '教材'),
+(7, '工作中无小事', 15.00, 12.00, 3.00, '机械工业出版社', '管理'),
+(8, '突破英文基础词汇', 10.00, 8.00, 2.00, '外语教学与研究出版社', '教育'),
+(9, '噼里啪啦丛书', 35.00, 30.00, 5.00, '21世纪出版社', '儿童'),
+(10, '水浒传', 30.00, 25.00, 5.00, '中华书局', '小说');
+-- 测试用例 1: COUNT(*)
+SELECT COUNT(*) FROM test_products;
+-- 测试用例 2: COUNT(DISTINCT)
+SELECT COUNT(DISTINCT publisher) FROM test_products;
+-- 测试用例 3: AVG
+SELECT AVG(now_price) FROM test_products WHERE discount < 5;
+-- 测试用例 4: SUM
+SELECT SUM(now_price) FROM test_products WHERE discount > 5;
+-- 测试用例 5: MAX
+SELECT MAX(now_price) FROM test_products;
+-- 测试用例 6: MIN
+SELECT MIN(now_price) FROM test_products WHERE discount < 7;
+-- 测试用例 7: VARIANCE
+SELECT VARIANCE(now_price) FROM test_products;
+-- 测试用例 8: STDDEV
+SELECT STDDEV(now_price) FROM test_products;
+-- 测试用例 9: STDDEV_SAMP
+SELECT STDDEV_SAMP(now_price) FROM test_products;
+-- 测试用例 10: COVAR_POP
+SELECT COVAR_POP(original_price, now_price) FROM test_products;
+-- 测试用例 11: COVAR_SAMP
+SELECT COVAR_SAMP(original_price, now_price) FROM test_products;
+-- 测试用例 12: CORR
+SELECT CORR(original_price, now_price) FROM test_products;
+-- 测试用例 13: FIRST_VALUE
+SELECT FIRST_VALUE(product_name) FROM test_products;
+-- 测试用例 14: AREA_MAX
+SELECT AREA_MAX(now_price, 20, 30) FROM test_products;
+-- 测试用例 15: FIRST/LAST 集函数
+SELECT type, MAX(now_price) KEEP (DENSE_RANK FIRST ORDER BY now_price) AS max_val,
+       MIN(now_price) KEEP (DENSE_RANK FIRST ORDER BY now_price) AS min_val
+FROM test_products
+GROUP BY type;
+-- 测试用例 16: LISTAGG
+SELECT LISTAGG(product_name, ', ') WITHIN GROUP (ORDER BY product_name) AS product_list
+FROM test_products;
+-- 测试用例 17: LISTAGG2
+SELECT LISTAGG2(product_name, ', ') WITHIN GROUP (ORDER BY product_name) AS product_list
+FROM test_products;
+-- 测试用例 18: MEDIAN
+SELECT MEDIAN(now_price) FROM test_products GROUP BY type;
+-- 测试用例 19: WM_CONCAT
+SELECT publisher, WM_CONCAT(product_name) AS product_list
+FROM test_products
+GROUP BY publisher;
+-- 测试用例 20: 嵌套集函数
+SELECT AVG(MAX(now_price)) FROM test_products GROUP BY type

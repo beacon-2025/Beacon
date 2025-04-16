@@ -1,0 +1,5 @@
+
+
+SELECT VARIABLE_NAME, MIN_VALUE, MAX_VALUE FROM performance_schema.variables_info
+       WHERE VARIABLE_NAME LIKE '%component%'
+       ORDER BY VARIABLE_NAME

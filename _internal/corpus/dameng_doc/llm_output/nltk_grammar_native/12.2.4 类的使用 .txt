@@ -1,0 +1,21 @@
+```plaintext
+CREATE_JAVA_CLASS -> 'CREATE' 'OR' 'REPLACE' 'JAVA' 'CLASS' 'jcls_name_1' JAVA_CLASS_BODY
+JAVA_CLASS_BODY -> '{' JAVA_CLASS_MEMBERS '}'
+JAVA_CLASS_MEMBERS -> JAVA_CLASS_FIELD JAVA_CLASS_METHODS
+JAVA_CLASS_FIELD -> 'int' 'a_value'
+JAVA_CLASS_METHODS -> JAVA_STATIC_METHOD JAVA_MEMBER_METHOD
+JAVA_STATIC_METHOD -> 'public' 'static' 'int' 'testAdd2' '(' 'int' 'a_value' ',' 'int' 'b_value' ')' '{' 'return' 'a_value' '+' 'b_value' ';' '}'
+JAVA_MEMBER_METHOD -> 'public' 'int' 'testAdd3' '(' 'int' 'a_value' ',' 'int' 'b_value' ',' 'int' 'c_value' ')' '{' 'return' 'a_value' '+' 'b_value' '+' 'c_value' ';' '}'
+
+CREATE_TABLE -> 'CREATE' 'TABLE' 'tt2_name_1' '(' 'c1_value' 'int' ',' 'c2_value' 'jcls_name_1' ')'
+INSERT_STATIC_METHOD -> 'INSERT' 'INTO' 'tt2_name_1' 'VALUES' '(' 'jcls_name_1' '.' 'testadd2' '(' '1_value' ',' '2_value' ')' ',' 'jcls_name_1' '(' '1_value' ')' ')'
+INSERT_MEMBER_METHOD -> 'INSERT' 'INTO' 'tt2_name_1' 'VALUES' '(' 'jcls_name_1' '(' ')' '.' 'testadd3' '(' '1_value' ',' '2_value' ',' '3_value' ')' ',' 'jcls_name_1' '(' '2_value' ')' ')'
+
+CREATE_TYPE -> 'CREATE' 'TYPE' TYPE_BODY
+TYPE_BODY -> 'CREATE' 'TYPE' 'BODY' 'FOR' 'TYPE_NAME' '{' PROCEDURES_OR_METHODS '}'
+PROCEDURES_OR_METHODS -> PROCEDURE | METHOD
+PROCEDURE -> 'PROCEDURE' 'procedure_name_1' '(' PARAMETERS ')' 'IS' 'BEGIN' 'END' ';'
+METHOD -> 'METHOD' 'method_name_1' '(' PARAMETERS ')' 'RETURN' 'RETURN_TYPE' 'IS' 'BEGIN' 'END' ';'
+PARAMETERS -> PARAMETER | PARAMETER ',' PARAMETER
+PARAMETER -> 'parameter_name_1' 'parameter_type_1'
+```

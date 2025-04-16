@@ -1,0 +1,85 @@
+-- 创建一个测试表
+CREATE TABLE test_table_1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+-- 插入一些测试数据
+INSERT INTO test_table_1 (id, name) VALUES (1, 'Alice');
+INSERT INTO test_table_1 (id, name) VALUES (2, 'Bob');
+-- 测试用例 1: 查询当前会话的SESSID
+SELECT SESSID FROM DUAL;
+-- 测试用例 2: 在查询中使用SESSID
+SELECT id, name, SESSID FROM test_table_1;
+-- 测试用例 3: 在WHERE子句中使用SESSID
+SELECT id, name FROM test_table_1 WHERE SESSID = (SELECT SESSID FROM DUAL);
+-- 测试用例 4: 在JOIN操作中使用SESSID
+CREATE TABLE test_table_2 (
+    session_id INT,
+    description VARCHAR(100)
+);
+INSERT INTO test_table_2 (session_id, description) VALUES (1, 'Session 1');
+INSERT INTO test_table_2 (session_id, description) VALUES (2, 'Session 2');
+SELECT t1.id, t1.name, t2.description 
+FROM test_table_1 t1 
+JOIN test_table_2 t2 ON t1.id = t2.session_id 
+WHERE t2.session_id = (SELECT SESSID FROM DUAL);
+-- 测试用例 5: 在GROUP BY子句中使用SESSID
+SELECT SESSID, COUNT(*) 
+FROM test_table_1 
+GROUP BY SESSID;
+-- 测试用例 6: 在ORDER BY子句中使用SESSID
+SELECT id, name, SESSID 
+FROM test_table_1 
+ORDER BY SESSID;
+-- 测试用例 7: 在HAVING子句中使用SESSID
+SELECT SESSID, COUNT(*) 
+FROM test_table_1 
+GROUP BY SESSID 
+HAVING SESSID = (SELECT SESSID FROM DUAL);
+-- 测试用例 8: 在子查询中使用SESSID
+SELECT id, name 
+FROM test_table_1 
+WHERE id = (SELECT id FROM test_table_1 WHERE SESSID = (SELECT SESSID FROM DUAL));
+-- 测试用例 9: 在INSERT语句中使用SESSID
+CREATE TABLE test_table_3 (
+    id INT,
+    session_id INT,
+    name VARCHAR(50)
+);
+INSERT INTO test_table_3 (id, session_id, name) 
+SELECT id, (SELECT SESSID FROM DUAL), name 
+FROM test_table_1;
+-- 测试用例 10: 在UPDATE语句中使用SESSID
+UPDATE test_table_3 
+SET name = 'Updated Name' 
+WHERE session_id = (SELECT SESSID FROM DUAL);
+-- 测试用例 11: 在DELETE语句中使用SESSID
+DELETE FROM test_table_3 
+WHERE session_id = (SELECT SESSID FROM DUAL);
+-- 测试用例 12: 在CASE语句中使用SESSID
+SELECT id, name, 
+       CASE 
+           WHEN SESSID = (SELECT SESSID FROM DUAL) THEN 'Current Session' 
+           ELSE 'Other Session' 
+       END AS session_status 
+FROM test_table_1;
+-- 测试用例 13: 在UNION操作中使用SESSID
+SELECT id, name, SESSID 
+FROM test_table_1 
+UNION 
+SELECT id, name, SESSID 
+FROM test_table_3;
+-- 测试用例 14: 在视图定义中使用SESSID
+CREATE VIEW test_view AS 
+SELECT id, name, SESSID 
+FROM test_table_1 
+WHERE SESSID = (SELECT SESSID FROM DUAL);
+SELECT * FROM test_view;
+-- 测试用例 15: 在存储过程中使用SESSID
+CREATE PROCEDURE test_procedure AS 
+BEGIN 
+    SELECT id, name, SESSID 
+    FROM test_table_1 
+    WHERE SESSID = (SELECT SESSID FROM DUAL);
+END;
+CALL test_procedure()

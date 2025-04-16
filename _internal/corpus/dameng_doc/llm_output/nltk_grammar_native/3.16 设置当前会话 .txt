@@ -1,0 +1,5 @@
+```plaintext
+S -> SET_SESSION
+SET_SESSION -> 'SET' 'SESSION' SESSION_OPTION
+SESSION_OPTION -> 'session_option'
+```

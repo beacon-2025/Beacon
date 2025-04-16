@@ -1,0 +1,3 @@
+
+
+set binlog_format='row'

@@ -1,0 +1,4 @@
+```  
+CREATE_DIRECTORY -> 'CREATE' OR_REPLACE 'DIRECTORY' 'directory_name_1' 'AS' 'dir_path_value'  
+OR_REPLACE -> 'OR' 'REPLACE' | ''  
+```

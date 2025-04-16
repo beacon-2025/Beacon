@@ -1,0 +1,4 @@
+
+
+# verify if the database really got deleted.
+CREATE SCHEMA DB1

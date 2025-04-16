@@ -1,0 +1,125 @@
+-- 创建用于审计的表
+CREATE TABLE audit_log (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    table_name VARCHAR(50),
+    operation VARCHAR(50),
+    old_data TEXT,
+    new_data TEXT,
+    operation_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+-- 创建表
+CREATE TABLE employees (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    salary DECIMAL(10, 2)
+);
+-- 插入数据
+INSERT INTO employees (name, salary) VALUES ('Alice', 50000.00);
+INSERT INTO employees (name, salary) VALUES ('Bob', 60000.00);
+-- 创建触发器
+CREATE TRIGGER audit_employee_insert
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (table_name, operation, new_data)
+    VALUES ('employees', 'INSERT', CONCAT('New Employee: ', NEW.name, ' with salary ', NEW.salary));
+END;
+-- 插入数据以触发触发器
+INSERT INTO employees (name, salary) VALUES ('Charlie', 70000.00);
+-- 创建触发器
+CREATE TRIGGER audit_employee_update
+AFTER UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (table_name, operation, old_data, new_data)
+    VALUES ('employees', 'UPDATE', CONCAT('Old Salary: ', OLD.salary), CONCAT('New Salary: ', NEW.salary));
+END;
+-- 更新数据以触发触发器
+UPDATE employees SET salary = 65000.00 WHERE name = 'Bob';
+-- 创建触发器
+CREATE TRIGGER audit_employee_delete
+AFTER DELETE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (table_name, operation, old_data)
+    VALUES ('employees', 'DELETE', CONCAT('Deleted Employee: ', OLD.name, ' with salary ', OLD.salary));
+END;
+-- 删除数据以触发触发器
+DELETE FROM employees WHERE name = 'Alice';
+-- 创建另一个表
+CREATE TABLE departments (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(100),
+    budget DECIMAL(15, 2)
+);
+-- 插入数据
+INSERT INTO departments (name, budget) VALUES ('HR', 1000000.00);
+INSERT INTO departments (name, budget) VALUES ('IT', 2000000.00);
+-- 创建触发器以审计插入操作
+CREATE TRIGGER audit_department_insert
+AFTER INSERT ON departments
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (table_name, operation, new_data)
+    VALUES ('departments', 'INSERT', CONCAT('New Department: ', NEW.name, ' with budget ', NEW.budget));
+END;
+-- 插入数据以触发触发器
+INSERT INTO departments (name, budget) VALUES ('Finance', 1500000.00);
+-- 创建触发器以审计更新操作
+CREATE TRIGGER audit_department_update
+AFTER UPDATE ON departments
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (table_name, operation, old_data, new_data)
+    VALUES ('departments', 'UPDATE', CONCAT('Old Budget: ', OLD.budget), CONCAT('New Budget: ', NEW.budget));
+END;
+-- 更新数据以触发触发器
+UPDATE departments SET budget = 1200000.00 WHERE name = 'HR';
+-- 创建触发器以审计删除操作
+CREATE TRIGGER audit_department_delete
+AFTER DELETE ON departments
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (table_name, operation, old_data)
+    VALUES ('departments', 'DELETE', CONCAT('Deleted Department: ', OLD.name, ' with budget ', OLD.budget));
+END;
+-- 删除数据以触发触发器
+DELETE FROM departments WHERE name = 'IT';
+-- 创建触发器以审计多个表的操作
+CREATE TRIGGER audit_employee_insert_multiple
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (table_name, operation, new_data)
+    VALUES ('employees', 'INSERT', CONCAT('New Employee: ', NEW.name, ' with salary ', NEW.salary));
+END;
+CREATE TRIGGER audit_department_insert_multiple
+AFTER INSERT ON departments
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (table_name, operation, new_data)
+    VALUES ('departments', 'INSERT', CONCAT('New Department: ', NEW.name, ' with budget ', NEW.budget));
+END;
+-- 插入数据以触发触发器
+INSERT INTO employees (name, salary) VALUES ('David', 80000.00);
+INSERT INTO departments (name, budget) VALUES ('Marketing', 900000.00);
+-- 创建触发器以审计复杂的更新操作
+CREATE TRIGGER audit_employee_complex_update
+AFTER UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (table_name, operation, old_data, new_data)
+    VALUES ('employees', 'UPDATE', CONCAT('Old Name: ', OLD.name, ' Old Salary: ', OLD.salary), CONCAT('New Name: ', NEW.name, ' New Salary: ', NEW.salary));
+END;
+-- 更新数据以触发触发器
+UPDATE employees SET name = 'Eve', salary = 75000.00 WHERE name = 'Charlie';
+-- 创建触发器以审计复杂的删除操作
+CREATE TRIGGER audit_employee_complex_delete
+AFTER DELETE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (table_name, operation, old_data)
+    VALUES ('employees', 'DELETE', CONCAT('Deleted Employee: ', OLD.name, ' with salary ', OLD.salary));
+END;
+-- 删除数据以触发触发器
+DELETE FROM employees WHERE name = 'David'

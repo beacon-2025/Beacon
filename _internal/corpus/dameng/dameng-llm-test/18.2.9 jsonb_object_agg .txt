@@ -1,0 +1,75 @@
+-- 创建测试表
+DROP TABLE IF EXISTS test1;
+CREATE TABLE test1 (c1 VARCHAR(20), c2 VARCHAR(20));
+DROP TABLE IF EXISTS test2;
+CREATE TABLE test2 (c1 VARCHAR(20), c2 VARCHAR(20));
+DROP TABLE IF EXISTS test3;
+CREATE TABLE test3 (c1 VARCHAR(20), c2 VARCHAR(20));
+DROP TABLE IF EXISTS test4;
+CREATE TABLE test4 (c1 VARCHAR(20), c2 VARCHAR(20));
+DROP TABLE IF EXISTS test5;
+CREATE TABLE test5 (c1 VARCHAR(20), c2 VARCHAR(20));
+DROP TABLE IF EXISTS test6;
+CREATE TABLE test6 (c1 VARCHAR(20), c2 VARCHAR(20));
+DROP TABLE IF EXISTS test7;
+CREATE TABLE test7 (c1 VARCHAR(20), c2 VARCHAR(20));
+DROP TABLE IF EXISTS test8;
+CREATE TABLE test8 (c1 VARCHAR(20), c2 VARCHAR(20));
+DROP TABLE IF EXISTS test9;
+CREATE TABLE test9 (c1 VARCHAR(20), c2 VARCHAR(20));
+DROP TABLE IF EXISTS test10;
+CREATE TABLE test10 (c1 VARCHAR(20), c2 VARCHAR(20));
+-- 插入数据
+INSERT INTO test1 VALUES ('a', '1');
+INSERT INTO test1 VALUES ('b', 'true');
+INSERT INTO test1 VALUES ('c', NULL);
+INSERT INTO test1 VALUES ('d', '[1,2,3]');
+INSERT INTO test1 VALUES ('e', 'str\ttest');
+INSERT INTO test1 VALUES ('f', '"str test"');
+INSERT INTO test1 VALUES ('str test', '{"name":"str test"}');
+-- 使用jsonb_object_agg聚合
+SELECT jsonb_object_agg(c1, c2) FROM test1;
+-- 插入数据
+INSERT INTO test2 VALUES (NULL, '1');
+-- 尝试使用jsonb_object_agg聚合，预期报错
+SELECT jsonb_object_agg(c1, c2) FROM test2;
+-- 插入数据
+INSERT INTO test3 VALUES ('a', '{"key":"value"}');
+INSERT INTO test3 VALUES ('b', '[1,2,3]');
+-- 使用jsonb_object_agg聚合，指定IS_JSONB为1
+SELECT jsonb_object_agg(c1, c2, 1) FROM test3;
+-- 插入数据
+INSERT INTO test4 VALUES ('a', 'plain text');
+INSERT INTO test4 VALUES ('b', 'another text');
+-- 使用jsonb_object_agg聚合，指定IS_JSONB为1
+SELECT jsonb_object_agg(c1, c2, 1) FROM test4;
+-- 插入数据
+INSERT INTO test5 VALUES ('a', 1);
+INSERT INTO test5 VALUES ('b', 2);
+-- 使用jsonb_object_agg聚合
+SELECT jsonb_object_agg(c1, c2) FROM test5;
+-- 插入数据
+INSERT INTO test6 VALUES ('a', 1.23);
+INSERT INTO test6 VALUES ('b', 4.56);
+-- 使用jsonb_object_agg聚合
+SELECT jsonb_object_agg(c1, c2) FROM test6;
+-- 插入数据
+INSERT INTO test7 VALUES ('a', CAST('blob data' AS BLOB));
+INSERT INTO test7 VALUES ('b', CAST('another blob' AS BLOB));
+-- 使用jsonb_object_agg聚合
+SELECT jsonb_object_agg(c1, c2) FROM test7;
+-- 插入数据
+INSERT INTO test8 VALUES ('a', CAST('clob data' AS CLOB));
+INSERT INTO test8 VALUES ('b', CAST('another clob' AS CLOB));
+-- 使用jsonb_object_agg聚合
+SELECT jsonb_object_agg(c1, c2) FROM test8;
+-- 插入数据
+INSERT INTO test9 VALUES ('a', CAST('varbinary data' AS VARBINARY));
+INSERT INTO test9 VALUES ('b', CAST('another varbinary' AS VARBINARY));
+-- 使用jsonb_object_agg聚合
+SELECT jsonb_object_agg(c1, c2) FROM test9;
+-- 插入数据
+INSERT INTO test10 VALUES ('a', '{"key":"value"}');
+INSERT INTO test10 VALUES ('b', '[1,2,3]');
+-- 使用jsonb_object_agg聚合
+SELECT jsonb_object_agg(c1, c2) FROM test10

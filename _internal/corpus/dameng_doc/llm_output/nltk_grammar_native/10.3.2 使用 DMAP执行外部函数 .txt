@@ -1,0 +1,6 @@
+```plaintext
+CREATE_FUNCTION -> 'CREATE' 'OR' 'REPLACE' 'FUNCTION' 'function_name_1' '(' 'A' 'VARCHAR' ',' 'B' 'VARCHAR' ')' 'RETURN' 'VARCHAR' 'EXTERNAL' 'external_path_value' 'C_CAT' 'USING' 'C'
+SELECT_FUNCTION -> 'SELECT' 'function_name_1' '(' 'string_value_1' ',' 'string_value_2' ')'
+LOG_CHECK -> '可在log目录下查看dmap.log日志文件，其中记录了执行外部函数时消息收发的日志'
+PACKAGE_DESCRIPTION -> 'DM支持DMSQL程序包来扩展数据库功能，用户可以通过包来创建应用程序或者使用包来管理过程和函数'
+```

@@ -1,0 +1,2 @@
+
+SET GLOBAL mysqlx_compression_algorithms=DEFAULT

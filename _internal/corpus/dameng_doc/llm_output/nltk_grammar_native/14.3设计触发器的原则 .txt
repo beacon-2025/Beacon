@@ -1,0 +1,7 @@
+```
+DESIGN_PRINCIPLES -> PRINCIPLE_1 PRINCIPLE_2 PRINCIPLE_3 PRINCIPLE_4
+PRINCIPLE_1 -> 'If' 'you' 'want' 'to' 'ensure' 'that' 'an' 'operation' 'can' 'trigger' 'a' 'series' 'of' 'related' 'actions' ',' 'use' 'a' 'trigger' '.'
+PRINCIPLE_2 -> 'Do' 'not' 'use' 'triggers' 'to' 'reimplement' 'functionality' 'already' 'available' 'in' 'DM' '.' 'For' 'example' ',' 'if' 'constraints' 'can' 'perform' 'the' 'desired' 'integrity' 'check' ',' 'do' 'not' 'use' 'a' 'trigger' '.'
+PRINCIPLE_3 -> 'Avoid' 'recursive' 'triggers' '.' 'Recursive' 'triggers' 'occur' 'when' 'the' 'statements' 'within' 'a' 'trigger' 'body' 'activate' 'the' 'same' 'trigger' ',' 'causing' 'an' 'infinite' 'loop' '.' 'For' 'example' ',' 'creating' 'a' 'BEFORE' 'UPDATE' 'trigger' 'on' 'table' 'T1' 'that' 'contains' 'an' 'UPDATE' 'statement' 'on' 'table' 'T1' '.'
+PRINCIPLE_4 -> 'Reasonable' 'control' 'of' 'trigger' 'size' 'and' 'number' '.' 'Remember' ',' 'once' 'a' 'trigger' 'is' 'created' ',' 'any' 'user' 'performing' 'the' 'corresponding' 'operation' 'at' 'any' 'time' 'will' 'cause' 'the' 'trigger' 'to' 'execute' ',' 'which' 'can' 'be' 'a' 'significant' 'overhead' '.'
+```

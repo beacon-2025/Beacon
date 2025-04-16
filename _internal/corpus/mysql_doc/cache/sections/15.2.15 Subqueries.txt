@@ -1,0 +1,731 @@
+15.2.15 Subqueries
+A subquery is a SELECT statement within another statement.
+All subquery forms and operations that the SQL standard requires are supported, as well as a few
+features that are MySQL-specific.
+Here is an example of a subquery:
+SELECT * FROM t1 WHERE column1 = (SELECT column1 FROM t2);
+In this example, SELECT * FROM t1 ... is the outer query (or outer statement), and (SELECT
+column1 FROM t2) is the subquery. We say that the subquery is nested within the outer query, and
+in fact it is possible to nest subqueries within other subqueries, to a considerable depth. A subquery
+must always appear within parentheses.
+The main advantages of subqueries are:
+• They allow queries that are structured so that it is possible to isolate each part of a statement.
+• They provide alternative ways to perform operations that would otherwise require complex joins and
+unions.
+• Many people find subqueries more readable than complex joins or unions. Indeed, it was the
+innovation of subqueries that gave people the original idea of calling the early SQL “Structured Query
+Language.”
+Here is an example statement that shows the major points about subquery syntax as specified by the
+SQL standard and supported in MySQL:
+DELETE FROM t1
+WHERE s11 > ANY
+ (SELECT COUNT(*) /* no hint */ FROM t2
+  WHERE NOT EXISTS
+   (SELECT * FROM t3
+    WHERE ROW(5*t2.s1,77)=
+     (SELECT 50,11*s1 FROM t4 UNION SELECT 50,77 FROM
+      (SELECT * FROM t5) AS t5)));
+A subquery can return a scalar (a single value), a single row, a single column, or a table (one or more
+rows of one or more columns). These are called scalar, column, row, and table subqueries. Subqueries
+that return a particular kind of result often can be used only in certain contexts, as described in the
+following sections.
+There are few restrictions on the type of statements in which subqueries can be used. A subquery can
+contain many of the keywords or clauses that an ordinary SELECT can contain: DISTINCT, GROUP BY,
+ORDER BY, LIMIT, joins, index hints, UNION constructs, comments, functions, and so on.
+TABLE and VALUES statements can be used in subqueries. Subqueries using VALUES are generally
+more verbose versions of subqueries that can be rewritten more compactly using set notation, or with
+SELECT or TABLE syntax; assuming that table ts is created using the statement CREATE TABLE ts
+VALUES ROW(2), ROW(4), ROW(6), the statements shown here are all equivalent:
+SELECT * FROM tt
+    WHERE b > ANY (VALUES ROW(2), ROW(4), ROW(6));
+SELECT * FROM tt
+    WHERE b > ANY (SELECT * FROM ts);
+SELECT * FROM tt
+    WHERE b > ANY (TABLE ts);
+Examples of TABLE subqueries are shown in the sections that follow.
+A subquery's outer statement can be any one of: SELECT, INSERT, UPDATE, DELETE, SET, or DO.
+For information about how the optimizer handles subqueries, see Section 10.2.2, “Optimizing
+Subqueries, Derived Tables, View References, and Common Table Expressions”. For a discussion of
+restrictions on subquery use, including performance issues for certain forms of subquery syntax, see
+Section 15.2.15.12, “Restrictions on Subqueries”.
+15.2.15.1 The Subquery as Scalar Operand
+In its simplest form, a subquery is a scalar subquery that returns a single value. A scalar subquery is a
+simple operand, and you can use it almost anywhere a single column value or literal is legal, and you
+can expect it to have those characteristics that all operands have: a data type, a length, an indication
+that it can be NULL, and so on. For example:
+CREATE TABLE t1 (s1 INT, s2 CHAR(5) NOT NULL);
+INSERT INTO t1 VALUES(100, 'abcde');
+SELECT (SELECT s2 FROM t1);
+The subquery in this SELECT returns a single value ('abcde') that has a data type of CHAR, a
+length of 5, a character set and collation equal to the defaults in effect at CREATE TABLE time, and
+an indication that the value in the column can be NULL. Nullability of the value selected by a scalar
+subquery is not copied because if the subquery result is empty, the result is NULL. For the subquery
+just shown, if t1 were empty, the result would be NULL even though s2 is NOT NULL.
+There are a few contexts in which a scalar subquery cannot be used. If a statement permits only a
+literal value, you cannot use a subquery. For example, LIMIT requires literal integer arguments, and
+LOAD DATA requires a literal string file name. You cannot use subqueries to supply these values.
+When you see examples in the following sections that contain the rather spartan construct (SELECT
+column1 FROM t1), imagine that your own code contains much more diverse and complex
+constructions.
+Suppose that we make two tables:
+CREATE TABLE t1 (s1 INT);
+INSERT INTO t1 VALUES (1);
+CREATE TABLE t2 (s1 INT);
+INSERT INTO t2 VALUES (2);
+Then perform a SELECT:
+SELECT (SELECT s1 FROM t2) FROM t1;
+The result is 2 because there is a row in t2 containing a column s1 that has a value of 2.
+The preceding query can also be written like this, using TABLE:
+SELECT (TABLE t2) FROM t1;
+A scalar subquery can be part of an expression, but remember the parentheses, even if the subquery is
+an operand that provides an argument for a function. For example:
+SELECT UPPER((SELECT s1 FROM t1)) FROM t2;
+The same result can be obtained using SELECT UPPER((TABLE t1)) FROM t2.
+15.2.15.2 Comparisons Using Subqueries
+The most common use of a subquery is in the form:
+non_subquery_operand comparison_operator (subquery)
+Where comparison_operator is one of these operators:
+=  >  <  >=  <=  <>  !=  <=>
+For example:
+... WHERE 'a' = (SELECT column1 FROM t1)
+MySQL also permits this construct:
+non_subquery_operand LIKE (subquery)
+At one time the only legal place for a subquery was on the right side of a comparison, and you might
+still find some old DBMSs that insist on this.
+Here is an example of a common-form subquery comparison that you cannot do with a join. It finds all
+the rows in table t1 for which the column1 value is equal to a maximum value in table t2:
+SELECT * FROM t1
+  WHERE column1 = (SELECT MAX(column2) FROM t2);
+Here is another example, which again is impossible with a join because it involves aggregating for one
+of the tables. It finds all rows in table t1 containing a value that occurs twice in a given column:
+SELECT * FROM t1 AS t
+  WHERE 2 = (SELECT COUNT(*) FROM t1 WHERE t1.id = t.id);
+For a comparison of the subquery to a scalar, the subquery must return a scalar. For a comparison of
+the subquery to a row constructor, the subquery must be a row subquery that returns a row with the
+same number of values as the row constructor. See Section 15.2.15.5, “Row Subqueries”.
+15.2.15.3 Subqueries with ANY, IN, or SOME
+Syntax:
+operand comparison_operator ANY (subquery)
+operand IN (subquery)
+operand comparison_operator SOME (subquery)
+Where comparison_operator is one of these operators:
+=  >  <  >=  <=  <>  !=
+The ANY keyword, which must follow a comparison operator, means “return TRUE if the comparison is
+TRUE for ANY of the values in the column that the subquery returns.” For example:
+SELECT s1 FROM t1 WHERE s1 > ANY (SELECT s1 FROM t2);
+Suppose that there is a row in table t1 containing (10). The expression is TRUE if table t2 contains
+(21,14,7) because there is a value 7 in t2 that is less than 10. The expression is FALSE if table
+t2 contains (20,10), or if table t2 is empty. The expression is unknown (that is, NULL) if table t2
+contains (NULL,NULL,NULL).
+When used with a subquery, the word IN is an alias for = ANY. Thus, these two statements are the
+same:
+SELECT s1 FROM t1 WHERE s1 = ANY (SELECT s1 FROM t2);
+SELECT s1 FROM t1 WHERE s1 IN    (SELECT s1 FROM t2);
+IN and = ANY are not synonyms when used with an expression list. IN can take an expression list, but
+= ANY cannot. See Section 14.4.2, “Comparison Functions and Operators”.
+NOT IN is not an alias for <> ANY, but for <> ALL. See Section 15.2.15.4, “Subqueries with ALL”.
+The word SOME is an alias for ANY. Thus, these two statements are the same:
+SELECT s1 FROM t1 WHERE s1 <> ANY  (SELECT s1 FROM t2);
+SELECT s1 FROM t1 WHERE s1 <> SOME (SELECT s1 FROM t2);
+Use of the word SOME is rare, but this example shows why it might be useful. To most people, the
+English phrase “a is not equal to any b” means “there is no b which is equal to a,” but that is not what is
+meant by the SQL syntax. The syntax means “there is some b to which a is not equal.” Using <> SOME
+instead helps ensure that everyone understands the true meaning of the query.
+You can use TABLE in a scalar IN, ANY, or SOME subquery provided the table contains only a single
+column. If t2 has only one column, the statements shown previously in this section can be written as
+shown here, in each case substituting TABLE t2 for SELECT s1 FROM t2:
+SELECT s1 FROM t1 WHERE s1 > ANY (TABLE t2);
+SELECT s1 FROM t1 WHERE s1 = ANY (TABLE t2);
+SELECT s1 FROM t1 WHERE s1 IN (TABLE t2);
+SELECT s1 FROM t1 WHERE s1 <> ANY  (TABLE t2);
+SELECT s1 FROM t1 WHERE s1 <> SOME (TABLE t2);
+15.2.15.4 Subqueries with ALL
+Syntax:
+operand comparison_operator ALL (subquery)
+The word ALL, which must follow a comparison operator, means “return TRUE if the comparison is
+TRUE for ALL of the values in the column that the subquery returns.” For example:
+SELECT s1 FROM t1 WHERE s1 > ALL (SELECT s1 FROM t2);
+Suppose that there is a row in table t1 containing (10). The expression is TRUE if table t2 contains
+(-5,0,+5) because 10 is greater than all three values in t2. The expression is FALSE if table t2
+contains (12,6,NULL,-100) because there is a single value 12 in table t2 that is greater than 10.
+The expression is unknown (that is, NULL) if table t2 contains (0,NULL,1).
+Finally, the expression is TRUE if table t2 is empty. So, the following expression is TRUE when table t2
+is empty:
+SELECT * FROM t1 WHERE 1 > ALL (SELECT s1 FROM t2);
+But this expression is NULL when table t2 is empty:
+SELECT * FROM t1 WHERE 1 > (SELECT s1 FROM t2);
+In addition, the following expression is NULL when table t2 is empty:
+SELECT * FROM t1 WHERE 1 > ALL (SELECT MAX(s1) FROM t2);
+In general, tables containing NULL values and empty tables are “edge cases.” When writing
+subqueries, always consider whether you have taken those two possibilities into account.
+NOT IN is an alias for <> ALL. Thus, these two statements are the same:
+SELECT s1 FROM t1 WHERE s1 <> ALL (SELECT s1 FROM t2);
+SELECT s1 FROM t1 WHERE s1 NOT IN (SELECT s1 FROM t2);
+As with IN, ANY, and SOME, you can use TABLE with ALL and NOT IN provided that the following two
+conditions are met:
+• The table in the subquery contains only one column
+• The subquery does not depend on a column expression
+For example, assuming that table t2 consists of a single column, the last two statements shown
+previously can be written using TABLE t2 like this:
+SELECT s1 FROM t1 WHERE s1 <> ALL (TABLE t2);
+SELECT s1 FROM t1 WHERE s1 NOT IN (TABLE t2);
+A query such as SELECT * FROM t1 WHERE 1 > ALL (SELECT MAX(s1) FROM t2); cannot be
+written using TABLE t2 because the subquery depends on a column expression.
+15.2.15.5 Row Subqueries
+Scalar or column subqueries return a single value or a column of values. A row subquery is a subquery
+variant that returns a single row and can thus return more than one column value. Legal operators for
+row subquery comparisons are:
+=  >  <  >=  <=  <>  !=  <=>
+Here are two examples:
+SELECT * FROM t1
+  WHERE (col1,col2) = (SELECT col3, col4 FROM t2 WHERE id = 10);
+SELECT * FROM t1
+  WHERE ROW(col1,col2) = (SELECT col3, col4 FROM t2 WHERE id = 10);
+For both queries, if the table t2 contains a single row with id = 10, the subquery returns a single
+row. If this row has col3 and col4 values equal to the col1 and col2 values of any rows in t1, the
+WHERE expression is TRUE and each query returns those t1 rows. If the t2 row col3 and col4 values
+are not equal the col1 and col2 values of any t1 row, the expression is FALSE and the query returns
+an empty result set. The expression is unknown (that is, NULL) if the subquery produces no rows. An
+error occurs if the subquery produces multiple rows because a row subquery can return at most one
+row.
+For information about how each operator works for row comparisons, see Section 14.4.2, “Comparison
+Functions and Operators”.
+The expressions (1,2) and ROW(1,2) are sometimes called row constructors. The two are
+equivalent. The row constructor and the row returned by the subquery must contain the same number
+of values.
+A row constructor is used for comparisons with subqueries that return two or more columns. When
+a subquery returns a single column, this is regarded as a scalar value and not as a row, so a row
+constructor cannot be used with a subquery that does not return at least two columns. Thus, the
+following query fails with a syntax error:
+SELECT * FROM t1 WHERE ROW(1) = (SELECT column1 FROM t2)
+Row constructors are legal in other contexts. For example, the following two statements are
+semantically equivalent (and are handled in the same way by the optimizer):
+SELECT * FROM t1 WHERE (column1,column2) = (1,1);
+SELECT * FROM t1 WHERE column1 = 1 AND column2 = 1;
+The following query answers the request, “find all rows in table t1 that also exist in table t2”:
+SELECT column1,column2,column3
+  FROM t1
+  WHERE (column1,column2,column3) IN
+         (SELECT column1,column2,column3 FROM t2);
+For more information about the optimizer and row constructors, see Section 10.2.1.22, “Row
+Constructor Expression Optimization”
+15.2.15.6 Subqueries with EXISTS or NOT EXISTS
+If a subquery returns any rows at all, EXISTS subquery is TRUE, and NOT EXISTS subquery is
+FALSE. For example:
+SELECT column1 FROM t1 WHERE EXISTS (SELECT * FROM t2);
+Traditionally, an EXISTS subquery starts with SELECT *, but it could begin with SELECT 5 or SELECT
+column1 or anything at all. MySQL ignores the SELECT list in such a subquery, so it makes no
+difference.
+For the preceding example, if t2 contains any rows, even rows with nothing but NULL values, the
+EXISTS condition is TRUE. This is actually an unlikely example because a [NOT] EXISTS subquery
+almost always contains correlations. Here are some more realistic examples:
+• What kind of store is present in one or more cities?
+SELECT DISTINCT store_type FROM stores
+  WHERE EXISTS (SELECT * FROM cities_stores
+                WHERE cities_stores.store_type = stores.store_type);
+• What kind of store is present in no cities?
+SELECT DISTINCT store_type FROM stores
+  WHERE NOT EXISTS (SELECT * FROM cities_stores
+                    WHERE cities_stores.store_type = stores.store_type);
+• What kind of store is present in all cities?
+SELECT DISTINCT store_type FROM stores
+  WHERE NOT EXISTS (
+    SELECT * FROM cities WHERE NOT EXISTS (
+      SELECT * FROM cities_stores
+       WHERE cities_stores.city = cities.city
+       AND cities_stores.store_type = stores.store_type));
+The last example is a double-nested NOT EXISTS query. That is, it has a NOT EXISTS clause within
+a NOT EXISTS clause. Formally, it answers the question “does a city exist with a store that is not in
+Stores”? But it is easier to say that a nested NOT EXISTS answers the question “is x TRUE for all y?”
+You can also use NOT EXISTS or NOT EXISTS with TABLE in the subquery, like this:
+SELECT column1 FROM t1 WHERE EXISTS (TABLE t2);
+The results are the same as when using SELECT * with no WHERE clause in the subquery.
+15.2.15.7 Correlated Subqueries
+A correlated subquery is a subquery that contains a reference to a table that also appears in the outer
+query. For example:
+SELECT * FROM t1
+  WHERE column1 = ANY (SELECT column1 FROM t2
+                       WHERE t2.column2 = t1.column2);
+Notice that the subquery contains a reference to a column of t1, even though the subquery's FROM
+clause does not mention a table t1. So, MySQL looks outside the subquery, and finds t1 in the outer
+query.
+Suppose that table t1 contains a row where column1 = 5 and column2 = 6; meanwhile, table
+t2 contains a row where column1 = 5 and column2 = 7. The simple expression ... WHERE
+column1 = ANY (SELECT column1 FROM t2) would be TRUE, but in this example, the WHERE
+clause within the subquery is FALSE (because (5,6) is not equal to (5,7)), so the expression as a
+whole is FALSE.
+Scoping rule: MySQL evaluates from inside to outside. For example:
+SELECT column1 FROM t1 AS x
+  WHERE x.column1 = (SELECT column1 FROM t2 AS x
+    WHERE x.column1 = (SELECT column1 FROM t3
+      WHERE x.column2 = t3.column1));
+In this statement, x.column2 must be a column in table t2 because SELECT column1 FROM t2
+AS x ... renames t2. It is not a column in table t1 because SELECT column1 FROM t1 ... is
+an outer query that is farther out.
+The optimizer can transform a correlated scalar subquery to a derived table when the
+subquery_to_derived flag of the optimizer_switch variable is enabled. Consider the query
+shown here:
+SELECT * FROM t1 
+    WHERE ( SELECT a FROM t2 
+              WHERE t2.a=t1.a ) > 0;
+To avoid materializing several times for a given derived table, we can instead materialize—once
+—a derived table which adds a grouping on the join column from the table referenced in the inner
+query (t2.a) and then an outer join on the lifted predicate (t1.a = derived.a) in order to select
+the correct group to match up with the outer row. (If the subquery already has an explicit grouping,
+the extra grouping is added to the end of the grouping list.) The query previously shown can thus be
+rewritten like this:
+SELECT t1.* FROM t1 
+    LEFT OUTER JOIN
+        (SELECT a, COUNT(*) AS ct FROM t2 GROUP BY a) AS derived
+    ON  t1.a = derived.a 
+        AND 
+        REJECT_IF(
+            (ct > 1),
+            "ERROR 1242 (21000): Subquery returns more than 1 row"
+            )
+    WHERE derived.a > 0;
+In the rewritten query, REJECT_IF() represents an internal function which tests a given condition
+(here, the comparison ct > 1) and raises a given error (in this case, ER_SUBQUERY_NO_1_ROW) if the
+condition is true. This reflects the cardinality check that the optimizer performs as part of evaluating the
+JOIN or WHERE clause, prior to evaluating any lifted predicate, which is done only if the subquery does
+not return more than one row.
+This type of transformation can be performed, provided the following conditions are met:
+• The subquery can be part of a SELECT list, WHERE condition, or HAVING condition, but cannot be
+part of a JOIN condition, and cannot contain an OFFSET clause. The subquery may contain LIMIT
+1 but no other LIMIT clause; it must use a literal 1, and no other value, placeholder (?), or variable.
+In addition, the subquery cannot contain any set operations such as UNION.
+• The WHERE clause may contain one or more predicates, combined with AND. If the WHERE clause
+contains an OR clause, it cannot be transformed. At least one of the WHERE clause predicates must
+be eligible for transformation, and none of them may reject transformation.
+• To be eligible for transformation, a WHERE clause predicate must be an equality predicate in
+which each operand should be a simple column reference. No other predicates—including other
+comparison predicates—are eligible for transformation. The predicate must employ the equality
+operator = for making the comparison; the null-safe <=> operator is not supported in this context.
+• A WHERE clause predicate that contains only inner references is not eligible for transformation,
+since it can be evaluated before the grouping. A WHERE clause predicate that contains only outer
+references is eligible for transformation, even though it can be lifted up to the outer query block. This
+is made possible by adding a cardinality check without grouping in the derived table.
+• To be eligible, a WHERE clause predicate must have one operand that contains only inner references
+and one operand that contains only outer references. If the predicate is not eligible due to this rule,
+transformation of the query is rejected.
+• A correlated column can be present only in the subquery's WHERE clause (and not in the SELECT list,
+a JOIN or ORDER BY clause, a GROUP BY list, or a HAVING clause). Nor can there be any correlated
+column inside a derived table in the subquery's FROM list.
+• A correlated column can not be contained in an aggregate function's list of arguments.
+• A correlated column must be resolved in the query block directly containing the subquery being
+considered for transformation.
+• A correlated column cannot be present in a nested scalar subquery in the WHERE clause.
+• The subquery cannot contain any window functions, and must not contain any aggregate function
+which aggregates in a query block outer to the subquery. A COUNT() aggregate function, if
+contained in the SELECT list element of the subquery, must be at the topmost level, and cannot be
+part of an expression.
+See also Section 15.2.15.8, “Derived Tables”.
+15.2.15.8 Derived Tables
+This section discusses general characteristics of derived tables. For information about lateral derived
+tables preceded by the LATERAL keyword, see Section 15.2.15.9, “Lateral Derived Tables”.
+A derived table is an expression that generates a table within the scope of a query FROM clause. For
+example, a subquery in a SELECT statement FROM clause is a derived table:
+SELECT ... FROM (subquery) [AS] tbl_name ...
+The JSON_TABLE() function generates a table and provides another way to create a derived table:
+SELECT * FROM JSON_TABLE(arg_list) [AS] tbl_name ...
+The [AS] tbl_name clause is mandatory because every table in a FROM clause must have a name.
+Any columns in the derived table must have unique names. Alternatively, tbl_name may be followed
+by a parenthesized list of names for the derived table columns:
+SELECT ... FROM (subquery) [AS] tbl_name (col_list) ...
+The number of column names must be the same as the number of table columns.
+For the sake of illustration, assume that you have this table:
+CREATE TABLE t1 (s1 INT, s2 CHAR(5), s3 FLOAT);
+Here is how to use a subquery in the FROM clause, using the example table:
+INSERT INTO t1 VALUES (1,'1',1.0);
+INSERT INTO t1 VALUES (2,'2',2.0);
+SELECT sb1,sb2,sb3
+  FROM (SELECT s1 AS sb1, s2 AS sb2, s3*2 AS sb3 FROM t1) AS sb
+  WHERE sb1 > 1;
+Result:
++------+------+------+
+| sb1  | sb2  | sb3  |
++------+------+------+
+|    2 | 2    |    4 |
++------+------+------+
+Here is another example: Suppose that you want to know the average of a set of sums for a grouped
+table. This does not work:
+SELECT AVG(SUM(column1)) FROM t1 GROUP BY column1;
+However, this query provides the desired information:
+SELECT AVG(sum_column1)
+  FROM (SELECT SUM(column1) AS sum_column1
+        FROM t1 GROUP BY column1) AS t1;
+Notice that the column name used within the subquery (sum_column1) is recognized in the outer
+query.
+The column names for a derived table come from its select list:
+mysql> SELECT * FROM (SELECT 1, 2, 3, 4) AS dt;
++---+---+---+---+
+| 1 | 2 | 3 | 4 |
++---+---+---+---+
+| 1 | 2 | 3 | 4 |
++---+---+---+---+
+To provide column names explicitly, follow the derived table name with a parenthesized list of column
+names:
+mysql> SELECT * FROM (SELECT 1, 2, 3, 4) AS dt (a, b, c, d);
++---+---+---+---+
+| a | b | c | d |
++---+---+---+---+
+| 1 | 2 | 3 | 4 |
++---+---+---+---+
+A derived table can return a scalar, column, row, or table.
+Derived tables are subject to these restrictions:
+• A derived table cannot contain references to other tables of the same SELECT (use a LATERAL
+derived table for that; see Section 15.2.15.9, “Lateral Derived Tables”).
+The optimizer determines information about derived tables in such a way that EXPLAIN does not need
+to materialize them. See Section 10.2.2.4, “Optimizing Derived Tables, View References, and Common
+Table Expressions with Merging or Materialization”.
+It is possible under certain circumstances that using EXPLAIN SELECT modifies table data. This can
+occur if the outer query accesses any tables and an inner query invokes a stored function that changes
+one or more rows of a table. Suppose that there are two tables t1 and t2 in database d1, and a stored
+function f1 that modifies t2, created as shown here:
+CREATE DATABASE d1;
+USE d1;
+CREATE TABLE t1 (c1 INT);
+CREATE TABLE t2 (c1 INT);
+CREATE FUNCTION f1(p1 INT) RETURNS INT
+  BEGIN
+    INSERT INTO t2 VALUES (p1);
+    RETURN p1;
+  END;
+Referencing the function directly in an EXPLAIN SELECT has no effect on t2, as shown here:
+mysql> SELECT * FROM t2;
+Empty set (0.02 sec)
+mysql> EXPLAIN SELECT f1(5)\G
+*************************** 1. row ***************************
+           id: 1
+  select_type: SIMPLE
+        table: NULL
+   partitions: NULL
+         type: NULL
+possible_keys: NULL
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: NULL
+     filtered: NULL
+        Extra: No tables used
+1 row in set (0.01 sec)
+mysql> SELECT * FROM t2;
+Empty set (0.01 sec)
+This is because the SELECT statement did not reference any tables, as can be seen in the table and
+Extra columns of the output. This is also true of the following nested SELECT:
+mysql> EXPLAIN SELECT NOW() AS a1, (SELECT f1(5)) AS a2\G
+*************************** 1. row ***************************
+           id: 1
+  select_type: PRIMARY
+        table: NULL
+         type: NULL
+possible_keys: NULL
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: NULL
+     filtered: NULL
+        Extra: No tables used
+1 row in set, 1 warning (0.00 sec)
+mysql> SHOW WARNINGS;
++-------+------+------------------------------------------+
+| Level | Code | Message                                  |
++-------+------+------------------------------------------+
+| Note  | 1249 | Select 2 was reduced during optimization |
++-------+------+------------------------------------------+
+1 row in set (0.00 sec)
+mysql> SELECT * FROM t2;
+Empty set (0.00 sec)
+However, if the outer SELECT references any tables, the optimizer executes the statement in the
+subquery as well, with the result that t2 is modified:
+mysql> EXPLAIN SELECT * FROM t1 AS a1, (SELECT f1(5)) AS a2\G
+*************************** 1. row ***************************
+           id: 1
+  select_type: PRIMARY
+        table: <derived2>
+   partitions: NULL
+         type: system
+possible_keys: NULL
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+*************************** 2. row ***************************
+           id: 1
+  select_type: PRIMARY
+        table: a1
+   partitions: NULL
+         type: ALL
+possible_keys: NULL
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: 1
+     filtered: 100.00
+        Extra: NULL
+*************************** 3. row ***************************
+           id: 2
+  select_type: DERIVED
+        table: NULL
+   partitions: NULL
+         type: NULL
+possible_keys: NULL
+          key: NULL
+      key_len: NULL
+          ref: NULL
+         rows: NULL
+     filtered: NULL
+        Extra: No tables used
+3 rows in set (0.00 sec)
+mysql> SELECT * FROM t2;
++------+
+| c1   |
++------+
+|    5 |
++------+
+1 row in set (0.00 sec)
+The derived table optimization can also be employed with many correlated (scalar) subqueries. For
+more information and examples, see Section 15.2.15.7, “Correlated Subqueries”.
+15.2.15.9 Lateral Derived Tables
+A derived table cannot normally refer to (depend on) columns of preceding tables in the same FROM
+clause. A derived table may be defined as a lateral derived table to specify that such references are
+permitted.
+Nonlateral derived tables are specified using the syntax discussed in Section 15.2.15.8, “Derived
+Tables”. The syntax for a lateral derived table is the same as for a nonlateral derived table except that
+the keyword LATERAL is specified before the derived table specification. The LATERAL keyword must
+precede each table to be used as a lateral derived table.
+Lateral derived tables are subject to these restrictions:
+• A lateral derived table can occur only in a FROM clause, either in a list of tables separated with
+commas or in a join specification (JOIN, INNER JOIN, CROSS JOIN, LEFT [OUTER] JOIN, or
+RIGHT [OUTER] JOIN).
+• If a lateral derived table is in the right operand of a join clause and contains a reference to the left
+operand, the join operation must be an INNER JOIN, CROSS JOIN, or LEFT [OUTER] JOIN.
+If the table is in the left operand and contains a reference to the right operand, the join operation
+must be an INNER JOIN, CROSS JOIN, or RIGHT [OUTER] JOIN.
+• If a lateral derived table references an aggregate function, the function's aggregation query cannot
+be the one that owns the FROM clause in which the lateral derived table occurs.
+• In accordance with the SQL standard, MySQL always treats a join with a table function such as
+JSON_TABLE() as though LATERAL had been used. Since the LATERAL keyword is implicit, it is not
+allowed before JSON_TABLE(); this is also according to the SQL standard.
+The following discussion shows how lateral derived tables make possible certain SQL operations that
+cannot be done with nonlateral derived tables or that require less-efficient workarounds.
+Suppose that we want to solve this problem: Given a table of people in a sales force (where each row
+describes a member of the sales force), and a table of all sales (where each row describes a sale:
+salesperson, customer, amount, date), determine the size and customer of the largest sale for each
+salesperson. This problem can be approached two ways.
+First approach to solving the problem: For each salesperson, calculate the maximum sale size, and
+also find the customer who provided this maximum. In MySQL, that can be done like this:
+SELECT
+  salesperson.name,
+  -- find maximum sale size for this salesperson
+  (SELECT MAX(amount) AS amount
+    FROM all_sales
+    WHERE all_sales.salesperson_id = salesperson.id)
+  AS amount,
+  -- find customer for this maximum size
+  (SELECT customer_name
+    FROM all_sales
+    WHERE all_sales.salesperson_id = salesperson.id
+    AND all_sales.amount =
+         -- find maximum size, again
+         (SELECT MAX(amount) AS amount
+           FROM all_sales
+           WHERE all_sales.salesperson_id = salesperson.id))
+  AS customer_name
+FROM
+  salesperson;
+That query is inefficient because it calculates the maximum size twice per salesperson (once in the first
+subquery and once in the second).
+We can try to achieve an efficiency gain by calculating the maximum once per salesperson and
+“caching” it in a derived table, as shown by this modified query:
+SELECT
+  salesperson.name,
+  max_sale.amount,
+  max_sale_customer.customer_name
+FROM
+  salesperson,
+  -- calculate maximum size, cache it in transient derived table max_sale
+  (SELECT MAX(amount) AS amount
+    FROM all_sales
+    WHERE all_sales.salesperson_id = salesperson.id)
+  AS max_sale,
+  -- find customer, reusing cached maximum size
+  (SELECT customer_name
+    FROM all_sales
+    WHERE all_sales.salesperson_id = salesperson.id
+    AND all_sales.amount =
+        -- the cached maximum size
+        max_sale.amount)
+  AS max_sale_customer;
+However, the query is illegal in SQL-92 because derived tables cannot depend on other tables in the
+same FROM clause. Derived tables must be constant over the query's duration, not contain references
+to columns of other FROM clause tables. As written, the query produces this error:
+ERROR 1054 (42S22): Unknown column 'salesperson.id' in 'where clause'
+In SQL:1999, the query becomes legal if the derived tables are preceded by the LATERAL keyword
+(which means “this derived table depends on previous tables on its left side”):
+SELECT
+  salesperson.name,
+  max_sale.amount,
+  max_sale_customer.customer_name
+FROM
+  salesperson,
+  -- calculate maximum size, cache it in transient derived table max_sale
+  LATERAL
+  (SELECT MAX(amount) AS amount
+    FROM all_sales
+    WHERE all_sales.salesperson_id = salesperson.id)
+  AS max_sale,
+  -- find customer, reusing cached maximum size
+  LATERAL
+  (SELECT customer_name
+    FROM all_sales
+    WHERE all_sales.salesperson_id = salesperson.id
+    AND all_sales.amount =
+        -- the cached maximum size
+        max_sale.amount)
+  AS max_sale_customer;
+A lateral derived table need not be constant and is brought up to date each time a new row from a
+preceding table on which it depends is processed by the top query.
+Second approach to solving the problem: A different solution could be used if a subquery in the
+SELECT list could return multiple columns:
+SELECT
+  salesperson.name,
+  -- find maximum size and customer at same time
+  (SELECT amount, customer_name
+    FROM all_sales
+    WHERE all_sales.salesperson_id = salesperson.id
+    ORDER BY amount DESC LIMIT 1)
+FROM
+  salesperson;
+That is efficient but illegal. It does not work because such subqueries can return only a single column:
+ERROR 1241 (21000): Operand should contain 1 column(s)
+One attempt at rewriting the query is to select multiple columns from a derived table:
+SELECT
+  salesperson.name,
+  max_sale.amount,
+  max_sale.customer_name
+FROM
+  salesperson,
+  -- find maximum size and customer at same time
+  (SELECT amount, customer_name
+    FROM all_sales
+    WHERE all_sales.salesperson_id = salesperson.id
+    ORDER BY amount DESC LIMIT 1)
+  AS max_sale;
+However, that also does not work. The derived table is dependent on the salesperson table and thus
+fails without LATERAL:
+ERROR 1054 (42S22): Unknown column 'salesperson.id' in 'where clause'
+Adding the LATERAL keyword makes the query legal:
+SELECT
+  salesperson.name,
+  max_sale.amount,
+  max_sale.customer_name
+FROM
+  salesperson,
+  -- find maximum size and customer at same time
+  LATERAL
+  (SELECT amount, customer_name
+    FROM all_sales
+    WHERE all_sales.salesperson_id = salesperson.id
+    ORDER BY amount DESC LIMIT 1)
+  AS max_sale;
+In short, LATERAL is the efficient solution to all drawbacks in the two approaches just discussed.
+15.2.15.10 Subquery Errors
+There are some errors that apply only to subqueries. This section describes them.
+• Unsupported subquery syntax:
+ERROR 1235 (ER_NOT_SUPPORTED_YET)
+SQLSTATE = 42000
+Message = "This version of MySQL doesn't yet support
+'LIMIT & IN/ALL/ANY/SOME subquery'"
+This means that MySQL does not support statements like the following:
+SELECT * FROM t1 WHERE s1 IN (SELECT s2 FROM t2 ORDER BY s1 LIMIT 1)
+• Incorrect number of columns from subquery:
+ERROR 1241 (ER_OPERAND_COL)
+SQLSTATE = 21000
+Message = "Operand should contain 1 column(s)"
+This error occurs in cases like this:
+SELECT (SELECT column1, column2 FROM t2) FROM t1;
+You may use a subquery that returns multiple columns, if the purpose is row comparison. In other
+contexts, the subquery must be a scalar operand. See Section 15.2.15.5, “Row Subqueries”.
+• Incorrect number of rows from subquery:
+ERROR 1242 (ER_SUBSELECT_NO_1_ROW)
+SQLSTATE = 21000
+Message = "Subquery returns more than 1 row"
+This error occurs for statements where the subquery must return at most one row but returns multiple
+rows. Consider the following example:
+SELECT * FROM t1 WHERE column1 = (SELECT column1 FROM t2);
+If SELECT column1 FROM t2 returns just one row, the previous query works. If the subquery
+returns more than one row, error 1242 occurs. In that case, the query should be rewritten as:
+SELECT * FROM t1 WHERE column1 = ANY (SELECT column1 FROM t2);
+• Incorrectly used table in subquery:
+Error 1093 (ER_UPDATE_TABLE_USED)
+SQLSTATE = HY000
+Message = "You can't specify target table 'x'
+for update in FROM clause"
+This error occurs in cases such as the following, which attempts to modify a table and select from the
+same table in the subquery:
+UPDATE t1 SET column2 = (SELECT MAX(column1) FROM t1);
+You can use a common table expression or derived table to work around this. See
+Section 15.2.15.12, “Restrictions on Subqueries”.
+All of the errors described in this section also apply when using TABLE in subqueries.
+For transactional storage engines, the failure of a subquery causes the entire statement to fail. For
+nontransactional storage engines, data modifications made before the error was encountered are
+preserved.
+15.2.15.11 Optimizing Subqueries
+Development is ongoing, so no optimization tip is reliable for the long term. The following list provides
+some interesting tricks that you might want to play with. See also Section 10.2.2, “Optimizing
+Subqueries, Derived Tables, View References, and Common Table Expressions”.
+• Move clauses from outside to inside the subquery. For example, use this query:
+SELECT * FROM t1
+  WHERE s1 IN (SELECT s1 FROM t1 UNION ALL SELECT s1 FROM t2);
+Instead of this query:
+SELECT * FROM t1
+  WHERE s1 IN (SELECT s1 FROM t1) OR s1 IN (SELECT s1 FROM t2);
+For another example, use this query:
+SELECT (SELECT column1 + 5 FROM t1) FROM t2;
+Instead of this query:
+SELECT (SELECT column1 FROM t1) + 5 FROM t2;
+15.2.15.12 Restrictions on Subqueries
+• In general, you cannot modify a table and select from the same table in a subquery. For example,
+this limitation applies to statements of the following forms:
+DELETE FROM t WHERE ... (SELECT ... FROM t ...);
+UPDATE t ... WHERE col = (SELECT ... FROM t ...);
+{INSERT|REPLACE} INTO t (SELECT ... FROM t ...);
+Exception: The preceding prohibition does not apply if for the modified table you are using a
+derived table and that derived table is materialized rather than merged into the outer query. (See
+Section 10.2.2.4, “Optimizing Derived Tables, View References, and Common Table Expressions
+with Merging or Materialization”.) Example:
+UPDATE t ... WHERE col = (SELECT * FROM (SELECT ... FROM t...) AS dt ...);
+Here the result from the derived table is materialized as a temporary table, so the relevant rows in t
+have already been selected by the time the update to t takes place.
+In general, you may be able to influence the optimizer to materialize a derived table by adding a
+NO_MERGE optimizer hint. See Section 10.9.3, “Optimizer Hints”.
+• Row comparison operations are only partially supported:
+• For expr [NOT] IN subquery, expr can be an n-tuple (specified using row constructor
+syntax) and the subquery can return rows of n-tuples. The permitted syntax is therefore more
+specifically expressed as row_constructor [NOT] IN table_subquery
+• For expr op {ALL|ANY|SOME} subquery, expr must be a scalar value and the subquery
+must be a column subquery; it cannot return multiple-column rows.
+In other words, for a subquery that returns rows of n-tuples, this is supported:
+(expr_1, ..., expr_n) [NOT] IN table_subquery
+But this is not supported:
+(expr_1, ..., expr_n) op {ALL|ANY|SOME} subquery
+The reason for supporting row comparisons for IN but not for the others is that IN is implemented by
+rewriting it as a sequence of = comparisons and AND operations. This approach cannot be used for
+ALL, ANY, or SOME.
+• MySQL does not support LIMIT in subqueries for certain subquery operators:
+mysql> SELECT * FROM t1
+       WHERE s1 IN (SELECT s2 FROM t2 ORDER BY s1 LIMIT 1);
+ERROR 1235 (42000): This version of MySQL doesn't yet support
+ 'LIMIT & IN/ALL/ANY/SOME subquery'
+See Section 15.2.15.10, “Subquery Errors”.
+• MySQL permits a subquery to refer to a stored function that has data-modifying side effects such as
+inserting rows into a table. For example, if f() inserts rows, the following query can modify data:
+SELECT ... WHERE x IN (SELECT f() ...);
+This behavior is an extension to the SQL standard. In MySQL, it can produce nondeterministic
+results because f() might be executed a different number of times for different executions of a given
+query depending on how the optimizer chooses to handle it.
+For statement-based or mixed-format replication, one implication of this indeterminism is that such a
+query can produce different results on the source and its replicas.

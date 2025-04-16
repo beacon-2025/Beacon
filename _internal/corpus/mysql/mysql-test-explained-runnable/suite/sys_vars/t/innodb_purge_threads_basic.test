@@ -1,0 +1,7 @@
+# Variable name: innodb_purge_threads
+# Scope: Global
+# Access type: Static
+# Data type: numeric
+
+
+SELECT COUNT(@@GLOBAL.innodb_purge_threads)

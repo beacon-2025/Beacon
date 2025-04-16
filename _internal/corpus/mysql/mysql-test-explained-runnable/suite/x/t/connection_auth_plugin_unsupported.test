@@ -1,0 +1,2 @@
+
+SHOW STATUS LIKE 'Mysqlx_ssl_active'

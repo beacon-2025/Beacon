@@ -1,0 +1,64 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 创建表
+CREATE TABLE schema1.table1 (id INT PRIMARY KEY, name VARCHAR(50));
+CREATE TABLE schema1.table2 (id INT PRIMARY KEY, name VARCHAR(50));
+CREATE TABLE schema2.table3 (id INT PRIMARY KEY, name VARCHAR(50));
+-- 插入数据
+INSERT INTO schema1.table1 (id, name) VALUES (1, 'Alice');
+INSERT INTO schema1.table1 (id, name) VALUES (2, 'Bob');
+INSERT INTO schema1.table2 (id, name) VALUES (1, 'Charlie');
+INSERT INTO schema1.table2 (id, name) VALUES (2, 'David');
+INSERT INTO schema2.table3 (id, name) VALUES (1, 'Eve');
+INSERT INTO schema2.table3 (id, name) VALUES (2, 'Frank');
+-- 测试用例1: 删除默认模式下的表的所有记录
+TRUNCATE TABLE schema1.table1;
+-- 测试用例2: 删除指定模式下的表的所有记录
+TRUNCATE TABLE schema2.table3;
+-- 测试用例3: 删除表的所有记录并级联删除引用表的数据
+-- 创建引用表和外键约束
+CREATE TABLE schema1.table4 (id INT PRIMARY KEY, ref_id INT, FOREIGN KEY (ref_id) REFERENCES schema1.table1(id) ON DELETE CASCADE);
+INSERT INTO schema1.table4 (id, ref_id) VALUES (1, 1);
+INSERT INTO schema1.table4 (id, ref_id) VALUES (2, 2);
+-- 删除表的所有记录并级联删除引用表的数据
+TRUNCATE TABLE schema1.table1 CASCADE;
+-- 测试用例4: 删除分区表的所有记录
+-- 创建分区表
+CREATE TABLE schema1.partitioned_table (id INT PRIMARY KEY, name VARCHAR(50)) PARTITION BY RANGE (id) (
+    PARTITION p1 VALUES LESS THAN (10),
+    PARTITION p2 VALUES LESS THAN (20)
+);
+-- 插入数据
+INSERT INTO schema1.partitioned_table (id, name) VALUES (1, 'Alice');
+INSERT INTO schema1.partitioned_table (id, name) VALUES (11, 'Bob');
+-- 删除分区表的所有记录
+TRUNCATE TABLE schema1.partitioned_table PARTITION p1;
+-- 测试用例5: 删除分区表的所有记录并级联删除引用表的数据
+-- 创建引用表和外键约束
+CREATE TABLE schema1.table5 (id INT PRIMARY KEY, ref_id INT, FOREIGN KEY (ref_id) REFERENCES schema1.partitioned_table(id) ON DELETE CASCADE);
+INSERT INTO schema1.table5 (id, ref_id) VALUES (1, 1);
+INSERT INTO schema1.table5 (id, ref_id) VALUES (2, 11);
+-- 删除分区表的所有记录并级联删除引用表的数据
+TRUNCATE TABLE schema1.partitioned_table PARTITION p1 CASCADE;
+-- 测试用例6: 删除分区表的所有记录（指定分区名）
+TRUNCATE TABLE schema1.partitioned_table PARTITION (p2);
+-- 测试用例7: 删除分区表的所有记录并级联删除引用表的数据（指定分区名）
+TRUNCATE TABLE schema1.partitioned_table PARTITION (p2) CASCADE;
+-- 测试用例8: 删除表的所有记录（未指定模式名，使用当前模式）
+-- 设置当前模式为schema1
+SET SCHEMA schema1;
+-- 删除表的所有记录
+TRUNCATE TABLE table2;
+-- 测试用例9: 删除表的所有记录并级联删除引用表的数据（未指定模式名，使用当前模式）
+-- 创建引用表和外键约束
+CREATE TABLE table6 (id INT PRIMARY KEY, ref_id INT, FOREIGN KEY (ref_id) REFERENCES table2(id) ON DELETE CASCADE);
+INSERT INTO table6 (id, ref_id) VALUES (1, 1);
+INSERT INTO table6 (id, ref_id) VALUES (2, 2);
+-- 删除表的所有记录并级联删除引用表的数据
+TRUNCATE TABLE table2 CASCADE;
+-- 测试用例10: 删除表的所有记录（未指定模式名，使用当前模式）
+-- 设置当前模式为schema2
+SET SCHEMA schema2;
+-- 删除表的所有记录
+TRUNCATE TABLE table3

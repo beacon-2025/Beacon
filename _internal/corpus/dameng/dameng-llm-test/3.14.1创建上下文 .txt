@@ -1,0 +1,65 @@
+-- 创建一个模式用于测试
+CREATE SCHEMA test_schema1;
+-- 创建一个包用于测试
+CREATE OR REPLACE PACKAGE test_schema1.test_package1 AS
+    PROCEDURE set_context_property(p_name VARCHAR2, p_value VARCHAR2);
+END test_package1;
+/
+
+CREATE OR REPLACE PACKAGE BODY test_schema1.test_package1 AS
+    PROCEDURE set_context_property(p_name VARCHAR2, p_value VARCHAR2) IS
+    BEGIN
+        DBMS_SESSION.SET_CONTEXT('test_namespace1', p_name, p_value);
+END set_context_property;
+END test_package1;
+/;
+-- 创建上下文
+CREATE CONTEXT test_namespace1 USING test_schema1.test_package1;
+-- 替换上下文
+CREATE OR REPLACE CONTEXT test_namespace1 USING test_schema1.test_package1;
+-- 设置上下文属性
+CALL test_schema1.test_package1.set_context_property('test_property1', 'test_value1');
+-- 访问上下文属性
+SELECT SYS_CONTEXT('test_namespace1', 'test_property1') FROM dual;
+-- 访问系统默认上下文USERENV的属性
+SELECT SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA') FROM dual;
+SELECT SYS_CONTEXT('USERENV', 'CURRENT_USER') FROM dual;
+SELECT SYS_CONTEXT('USERENV', 'DB_NAME') FROM dual;
+-- 创建另一个上下文
+CREATE CONTEXT test_namespace2 USING test_schema1.test_package1;
+-- 设置上下文属性
+CALL test_schema1.test_package1.set_context_property('test_property2', 'test_value2');
+-- 访问上下文属性
+SELECT SYS_CONTEXT('test_namespace2', 'test_property2') FROM dual;
+-- 访问不存在的上下文属性
+SELECT SYS_CONTEXT('test_namespace1', 'non_existent_property') FROM dual;
+-- 访问不存在的上下文
+SELECT SYS_CONTEXT('non_existent_namespace', 'test_property1') FROM dual;
+-- 设置上下文属性
+CALL test_schema1.test_package1.set_context_property('test_property3', 'test_value3');
+-- 访问上下文属性并指定length参数
+SELECT SYS_CONTEXT('test_namespace1', 'test_property3', 1000) FROM dual;
+-- 创建另一个模式
+CREATE SCHEMA test_schema2;
+-- 创建另一个包
+CREATE OR REPLACE PACKAGE test_schema2.test_package2 AS
+    PROCEDURE set_context_property(p_name VARCHAR2, p_value VARCHAR2);
+END test_package2;
+/
+
+CREATE OR REPLACE PACKAGE BODY test_schema2.test_package2 AS
+    PROCEDURE set_context_property(p_name VARCHAR2, p_value VARCHAR2) IS
+    BEGIN
+        DBMS_SESSION.SET_CONTEXT('test_namespace3', p_name, p_value);
+END set_context_property;
+END test_package2;
+/
+
+-- 创建上下文并使用不同的模式
+CREATE CONTEXT test_namespace3 USING test_schema2.test_package2;
+-- 设置上下文属性
+CALL test_schema2.test_package2.set_context_property('test_property4', 'test_value4');
+-- 访问上下文属性
+SELECT SYS_CONTEXT('test_namespace3', 'test_property4') FROM dual;
+-- 查看动态视图V$CONTEXT
+SELECT * FROM V$CONTEXT

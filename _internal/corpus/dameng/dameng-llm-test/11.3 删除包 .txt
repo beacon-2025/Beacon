@@ -1,0 +1,68 @@
+-- 创建包规范
+CREATE OR REPLACE PACKAGE test_package1 AS
+    PROCEDURE test_procedure1;
+END test_package1;
+/
+
+-- 创建包主体
+CREATE OR REPLACE PACKAGE BODY test_package1 AS
+    PROCEDURE test_procedure1 IS
+    BEGIN
+        NULL;
+END test_procedure1;
+END test_package1;
+/
+
+-- 创建另一个包规范
+CREATE OR REPLACE PACKAGE test_package2 AS
+    FUNCTION test_function2 RETURN NUMBER;
+END test_package2;
+/
+
+-- 创建另一个包主体
+CREATE OR REPLACE PACKAGE BODY test_package2 AS
+    FUNCTION test_function2 RETURN NUMBER IS
+    BEGIN
+        RETURN 1;
+END test_function2;
+END test_package2;
+/;
+-- 测试用例 1: 删除包规范
+DROP PACKAGE test_package1;
+/
+
+-- 测试用例 2: 删除包主体
+DROP PACKAGE BODY test_package1;
+/
+
+-- 测试用例 3: 删除包规范和包主体
+DROP PACKAGE test_package2;
+/
+
+-- 测试用例 4: 删除不存在的包规范 (预期报错)
+DROP PACKAGE non_existent_package;
+/
+
+-- 测试用例 5: 删除不存在的包主体 (预期报错)
+DROP PACKAGE BODY non_existent_package;
+/
+
+-- 测试用例 6: 删除包规范和包主体 (包主体不存在)
+DROP PACKAGE test_package1;
+/
+
+-- 测试用例 7: 删除包规范和包主体 (包规范不存在)
+DROP PACKAGE BODY test_package2;
+/
+
+-- 测试用例 8: 删除包规范和包主体 (包规范和包主体都存在)
+DROP PACKAGE test_package2;
+/
+
+-- 测试用例 9: 删除包规范和包主体 (包规范和包主体都不存在)
+DROP PACKAGE non_existent_package;
+/
+
+-- 测试用例 10: 删除包规范和包主体 (包规范存在，包主体不存在)
+DROP PACKAGE test_package1;
+/

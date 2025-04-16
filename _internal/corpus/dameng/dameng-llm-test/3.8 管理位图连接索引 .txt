@@ -1,0 +1,49 @@
+-- 创建表1
+CREATE TABLE table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    status INT
+);
+-- 创建表2
+CREATE TABLE table2 (
+    id INT PRIMARY KEY,
+    description VARCHAR(100),
+    flag INT
+);
+-- 插入数据到表1
+INSERT INTO table1 (id, name, status) VALUES (1, 'Alice', 1);
+INSERT INTO table1 (id, name, status) VALUES (2, 'Bob', 0);
+INSERT INTO table1 (id, name, status) VALUES (3, 'Charlie', 1);
+-- 插入数据到表2
+INSERT INTO table2 (id, description, flag) VALUES (1, 'Description 1', 1);
+INSERT INTO table2 (id, description, flag) VALUES (2, 'Description 2', 0);
+INSERT INTO table2 (id, description, flag) VALUES (3, 'Description 3', 1);
+-- 在表1的status列上创建位图索引
+CREATE BITMAP INDEX idx_table1_status ON table1(status);
+-- 删除表1上的位图索引
+DROP INDEX idx_table1_status;
+-- 查询表1中status为1的记录
+SELECT * FROM table1 WHERE status = 1;
+-- 在表1和表2的连接列上创建位图连接索引
+CREATE BITMAP INDEX idx_table1_table2_join ON table1(status) FROM table1, table2 WHERE table1.id = table2.id;
+-- 删除表1和表2的连接位图索引
+DROP INDEX idx_table1_table2_join;
+-- 查询表1和表2中status和flag都为1的记录
+SELECT table1.id, table1.name, table2.description 
+FROM table1 
+JOIN table2 ON table1.id = table2.id 
+WHERE table1.status = 1 AND table2.flag = 1;
+-- 在表1的status列和表2的flag列上分别创建位图索引
+CREATE BITMAP INDEX idx_table1_status ON table1(status);
+CREATE BITMAP INDEX idx_table2_flag ON table2(flag);
+-- 删除表1和表2上的位图索引
+DROP INDEX idx_table1_status;
+DROP INDEX idx_table2_flag;
+-- 查询表1中status为1且表2中flag为1的记录
+SELECT table1.id, table1.name, table2.description 
+FROM table1 
+JOIN table2 ON table1.id = table2.id 
+WHERE table1.status = 1 AND table2.flag = 1;
+-- 在表1的status列上创建位图索引并查询
+CREATE BITMAP INDEX idx_table1_status ON table1(status);
+SELECT * FROM table1 WHERE status = 1

@@ -1,0 +1,60 @@
+-- 创建模式
+CREATE SCHEMA test_schema;
+-- 创建表
+CREATE TABLE test_schema.PERSON (
+    ID INT PRIMARY KEY,
+    NAME VARCHAR(100),
+    AGE INT
+);
+-- 创建视图
+CREATE VIEW test_schema.PERSON_VIEW AS
+SELECT ID, NAME
+FROM test_schema.PERSON;
+-- 测试用例 1: 为表创建注释
+COMMENT ON TABLE test_schema.PERSON IS 'This is a table for storing person information.';
+-- 测试用例 2: 为视图创建注释
+COMMENT ON VIEW test_schema.PERSON_VIEW IS 'This is a view for displaying person names and IDs.';
+-- 测试用例 3: 为表的列创建注释
+COMMENT ON COLUMN test_schema.PERSON.NAME IS 'This column stores the name of the person.';
+-- 测试用例 4: 为视图的列创建注释
+COMMENT ON COLUMN test_schema.PERSON_VIEW.NAME IS 'This column in the view displays the name of the person.';
+-- 测试用例 5: 为表的列创建注释（不带模式名）
+COMMENT ON COLUMN PERSON.AGE IS 'This column stores the age of the person.';
+-- 测试用例 6: 为视图的列创建注释（不带模式名）
+COMMENT ON COLUMN PERSON_VIEW.ID IS 'This column in the view displays the ID of the person.';
+-- 测试用例 7: 更新表的注释
+COMMENT ON TABLE test_schema.PERSON IS 'Updated comment for the person table.';
+-- 测试用例 8: 更新视图的注释
+COMMENT ON VIEW test_schema.PERSON_VIEW IS 'Updated comment for the person view.';
+-- 测试用例 9: 更新表的列注释
+COMMENT ON COLUMN test_schema.PERSON.NAME IS 'Updated comment for the name column.';
+-- 测试用例 10: 更新视图的列注释
+COMMENT ON COLUMN test_schema.PERSON_VIEW.NAME IS 'Updated comment for the name column in the view.';
+-- 测试用例 11: 为另一个表创建注释
+CREATE TABLE test_schema.EMPLOYEE (
+    EMP_ID INT PRIMARY KEY,
+    EMP_NAME VARCHAR(100),
+    SALARY DECIMAL(10, 2)
+);
+COMMENT ON TABLE test_schema.EMPLOYEE IS 'This table stores employee information.';
+-- 测试用例 12: 为另一个表的列创建注释
+COMMENT ON COLUMN test_schema.EMPLOYEE.EMP_NAME IS 'This column stores the name of the employee.';
+-- 测试用例 13: 为另一个视图创建注释
+CREATE VIEW test_schema.EMPLOYEE_VIEW AS
+SELECT EMP_ID, EMP_NAME
+FROM test_schema.EMPLOYEE;
+COMMENT ON VIEW test_schema.EMPLOYEE_VIEW IS 'This view displays employee IDs and names.';
+-- 测试用例 14: 为另一个视图的列创建注释
+COMMENT ON COLUMN test_schema.EMPLOYEE_VIEW.EMP_NAME IS 'This column in the view displays the name of the employee.';
+-- 测试用例 15: 为另一个表的列创建注释（不带模式名）
+COMMENT ON COLUMN EMPLOYEE.SALARY IS 'This column stores the salary of the employee.';
+-- 测试用例 16: 为另一个视图的列创建注释（不带模式名）
+COMMENT ON COLUMN EMPLOYEE_VIEW.EMP_ID IS 'This column in the view displays the ID of the employee.';
+-- 测试用例 17: 更新另一个表的注释
+COMMENT ON TABLE test_schema.EMPLOYEE IS 'Updated comment for the employee table.';
+-- 测试用例 18: 更新另一个视图的注释
+COMMENT ON VIEW test_schema.EMPLOYEE_VIEW IS 'Updated comment for the employee view.';
+-- 测试用例 19: 更新另一个表的列注释
+COMMENT ON COLUMN test_schema.EMPLOYEE.EMP_NAME IS 'Updated comment for the employee name column.';
+-- 测试用例 20: 更新另一个视图的列注释
+COMMENT ON COLUMN test_schema.EMPLOYEE_VIEW.EMP_NAME IS 'Updated comment for the employee name column in the view.'

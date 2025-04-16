@@ -1,0 +1,12 @@
+```plaintext
+STRING -> UNQUOTED_STRING | QUOTED_STRING
+UNQUOTED_STRING -> LETTER (LETTER | DIGIT)*
+QUOTED_STRING -> SINGLE_QUOTE (CHARACTER | ESCAPE_SEQUENCE)* SINGLE_QUOTE | DOUBLE_QUOTE (CHARACTER | ESCAPE_SEQUENCE)* DOUBLE_QUOTE
+LETTER -> 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' | 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F' | 'G' | 'H' | 'I' | 'J' | 'K' | 'L' | 'M' | 'N' | 'O' | 'P' | 'Q' | 'R' | 'S' | 'T' | 'U' | 'V' | 'W' | 'X' | 'Y' | 'Z'
+DIGIT -> '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+CHARACTER -> LETTER | DIGIT | ' ' | '!' | '"' | '#' | '$' | '%' | '&' | '\'' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/' | ':' | ';' | '<' | '=' | '>' | '?' | '@' | '[' | '\\' | ']' | '^' | '_' | '`' | '{' | '|' | '}' | '~'
+ESCAPE_SEQUENCE -> '\\"' | '\\\\' | '\\/' | '\\b' | '\\f' | '\\n' | '\\r' | '\\t' | '\\u' HEX_DIGIT HEX_DIGIT HEX_DIGIT HEX_DIGIT
+HEX_DIGIT -> '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'A' | 'B' | 'C' | 'D' | 'E' | 'F'
+SINGLE_QUOTE -> '\''
+DOUBLE_QUOTE -> '"'
+```

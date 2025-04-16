@@ -1,0 +1,9 @@
+```text
+S -> FLASHBACK_TRX_QUERY | JSON_INTRODUCTION | JSON_EXAMPLE
+FLASHBACK_TRX_QUERY -> '闪回事务查询提供系统视图' 'V$FLASHBACK_TRX_INFO' '供用户查看在事务级对数据库所做的更改。根据视图信息，可以确定如何还原指定事务或指定时间段内的修改。'
+JSON_INTRODUCTION -> 'JSON（JavaScript Object Notation）是完全独立于语言的文本格式，是一种轻量级的数据交换格式。'
+JSON_EXAMPLE -> 'DM 数据库支持对 JSON数据进行存储和查询。在 DM 数据库中 JSON数据以字符串形式存储。DM建议用户在插入JSON数据之前，使用IS JSON来验证输入JSON数据的正确性。'
+
+V$FLASHBACK_TRX_INFO -> 'START_TRXID' 'BIGINT' | 'START_TIMESTAMP' 'TIMESTAMP' | 'COMMIT_TRXID' 'BIGINT' | 'COMMIT_TIMESTAMP' 'TIMESTAMP' | 'LOGON_USER' 'VARCHAR(256)' | 'UNDO_CHANGE#' 'INT' | 'OPERATION' 'CHAR(1)' | 'TABLE_NAME' 'VARCHAR(256)' | 'TABLE_OWNER' 'VARCHAR(256)' | 'ROW_ID' 'BIGINT' | 'UNDO_SQL' 'VARCHAR(3900)'
+OPERATION -> 'D' | 'U' | 'I' | 'N' | 'C' | 'P' | 'O'
+```

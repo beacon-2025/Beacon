@@ -1,0 +1,6 @@
+```plaintext
+DROP_INDEX -> 'DROP' 'INDEX' IF_EXISTS SCHEMA_NAME '.' INDEX_NAME
+IF_EXISTS -> 'IF EXISTS' | ''
+SCHEMA_NAME -> 'schemaname_1' | ''
+INDEX_NAME -> 'indexname_1'
+```

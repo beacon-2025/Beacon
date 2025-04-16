@@ -1,0 +1,2 @@
+
+SELECT name FROM information_schema.innodb_tablespaces WHERE name LIKE '%long%'

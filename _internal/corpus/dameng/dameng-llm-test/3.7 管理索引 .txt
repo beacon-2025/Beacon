@@ -1,0 +1,51 @@
+-- 创建测试表
+CREATE TABLE test_table_1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    age INT
+);
+CREATE TABLE test_table_2 (
+    id INT PRIMARY KEY,
+    address VARCHAR(200),
+    salary DECIMAL(10, 2)
+);
+-- 测试用例 1: 创建单列索引
+CREATE INDEX idx_name ON test_table_1 (name);
+-- 测试用例 2: 创建多列索引
+CREATE INDEX idx_name_age ON test_table_1 (name, age);
+-- 测试用例 3: 创建唯一索引
+CREATE UNIQUE INDEX idx_unique_name ON test_table_1 (name);
+-- 测试用例 4: 删除索引
+DROP INDEX idx_name ON test_table_1;
+-- 测试用例 5: 创建索引并指定索引类型 (假设支持 BTREE)
+CREATE INDEX idx_age ON test_table_1 (age) USING BTREE;
+-- 测试用例 6: 创建索引并指定索引排序 (假设支持 DESC)
+CREATE INDEX idx_name_desc ON test_table_1 (name DESC);
+-- 测试用例 7: 创建索引并指定索引长度 (假设支持前缀索引)
+CREATE INDEX idx_name_prefix ON test_table_1 (name(10));
+-- 测试用例 8: 创建索引并指定存储引擎 (假设支持 InnoDB)
+CREATE INDEX idx_address ON test_table_2 (address) USING INNODB;
+-- 测试用例 9: 创建索引并指定注释
+CREATE INDEX idx_salary ON test_table_2 (salary) COMMENT 'Index on salary column';
+-- 测试用例 10: 创建索引并指定并行度 (假设支持并行创建索引)
+CREATE INDEX idx_age_parallel ON test_table_1 (age) WITH (PARALLEL = 4);
+-- 测试用例 11: 创建索引并指定索引可见性 (假设支持不可见索引)
+CREATE INDEX idx_name_invisible ON test_table_1 (name) INVISIBLE;
+-- 测试用例 12: 创建索引并指定索引存储位置 (假设支持指定表空间)
+CREATE INDEX idx_address_tablespace ON test_table_2 (address) TABLESPACE my_tablespace;
+-- 测试用例 13: 创建索引并指定索引压缩 (假设支持压缩)
+CREATE INDEX idx_name_compressed ON test_table_1 (name) WITH (COMPRESSION = 'HIGH');
+-- 测试用例 14: 创建索引并指定索引分区 (假设支持分区索引)
+CREATE INDEX idx_age_partitioned ON test_table_1 (age) PARTITION BY RANGE (age);
+-- 测试用例 15: 创建索引并指定索引延迟创建 (假设支持延迟创建)
+CREATE INDEX idx_name_deferred ON test_table_1 (name) DEFERRED;
+-- 测试用例 16: 创建索引并指定索引统计信息 (假设支持统计信息)
+CREATE INDEX idx_salary_stats ON test_table_2 (salary) WITH (STATISTICS = 'ON');
+-- 测试用例 17: 创建索引并指定索引缓存 (假设支持缓存)
+CREATE INDEX idx_address_cached ON test_table_2 (address) WITH (CACHE = 'ON');
+-- 测试用例 18: 创建索引并指定索引日志 (假设支持日志)
+CREATE INDEX idx_name_logged ON test_table_1 (name) WITH (LOGGING = 'ON');
+-- 测试用例 19: 创建索引并指定索引并行度 (假设支持并行度)
+CREATE INDEX idx_age_parallel_high ON test_table_1 (age) WITH (PARALLEL = 8);
+-- 测试用例 20: 创建索引并指定索引存储格式 (假设支持存储格式)
+CREATE INDEX idx_name_storage_format ON test_table_1 (name) WITH (STORAGE_FORMAT = 'COLUMNAR')

@@ -1,0 +1,6 @@
+
+
+select OBJECT_INSTANCE_BEGIN, OWNER_THREAD_ID, OWNER_EVENT_ID
+  from performance_schema.table_handles
+  where OBJECT_NAME = 'explain_test_table'
+  into @oib, @o_tid, @o_eid

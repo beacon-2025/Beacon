@@ -1,0 +1,2 @@
+
+PREPARE stmt FROM 'ALTER USER testuser@localhost IDENTIFIED BY \'NewPass\''

@@ -1,0 +1,4 @@
+```text
+S -> MANAGE_USER
+MANAGE_USER -> '3.2' '管理用户'
+```

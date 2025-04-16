@@ -1,0 +1,236 @@
+15.3.8 XA Transactions
+Support for XA transactions is available for the InnoDB storage engine. The MySQL XA
+implementation is based on the X/Open CAE document Distributed Transaction Processing:
+The XA Specification. This document is published by The Open Group and available at http://
+www.opengroup.org/public/pubs/catalog/c193.htm. Limitations of the current XA implementation are
+described in Section 15.3.8.3, “Restrictions on XA Transactions”.
+On the client side, there are no special requirements. The XA interface to a MySQL server consists of
+SQL statements that begin with the XA keyword. MySQL client programs must be able to send SQL
+statements and to understand the semantics of the XA statement interface. They do not need be linked
+against a recent client library. Older client libraries also work.
+Among the MySQL Connectors, MySQL Connector/J 5.0.0 and higher supports XA directly, by means
+of a class interface that handles the XA SQL statement interface for you.
+XA supports distributed transactions, that is, the ability to permit multiple separate transactional
+resources to participate in a global transaction. Transactional resources often are RDBMSs but may be
+other kinds of resources.
+A global transaction involves several actions that are transactional in themselves, but that all must
+either complete successfully as a group, or all be rolled back as a group. In essence, this extends ACID
+properties “up a level” so that multiple ACID transactions can be executed in concert as components of
+a global operation that also has ACID properties. (As with nondistributed transactions, SERIALIZABLE
+may be preferred if your applications are sensitive to read phenomena. REPEATABLE READ may not
+be sufficient for distributed transactions.)
+Some examples of distributed transactions:
+• An application may act as an integration tool that combines a messaging service with an RDBMS.
+The application makes sure that transactions dealing with message sending, retrieval, and
+processing that also involve a transactional database all happen in a global transaction. You can
+think of this as “transactional email.”
+• An application performs actions that involve different database servers, such as a MySQL server
+and an Oracle server (or multiple MySQL servers), where actions that involve multiple servers must
+happen as part of a global transaction, rather than as separate transactions local to each server.
+• A bank keeps account information in an RDBMS and distributes and receives money through
+automated teller machines (ATMs). It is necessary to ensure that ATM actions are correctly reflected
+in the accounts, but this cannot be done with the RDBMS alone. A global transaction manager
+integrates the ATM and database resources to ensure overall consistency of financial transactions.
+Applications that use global transactions involve one or more Resource Managers and a Transaction
+Manager:
+• A Resource Manager (RM) provides access to transactional resources. A database server is one
+kind of resource manager. It must be possible to either commit or roll back transactions managed by
+the RM.
+• A Transaction Manager (TM) coordinates the transactions that are part of a global transaction. It
+communicates with the RMs that handle each of these transactions. The individual transactions
+within a global transaction are “branches” of the global transaction. Global transactions and their
+branches are identified by a naming scheme described later.
+The MySQL implementation of XA enables a MySQL server to act as a Resource Manager that
+handles XA transactions within a global transaction. A client program that connects to the MySQL
+server acts as the Transaction Manager.
+To carry out a global transaction, it is necessary to know which components are involved, and
+bring each component to a point when it can be committed or rolled back. Depending on what each
+component reports about its ability to succeed, they must all commit or roll back as an atomic group.
+That is, either all components must commit, or all components must roll back. To manage a global
+transaction, it is necessary to take into account that any component or the connecting network might
+fail.
+The process for executing a global transaction uses two-phase commit (2PC). This takes place after
+the actions performed by the branches of the global transaction have been executed.
+1. In the first phase, all branches are prepared. That is, they are told by the TM to get ready to
+commit. Typically, this means each RM that manages a branch records the actions for the branch in
+stable storage. The branches indicate whether they are able to do this, and these results are used
+for the second phase.
+2. In the second phase, the TM tells the RMs whether to commit or roll back. If all branches indicated
+when they were prepared that they were able to commit, all branches are told to commit. If any
+branch indicated when it was prepared that it was not able to commit, all branches are told to roll
+back.
+In some cases, a global transaction might use one-phase commit (1PC). For example, when a
+Transaction Manager finds that a global transaction consists of only one transactional resource (that is,
+a single branch), that resource can be told to prepare and commit at the same time.
+15.3.8.1 XA Transaction SQL Statements
+To perform XA transactions in MySQL, use the following statements:
+XA {START|BEGIN} xid [JOIN|RESUME]
+XA END xid [SUSPEND [FOR MIGRATE]]
+XA PREPARE xid
+XA COMMIT xid [ONE PHASE]
+XA ROLLBACK xid
+XA RECOVER [CONVERT XID]
+For XA START, the JOIN and RESUME clauses are recognized but have no effect.
+For XA END the SUSPEND [FOR MIGRATE] clause is recognized but has no effect.
+Each XA statement begins with the XA keyword, and most of them require an xid value. An xid is
+an XA transaction identifier. It indicates which transaction the statement applies to. xid values are
+supplied by the client, or generated by the MySQL server. An xid value has from one to three parts:
+xid: gtrid [, bqual [, formatID ]]
+gtrid is a global transaction identifier, bqual is a branch qualifier, and formatID is a number that
+identifies the format used by the gtrid and bqual values. As indicated by the syntax, bqual and
+formatID are optional. The default bqual value is '' if not given. The default formatID value is 1 if
+not given.
+gtrid and bqual must be string literals, each up to 64 bytes (not characters) long. gtrid and bqual
+can be specified in several ways. You can use a quoted string ('ab'), hex string (X'6162', 0x6162),
+or bit value (b'nnnn').
+formatID is an unsigned integer.
+The gtrid and bqual values are interpreted in bytes by the MySQL server's underlying XA support
+routines. However, while an SQL statement containing an XA statement is being parsed, the server
+works with some specific character set. To be safe, write gtrid and bqual as hex strings.
+xid values typically are generated by the Transaction Manager. Values generated by one TM must
+be different from values generated by other TMs. A given TM must be able to recognize its own xid
+values in a list of values returned by the XA RECOVER statement.
+XA START xid starts an XA transaction with the given xid value. Each XA transaction must have a
+unique xid value, so the value must not currently be used by another XA transaction. Uniqueness is
+assessed using the gtrid and bqual values. All following XA statements for the XA transaction must
+be specified using the same xid value as that given in the XA START statement. If you use any of
+those statements but specify an xid value that does not correspond to some existing XA transaction,
+an error occurs.
+XA START, XA BEGIN, XA END, XA COMMIT, and XA ROLLBACK statements are not filtered by the
+default database when the server is running with --replicate-do-db or --replicate-ignore-
+db.
+One or more XA transactions can be part of the same global transaction. All XA transactions within
+a given global transaction must use the same gtrid value in the xid value. For this reason, gtrid
+values must be globally unique so that there is no ambiguity about which global transaction a given
+XA transaction is part of. The bqual part of the xid value must be different for each XA transaction
+within a global transaction. (The requirement that bqual values be different is a limitation of the current
+MySQL XA implementation. It is not part of the XA specification.)
+The XA RECOVER statement returns information for those XA transactions on the MySQL server that
+are in the PREPARED state. (See Section 15.3.8.2, “XA Transaction States”.) The output includes a row
+for each such XA transaction on the server, regardless of which client started it.
+XA RECOVER requires the XA_RECOVER_ADMIN privilege. This privilege requirement prevents users
+from discovering the XID values for outstanding prepared XA transactions other than their own. It does
+not affect normal commit or rollback of an XA transaction because the user who started it knows its
+XID.
+XA RECOVER output rows look like this (for an example xid value consisting of the parts 'abc',
+'def', and 7):
+mysql> XA RECOVER;
++----------+--------------+--------------+--------+
+| formatID | gtrid_length | bqual_length | data   |
++----------+--------------+--------------+--------+
+|        7 |            3 |            3 | abcdef |
++----------+--------------+--------------+--------+
+The output columns have the following meanings:
+• formatID is the formatID part of the transaction xid
+• gtrid_length is the length in bytes of the gtrid part of the xid
+• bqual_length is the length in bytes of the bqual part of the xid
+• data is the concatenation of the gtrid and bqual parts of the xid
+XID values may contain nonprintable characters. XA RECOVER permits an optional CONVERT XID
+clause so that clients can request XID values in hexadecimal.
+15.3.8.2 XA Transaction States
+An XA transaction progresses through the following states:
+1. Use XA START to start an XA transaction and put it in the ACTIVE state.
+2. For an ACTIVE XA transaction, issue the SQL statements that make up the transaction, and then
+issue an XA END statement. XA END puts the transaction in the IDLE state.
+3. For an IDLE XA transaction, you can issue either an XA PREPARE statement or an XA
+COMMIT ... ONE PHASE statement:
+• XA PREPARE puts the transaction in the PREPARED state. An XA RECOVER statement at this
+point includes the transaction's xid value in its output, because XA RECOVER lists all XA
+transactions that are in the PREPARED state.
+• XA COMMIT ... ONE PHASE prepares and commits the transaction. The xid value is not listed
+by XA RECOVER because the transaction terminates.
+4. For a PREPARED XA transaction, you can issue an XA COMMIT statement to commit and terminate
+the transaction, or XA ROLLBACK to roll back and terminate the transaction.
+Here is a simple XA transaction that inserts a row into a table as part of a global transaction:
+mysql> XA START 'xatest';
+Query OK, 0 rows affected (0.00 sec)
+mysql> INSERT INTO mytable (i) VALUES(10);
+Query OK, 1 row affected (0.04 sec)
+mysql> XA END 'xatest';
+Query OK, 0 rows affected (0.00 sec)
+mysql> XA PREPARE 'xatest';
+Query OK, 0 rows affected (0.00 sec)
+mysql> XA COMMIT 'xatest';
+Query OK, 0 rows affected (0.00 sec)
+MySQL 9.1 supports detached XA transactions, enabled by the xa_detach_on_prepare system
+variable (ON by default). Detached transactions are disconnected from the current session following
+execution of XA PREPARE (and can be committed or rolled back by another connection). This means
+that the current session is free to start a new local transaction or XA transaction without having to wait
+for the prepared XA transaction to be committed or rolled back.
+When XA transactions are detached, a connection has no special knowledge of any XA transaction
+that it has prepared. If the current session tries to commit or roll back a given XA transaction (even one
+which it prepared) after another connection has already done so, the attempt is rejected with an invalid
+XID error (ER_XAER_NOTA) since the requested xid no longer exists.
+Note
+Detached XA transactions cannot use temporary tables.
+When detached XA transactions are disabled (xa_detach_on_prepare set to OFF), an XA
+transaction remains connected until it is committed or rolled back by the originating connection.
+Disabling detached XA transactions is not recommended for a MySQL server instance used in group
+replication; see Server Instance Configuration, for more information.
+If an XA transaction is in the ACTIVE state, you cannot issue any statements that cause an implicit
+commit. That would violate the XA contract because you could not roll back the XA transaction. Trying
+to execute such a statement raises the following error:
+ERROR 1399 (XAE07): XAER_RMFAIL: The command cannot be executed
+when global transaction is in the ACTIVE state
+Statements to which the preceding remark applies are listed at Section 15.3.3, “Statements That Cause
+an Implicit Commit”.
+15.3.8.3 Restrictions on XA Transactions
+XA transaction support is limited to the InnoDB storage engine.
+For “external XA,” a MySQL server acts as a Resource Manager and client programs act as
+Transaction Managers. For “Internal XA”, storage engines within a MySQL server act as RMs, and
+the server itself acts as a TM. Internal XA support is limited by the capabilities of individual storage
+engines. Internal XA is required for handling XA transactions that involve more than one storage
+engine. The implementation of internal XA requires that a storage engine support two-phase commit at
+the table handler level, and currently this is true only for InnoDB.
+For XA START, the JOIN and RESUME clauses are recognized but have no effect.
+For XA END the SUSPEND [FOR MIGRATE] clause is recognized but has no effect.
+The requirement that the bqual part of the xid value be different for each XA transaction within
+a global transaction is a limitation of the current MySQL XA implementation. It is not part of the XA
+specification.
+An XA transaction is written to the binary log in two parts. When XA PREPARE is issued, the first part
+of the transaction up to XA PREPARE is written using an initial GTID. A XA_prepare_log_event
+is used to identify such transactions in the binary log. When XA COMMIT or XA ROLLBACK
+is issued, a second part of the transaction containing only the XA COMMIT or XA ROLLBACK
+statement is written using a second GTID. Note that the initial part of the transaction, identified by
+XA_prepare_log_event, is not necessarily followed by its XA COMMIT or XA ROLLBACK, which
+can cause interleaved binary logging of any two XA transactions. The two parts of the XA transaction
+can even appear in different binary log files. This means that an XA transaction in PREPARED state is
+now persistent until an explicit XA COMMIT or XA ROLLBACK statement is issued, ensuring that XA
+transactions are compatible with replication.
+On a replica, immediately after the XA transaction is prepared, it is detached from the replication
+applier thread, and can be committed or rolled back by any thread on the replica. This means that
+the same XA transaction can appear in the events_transactions_current table with different
+states on different threads. The events_transactions_current table displays the current status
+of the most recent monitored transaction event on the thread, and does not update this status when the
+thread is idle. So the XA transaction can still be displayed in the PREPARED state for the original applier
+thread, after it has been processed by another thread. To positively identify XA transactions that are
+still in the PREPARED state and need to be recovered, use the XA RECOVER statement rather than the
+Performance Schema transaction tables.
+The following restrictions exist for using XA transactions:
+• The use of replication filters or binary log filters in combination with XA transactions is not
+supported. Filtering of tables could cause an XA transaction to be empty on a replica, and empty XA
+transactions are not supported. Also, with the replica's connection metadata repository and applier
+metadata repository stored in InnoDB tables (the default), the internal state of the data engine
+transaction is changed following a filtered XA transaction, and can become inconsistent with the
+replication transaction context state.
+The error ER_XA_REPLICATION_FILTERS is logged whenever an XA transaction is impacted by a
+replication filter, whether or not the transaction was empty as a result. If the transaction is not empty,
+the replica is able to continue running, but you should take steps to discontinue the use of replication
+filters with XA transactions in order to avoid potential issues. If the transaction is empty, the replica
+stops. In that event, the replica might be in an undetermined state in which the consistency of the
+replication process might be compromised. In particular, the gtid_executed set on a replica of
+the replica might be inconsistent with that on the source. To resolve this situation, isolate the source
+and stop all replication, then check GTID consistency across the replication topology. Undo the XA
+transaction that generated the error message, then restart replication.
+• XA transactions are considered unsafe for statement-based replication. If two XA transactions
+committed in parallel on the source are being prepared on the replica in the inverse order, locking
+dependencies can occur that cannot be safely resolved, and it is possible for replication to fail with
+deadlock on the replica. This situation can occur for a single-threaded or multithreaded replica.
+When binlog_format=STATEMENT is set, a warning is issued for DML statements inside XA
+transactions. When binlog_format=MIXED or binlog_format=ROW is set, DML statements
+inside XA transactions are logged using row-based replication, and the potential issue is not present.
+• You should be aware that, when the same transaction XID is used to execute XA transactions
+sequentially and a break occurs during the processing of XA COMMIT ... ONE PHASE, it may no
+longer be possible to synchronize the state between the binary log and the storage engine. This can
+occur if the series of events just described takes place after this transaction has been prepared in the
+storage engine, while the XA COMMIT statement is still executing. This is a known issue.

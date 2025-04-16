@@ -1,0 +1,19 @@
+## Compression done on client side
+#
+# client->server: Mysqlx.Connection.Compression
+#
+# In which X Plugin compress by default following messages
+#
+# * NOTICE - 11, 0x0b
+# * RESULTSET_COLUMN_META_DATA - 12, 0x0c
+# * RESULTSET_ROW  - 13, 0x0d
+# * RESULTSET_FETCH_DONE - 14, 0x0e
+#
+# followed with uncompressed:
+#
+# * SQL_STMT_EXECUTE_OK = 17   0x11
+#
+# The client is going to use following messages to transfer
+# compressed payload:
+#
+# * COMPRESSION = 46

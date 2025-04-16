@@ -1,0 +1,6 @@
+```
+DROP_MATERIALIZED_VIEW -> 'DROP' 'MATERIALIZED' 'VIEW' IF_EXISTS SCHEMA_NAME '.' VIEW_NAME ';'
+IF_EXISTS -> 'IF' 'EXISTS' | ''
+SCHEMA_NAME -> 'schemaname_1' | ''
+VIEW_NAME -> 'viewname_1'
+```

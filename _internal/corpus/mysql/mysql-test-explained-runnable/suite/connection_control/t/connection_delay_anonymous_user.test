@@ -1,0 +1,2 @@
+
+SET @global.connection_control_max_connection_delay = 1000

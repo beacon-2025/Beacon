@@ -1,0 +1,2 @@
+
+create user nonblank@localhost identified by 'nonblank'

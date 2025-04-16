@@ -1,0 +1,139 @@
+-- 公共前置语句：创建测试表
+CREATE TABLE test_table (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    description CLOB,
+    binary_data BLOB
+);
+-- 插入一些测试数据
+INSERT INTO test_table (id, name, description, binary_data) VALUES (1, '红楼梦', '中国古典小说', EMPTY_BLOB());
+INSERT INTO test_table (id, name, description, binary_data) VALUES (2, '水浒传', '中国古典小说', EMPTY_BLOB());
+INSERT INTO test_table (id, name, description, binary_data) VALUES (3, '老人与海', '外国文学', EMPTY_BLOB());
+INSERT INTO test_table (id, name, description, binary_data) VALUES (4, '射雕英雄传', '武侠小说', EMPTY_BLOB());
+INSERT INTO test_table (id, name, description, binary_data) VALUES (5, '鲁迅文集', '现代文学', EMPTY_BLOB());
+-- 测试用例 1: ASCII 函数
+SELECT ASCII('B'), ASCII('中') FROM DUAL;
+-- 测试用例 2: ASCIISTR 函数
+SELECT ASCIISTR('中'), ASCIISTR(CHR(54992)) FROM DUAL;
+-- 测试用例 3: BIT_LENGTH 函数
+SELECT BIT_LENGTH('ab') FROM DUAL;
+-- 测试用例 4: CHAR 函数
+SELECT CHAR(66), CHAR(67), CHAR(68), CHAR(54992) FROM DUAL;
+-- 测试用例 5: CHAR_LENGTH 函数
+SELECT CHAR_LENGTH('我们') FROM DUAL;
+-- 测试用例 6: CHR 函数
+SELECT CHR(66), CHR(54992) FROM DUAL;
+-- 测试用例 7: CONCAT 函数
+SELECT CONCAT('Hello', 'World') FROM DUAL;
+-- 测试用例 8: DIFFERENCE 函数
+SELECT DIFFERENCE('she', 'he') FROM DUAL;
+-- 测试用例 9: INITCAP 函数
+SELECT INITCAP('hello world') FROM DUAL;
+-- 测试用例 10: INS 函数
+SELECT INS('abcdefg', 1, 3, 'kkk') FROM DUAL;
+-- 测试用例 11: INSERT 函数
+SELECT INSERT('That is a cake', 2, 3, 'his') FROM DUAL;
+-- 测试用例 12: INSTR 函数
+SELECT INSTR('CORPORATE FLOOR', 'OR', 3, 2) FROM DUAL;
+-- 测试用例 13: INSTRB 函数
+SELECT INSTRB('CORPORATE FLOOR', 'OR', 3, 2) FROM DUAL;
+-- 测试用例 14: LCASE 函数
+SELECT LCASE('ABC') FROM DUAL;
+-- 测试用例 15: LEFT 函数
+SELECT LEFT('computer science', 10) FROM DUAL;
+-- 测试用例 16: LEN 函数
+SELECT LEN('hi,你好□□') FROM DUAL;
+-- 测试用例 17: LENGTH 函数
+SELECT LENGTH('hi,你好□□') FROM DUAL;
+-- 测试用例 18: OCTET_LENGTH 函数
+SELECT OCTET_LENGTH('大家好') FROM DUAL;
+-- 测试用例 19: LOCATE 函数
+SELECT LOCATE('man', 'The manager is a man', 10) FROM DUAL;
+-- 测试用例 20: LOWER 函数
+SELECT LOWER('HELLO WORLD') FROM DUAL;
+-- 测试用例 21: LPAD 函数
+SELECT LPAD('FX', 19, 'Teacher') FROM DUAL;
+-- 测试用例 22: LTRIM 函数
+SELECT LTRIM('xyyxxxXxyLAST WORD', 'xy') FROM DUAL;
+-- 测试用例 23: POSITION 函数
+SELECT POSITION('数' IN '达梦数据库') FROM DUAL;
+-- 测试用例 24: REPEAT 函数
+SELECT REPEAT('Hello ', 3) FROM DUAL;
+-- 测试用例 25: REPLACE 函数
+SELECT REPLACE('发货地址', '地址', '地点') FROM DUAL;
+-- 测试用例 26: REPLICATE 函数
+SELECT REPLICATE('aaa', 3) FROM DUAL;
+-- 测试用例 27: REVERSE 函数
+SELECT REVERSE('abcd') FROM DUAL;
+-- 测试用例 28: RIGHT 函数
+SELECT RIGHT('computer', 3) FROM DUAL;
+-- 测试用例 29: RPAD 函数
+SELECT RPAD('FUXIN', 11, 'BigBig') FROM DUAL;
+-- 测试用例 30: RTRIM 函数
+SELECT RTRIM('TURNERyXxxxyyyxy', 'xy') FROM DUAL;
+-- 测试用例 31: SOUNDEX 函数
+SELECT SOUNDEX('Hello') FROM DUAL;
+-- 测试用例 32: SPACE 函数
+SELECT SPACE(5) FROM DUAL;
+-- 测试用例 33: STRPOSDEC 函数
+SELECT STRPOSDEC('hello') FROM DUAL;
+-- 测试用例 34: STRPOSDEC 函数（带位置参数）
+SELECT STRPOSDEC('hello', 3) FROM DUAL;
+-- 测试用例 35: STRPOSINC 函数
+SELECT STRPOSINC('hello') FROM DUAL;
+-- 测试用例 36: STRPOSINC 函数（带位置参数）
+SELECT STRPOSINC('hello', 3) FROM DUAL;
+-- 测试用例 37: STUFF 函数
+SELECT STUFF('ABCDEFG', 1, 3, 'OOO') FROM DUAL;
+-- 测试用例 38: SUBSTR 函数
+SELECT SUBSTR('我们的计算机', 3, 4) FROM DUAL;
+-- 测试用例 39: SUBSTRB 函数
+SELECT SUBSTRB('达梦数据库有限公司', 4, 15) FROM DUAL;
+-- 测试用例 40: TO_CHAR 函数
+SELECT TO_CHAR('0110') FROM DUAL;
+-- 测试用例 41: TRANSLATE 函数
+SELECT TRANSLATE('我们的计算机', '我们的', '大世界') FROM DUAL;
+-- 测试用例 42: TRIM 函数
+SELECT TRIM('   Hello World   ') FROM DUAL;
+-- 测试用例 43: UCASE 函数
+SELECT UCASE('hello world') FROM DUAL;
+-- 测试用例 44: UPPER 函数
+SELECT UPPER('hello world') FROM DUAL;
+-- 测试用例 45: REGEXP_COUNT 函数
+SELECT REGEXP_COUNT('AbCd', 'abcd', 1, 'i') FROM DUAL;
+-- 测试用例 46: REGEXP_LIKE 函数
+SELECT 1 FROM DUAL WHERE REGEXP_LIKE('DM database V7', 'dm', 'i');
+-- 测试用例 47: REGEXP_INSTR 函数
+SELECT REGEXP_INSTR('a为了 aaac', 'aa') FROM DUAL;
+-- 测试用例 48: REGEXP_SUBSTR 函数
+SELECT REGEXP_SUBSTR('a为 aa了 aac', '(a+)', 2) FROM DUAL;
+-- 测试用例 49: REGEXP_REPLACE 函数
+SELECT REGEXP_REPLACE('a为了 aaac', 'aa', 'bb') FROM DUAL;
+-- 测试用例 50: OVERLAY 函数
+SELECT OVERLAY('txxxxas' PLACING 'hom' FROM 2 FOR 4) FROM DUAL;
+-- 测试用例 51: TEXT_EQUAL 函数
+SELECT TEXT_EQUAL('a', 'b') FROM DUAL;
+-- 测试用例 52: BLOB_EQUAL 函数
+SELECT BLOB_EQUAL(0xFFFEE, 0xEEEFF) FROM DUAL;
+-- 测试用例 53: NLSSORT 函数
+SELECT NLSSORT('abc') FROM DUAL;
+-- 测试用例 54: GREATEST 函数
+SELECT GREATEST('abb', 'abd', 'abc') FROM DUAL;
+-- 测试用例 55: GREAT 函数
+SELECT GREAT('abb', 'abd') FROM DUAL;
+-- 测试用例 56: TO_SINGLE_BYTE 函数
+SELECT LENGTHB(TO_SINGLE_BYTE('aa')) FROM DUAL;
+-- 测试用例 57: TO_MULTI_BYTE 函数
+SELECT LENGTHB(TO_MULTI_BYTE('aa')) FROM DUAL;
+-- 测试用例 58: EMPTY_BLOB 函数
+SELECT LENGTHB(EMPTY_BLOB()) FROM DUAL;
+-- 测试用例 59: EMPTY_CLOB 函数
+SELECT LENGTHB(EMPTY_CLOB()) FROM DUAL;
+-- 测试用例 60: UNISTR 函数
+SELECT UNISTR('\803F\55B5\55B5kind又\006e\0069\0063\0065') FROM DUAL;
+-- 测试用例 61: ISNULL 函数
+SELECT ISNULL(NULL) FROM DUAL;
+-- 测试用例 62: CONCAT_WS 函数
+SELECT CONCAT_WS(',,', '11', '22', '33') FROM DUAL;
+-- 测试用例 63: SUBSTRING_INDEX 函数
+SELECT SUBSTRING_INDEX('blog.jb51.net', '.', 2) FROM DUAL

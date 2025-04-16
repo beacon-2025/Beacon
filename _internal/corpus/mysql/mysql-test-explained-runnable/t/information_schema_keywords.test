@@ -1,0 +1,7 @@
+
+#
+# 1. Extract the I_S version from the current database.
+#
+# The current mysql.dd_properties.properties has the format:
+#
+#   DD_version=99999

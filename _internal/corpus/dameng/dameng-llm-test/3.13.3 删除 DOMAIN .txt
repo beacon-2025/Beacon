@@ -1,0 +1,25 @@
+-- 创建一些DOMAIN以供后续测试使用
+CREATE DOMAIN domain1 AS INT;
+CREATE DOMAIN domain2 AS VARCHAR(50);
+CREATE DOMAIN domain3 AS DATE;
+-- 测试用例 1: 删除一个存在的DOMAIN，使用RESTRICT选项
+DROP DOMAIN domain1 RESTRICT;
+-- 测试用例 2: 删除一个存在的DOMAIN，使用CASCADE选项
+DROP DOMAIN domain2 CASCADE;
+-- 测试用例 3: 删除一个不存在的DOMAIN，不使用IF EXISTS，预期报错
+-- 注意：此语句会报错，因为domain4不存在
+DROP DOMAIN domain4;
+-- 测试用例 4: 删除一个不存在的DOMAIN，使用IF EXISTS，预期不报错
+DROP DOMAIN IF EXISTS domain4;
+-- 测试用例 5: 删除一个存在的DOMAIN，不使用任何选项（默认行为）
+DROP DOMAIN domain3;
+-- 测试用例 6: 删除一个存在的DOMAIN，使用IF EXISTS和RESTRICT选项
+DROP DOMAIN IF EXISTS domain1 RESTRICT;
+-- 测试用例 7: 删除一个存在的DOMAIN，使用IF EXISTS和CASCADE选项
+DROP DOMAIN IF EXISTS domain2 CASCADE;
+-- 测试用例 8: 删除一个不存在的DOMAIN，使用IF EXISTS和RESTRICT选项
+DROP DOMAIN IF EXISTS domain5 RESTRICT;
+-- 测试用例 9: 删除一个不存在的DOMAIN，使用IF EXISTS和CASCADE选项
+DROP DOMAIN IF EXISTS domain6 CASCADE;
+-- 测试用例 10: 删除一个存在的DOMAIN，使用IF EXISTS和不指定行为选项
+DROP DOMAIN IF EXISTS domain3

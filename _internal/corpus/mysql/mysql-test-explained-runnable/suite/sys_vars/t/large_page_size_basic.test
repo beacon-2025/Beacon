@@ -1,0 +1,4 @@
+#
+# only global
+#
+select @@global.large_page_size = 1

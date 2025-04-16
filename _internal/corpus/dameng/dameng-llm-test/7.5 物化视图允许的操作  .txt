@@ -1,0 +1,69 @@
+-- 创建基础表
+CREATE TABLE base_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    value INT
+);
+-- 插入数据到基础表
+INSERT INTO base_table1 (id, name, value) VALUES (1, 'Alice', 100);
+INSERT INTO base_table1 (id, name, value) VALUES (2, 'Bob', 200);
+INSERT INTO base_table1 (id, name, value) VALUES (3, 'Charlie', 300);
+-- 创建物化视图
+CREATE MATERIALIZED VIEW mv1 AS
+SELECT id, name, value
+FROM base_table1
+WHERE value > 150;
+-- 测试用例 1: 查询物化视图
+SELECT * FROM mv1;
+-- 测试用例 2: 在物化视图上创建索引
+CREATE INDEX idx_mv1_value ON mv1(value);
+-- 测试用例 3: 刷新物化视图
+REFRESH MATERIALIZED VIEW mv1;
+-- 测试用例 4: 查询物化视图以验证刷新操作
+SELECT * FROM mv1;
+-- 测试用例 5: 创建另一个基础表
+CREATE TABLE base_table2 (
+    id INT PRIMARY KEY,
+    description TEXT,
+    amount DECIMAL(10, 2)
+);
+-- 插入数据到基础表
+INSERT INTO base_table2 (id, description, amount) VALUES (1, 'Item A', 50.00);
+INSERT INTO base_table2 (id, description, amount) VALUES (2, 'Item B', 150.00);
+INSERT INTO base_table2 (id, description, amount) VALUES (3, 'Item C', 250.00);
+-- 创建另一个物化视图
+CREATE MATERIALIZED VIEW mv2 AS
+SELECT id, description, amount
+FROM base_table2
+WHERE amount > 100.00;
+-- 测试用例 6: 查询第二个物化视图
+SELECT * FROM mv2;
+-- 测试用例 7: 在第二个物化视图上创建索引
+CREATE INDEX idx_mv2_amount ON mv2(amount);
+-- 测试用例 8: 刷新第二个物化视图
+REFRESH MATERIALIZED VIEW mv2;
+-- 测试用例 9: 查询第二个物化视图以验证刷新操作
+SELECT * FROM mv2;
+-- 测试用例 10: 创建第三个基础表
+CREATE TABLE base_table3 (
+    id INT PRIMARY KEY,
+    category VARCHAR(50),
+    quantity INT
+);
+-- 插入数据到基础表
+INSERT INTO base_table3 (id, category, quantity) VALUES (1, 'Electronics', 10);
+INSERT INTO base_table3 (id, category, quantity) VALUES (2, 'Clothing', 20);
+INSERT INTO base_table3 (id, category, quantity) VALUES (3, 'Furniture', 30);
+-- 创建第三个物化视图
+CREATE MATERIALIZED VIEW mv3 AS
+SELECT id, category, quantity
+FROM base_table3
+WHERE quantity > 15;
+-- 测试用例 11: 查询第三个物化视图
+SELECT * FROM mv3;
+-- 测试用例 12: 在第三个物化视图上创建索引
+CREATE INDEX idx_mv3_quantity ON mv3(quantity);
+-- 测试用例 13: 刷新第三个物化视图
+REFRESH MATERIALIZED VIEW mv3;
+-- 测试用例 14: 查询第三个物化视图以验证刷新操作
+SELECT * FROM mv3

@@ -1,0 +1,4 @@
+
+
+# Start event recording
+update performance_schema.setup_consumers set enabled = 'YES'

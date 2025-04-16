@@ -1,0 +1,72 @@
+-- 创建测试表
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    employee_name VARCHAR(50),
+    manager_id INT
+);
+-- 插入测试数据
+INSERT INTO employees (employee_id, employee_name, manager_id) VALUES
+(1, 'Alice', NULL),
+(2, 'Bob', 1),
+(3, 'Charlie', 1),
+(4, 'David', 2),
+(5, 'Eve', 2),
+(6, 'Frank', 3),
+(7, 'Grace', 3),
+(8, 'Hank', 4),
+(9, 'Ivy', 4),
+(10, 'Jack', 5);
+-- 查询所有员工及其直接上级
+SELECT employee_id, employee_name, manager_id
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id;
+-- 查询员工及其层次级别
+SELECT employee_id, employee_name, manager_id, LEVEL
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id;
+-- 查询每个员工的根节点（最高级管理者）
+SELECT employee_id, employee_name, CONNECT_BY_ROOT employee_name AS root_manager
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id;
+-- 查询叶子节点（没有下属的员工）
+SELECT employee_id, employee_name, CONNECT_BY_ISLEAF AS is_leaf
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id;
+-- 查询员工的管理路径
+SELECT employee_id, employee_name, SYS_CONNECT_BY_PATH(employee_name, '/') AS path
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id;
+-- 查询员工并按层次排序
+SELECT employee_id, employee_name, manager_id, LEVEL
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id
+ORDER SIBLINGS BY employee_name;
+-- 查询员工并避免循环
+SELECT employee_id, employee_name, manager_id, LEVEL
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY NOCYCLE PRIOR employee_id = manager_id;
+-- 查询层次结构中级别为2的员工
+SELECT employee_id, employee_name, manager_id, LEVEL
+FROM employees
+WHERE LEVEL = 2
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id;
+-- 查询根节点为Alice的员工
+SELECT employee_id, employee_name, manager_id, LEVEL
+FROM employees
+WHERE CONNECT_BY_ROOT employee_name = 'Alice'
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id;
+-- 查询叶子节点且级别为3的员工
+SELECT employee_id, employee_name, manager_id, LEVEL
+FROM employees
+WHERE CONNECT_BY_ISLEAF = 1 AND LEVEL = 3
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id

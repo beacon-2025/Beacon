@@ -1,0 +1,8 @@
+```
+TOP_CLAUSE -> TOP_N | TOP_N1_N2 | TOP_N_PERCENT | TOP_N_WITH_TIES | TOP_N_PERCENT_WITH_TIES
+TOP_N -> 'TOP' 'int_value'
+TOP_N1_N2 -> 'TOP' 'int_value' ',' 'int_value'
+TOP_N_PERCENT -> 'TOP' 'int_value' 'PERCENT'
+TOP_N_WITH_TIES -> 'TOP' 'int_value' 'WITH' 'TIES'
+TOP_N_PERCENT_WITH_TIES -> 'TOP' 'int_value' 'PERCENT' 'WITH' 'TIES'
+```

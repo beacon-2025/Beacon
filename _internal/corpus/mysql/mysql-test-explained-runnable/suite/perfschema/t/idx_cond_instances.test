@@ -1,0 +1,5 @@
+
+
+select OBJECT_INSTANCE_BEGIN, NAME from performance_schema.cond_instances
+  limit 1
+  into @oib, @name

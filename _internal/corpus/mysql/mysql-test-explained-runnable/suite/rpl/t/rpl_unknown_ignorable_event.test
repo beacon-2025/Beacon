@@ -1,0 +1,11 @@
+# ==== Purpose ====
+#
+# Bug#19949915  IGNORABLE EVENTS DO NOT WORK AND ARE NOT TESTED
+#
+# Problem:
+#  In 5.6, Ignorable log events were introduced. These events have
+#  the flag LOG_EVENT_IGNORABLE_F flag (0x80) set in the flags field.
+#  When the server (specifically, the replication receiver and applier
+#  threads) sees an event with a type code it does not recognize, the
+#  server is supposed to check if this flag is set. If the flag is not
+#  set, the server generates an error and stops

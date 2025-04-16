@@ -1,0 +1,4 @@
+
+
+# 3) End the current active transaction.
+COMMIT

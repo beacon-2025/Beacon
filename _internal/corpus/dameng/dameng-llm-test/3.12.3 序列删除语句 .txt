@@ -1,0 +1,39 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 创建序列
+CREATE SEQUENCE schema1.seq1 START WITH 1 INCREMENT BY 1;
+CREATE SEQUENCE schema2.seq2 START WITH 100 INCREMENT BY 10;
+CREATE SEQUENCE seq3 START WITH 50 INCREMENT BY 5;
+-- 测试用例1: 删除当前模式下的序列
+DROP SEQUENCE seq3;
+-- 测试用例2: 删除指定模式下的序列
+DROP SEQUENCE schema1.seq1;
+-- 测试用例3: 删除不存在的序列（不指定IF EXISTS，预期报错）
+DROP SEQUENCE non_existent_seq;
+-- 测试用例4: 删除不存在的序列（指定IF EXISTS，预期不报错）
+DROP SEQUENCE IF EXISTS non_existent_seq;
+-- 测试用例5: 删除指定模式下的序列（指定IF EXISTS）
+DROP SEQUENCE IF EXISTS schema2.seq2;
+-- 测试用例6: 删除当前模式下的序列（指定IF EXISTS）
+DROP SEQUENCE IF EXISTS seq3;
+-- 测试用例7: 删除序列并重新创建以重新启动序列生成器
+-- 删除序列
+DROP SEQUENCE schema1.seq1;
+-- 重新创建序列
+CREATE SEQUENCE schema1.seq1 START WITH 27 INCREMENT BY 1;
+-- 测试用例8: 删除序列并重新创建以重新启动序列生成器（指定IF EXISTS）
+-- 删除序列
+DROP SEQUENCE IF EXISTS schema2.seq2;
+-- 重新创建序列
+CREATE SEQUENCE schema2.seq2 START WITH 50 INCREMENT BY 5;
+-- 测试用例9: 删除当前模式下的序列并重新创建以重新启动序列生成器
+-- 删除序列
+DROP SEQUENCE seq3;
+-- 重新创建序列
+CREATE SEQUENCE seq3 START WITH 100 INCREMENT BY 10;
+-- 测试用例10: 删除序列并重新创建以重新启动序列生成器（指定IF EXISTS）
+-- 删除序列
+DROP SEQUENCE IF EXISTS seq3;
+-- 重新创建序列
+CREATE SEQUENCE seq3 START WITH 200 INCREMENT BY 20

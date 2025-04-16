@@ -1,0 +1,43 @@
+15.7.5 CLONE Statement
+CLONE clone_action
+clone_action: {
+    LOCAL DATA DIRECTORY [=] 'clone_dir';
+  | INSTANCE FROM 'user'@'host':port
+    IDENTIFIED BY 'password'
+    [DATA DIRECTORY [=] 'clone_dir']
+    [REQUIRE [NO] SSL]
+}
+The CLONE statement is used to clone data locally or from a remote MySQL server instance. To use
+CLONE syntax, the clone plugin must be installed. See Section 7.6.7, “The Clone Plugin”.
+CLONE LOCAL DATA DIRECTORY syntax clones data from the local MySQL data directory to a
+directory on the same server or node where the MySQL server instance runs. The 'clone_dir'
+directory is the full path of the local directory that data is cloned to. An absolute path is required.
+The specified directory must not exist, but the specified path must be an existent path. The MySQL
+server requires the necessary write access to create the specified directory. For more information, see
+Section 7.6.7.2, “Cloning Data Locally”.
+CLONE INSTANCE syntax clones data from a remote MySQL server instance (the donor) and transfers
+it to the MySQL instance where the cloning operation was initiated (the recipient).
+• user is the clone user on the donor MySQL server instance.
+• host is the hostname address of the donor MySQL server instance. Internet Protocol version 6
+(IPv6) address format is not supported. An alias to the IPv6 address can be used instead. An IPv4
+address can be used as is.
+• port is the port number of the donor MySQL server instance. (The X Protocol port specified by
+mysqlx_port is not supported. Connecting to the donor MySQL server instance through MySQL
+Router is also not supported.)
+• IDENTIFIED BY 'password' specifies the password of the clone user on the donor MySQL
+server instance.
+• DATA DIRECTORY [=] 'clone_dir' is an optional clause used to specify a directory on the
+recipient for the data you are cloning. Use this option if you do not want to remove existing data
+in the recipient data directory. An absolute path is required, and the directory must not exist. The
+MySQL server must have the necessary write access to create the directory.
+When the optional DATA DIRECTORY [=] 'clone_dir' clause is not used, a cloning operation
+removes existing data in the recipient data directory, replaces it with the cloned data, and
+automatically restarts the server afterward.
+• [REQUIRE [NO] SSL] explicitly specifies whether an encrypted connection is to be used or not
+when transferring cloned data over the network. An error is returned if the explicit specification
+cannot be satisfied. If an SSL clause is not specified, clone attempts to establish an encrypted
+connection by default, falling back to an insecure connection if the secure connection attempt fails.
+A secure connection is required when cloning encrypted data regardless of whether this clause is
+specified. For more information, see Configuring an Encrypted Connection for Cloning.
+For additional information about cloning data from a remote MySQL server instance, see
+Section 7.6.7.3, “Cloning Remote Data”.

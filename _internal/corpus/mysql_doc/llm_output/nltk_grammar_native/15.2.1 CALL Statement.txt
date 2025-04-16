@@ -1,0 +1,13 @@
+```
+S -> CALL_STMT
+
+CALL_STMT -> 'CALL' PROCEDURE_CALL PARAMETERS
+PROCEDURE_CALL -> 'sp_name_name_1'
+PARAMETERS -> '(' PARAMETER_LIST ')' | '(' ')' | ''
+
+PARAMETER_LIST -> PARAMETER | PARAMETER ',' PARAMETER_LIST
+PARAMETER -> 'parameter_unknown'  # This represents any form of parameter as it's generic
+
+# Note: This grammar focuses on the structure of the CALL statement as it appears in SQL,
+# and not on the internal details of stored procedure creation or parameter handling.
+```

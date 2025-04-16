@@ -1,0 +1,3 @@
+
+  SELECT count(1) FROM INFORMATION_SCHEMA.TABLES
+    WHERE TABLE_SCHEMA = 'mysql' AND TABLE_NAME = 'ndb_schema'

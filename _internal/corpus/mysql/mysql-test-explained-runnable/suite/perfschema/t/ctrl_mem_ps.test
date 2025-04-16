@@ -1,0 +1,6 @@
+
+
+UPDATE performance_schema.setup_instruments
+  SET FLAGS = 'controlled', ENABLED='YES'
+  WHERE NAME IN ('memory/sql/Prepared_statement::infrastructure',
+  'memory/sql/Prepared_statement::main_mem_root')

@@ -1,0 +1,10 @@
+```plaintext
+CREATE_FUNCTION -> 'CREATE' 'OR' 'REPLACE' 'FUNCTION' SCHEMA_NAME '.' FUNCTION_NAME '(' PARAMETER_LIST ')' 'RETURN' DATATYPE 'EXTERNAL' DLL_PATH ALIAS 'USING' FUNCTION_TYPE ';'
+SCHEMA_NAME -> 'schemaname_1'
+FUNCTION_NAME -> 'functionname_1'
+PARAMETER_LIST -> 'parameter_column_1'
+DATATYPE -> 'datatype_1'
+DLL_PATH -> 'dllpath_value'
+ALIAS -> 'alias_value' | ''
+FUNCTION_TYPE -> 'C' | 'CS'
+```

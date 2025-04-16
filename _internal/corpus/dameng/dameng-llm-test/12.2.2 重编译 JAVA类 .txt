@@ -1,0 +1,22 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 创建JAVA类
+CREATE JAVA CLASS schema1.JavaClass1;
+CREATE JAVA CLASS schema2.JavaClass2;
+-- 测试用例1: 重编译指定模式下的JAVA类
+ALTER JAVA CLASS schema1.JavaClass1 COMPILE;
+-- 测试用例2: 重编译指定模式下的JAVA类并启用DEBUG模式
+ALTER JAVA CLASS schema1.JavaClass1 COMPILE DEBUG;
+-- 测试用例3: 重编译另一个模式下的JAVA类
+ALTER JAVA CLASS schema2.JavaClass2 COMPILE;
+-- 测试用例4: 重编译另一个模式下的JAVA类并启用DEBUG模式
+ALTER JAVA CLASS schema2.JavaClass2 COMPILE DEBUG;
+-- 测试用例5: 重编译默认模式下的JAVA类（假设默认模式为schema1）
+ALTER JAVA CLASS JavaClass1 COMPILE;
+-- 测试用例6: 重编译默认模式下的JAVA类并启用DEBUG模式
+ALTER JAVA CLASS JavaClass1 COMPILE DEBUG;
+-- 测试用例7: 重编译默认模式下的JAVA类（假设默认模式为schema2）
+ALTER JAVA CLASS JavaClass2 COMPILE;
+-- 测试用例8: 重编译默认模式下的JAVA类并启用DEBUG模式
+ALTER JAVA CLASS JavaClass2 COMPILE DEBUG

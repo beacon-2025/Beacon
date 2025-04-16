@@ -1,0 +1,4 @@
+```text
+S -> MANAGE_TABLESPACE
+MANAGE_TABLESPACE -> '3.4' '管理表空间'
+```

@@ -1,0 +1,5 @@
+```plaintext
+S -> DROP_DIRECTORY
+DROP_DIRECTORY -> 'DROP' 'DIRECTORY' IF_EXISTS 'directory_name_1'
+IF_EXISTS -> 'IF EXISTS' | ''
+```

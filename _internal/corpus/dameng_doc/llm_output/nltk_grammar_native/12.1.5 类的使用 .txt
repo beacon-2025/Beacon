@@ -1,0 +1,19 @@
+```plaintext
+S -> CLASS_USAGE | VARIABLE_OBJECT | COLUMN_OBJECT | CLASS_INHERITANCE
+CLASS_USAGE -> '类类型同普通的数据类型一样，可以作为表中列的数据类型，DMSQL 程序语句块中变量的数据类型或过程及函数参数的数据类型。'
+VARIABLE_OBJECT -> '变量对象指的是在 DMSQL程序语句块中声明的类类型的变量'
+COLUMN_OBJECT -> '列对象指的是在表中类类型的列'
+CLASS_INHERITANCE -> 'CREATE OR REPLACE CLASS cls01 NOT FINAL IS name VARCHAR2(10); MEMBER FUNCTION get_info RETURN VARCHAR2; END; CREATE OR REPLACE CLASS cls02 UNDER cls01 IS ID INT; OVERRIDING MEMBER FUNCTION get_info RETURN VARCHAR2; END;'
+
+VARIABLE_OBJECT_INSTANTIATION -> '类的实例化通过NEW 表达式调用构造函数完成。'
+VARIABLE_OBJECT_REFERENCE -> '通过‗=‘进行的类类型变量之间的赋值所进行的是对象的引用， 并没有复制一个新的对象。'
+VARIABLE_OBJECT_ATTRIBUTE_ACCESS -> '<对象名>.<属性名>'
+VARIABLE_OBJECT_METHOD_CALL -> '<对象名>.<成员方法名>(<参数>{,<参数>})'
+COLUMN_OBJECT_INSERTION -> '列对象的创建是通过INSERT语句向表中插入数据完成，插入语句中的值是变量对象，插入后存储在表中的数据即为列对象。'
+COLUMN_OBJECT_COPY -> '存储在表中的对象不允许对对象中成员变量的修改，通过into查询或‘=‘进行的列到变量的赋值所进行的是对象的赋值， 生成了一个与列对象数据一样的副本， 在该副本上进行的修改不会影响表中列对象的值。'
+COLUMN_OBJECT_ATTRIBUTE_ACCESS -> '<列名>.<属性名>'
+COLUMN_OBJECT_METHOD_CALL -> '<列名>.<成员方法名>(<参数>{,<参数>})'
+
+APPLICATION_EXAMPLE_VARIABLE_OBJECT -> 'declare type ex_rec_t is record (a int, b int); rec ex_rec_t; o1 mycls; o2 mycls; begin o1 = new mycls(1,2,3); o2 = o1; rec = o2.r; print rec.a; print rec.b; rec = o1.f1(4,5); print rec.a; print rec.b; print o1.id; end;'
+APPLICATION_EXAMPLE_COLUMN_OBJECT -> 'Create table tt1(c1 int, c2 mycls); Insert into tt1 values(1, mycls(1,2,3)); Declare o mycls; id int; begin select top 1 c2 into o from tt1; select top 1 c2.id into id from tt1; end;'
+```

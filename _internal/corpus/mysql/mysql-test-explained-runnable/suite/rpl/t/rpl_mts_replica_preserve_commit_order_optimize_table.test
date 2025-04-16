@@ -1,0 +1,4 @@
+
+
+# execute OPTIMIZE TABLE query
+OPTIMIZE TABLE t

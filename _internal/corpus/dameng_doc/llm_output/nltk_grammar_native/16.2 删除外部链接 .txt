@@ -1,0 +1,7 @@
+```nltk
+S -> DROP_LINK
+DROP_LINK -> 'DROP' PUBLIC_OPTION 'LINK' IF_EXISTS_OPTION SCHEMA_NAME_OPTION 'link_name_1' ';'
+PUBLIC_OPTION -> 'PUBLIC' | ''
+IF_EXISTS_OPTION -> 'IF EXISTS' | ''
+SCHEMA_NAME_OPTION -> 'schemaname_1' '.' | ''
+```

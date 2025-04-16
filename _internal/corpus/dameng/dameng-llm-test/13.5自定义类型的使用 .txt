@@ -1,0 +1,49 @@
+-- 创建一个自定义类型
+CREATE TYPE address_type AS (
+    street TEXT,
+    city TEXT,
+    zip_code TEXT
+);
+-- 创建一个使用自定义类型的表
+CREATE TABLE customers (
+    id SERIAL PRIMARY KEY,
+    name TEXT,
+    address address_type
+);
+-- 测试用例 1: 插入一条包含自定义类型的数据
+INSERT INTO customers (name, address) 
+VALUES ('John Doe', ROW('123 Main St', 'Springfield', '12345'));
+-- 测试用例 2: 查询包含自定义类型的数据
+SELECT name, (address).street, (address).city, (address).zip_code 
+FROM customers 
+WHERE id = 1;
+-- 测试用例 3: 更新包含自定义类型的数据
+UPDATE customers 
+SET address = ROW('456 Elm St', 'Shelbyville', '67890') 
+WHERE id = 1;
+-- 测试用例 4: 删除包含自定义类型的数据
+DELETE FROM customers 
+WHERE id = 1;
+-- 测试用例 5: 插入多条包含自定义类型的数据
+INSERT INTO customers (name, address) 
+VALUES 
+('Jane Smith', ROW('789 Oak St', 'Capital City', '54321')),
+('Alice Johnson', ROW('321 Pine St', 'Metropolis', '98765'));
+-- 测试用例 6: 查询所有包含自定义类型的数据
+SELECT name, (address).street, (address).city, (address).zip_code 
+FROM customers;
+-- 测试用例 7: 使用自定义类型进行条件查询
+SELECT name 
+FROM customers 
+WHERE (address).city = 'Springfield';
+-- 测试用例 8: 使用自定义类型进行排序
+SELECT name, (address).city 
+FROM customers 
+ORDER BY (address).city;
+-- 测试用例 9: 使用自定义类型进行分组
+SELECT (address).city, COUNT(*) 
+FROM customers 
+GROUP BY (address).city;
+-- 测试用例 10: 使用自定义类型进行聚合函数计算
+SELECT AVG(LENGTH((address).street)) 
+FROM customers

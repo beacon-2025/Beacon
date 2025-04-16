@@ -1,0 +1,3 @@
+
+
+truncate table performance_schema.events_waits_summary_by_user_by_event_name

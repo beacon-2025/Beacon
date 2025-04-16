@@ -1,0 +1,298 @@
+-- 创建类头
+CREATE CLASS MyClass1 AS
+    TYPE RecType IS RECORD (c1 INT, c2 INT);
+-- 类型声明
+    id INT;
+-- 成员变量
+    r RecType;
+-- 成员变量
+    FUNCTION F1(a INT, b INT) RETURN RecType;
+-- 成员函数
+    FUNCTION MyClass1(id INT, r_c1 INT, r_c2 INT) RETURN MyClass1;
+-- 用户自定义构造函数
+END;
+/
+
+-- 创建类体
+CREATE OR REPLACE CLASS BODY MyClass1 AS
+    FUNCTION F1(a INT, b INT) RETURN RecType AS
+    BEGIN
+        r.c1 = a;
+r.c2 = b;
+RETURN r;
+END;
+FUNCTION MyClass1(id INT, r_c1 INT, r_c2 INT) RETURN MyClass1 AS
+    BEGIN
+        this.id = id;
+-- 可以使用 this.来访问自身的成员
+        r.c1 = r_c1;
+-- this也可以省略
+        r.c2 = r_c2;
+RETURN this;
+-- 使用 return this 返回本对象
+    END;
+END;
+/;
+-- 创建类头
+CREATE CLASS MyClass2 AS
+    TYPE RecType IS RECORD (c1 INT, c2 INT);
+-- 类型声明
+    id INT;
+-- 成员变量
+    r RecType;
+-- 成员变量
+    FUNCTION F1(a INT, b INT) RETURN RecType;
+-- 成员函数
+END;
+/
+
+-- 创建类体
+CREATE OR REPLACE CLASS BODY MyClass2 AS
+    FUNCTION F1(a INT, b INT) RETURN RecType AS
+    BEGIN
+        r.c1 = a;
+r.c2 = b;
+RETURN r;
+END;
+END;
+/;
+-- 创建类头
+CREATE CLASS MyClass3 AS
+    TYPE RecType IS RECORD (c1 INT, c2 INT);
+-- 类型声明
+    id INT;
+-- 成员变量
+    r RecType;
+-- 成员变量
+    STATIC FUNCTION F1(a INT, b INT) RETURN RecType;
+-- 静态函数
+END;
+/
+
+-- 创建类体
+CREATE OR REPLACE CLASS BODY MyClass3 AS
+    STATIC FUNCTION F1(a INT, b INT) RETURN RecType AS
+    BEGIN
+        r.c1 = a;
+r.c2 = b;
+RETURN r;
+END;
+END;
+/;
+-- 创建类头
+CREATE CLASS MyClass4 AS
+    TYPE RecType IS RECORD (c1 INT, c2 INT);
+-- 类型声明
+    id INT;
+-- 成员变量
+    r RecType;
+-- 成员变量
+    FUNCTION F1(a INT, b INT) RETURN RecType;
+-- 成员函数
+    FUNCTION F1(a INT, b INT, c INT) RETURN RecType;
+-- 重载函数
+END;
+/
+
+-- 创建类体
+CREATE OR REPLACE CLASS BODY MyClass4 AS
+    FUNCTION F1(a INT, b INT) RETURN RecType AS
+    BEGIN
+        r.c1 = a;
+r.c2 = b;
+RETURN r;
+END;
+FUNCTION F1(a INT, b INT, c INT) RETURN RecType AS
+    BEGIN
+        r.c1 = a + c;
+r.c2 = b + c;
+RETURN r;
+END;
+END;
+/;
+-- 创建类头
+CREATE CLASS MyClass5 AS
+    TYPE RecType IS RECORD (c1 INT, c2 INT);
+-- 类型声明
+    id INT;
+-- 成员变量
+    r RecType;
+-- 成员变量
+    FUNCTION F1(a INT, b INT) RETURN RecType;
+-- 成员函数
+END;
+/
+
+-- 创建类体
+CREATE OR REPLACE CLASS BODY MyClass5 AS
+    FUNCTION F1(a INT, b INT) RETURN RecType AS
+    BEGIN
+        r.c1 = a;
+r.c2 = b;
+RETURN r;
+END;
+-- 初始化代码
+    BEGIN
+        id := 1;
+r.c1 := 10;
+r.c2 := 20;
+END;
+END;
+/;
+-- 创建类头
+CREATE CLASS MyClass6 AS
+    TYPE RecType IS RECORD (c1 INT, c2 INT);
+-- 类型声明
+    id INT;
+-- 成员变量
+    r RecType;
+-- 成员变量
+    FUNCTION F1(a INT, b INT) RETURN RecType;
+-- 成员函数
+END;
+/
+
+-- 创建类体
+CREATE OR REPLACE CLASS BODY MyClass6 AS
+    FUNCTION F1(a INT, b INT) RETURN RecType AS
+    BEGIN
+        IF a < 0 OR b < 0 THEN
+            RAISE_APPLICATION_ERROR(-20001, 'Invalid input');
+END IF;
+r.c1 = a;
+r.c2 = b;
+RETURN r;
+END;
+-- 异常处理部分
+    EXCEPTION
+        WHEN OTHERS THEN
+            DBMS_OUTPUT.PUT_LINE('An error occurred');
+END;
+END;
+/;
+-- 创建类头
+CREATE CLASS MyClass7 AS
+    TYPE RecType IS RECORD (c1 INT, c2 INT);
+-- 类型声明
+    id INT;
+-- 成员变量
+    r RecType;
+-- 成员变量
+    FUNCTION F1(a INT, b INT) RETURN RecType;
+-- 成员函数
+END;
+/
+
+-- 创建类体
+CREATE OR REPLACE CLASS BODY MyClass7 AS
+    FUNCTION F1(a INT, b INT) RETURN RecType AS
+        CURSOR cur IS SELECT c1, c2 FROM MyTable WHERE c1 = a;
+BEGIN
+        OPEN cur;
+FETCH cur INTO r.c1, r.c2;
+CLOSE cur;
+RETURN r;
+END;
+END;
+/;
+-- 创建类头
+CREATE CLASS MyClass8 AS
+    TYPE RecType IS RECORD (c1 INT, c2 INT);
+-- 类型声明
+    id INT;
+-- 成员变量
+    r RecType;
+-- 成员变量
+    FUNCTION F1(a INT, b INT) RETURN RecType;
+-- 成员函数
+END;
+/
+
+-- 创建类体
+CREATE OR REPLACE CLASS BODY MyClass8 AS
+    FUNCTION F1(a INT, b INT) RETURN RecType AS
+        PROCEDURE SubProc(p1 INT, p2 INT) IS
+        BEGIN
+            r.c1 := p1;
+r.c2 := p2;
+END;
+BEGIN
+        SubProc(a, b);
+RETURN r;
+END;
+END;
+/;
+-- 创建类头
+CREATE CLASS MyClass9 AS
+    TYPE RecType IS RECORD (c1 INT, c2 INT);
+-- 类型声明
+    id INT;
+-- 成员变量
+    r RecType;
+-- 成员变量
+    FUNCTION F1(a INT, b INT) RETURN RecType;
+-- 成员函数
+END;
+/
+
+-- 创建类体
+CREATE OR REPLACE CLASS BODY MyClass9 AS
+    FUNCTION F1(a INT, b INT) RETURN RecType AS
+        FUNCTION SubFunc(p1 INT, p2 INT) RETURN RecType IS
+        BEGIN
+            r.c1 := p1;
+r.c2 := p2;
+RETURN r;
+END;
+BEGIN
+        RETURN SubFunc(a, b);
+END;
+END;
+/;
+-- 创建类头
+CREATE CLASS MyClass10 AS
+    TYPE RecType IS RECORD (c1 INT, c2 INT);
+-- 类型声明
+    id INT;
+-- 成员变量
+    r RecType;
+-- 成员变量
+    FUNCTION F1(a INT, b INT) RETURN RecType DETERMINISTIC;
+-- 确定性函数
+END;
+/
+
+-- 创建类体
+CREATE OR REPLACE CLASS BODY MyClass10 AS
+    FUNCTION F1(a INT, b INT) RETURN RecType DETERMINISTIC AS
+    BEGIN
+        r.c1 = a;
+r.c2 = b;
+RETURN r;
+END;
+END;
+/;
+-- 创建类头
+CREATE CLASS MyClass11 AS
+    TYPE RecType IS RECORD (c1 INT, c2 INT);
+-- 类型声明
+    id INT;
+-- 成员变量
+    r RecType;
+-- 成员变量
+    FUNCTION F1(a INT, b INT) RETURN RecType PIPELINED;
+-- 管道函数
+END;
+/
+
+-- 创建类体
+CREATE OR REPLACE CLASS BODY MyClass11 AS
+    FUNCTION F1(a INT, b INT) RETURN RecType PIPELINED AS
+    BEGIN
+        r.c1 = a;
+r.c2 = b;
+PIPE ROW(r);
+RETURN;
+END;
+END;
+/

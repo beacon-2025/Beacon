@@ -1,0 +1,7 @@
+```nltk
+DROP_CONTEXT_INDEX -> 'DROP' 'CONTEXT' 'INDEX' IF_EXISTS INDEX_NAME 'ON' SCHEMA_NAME '.' TABLE_NAME
+IF_EXISTS -> 'IF' 'EXISTS' | ''
+INDEX_NAME -> 'index_name_1'
+SCHEMA_NAME -> 'schema_name_1'
+TABLE_NAME -> 'table_name_1'
+```

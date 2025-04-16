@@ -1,0 +1,268 @@
+-- 创建表1
+CREATE TABLE sales_data1 (
+    id INT PRIMARY KEY,
+    product_name VARCHAR(50),
+    sales_amount DECIMAL(10, 2),
+    sales_date DATE
+);
+-- 插入数据到表1
+INSERT INTO sales_data1 (id, product_name, sales_amount, sales_date) VALUES
+(1, 'Product A', 100.50, '2023-01-01'),
+(2, 'Product B', 200.75, '2023-01-02'),
+(3, 'Product A', 150.25, '2023-01-03'),
+(4, 'Product C', 300.00, '2023-01-04'),
+(5, 'Product B', 250.50, '2023-01-05');
+-- 创建表2
+CREATE TABLE sales_data2 (
+    id INT PRIMARY KEY,
+    product_name VARCHAR(50),
+    sales_amount DECIMAL(10, 2),
+    sales_date DATE
+);
+-- 插入数据到表2
+INSERT INTO sales_data2 (id, product_name, sales_amount, sales_date) VALUES
+(1, 'Product X', 500.00, '2023-02-01'),
+(2, 'Product Y', 600.00, '2023-02-02'),
+(3, 'Product X', 550.00, '2023-02-03'),
+(4, 'Product Z', 700.00, '2023-02-04'),
+(5, 'Product Y', 650.00, '2023-02-05');
+-- 测试用例1: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额
+SELECT product_name, SUM(sales_amount) AS total_sales
+FROM sales_data1
+GROUP BY product_name;
+-- 测试用例2: 使用GROUP BY对产品名称进行分组，并计算每个产品的平均销售额
+SELECT product_name, AVG(sales_amount) AS average_sales
+FROM sales_data1
+GROUP BY product_name;
+-- 测试用例3: 使用GROUP BY对产品名称进行分组，并计算每个产品的最大销售额
+SELECT product_name, MAX(sales_amount) AS max_sales
+FROM sales_data1
+GROUP BY product_name;
+-- 测试用例4: 使用GROUP BY对产品名称进行分组，并计算每个产品的最小销售额
+SELECT product_name, MIN(sales_amount) AS min_sales
+FROM sales_data1
+GROUP BY product_name;
+-- 测试用例5: 使用GROUP BY对产品名称进行分组，并计算每个产品的销售次数
+SELECT product_name, COUNT(*) AS sales_count
+FROM sales_data1
+GROUP BY product_name;
+-- 测试用例6: 使用GROUP BY对产品名称进行分组，并使用HAVING过滤出总销售额大于200的产品
+SELECT product_name, SUM(sales_amount) AS total_sales
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200;
+-- 测试用例7: 使用GROUP BY对产品名称进行分组，并使用HAVING过滤出平均销售额大于150的产品
+SELECT product_name, AVG(sales_amount) AS average_sales
+FROM sales_data1
+GROUP BY product_name
+HAVING AVG(sales_amount) > 150;
+-- 测试用例8: 使用GROUP BY对产品名称进行分组，并使用HAVING过滤出销售次数大于1的产品
+SELECT product_name, COUNT(*) AS sales_count
+FROM sales_data1
+GROUP BY product_name
+HAVING COUNT(*) > 1;
+-- 测试用例9: 使用GROUP BY对产品名称进行分组，并使用HAVING过滤出最大销售额大于200的产品
+SELECT product_name, MAX(sales_amount) AS max_sales
+FROM sales_data1
+GROUP BY product_name
+HAVING MAX(sales_amount) > 200;
+-- 测试用例10: 使用GROUP BY对产品名称进行分组，并使用HAVING过滤出最小销售额小于100的产品
+SELECT product_name, MIN(sales_amount) AS min_sales
+FROM sales_data1
+GROUP BY product_name
+HAVING MIN(sales_amount) < 100;
+-- 测试用例11: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，按总销售额降序排列
+SELECT product_name, SUM(sales_amount) AS total_sales
+FROM sales_data1
+GROUP BY product_name
+ORDER BY total_sales DESC;
+-- 测试用例12: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，按总销售额升序排列
+SELECT product_name, SUM(sales_amount) AS total_sales
+FROM sales_data1
+GROUP BY product_name
+ORDER BY total_sales ASC;
+-- 测试用例13: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按总销售额降序排列
+SELECT product_name, SUM(sales_amount) AS total_sales
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY total_sales DESC;
+-- 测试用例14: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按总销售额升序排列
+SELECT product_name, SUM(sales_amount) AS total_sales
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY total_sales ASC;
+-- 测试用例15: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按产品名称升序排列
+SELECT product_name, SUM(sales_amount) AS total_sales
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY product_name ASC;
+-- 测试用例16: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按产品名称降序排列
+SELECT product_name, SUM(sales_amount) AS total_sales
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY product_name DESC;
+-- 测试用例17: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按产品名称升序排列，限制返回2条记录
+SELECT product_name, SUM(sales_amount) AS total_sales
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY product_name ASC
+LIMIT 2;
+-- 测试用例18: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按产品名称降序排列，限制返回2条记录
+SELECT product_name, SUM(sales_amount) AS total_sales
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY product_name DESC
+LIMIT 2;
+-- 测试用例19: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按总销售额降序排列，限制返回2条记录
+SELECT product_name, SUM(sales_amount) AS total_sales
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY total_sales DESC
+LIMIT 2;
+-- 测试用例20: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按总销售额升序排列，限制返回2条记录
+SELECT product_name, SUM(sales_amount) AS total_sales
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY total_sales ASC
+LIMIT 2;
+-- 测试用例21: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按产品名称升序排列，限制返回2条记录，偏移1条记录
+SELECT product_name, SUM(sales_amount) AS total_sales
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY product_name ASC
+LIMIT 2 OFFSET 1;
+-- 测试用例22: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按产品名称降序排列，限制返回2条记录，偏移1条记录
+SELECT product_name, SUM(sales_amount) AS total_sales
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY product_name DESC
+LIMIT 2 OFFSET 1;
+-- 测试用例23: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按总销售额降序排列，限制返回2条记录，偏移1条记录
+SELECT product_name, SUM(sales_amount) AS total_sales
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY total_sales DESC
+LIMIT 2 OFFSET 1;
+-- 测试用例24: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按总销售额升序排列，限制返回2条记录，偏移1条记录
+SELECT product_name, SUM(sales_amount) AS total_sales
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY total_sales ASC
+LIMIT 2 OFFSET 1;
+-- 测试用例25: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按产品名称升序排列，限制返回2条记录，偏移1条记录，并返回总记录数
+SELECT product_name, SUM(sales_amount) AS total_sales, COUNT(*) OVER() AS total_count
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY product_name ASC
+LIMIT 2 OFFSET 1;
+-- 测试用例26: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按产品名称降序排列，限制返回2条记录，偏移1条记录，并返回总记录数
+SELECT product_name, SUM(sales_amount) AS total_sales, COUNT(*) OVER() AS total_count
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY product_name DESC
+LIMIT 2 OFFSET 1;
+-- 测试用例27: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按总销售额降序排列，限制返回2条记录，偏移1条记录，并返回总记录数
+SELECT product_name, SUM(sales_amount) AS total_sales, COUNT(*) OVER() AS total_count
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY total_sales DESC
+LIMIT 2 OFFSET 1;
+-- 测试用例28: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按总销售额升序排列，限制返回2条记录，偏移1条记录，并返回总记录数
+SELECT product_name, SUM(sales_amount) AS total_sales, COUNT(*) OVER() AS total_count
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY total_sales ASC
+LIMIT 2 OFFSET 1;
+-- 测试用例29: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按产品名称升序排列，限制返回2条记录，偏移1条记录，并返回总记录数
+SELECT product_name, SUM(sales_amount) AS total_sales, COUNT(*) OVER() AS total_count
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY product_name ASC
+LIMIT 2 OFFSET 1;
+-- 测试用例30: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按产品名称降序排列，限制返回2条记录，偏移1条记录，并返回总记录数
+SELECT product_name, SUM(sales_amount) AS total_sales, COUNT(*) OVER() AS total_count
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY product_name DESC
+LIMIT 2 OFFSET 1;
+-- 测试用例31: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按总销售额降序排列，限制返回2条记录，偏移1条记录，并返回总记录数
+SELECT product_name, SUM(sales_amount) AS total_sales, COUNT(*) OVER() AS total_count
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY total_sales DESC
+LIMIT 2 OFFSET 1;
+-- 测试用例32: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按总销售额升序排列，限制返回2条记录，偏移1条记录，并返回总记录数
+SELECT product_name, SUM(sales_amount) AS total_sales, COUNT(*) OVER() AS total_count
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY total_sales ASC
+LIMIT 2 OFFSET 1;
+-- 测试用例33: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按产品名称升序排列，限制返回2条记录，偏移1条记录，并返回总记录数
+SELECT product_name, SUM(sales_amount) AS total_sales, COUNT(*) OVER() AS total_count
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY product_name ASC
+LIMIT 2 OFFSET 1;
+-- 测试用例34: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按产品名称降序排列，限制返回2条记录，偏移1条记录，并返回总记录数
+SELECT product_name, SUM(sales_amount) AS total_sales, COUNT(*) OVER() AS total_count
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY product_name DESC
+LIMIT 2 OFFSET 1;
+-- 测试用例35: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按总销售额降序排列，限制返回2条记录，偏移1条记录，并返回总记录数
+SELECT product_name, SUM(sales_amount) AS total_sales, COUNT(*) OVER() AS total_count
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY total_sales DESC
+LIMIT 2 OFFSET 1;
+-- 测试用例36: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按总销售额升序排列，限制返回2条记录，偏移1条记录，并返回总记录数
+SELECT product_name, SUM(sales_amount) AS total_sales, COUNT(*) OVER() AS total_count
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY total_sales ASC
+LIMIT 2 OFFSET 1;
+-- 测试用例37: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按产品名称升序排列，限制返回2条记录，偏移1条记录，并返回总记录数
+SELECT product_name, SUM(sales_amount) AS total_sales, COUNT(*) OVER() AS total_count
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY product_name ASC
+LIMIT 2 OFFSET 1;
+-- 测试用例38: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按产品名称降序排列，限制返回2条记录，偏移1条记录，并返回总记录数
+SELECT product_name, SUM(sales_amount) AS total_sales, COUNT(*) OVER() AS total_count
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY product_name DESC
+LIMIT 2 OFFSET 1;
+-- 测试用例39: 使用GROUP BY对产品名称进行分组，并计算每个产品的总销售额，过滤出总销售额大于200的产品，并按总销售额降序排列，限制返回2条记录，偏移1条记录，并返回总记录数
+SELECT product_name, SUM(sales_amount) AS total_sales, COUNT(*) OVER() AS total_count
+FROM sales_data1
+GROUP BY product_name
+HAVING SUM(sales_amount) > 200
+ORDER BY total_sales DESC
+LIMIT 2 OFFSET 1

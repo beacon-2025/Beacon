@@ -1,0 +1,7 @@
+```plaintext
+JSONB_EACH_FUNCTION -> 'jsonb_each' '(' JSON_EXP1 ')'
+JSON_EXP1 -> 'json_exp1_value'
+RETURN_TABLE -> '(' 'key' ',' 'value' ')'
+KEY -> 'key_value'
+VALUE -> 'value_value'
+```

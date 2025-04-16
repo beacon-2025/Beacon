@@ -1,0 +1,262 @@
+-- 创建用于存储触发器日志的表
+CREATE TABLE trigger_log (
+    event_type VARCHAR(50),
+    object_type VARCHAR(50),
+    object_name VARCHAR(128),
+    schema_name VARCHAR(128),
+    database_name VARCHAR(128),
+    op_user VARCHAR(128),
+    op_time DATETIME
+);
+-- 创建用于存储DDL语句的表
+CREATE TABLE ddl_log (
+    sql_text VARCHAR(1000),
+    object_name VARCHAR(128),
+    object_type VARCHAR(128),
+    object_owner VARCHAR(128)
+);
+CREATE OR REPLACE TRIGGER before_create_table_trigger
+BEFORE CREATE ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES (:EVENTINFO.OPTYPE, :EVENTINFO.OBJECTTYPE, :EVENTINFO.OBJECTNAME, :EVENTINFO.SCHEMANAME, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 创建表以触发触发器
+CREATE TABLE test_table_1 (id INT);
+CREATE OR REPLACE TRIGGER after_drop_table_trigger
+AFTER DROP ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES (:EVENTINFO.OPTYPE, :EVENTINFO.OBJECTTYPE, :EVENTINFO.OBJECTNAME, :EVENTINFO.SCHEMANAME, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 删除表以触发触发器
+DROP TABLE test_table_1;
+CREATE OR REPLACE TRIGGER after_login_trigger
+AFTER LOGIN ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('LOGIN', 'USER', :EVENTINFO.LOGINNAME, NULL, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟登录操作（假设登录用户为SYSDBA）
+-- 注意：实际登录操作无法通过SQL模拟，此处仅为触发器定义;
+CREATE OR REPLACE TRIGGER after_backup_database_trigger
+AFTER BACKUP DATABASE ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('BACKUP DATABASE', 'DATABASE', :EVENTINFO.DATABASENAME, NULL, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟备份数据库操作（假设备份数据库为DAMENG）
+-- 注意：实际备份操作无法通过SQL模拟，此处仅为触发器定义;
+CREATE OR REPLACE TRIGGER before_ddl_trigger
+BEFORE DDL ON DATABASE
+DECLARE
+    n NUMBER;
+str_stmt VARCHAR(1000);
+sql_text DM_NAME_LIST_T;
+BEGIN
+    n := DM_SQL_TXT(sql_text);
+FOR i IN 1..n LOOP
+        str_stmt := str_stmt || sql_text(i);
+END LOOP;
+INSERT INTO ddl_log (sql_text, object_name, object_type, object_owner)
+    VALUES (str_stmt, DM_DICT_OBJ_NAME, DM_DICT_OBJ_TYPE, DM_DICT_OBJ_OWNER);
+END;
+/
+
+-- 创建模式以触发触发器
+CREATE SCHEMA test_schema;
+-- 创建表以触发触发器
+CREATE TABLE test_schema.test_table_2 (id INT);
+CREATE OR REPLACE TRIGGER after_startup_trigger
+AFTER STARTUP ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('STARTUP', 'DATABASE', :EVENTINFO.DATABASENAME, NULL, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟服务器启动操作（无法通过SQL模拟，此处仅为触发器定义）;
+CREATE OR REPLACE TRIGGER before_shutdown_trigger
+BEFORE SHUTDOWN ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('SHUTDOWN', 'DATABASE', :EVENTINFO.DATABASENAME, NULL, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟服务器关闭操作（无法通过SQL模拟，此处仅为触发器定义）;
+CREATE OR REPLACE TRIGGER after_grant_trigger
+AFTER GRANT ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('GRANT', :EVENTINFO.GRANTTYPE, :EVENTINFO.OBJECTNAME, :EVENTINFO.SCHEMANAME, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟GRANT操作
+GRANT SELECT ON test_schema.test_table_2 TO PUBLIC;
+CREATE OR REPLACE TRIGGER after_revoke_trigger
+AFTER REVOKE ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('REVOKE', :EVENTINFO.GRANTTYPE, :EVENTINFO.OBJECTNAME, :EVENTINFO.SCHEMANAME, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟REVOKE操作
+REVOKE SELECT ON test_schema.test_table_2 FROM PUBLIC;
+CREATE OR REPLACE TRIGGER after_truncate_trigger
+AFTER TRUNCATE ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('TRUNCATE', 'TABLE', :EVENTINFO.OBJECTNAME, :EVENTINFO.SCHEMANAME, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟TRUNCATE操作
+TRUNCATE TABLE test_schema.test_table_2;
+CREATE OR REPLACE TRIGGER after_audit_trigger
+AFTER AUDIT ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('AUDIT', 'DATABASE', :EVENTINFO.DATABASENAME, NULL, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟AUDIT操作（无法通过SQL模拟，此处仅为触发器定义）;
+CREATE OR REPLACE TRIGGER after_noaudit_trigger
+AFTER NOAUDIT ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('NOAUDIT', 'DATABASE', :EVENTINFO.DATABASENAME, NULL, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟NOAUDIT操作（无法通过SQL模拟，此处仅为触发器定义）;
+CREATE OR REPLACE TRIGGER timer_trigger
+AFTER TIMER ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('TIMER', 'DATABASE', :EVENTINFO.DATABASENAME, NULL, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟TIMER事件（无法通过SQL模拟，此处仅为触发器定义）;
+CREATE OR REPLACE TRIGGER after_comment_trigger
+AFTER COMMENT ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('COMMENT', :EVENTINFO.OBJECTTYPE, :EVENTINFO.OBJECTNAME, :EVENTINFO.SCHEMANAME, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟COMMENT操作
+COMMENT ON TABLE test_schema.test_table_2 IS 'This is a test table';
+CREATE OR REPLACE TRIGGER after_sererr_trigger
+AFTER SERERR ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('SERERR', 'ERROR', :EVENTINFO.ERRCODE, NULL, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟SERERR事件（无法通过SQL模拟，此处仅为触发器定义）;
+CREATE OR REPLACE TRIGGER after_restore_database_trigger
+AFTER RESTORE DATABASE ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('RESTORE DATABASE', 'DATABASE', :EVENTINFO.DATABASENAME, NULL, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟RESTORE DATABASE操作（无法通过SQL模拟，此处仅为触发器定义）;
+CREATE OR REPLACE TRIGGER before_logout_trigger
+BEFORE LOGOUT ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('LOGOUT', 'USER', :EVENTINFO.LOGINNAME, NULL, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟LOGOUT事件（无法通过SQL模拟，此处仅为触发器定义）;
+CREATE OR REPLACE TRIGGER after_alter_trigger
+AFTER ALTER ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('ALTER', :EVENTINFO.OBJECTTYPE, :EVENTINFO.OBJECTNAME, :EVENTINFO.SCHEMANAME, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟ALTER操作
+ALTER TABLE test_schema.test_table_2 ADD COLUMN new_column VARCHAR(50);
+CREATE OR REPLACE TRIGGER after_drop_trigger
+AFTER DROP ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('DROP', :EVENTINFO.OBJECTTYPE, :EVENTINFO.OBJECTNAME, :EVENTINFO.SCHEMANAME, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟DROP操作
+DROP TABLE test_schema.test_table_2;
+CREATE OR REPLACE TRIGGER after_create_trigger
+AFTER CREATE ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('CREATE', :EVENTINFO.OBJECTTYPE, :EVENTINFO.OBJECTNAME, :EVENTINFO.SCHEMANAME, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟CREATE操作
+CREATE TABLE test_schema.test_table_3 (id INT);
+CREATE OR REPLACE TRIGGER after_create_or_replace_trigger
+AFTER CREATE OR REPLACE ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('CREATE OR REPLACE', :EVENTINFO.OBJECTTYPE, :EVENTINFO.OBJECTNAME, :EVENTINFO.SCHEMANAME, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟CREATE OR REPLACE操作
+CREATE OR REPLACE VIEW test_schema.test_view AS SELECT * FROM test_schema.test_table_3;
+CREATE OR REPLACE TRIGGER after_create_or_replace_trigger
+AFTER CREATE OR REPLACE ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('CREATE OR REPLACE', :EVENTINFO.OBJECTTYPE, :EVENTINFO.OBJECTNAME, :EVENTINFO.SCHEMANAME, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟CREATE OR REPLACE操作
+CREATE OR REPLACE PROCEDURE test_schema.test_procedure AS BEGIN SELECT * FROM test_schema.test_table_3;
+END;
+CREATE OR REPLACE TRIGGER after_create_or_replace_trigger
+AFTER CREATE OR REPLACE ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('CREATE OR REPLACE', :EVENTINFO.OBJECTTYPE, :EVENTINFO.OBJECTNAME, :EVENTINFO.SCHEMANAME, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟CREATE OR REPLACE操作
+CREATE OR REPLACE FUNCTION test_schema.test_function RETURN VARCHAR(30) AS BEGIN RETURN 'Hello';
+END;
+CREATE OR REPLACE TRIGGER after_create_or_replace_trigger
+AFTER CREATE OR REPLACE ON DATABASE
+BEGIN
+    INSERT INTO trigger_log (event_type, object_type, object_name, schema_name, database_name, op_user, op_time)
+    VALUES ('CREATE OR REPLACE', :EVENTINFO.OBJECTTYPE, :EVENTINFO.OBJECTNAME, :EVENTINFO.SCHEMANAME, :EVENTINFO.DATABASENAME, :EVENTINFO.OPUSER, :EVENTINFO.OPTIME);
+END;
+/
+
+-- 模拟CREATE OR REPLACE操作
+CREATE OR REPLACE TRIGGER test_schema.test_trigger AFTER INSERT ON test_schema.test_table_3 BEGIN PRINT 'Trigger fired';
+END

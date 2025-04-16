@@ -1,0 +1,53 @@
+```
+S -> SELECT_STATEMENT
+SELECT_STATEMENT -> 'SELECT' MODIFIERS SELECT_EXPR FROM_CLAUSE PARTITION_CLAUSE WHERE_CLAUSE GROUP_BY_CLAUSE 
+                   HAVING_CLAUSE WINDOW_CLAUSE ORDER_BY_CLAUSE LIMIT_CLAUSE INTO_OPTION FOR_CLAUSE INTO_OPTION
+                   
+MODIFIERS -> 'ALL' | 'DISTINCT' | 'DISTINCTROW' | 'HIGH_PRIORITY' | 'STRAIGHT_JOIN' 
+           | 'SQL_SMALL_RESULT' | 'SQL_BIG_RESULT' | 'SQL_BUFFER_RESULT' 
+           | 'SQL_NO_CACHE' | 'SQL_CALC_FOUND_ROWS' | ''
+
+SELECT_EXPR -> SELECT_EXPR_SINGLE | SELECT_EXPR ',' SELECT_EXPR
+
+SELECT_EXPR_SINGLE -> 'select_expr_unknown'
+
+FROM_CLAUSE -> 'FROM' 'table_references_unknown' | ''
+PARTITION_CLAUSE -> 'PARTITION' 'partition_list_unknown' | ''
+WHERE_CLAUSE -> 'WHERE' 'where_condition_unknown' | ''
+GROUP_BY_CLAUSE -> 'GROUP BY' GROUP_BY_LIST 'WITH ROLLUP' | 'GROUP BY' GROUP_BY_LIST | ''
+GROUP_BY_LIST -> 'col_name_unknown' | 'expr_unknown' | 'position_unknown'
+
+HAVING_CLAUSE -> 'HAVING' 'where_condition_unknown' | ''
+WINDOW_CLAUSE -> 'WINDOW' WINDOW_LIST | ''
+WINDOW_LIST -> 'window_name_unknown' 'AS' '(' 'window_spec_unknown' ')' | ''
+ORDER_BY_CLAUSE -> 'ORDER BY' ORDER_BY_LIST 'WITH ROLLUP' | 'ORDER BY' ORDER_BY_LIST | ''
+ORDER_BY_LIST -> 'col_name_unknown' 'ASC' | 'col_name_unknown' 'DESC' | 'expr_unknown' 'ASC'
+               | 'expr_unknown' 'DESC' | 'position_unknown' 'ASC' | 'position_unknown' 'DESC'
+
+LIMIT_CLAUSE -> 'LIMIT' LIMIT_EXPRESSION | ''
+LIMIT_EXPRESSION -> 'row_count' | 'offset' ',' 'row_count' | 'row_count' 'OFFSET' 'offset'
+
+INTO_OPTION -> INTO_OUTFILE | INTO_DUMPFILE | INTO_VAR_LIST | ''
+INTO_OUTFILE -> 'INTO OUTFILE' 'file_name_value' EXPORT_OPTIONS
+INTO_DUMPFILE -> 'INTO DUMPFILE' 'file_name_value'
+INTO_VAR_LIST -> 'INTO' VAR_LIST
+VAR_LIST -> 'var_name_unknown' | 'var_name_unknown' ',' VAR_LIST
+
+EXPORT_OPTIONS -> FIELDS_COLUMNS CLAUSES LINES_CLAUSES | ''
+FIELDS_COLUMNS -> 'FIELDS' | 'COLUMNS' | ''
+CLAUSES -> FIELDS_TERMINATED ENCLOSED_BY ESCAPED_BY | ''
+FIELDS_TERMINATED -> 'TERMINATED BY' 'string_value' | ''
+ENCLOSED_BY -> 'OPTIONALLY ENCLOSED BY' 'char_value' | 'ENCLOSE BY' 'char_value' | ''
+ESCAPED_BY -> 'ESCAPED BY' 'char_value' | ''
+
+LINES_CLAUSES -> LINES_STARTING TERMINATED_BY | ''
+LINES_STARTING -> 'STARTING BY' 'string_value' | ''
+TERMINATED_BY -> 'TERMINATED BY' 'string_value' | ''
+
+FOR_CLAUSE -> FOR_UPDATE | FOR_SHARE | LOCK_IN_SHARE_MODE | ''
+FOR_UPDATE -> 'FOR UPDATE' NOWAIT_SKIP_LOCKED | ''
+FOR_SHARE -> 'FOR SHARE' OF_TBL_NAME NOWAIT_SKIP_LOCKED | ''
+OF_TBL_NAME -> 'OF tbl_name_unknown' | ''
+NOWAIT_SKIP_LOCKED -> 'NOWAIT' | 'SKIP LOCKED' | ''
+LOCK_IN_SHARE_MODE -> 'LOCK IN SHARE MODE' | ''
+```

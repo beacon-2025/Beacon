@@ -1,0 +1,135 @@
+-- 创建测试表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    value INT
+);
+CREATE TABLE test_table2 (
+    id INT PRIMARY KEY,
+    description VARCHAR(100),
+    amount INT
+);
+-- 创建日志表用于记录触发器操作
+CREATE TABLE trigger_log (
+    id SERIAL PRIMARY KEY,
+    event_type VARCHAR(50),
+    table_name VARCHAR(50),
+    record_id INT,
+    log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+-- 创建表触发器，在插入数据时记录日志
+CREATE TRIGGER trigger_insert
+AFTER INSERT ON test_table1
+FOR EACH ROW
+BEGIN
+    INSERT INTO trigger_log (event_type, table_name, record_id)
+    VALUES ('INSERT', 'test_table1', NEW.id);
+END;
+-- 插入数据触发触发器
+INSERT INTO test_table1 (id, name, value) VALUES (1, 'Alice', 100);
+-- 查询日志表验证触发器是否执行
+SELECT * FROM trigger_log;
+-- 创建表触发器，在更新数据时记录日志
+CREATE TRIGGER trigger_update
+AFTER UPDATE ON test_table1
+FOR EACH ROW
+BEGIN
+    INSERT INTO trigger_log (event_type, table_name, record_id)
+    VALUES ('UPDATE', 'test_table1', NEW.id);
+END;
+-- 更新数据触发触发器
+UPDATE test_table1 SET value = 200 WHERE id = 1;
+-- 查询日志表验证触发器是否执行
+SELECT * FROM trigger_log;
+-- 创建表触发器，在删除数据时记录日志
+CREATE TRIGGER trigger_delete
+AFTER DELETE ON test_table1
+FOR EACH ROW
+BEGIN
+    INSERT INTO trigger_log (event_type, table_name, record_id)
+    VALUES ('DELETE', 'test_table1', OLD.id);
+END;
+-- 删除数据触发触发器
+DELETE FROM test_table1 WHERE id = 1;
+-- 查询日志表验证触发器是否执行
+SELECT * FROM trigger_log;
+-- 创建事件触发器，在创建表时记录日志
+CREATE TRIGGER trigger_create_table
+AFTER CREATE ON SCHEMA
+FOR EACH STATEMENT
+BEGIN
+    INSERT INTO trigger_log (event_type, table_name)
+    VALUES ('CREATE TABLE', 'new_table');
+END;
+-- 创建新表触发触发器
+CREATE TABLE new_table (
+    id INT PRIMARY KEY,
+    data VARCHAR(100)
+);
+-- 查询日志表验证触发器是否执行
+SELECT * FROM trigger_log;
+-- 创建事件触发器，在删除表时记录日志
+CREATE TRIGGER trigger_drop_table
+AFTER DROP ON SCHEMA
+FOR EACH STATEMENT
+BEGIN
+    INSERT INTO trigger_log (event_type, table_name)
+    VALUES ('DROP TABLE', 'new_table');
+END;
+-- 删除表触发触发器
+DROP TABLE new_table;
+-- 查询日志表验证触发器是否执行
+SELECT * FROM trigger_log;
+-- 创建时间触发器，在每天午夜执行
+CREATE TRIGGER trigger_midnight
+AFTER SCHEDULE '0 0 * * *'
+FOR EACH STATEMENT
+BEGIN
+    INSERT INTO trigger_log (event_type, table_name)
+    VALUES ('MIDNIGHT', 'N/A');
+END;
+-- 查询日志表验证触发器是否执行
+SELECT * FROM trigger_log;
+-- 创建时间触发器，每隔1小时执行一次
+CREATE TRIGGER trigger_hourly
+AFTER SCHEDULE '0 * * * *'
+FOR EACH STATEMENT
+BEGIN
+    INSERT INTO trigger_log (event_type, table_name)
+    VALUES ('HOURLY', 'N/A');
+END;
+-- 查询日志表验证触发器是否执行
+SELECT * FROM trigger_log;
+-- 创建表触发器，在插入数据时更新另一张表
+CREATE TRIGGER trigger_insert_update
+AFTER INSERT ON test_table1
+FOR EACH ROW
+BEGIN
+    UPDATE test_table2 SET amount = amount + NEW.value WHERE id = 1;
+END;
+-- 插入数据触发触发器
+INSERT INTO test_table1 (id, name, value) VALUES (2, 'Bob', 150);
+-- 查询test_table2验证触发器是否执行
+SELECT * FROM test_table2;
+-- 创建表触发器，在更新数据时更新另一张表
+CREATE TRIGGER trigger_update_update
+AFTER UPDATE ON test_table1
+FOR EACH ROW
+BEGIN
+    UPDATE test_table2 SET amount = amount + (NEW.value - OLD.value) WHERE id = 1;
+END;
+-- 更新数据触发触发器
+UPDATE test_table1 SET value = 300 WHERE id = 2;
+-- 查询test_table2验证触发器是否执行
+SELECT * FROM test_table2;
+-- 创建表触发器，在删除数据时更新另一张表
+CREATE TRIGGER trigger_delete_update
+AFTER DELETE ON test_table1
+FOR EACH ROW
+BEGIN
+    UPDATE test_table2 SET amount = amount - OLD.value WHERE id = 1;
+END;
+-- 删除数据触发触发器
+DELETE FROM test_table1 WHERE id = 2;
+-- 查询test_table2验证触发器是否执行
+SELECT * FROM test_table2

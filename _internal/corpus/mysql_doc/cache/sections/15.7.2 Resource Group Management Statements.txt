@@ -1,0 +1,122 @@
+15.7.2 Resource Group Management Statements
+MySQL supports creation and management of resource groups, and permits assigning threads running
+within the server to particular groups so that threads execute according to the resources available to
+the group. This section describes the SQL statements available for resource group management. For
+general discussion of the resource group capability, see Section 7.1.16, “Resource Groups”.
+15.7.2.1 ALTER RESOURCE GROUP Statement
+ALTER RESOURCE GROUP group_name
+    [VCPU [=] vcpu_spec [, vcpu_spec] ...]
+    [THREAD_PRIORITY [=] N]
+    [ENABLE|DISABLE [FORCE]]
+vcpu_spec: {N | M - N}
+ALTER RESOURCE GROUP is used for resource group management (see Section 7.1.16, “Resource
+Groups”). This statement alters modifiable attributes of an existing resource group. It requires the
+RESOURCE_GROUP_ADMIN privilege.
+group_name identifies which resource group to alter. If the group does not exist, an error occurs.
+The attributes for CPU affinity, priority, and whether the group is enabled can be modified with ALTER
+RESOURCE GROUP. These attributes are specified the same way as described for CREATE RESOURCE
+GROUP (see Section 15.7.2.2, “CREATE RESOURCE GROUP Statement”). Only the attributes
+specified are altered. Unspecified attributes retain their current values.
+The FORCE modifier is used with DISABLE. It determines statement behavior if the resource group has
+any threads assigned to it:
+• If FORCE is not given, existing threads in the group continue to run until they terminate, but new
+threads cannot be assigned to the group.
+• If FORCE is given, existing threads in the group are moved to their respective default group (system
+threads to SYS_default, user threads to USR_default).
+The name and type attributes are set at group creation time and cannot be modified thereafter with
+ALTER RESOURCE GROUP.
+Examples:
+• Alter a group CPU affinity:
+ALTER RESOURCE GROUP rg1 VCPU = 0-63;
+• Alter a group thread priority:
+ALTER RESOURCE GROUP rg2 THREAD_PRIORITY = 5;
+• Disable a group, moving any threads assigned to it to the default groups:
+ALTER RESOURCE GROUP rg3 DISABLE FORCE;
+Resource group management is local to the server on which it occurs. ALTER RESOURCE GROUP
+statements are not written to the binary log and are not replicated.
+15.7.2.2 CREATE RESOURCE GROUP Statement
+CREATE RESOURCE GROUP group_name
+    TYPE = {SYSTEM|USER}
+    [VCPU [=] vcpu_spec [, vcpu_spec] ...]
+    [THREAD_PRIORITY [=] N]
+    [ENABLE|DISABLE]
+vcpu_spec: {N | M - N}
+CREATE RESOURCE GROUP is used for resource group management (see Section 7.1.16, “Resource
+Groups”). This statement creates a new resource group and assigns its initial attribute values. It
+requires the RESOURCE_GROUP_ADMIN privilege.
+group_name identifies which resource group to create. If the group already exists, an error occurs.
+The TYPE attribute is required. It should be SYSTEM for a system resource group, USER for a user
+resource group. The group type affects permitted THREAD_PRIORITY values, as described later.
+The VCPU attribute indicates the CPU affinity; that is, the set of virtual CPUs the group can use:
+• If VCPU is not given, the resource group has no CPU affinity and can use all available CPUs.
+• If VCPU is given, the attribute value is a list of comma-separated CPU numbers or ranges:
+• Each number must be an integer in the range from 0 to the number of CPUs − 1. For example, on
+a system with 64 CPUs, the number can range from 0 to 63.
+• A range is given in the form M − N, where M is less than or equal to N and both numbers are in the
+CPU range.
+• If a CPU number is an integer outside the permitted range or is not an integer, an error occurs.
+Example VCPU specifiers (these are all equivalent):
+VCPU = 0,1,2,3,9,10
+VCPU = 0-3,9-10
+VCPU = 9,10,0-3
+VCPU = 0,10,1,9,3,2
+The THREAD_PRIORITY attribute indicates the priority for threads assigned to the group:
+• If THREAD_PRIORITY is not given, the default priority is 0.
+• If THREAD_PRIORITY is given, the attribute value must be in the range from -20 (highest priority)
+to 19 (lowest priority). The priority for system resource groups must be in the range from -20 to 0.
+The priority for user resource groups must be in the range from 0 to 19. Use of different ranges for
+system and user groups ensures that user threads never have a higher priority than system threads.
+ENABLE and DISABLE specify that the resource group is initially enabled or disabled. If neither is
+specified, the group is enabled by default. A disabled group cannot have threads assigned to it.
+Examples:
+• Create an enabled user group that has a single CPU and the lowest priority:
+CREATE RESOURCE GROUP rg1
+  TYPE = USER
+  VCPU = 0
+  THREAD_PRIORITY = 19;
+• Create a disabled system group that has no CPU affinity (can use all CPUs) and the highest priority:
+CREATE RESOURCE GROUP rg2
+  TYPE = SYSTEM
+  THREAD_PRIORITY = -20
+  DISABLE;
+Resource group management is local to the server on which it occurs. CREATE RESOURCE GROUP
+statements are not written to the binary log and are not replicated.
+15.7.2.3 DROP RESOURCE GROUP Statement
+DROP RESOURCE GROUP group_name [FORCE]
+DROP RESOURCE GROUP is used for resource group management (see Section 7.1.16, “Resource
+Groups”). This statement drops a resource group. It requires the RESOURCE_GROUP_ADMIN privilege.
+group_name identifies which resource group to drop. If the group does not exist, an error occurs.
+The FORCE modifier determines statement behavior if the resource group has any threads assigned to
+it:
+• If FORCE is not given and any threads are assigned to the group, an error occurs.
+• If FORCE is given, existing threads in the group are moved to their respective default group (system
+threads to SYS_default, user threads to USR_default).
+Examples:
+• Drop a group, failing if the group contains any threads:
+DROP RESOURCE GROUP rg1;
+• Drop a group and move existing threads to the default groups:
+DROP RESOURCE GROUP rg2 FORCE;
+Resource group management is local to the server on which it occurs. DROP RESOURCE GROUP
+statements are not written to the binary log and are not replicated.
+15.7.2.4 SET RESOURCE GROUP Statement
+SET RESOURCE GROUP group_name
+    [FOR thread_id [, thread_id] ...]
+SET RESOURCE GROUP is used for resource group management (see Section 7.1.16,
+“Resource Groups”). This statement assigns threads to a resource group. It requires the
+RESOURCE_GROUP_ADMIN or RESOURCE_GROUP_USER privilege.
+group_name identifies which resource group to be assigned. Any thread_id values indicate threads
+to assign to the group. Thread IDs can be determined from the Performance Schema threads table. If
+the resource group or any named thread ID does not exist, an error occurs.
+With no FOR clause, the statement assigns the current thread for the session to the resource group.
+With a FOR clause that names thread IDs, the statement assigns those threads to the resource group.
+For attempts to assign a system thread to a user resource group or a user thread to a system resource
+group, a warning occurs.
+Examples:
+• Assign the current session thread to a group:
+SET RESOURCE GROUP rg1;
+• Assign the named threads to a group:
+SET RESOURCE GROUP rg2 FOR 14, 78, 4;
+Resource group management is local to the server on which it occurs. SET RESOURCE GROUP
+statements are not written to the binary log and are not replicated.
+An alternative to SET RESOURCE GROUP is the RESOURCE_GROUP optimizer hint, which assigns
+individual statements to a resource group. See Section 10.9.3, “Optimizer Hints”.

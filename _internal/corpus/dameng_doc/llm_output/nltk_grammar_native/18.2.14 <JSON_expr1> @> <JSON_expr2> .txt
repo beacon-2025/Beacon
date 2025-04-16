@@ -1,0 +1,5 @@
+```nltk
+JSON_EXPR -> JSON_EXPR1 '@>' JSON_EXPR2
+JSON_EXPR1 -> 'json_expr1_value'
+JSON_EXPR2 -> 'json_expr2_value'
+```

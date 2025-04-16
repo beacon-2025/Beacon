@@ -1,0 +1,4 @@
+
+
+-- connection slave
+set @@global.replica_exec_mode= 'IDEMPOTENT'

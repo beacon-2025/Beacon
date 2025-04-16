@@ -1,0 +1,43 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 测试用例1: 创建一个简单的JAVA外部函数，使用默认模式
+CREATE OR REPLACE FUNCTION function1 (param1 IN INT, param2 IN VARCHAR(50))
+RETURN INT
+EXTERNAL '/path/to/jar1.jar' USING JAVA;
+-- 测试用例2: 创建一个JAVA外部函数，指定模式名
+CREATE OR REPLACE FUNCTION schema1.function2 (param1 IN BIGINT, param2 OUT DOUBLE)
+RETURN VARCHAR(100)
+EXTERNAL '/path/to/jar2.jar' USING JAVA;
+-- 测试用例3: 创建一个JAVA外部函数，指定引用函数名
+CREATE OR REPLACE FUNCTION function3 (param1 IN DOUBLE, param2 IN OUT VARCHAR(100))
+RETURN BIGINT
+EXTERNAL '/path/to/jar3.jar' 'com.example.ClassName.methodName' USING JAVA;
+-- 测试用例4: 创建一个JAVA外部函数，使用IN OUT参数
+CREATE OR REPLACE FUNCTION schema2.function4 (param1 IN OUT INT, param2 IN OUT VARCHAR(50))
+RETURN DOUBLE
+EXTERNAL '/path/to/jar4.jar' USING JAVA;
+-- 测试用例5: 创建一个JAVA外部函数，使用不同的参数类型
+CREATE OR REPLACE FUNCTION function5 (param1 IN INT, param2 IN VARCHAR(100), param3 OUT BIGINT)
+RETURN VARCHAR(200)
+EXTERNAL '/path/to/jar5.jar' USING JAVA;
+-- 测试用例6: 创建一个JAVA外部函数，使用不同的返回值类型
+CREATE OR REPLACE FUNCTION schema1.function6 (param1 IN DOUBLE, param2 IN OUT VARCHAR(50))
+RETURN INT
+EXTERNAL '/path/to/jar6.jar' USING JAVA;
+-- 测试用例7: 创建一个JAVA外部函数，使用不同的jar包路径
+CREATE OR REPLACE FUNCTION function7 (param1 IN BIGINT, param2 IN VARCHAR(50))
+RETURN DOUBLE
+EXTERNAL '/path/to/jar7.jar' USING JAVA;
+-- 测试用例8: 创建一个JAVA外部函数，使用不同的引用函数名
+CREATE OR REPLACE FUNCTION schema2.function8 (param1 IN INT, param2 OUT VARCHAR(100))
+RETURN BIGINT
+EXTERNAL '/path/to/jar8.jar' 'com.example.AnotherClass.anotherMethod' USING JAVA;
+-- 测试用例9: 创建一个JAVA外部函数，使用不同的参数模式
+CREATE OR REPLACE FUNCTION function9 (param1 IN OUT INT, param2 IN OUT VARCHAR(50))
+RETURN VARCHAR(100)
+EXTERNAL '/path/to/jar9.jar' USING JAVA;
+-- 测试用例10: 创建一个JAVA外部函数，使用不同的参数类型和返回值类型
+CREATE OR REPLACE FUNCTION schema1.function10 (param1 IN DOUBLE, param2 IN OUT VARCHAR(100))
+RETURN BIGINT
+EXTERNAL '/path/to/jar10.jar' USING JAVA

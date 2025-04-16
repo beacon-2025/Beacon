@@ -1,0 +1,70 @@
+-- 创建测试表
+CREATE TABLE test_documents (
+    id INT PRIMARY KEY,
+    title VARCHAR(255),
+    content TEXT
+);
+-- 创建全文索引
+CREATE FULLTEXT INDEX idx_content ON test_documents(content);
+-- 删除全文索引
+DROP INDEX idx_content ON test_documents;
+-- 插入测试数据
+INSERT INTO test_documents (id, title, content) VALUES (1, 'Document 1', 'This is a sample document for testing full-text search.');
+INSERT INTO test_documents (id, title, content) VALUES (2, 'Document 2', 'Another document to test the full-text search capabilities.');
+-- 创建全文索引
+CREATE FULLTEXT INDEX idx_content ON test_documents(content);
+-- 使用全文索引进行查询
+SELECT * FROM test_documents WHERE MATCH(content) AGAINST('sample document');
+-- 插入测试数据
+INSERT INTO test_documents (id, title, content) VALUES (3, 'Document 3', 'This document contains specific keywords like database and search.');
+INSERT INTO test_documents (id, title, content) VALUES (4, 'Document 4', 'Another example with keywords such as index and query.');
+-- 创建全文索引
+CREATE FULLTEXT INDEX idx_content ON test_documents(content);
+-- 使用布尔模式进行全文索引查询
+SELECT * FROM test_documents WHERE MATCH(content) AGAINST('+database -search' IN BOOLEAN MODE);
+-- 插入测试数据
+INSERT INTO test_documents (id, title, content) VALUES (5, 'Document 5', 'This is a natural language search example.');
+INSERT INTO test_documents (id, title, content) VALUES (6, 'Document 6', 'Another example of natural language search.');
+-- 创建全文索引
+CREATE FULLTEXT INDEX idx_content ON test_documents(content);
+-- 使用自然语言模式进行全文索引查询
+SELECT * FROM test_documents WHERE MATCH(content) AGAINST('natural language search' IN NATURAL LANGUAGE MODE);
+-- 插入测试数据
+INSERT INTO test_documents (id, title, content) VALUES (7, 'Document 7', 'This is a query expansion example.');
+INSERT INTO test_documents (id, title, content) VALUES (8, 'Document 8', 'Another example of query expansion.');
+-- 创建全文索引
+CREATE FULLTEXT INDEX idx_content ON test_documents(content);
+-- 使用查询扩展模式进行全文索引查询
+SELECT * FROM test_documents WHERE MATCH(content) AGAINST('query expansion' WITH QUERY EXPANSION);
+-- 插入测试数据
+INSERT INTO test_documents (id, title, content) VALUES (9, 'Document 9', 'This is a test for stop words like the and is.');
+INSERT INTO test_documents (id, title, content) VALUES (10, 'Document 10', 'Another test for stop words.');
+-- 创建全文索引
+CREATE FULLTEXT INDEX idx_content ON test_documents(content);
+-- 使用全文索引查询，停用词将被忽略
+SELECT * FROM test_documents WHERE MATCH(content) AGAINST('test stop words');
+-- 插入测试数据
+INSERT INTO test_documents (id, title, content) VALUES (11, 'Document 11', 'This is a test for minimum word length.');
+INSERT INTO test_documents (id, title, content) VALUES (12, 'Document 12', 'Another test for minimum word length.');
+-- 创建全文索引
+CREATE FULLTEXT INDEX idx_content ON test_documents(content);
+-- 设置全文索引的最小词长度为4
+SET GLOBAL innodb_ft_min_token_size = 4;
+-- 使用全文索引查询，忽略长度小于4的词
+SELECT * FROM test_documents WHERE MATCH(content) AGAINST('test minimum word length');
+-- 插入测试数据
+INSERT INTO test_documents (id, title, content) VALUES (13, 'Document 13', 'This is a test for custom stop words.');
+INSERT INTO test_documents (id, title, content) VALUES (14, 'Document 14', 'Another test for custom stop words.');
+-- 创建全文索引
+CREATE FULLTEXT INDEX idx_content ON test_documents(content);
+-- 设置自定义停用词表
+SET GLOBAL innodb_ft_server_stopword_table = 'custom_stopwords';
+-- 使用全文索引查询，忽略自定义停用词
+SELECT * FROM test_documents WHERE MATCH(content) AGAINST('test custom stop words');
+-- 插入测试数据
+INSERT INTO test_documents (id, title, content) VALUES (15, 'Document 15', 'This is a test for weighted full-text search.');
+INSERT INTO test_documents (id, title, content) VALUES (16, 'Document 16', 'Another test for weighted full-text search.');
+-- 创建全文索引
+CREATE FULLTEXT INDEX idx_content ON test_documents(content);
+-- 使用全文索引查询，设置权重
+SELECT id, title, MATCH(content) AGAINST('weighted search') AS score FROM test_documents WHERE MATCH(content) AGAINST('weighted search')

@@ -1,0 +1,116 @@
+-- 创建用于测试的表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    value DOUBLE
+);
+CREATE TABLE test_table2 (
+    id INT PRIMARY KEY,
+    description VARCHAR(200),
+    amount DOUBLE
+);
+-- 插入一些测试数据
+INSERT INTO test_table1 (id, name, value) VALUES (1, 'Alice', 100.5);
+INSERT INTO test_table1 (id, name, value) VALUES (2, 'Bob', 200.75);
+INSERT INTO test_table2 (id, description, amount) VALUES (1, 'Item1', 50.25);
+INSERT INTO test_table2 (id, description, amount) VALUES (2, 'Item2', 75.50);
+-- 创建外部函数
+CREATE FUNCTION get_int_value(arg_id INT) RETURNS INT
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT get_int_value(1) FROM test_table1 WHERE id = 1;
+-- 创建外部函数
+CREATE FUNCTION get_double_value(arg_id INT) RETURNS DOUBLE
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT get_double_value(1) FROM test_table1 WHERE id = 2;
+-- 创建外部函数
+CREATE FUNCTION get_str_value(arg_id INT) RETURNS VARCHAR(100)
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT get_str_value(1) FROM test_table1 WHERE id = 1;
+-- 创建外部函数
+CREATE FUNCTION get_str_with_len_value(arg_id INT) RETURNS VARCHAR(100)
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT get_str_with_len_value(1) FROM test_table1 WHERE id = 2;
+-- 创建外部函数
+CREATE FUNCTION set_int_value(arg_id INT, new_value INT) RETURNS INT
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT set_int_value(1, 300) FROM test_table1 WHERE id = 1;
+-- 创建外部函数
+CREATE FUNCTION set_double_value(arg_id INT, new_value DOUBLE) RETURNS DOUBLE
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT set_double_value(1, 400.25) FROM test_table1 WHERE id = 2;
+-- 创建外部函数
+CREATE FUNCTION set_str_value(arg_id INT, new_value VARCHAR(100)) RETURNS VARCHAR(100)
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT set_str_value(1, 'Charlie') FROM test_table1 WHERE id = 1;
+-- 创建外部函数
+CREATE FUNCTION set_str_with_len_value(arg_id INT, new_value VARCHAR(100), len INT) RETURNS VARCHAR(100)
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT set_str_with_len_value(1, 'David', 5) FROM test_table1 WHERE id = 2;
+-- 创建外部函数
+CREATE FUNCTION set_null_value(arg_id INT) RETURNS INT
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT set_null_value(1) FROM test_table1 WHERE id = 1;
+-- 创建外部函数
+CREATE FUNCTION return_int_value() RETURNS INT
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT return_int_value() FROM test_table1 WHERE id = 1;
+-- 创建外部函数
+CREATE FUNCTION return_double_value() RETURNS DOUBLE
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT return_double_value() FROM test_table1 WHERE id = 2;
+-- 创建外部函数
+CREATE FUNCTION return_str_value() RETURNS VARCHAR(100)
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT return_str_value() FROM test_table1 WHERE id = 1;
+-- 创建外部函数
+CREATE FUNCTION return_str_with_len_value() RETURNS VARCHAR(100)
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT return_str_with_len_value() FROM test_table1 WHERE id = 2;
+-- 创建外部函数
+CREATE FUNCTION return_null_value() RETURNS INT
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT return_null_value() FROM test_table1 WHERE id = 1;
+-- 创建外部函数
+CREATE FUNCTION is_null_value(arg_id INT) RETURNS INT
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT is_null_value(1) FROM test_table1 WHERE id = 2;
+-- 创建外部函数
+CREATE FUNCTION free_str_value(arg_id INT) RETURNS INT
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT free_str_value(1) FROM test_table1 WHERE id = 1;
+-- 创建外部函数
+CREATE FUNCTION scalar_function(arg1 INT, arg2 DOUBLE, arg3 VARCHAR(100)) RETURNS VARCHAR(100)
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT scalar_function(1, 100.5, 'Test') FROM test_table1 WHERE id = 1;
+-- 创建外部函数
+CREATE FUNCTION scalar_function_return_str(arg1 INT, arg2 DOUBLE, arg3 VARCHAR(100)) RETURNS VARCHAR(100)
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT scalar_function_return_str(1, 100.5, 'Test') FROM test_table1 WHERE id = 2;
+-- 创建外部函数
+CREATE FUNCTION scalar_function_return_int(arg1 INT, arg2 DOUBLE, arg3 VARCHAR(100)) RETURNS INT
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT scalar_function_return_int(1, 100.5, 'Test') FROM test_table1 WHERE id = 1;
+-- 创建外部函数
+CREATE FUNCTION scalar_function_return_double(arg1 INT, arg2 DOUBLE, arg3 VARCHAR(100)) RETURNS DOUBLE
+AS EXTERNAL NAME '/path/to/libtest.so' LANGUAGE C;
+-- 调用外部函数
+SELECT scalar_function_return_double(1, 100.5, 'Test') FROM test_table1 WHERE id = 2

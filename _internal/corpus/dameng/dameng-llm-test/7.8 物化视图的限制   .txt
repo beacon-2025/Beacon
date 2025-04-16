@@ -1,0 +1,332 @@
+-- 创建测试表
+CREATE TABLE test_table_1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    value INT
+);
+-- 插入测试数据
+INSERT INTO test_table_1 (id, name, value) VALUES (1, 'Alice', 100);
+INSERT INTO test_table_1 (id, name, value) VALUES (2, 'Bob', 200);
+INSERT INTO test_table_1 (id, name, value) VALUES (3, 'Charlie', 300);
+-- 测试用例 1: 创建物化视图
+CREATE MATERIALIZED VIEW mv_test_1 AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 150;
+-- 测试用例 2: 刷新物化视图
+REFRESH MATERIALIZED VIEW mv_test_1;
+-- 测试用例 3: 查询物化视图
+SELECT * FROM mv_test_1;
+-- 测试用例 4: 删除物化视图
+DROP MATERIALIZED VIEW mv_test_1;
+-- 测试用例 5: 创建带索引的物化视图
+CREATE MATERIALIZED VIEW mv_test_2 AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+CREATE INDEX idx_mv_test_2 ON mv_test_2 (value);
+-- 测试用例 6: 刷新带索引的物化视图
+REFRESH MATERIALIZED VIEW mv_test_2;
+-- 测试用例 7: 查询带索引的物化视图
+SELECT * FROM mv_test_2 WHERE value > 200;
+-- 测试用例 8: 删除带索引的物化视图
+DROP MATERIALIZED VIEW mv_test_2;
+-- 测试用例 9: 创建物化视图并指定存储路径
+CREATE MATERIALIZED VIEW mv_test_3
+WITH (storage_path = '/var/lib/postgresql/data/mv_test_3')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 50;
+-- 测试用例 10: 刷新指定存储路径的物化视图
+REFRESH MATERIALIZED VIEW mv_test_3;
+-- 测试用例 11: 查询指定存储路径的物化视图
+SELECT * FROM mv_test_3;
+-- 测试用例 12: 删除指定存储路径的物化视图
+DROP MATERIALIZED VIEW mv_test_3;
+-- 测试用例 13: 创建物化视图并指定刷新模式
+CREATE MATERIALIZED VIEW mv_test_4
+WITH (refresh_mode = 'fast')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 14: 刷新指定刷新模式的物化视图
+REFRESH MATERIALIZED VIEW mv_test_4;
+-- 测试用例 15: 查询指定刷新模式的物化视图
+SELECT * FROM mv_test_4;
+-- 测试用例 16: 删除指定刷新模式的物化视图
+DROP MATERIALIZED VIEW mv_test_4;
+-- 测试用例 17: 创建物化视图并指定刷新时间
+CREATE MATERIALIZED VIEW mv_test_5
+WITH (refresh_time = '2023-10-01 12:00:00')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 18: 刷新指定刷新时间的物化视图
+REFRESH MATERIALIZED VIEW mv_test_5;
+-- 测试用例 19: 查询指定刷新时间的物化视图
+SELECT * FROM mv_test_5;
+-- 测试用例 20: 删除指定刷新时间的物化视图
+DROP MATERIALIZED VIEW mv_test_5;
+-- 测试用例 21: 创建物化视图并指定并行度
+CREATE MATERIALIZED VIEW mv_test_6
+WITH (parallel_degree = 4)
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 22: 刷新指定并行度的物化视图
+REFRESH MATERIALIZED VIEW mv_test_6;
+-- 测试用例 23: 查询指定并行度的物化视图
+SELECT * FROM mv_test_6;
+-- 测试用例 24: 删除指定并行度的物化视图
+DROP MATERIALIZED VIEW mv_test_6;
+-- 测试用例 25: 创建物化视图并指定存储参数
+CREATE MATERIALIZED VIEW mv_test_7
+WITH (storage_parameter = 'compression=on')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 26: 刷新指定存储参数的物化视图
+REFRESH MATERIALIZED VIEW mv_test_7;
+-- 测试用例 27: 查询指定存储参数的物化视图
+SELECT * FROM mv_test_7;
+-- 测试用例 28: 删除指定存储参数的物化视图
+DROP MATERIALIZED VIEW mv_test_7;
+-- 测试用例 29: 创建物化视图并指定查询重写
+CREATE MATERIALIZED VIEW mv_test_8
+WITH (query_rewrite = 'enabled')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 30: 刷新指定查询重写的物化视图
+REFRESH MATERIALIZED VIEW mv_test_8;
+-- 测试用例 31: 查询指定查询重写的物化视图
+SELECT * FROM mv_test_8;
+-- 测试用例 32: 删除指定查询重写的物化视图
+DROP MATERIALIZED VIEW mv_test_8;
+-- 测试用例 33: 创建物化视图并指定刷新方式
+CREATE MATERIALIZED VIEW mv_test_9
+WITH (refresh_method = 'complete')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 34: 刷新指定刷新方式的物化视图
+REFRESH MATERIALIZED VIEW mv_test_9;
+-- 测试用例 35: 查询指定刷新方式的物化视图
+SELECT * FROM mv_test_9;
+-- 测试用例 36: 删除指定刷新方式的物化视图
+DROP MATERIALIZED VIEW mv_test_9;
+-- 测试用例 37: 创建物化视图并指定刷新间隔
+CREATE MATERIALIZED VIEW mv_test_10
+WITH (refresh_interval = '1 hour')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 38: 刷新指定刷新间隔的物化视图
+REFRESH MATERIALIZED VIEW mv_test_10;
+-- 测试用例 39: 查询指定刷新间隔的物化视图
+SELECT * FROM mv_test_10;
+-- 测试用例 40: 删除指定刷新间隔的物化视图
+DROP MATERIALIZED VIEW mv_test_10;
+-- 测试用例 41: 创建物化视图并指定刷新触发器
+CREATE MATERIALIZED VIEW mv_test_11
+WITH (refresh_trigger = 'on_commit')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 42: 刷新指定刷新触发器的物化视图
+REFRESH MATERIALIZED VIEW mv_test_11;
+-- 测试用例 43: 查询指定刷新触发器的物化视图
+SELECT * FROM mv_test_11;
+-- 测试用例 44: 删除指定刷新触发器的物化视图
+DROP MATERIALIZED VIEW mv_test_11;
+-- 测试用例 45: 创建物化视图并指定刷新延迟
+CREATE MATERIALIZED VIEW mv_test_12
+WITH (refresh_delay = '5 minutes')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 46: 刷新指定刷新延迟的物化视图
+REFRESH MATERIALIZED VIEW mv_test_12;
+-- 测试用例 47: 查询指定刷新延迟的物化视图
+SELECT * FROM mv_test_12;
+-- 测试用例 48: 删除指定刷新延迟的物化视图
+DROP MATERIALIZED VIEW mv_test_12;
+-- 测试用例 49: 创建物化视图并指定刷新优先级
+CREATE MATERIALIZED VIEW mv_test_13
+WITH (refresh_priority = 'high')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 50: 刷新指定刷新优先级的物化视图
+REFRESH MATERIALIZED VIEW mv_test_13;
+-- 测试用例 51: 查询指定刷新优先级的物化视图
+SELECT * FROM mv_test_13;
+-- 测试用例 52: 删除指定刷新优先级的物化视图
+DROP MATERIALIZED VIEW mv_test_13;
+-- 测试用例 53: 创建物化视图并指定刷新并发
+CREATE MATERIALIZED VIEW mv_test_14
+WITH (refresh_concurrency = 'parallel')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 54: 刷新指定刷新并发的物化视图
+REFRESH MATERIALIZED VIEW mv_test_14;
+-- 测试用例 55: 查询指定刷新并发的物化视图
+SELECT * FROM mv_test_14;
+-- 测试用例 56: 删除指定刷新并发的物化视图
+DROP MATERIALIZED VIEW mv_test_14;
+-- 测试用例 57: 创建物化视图并指定刷新日志
+CREATE MATERIALIZED VIEW mv_test_15
+WITH (refresh_log = 'enabled')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 58: 刷新指定刷新日志的物化视图
+REFRESH MATERIALIZED VIEW mv_test_15;
+-- 测试用例 59: 查询指定刷新日志的物化视图
+SELECT * FROM mv_test_15;
+-- 测试用例 60: 删除指定刷新日志的物化视图
+DROP MATERIALIZED VIEW mv_test_15;
+-- 测试用例 61: 创建物化视图并指定刷新日志路径
+CREATE MATERIALIZED VIEW mv_test_16
+WITH (refresh_log_path = '/var/log/postgresql/mv_test_16.log')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 62: 刷新指定刷新日志路径的物化视图
+REFRESH MATERIALIZED VIEW mv_test_16;
+-- 测试用例 63: 查询指定刷新日志路径的物化视图
+SELECT * FROM mv_test_16;
+-- 测试用例 64: 删除指定刷新日志路径的物化视图
+DROP MATERIALIZED VIEW mv_test_16;
+-- 测试用例 65: 创建物化视图并指定刷新日志级别
+CREATE MATERIALIZED VIEW mv_test_17
+WITH (refresh_log_level = 'debug')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 66: 刷新指定刷新日志级别的物化视图
+REFRESH MATERIALIZED VIEW mv_test_17;
+-- 测试用例 67: 查询指定刷新日志级别的物化视图
+SELECT * FROM mv_test_17;
+-- 测试用例 68: 删除指定刷新日志级别的物化视图
+DROP MATERIALIZED VIEW mv_test_17;
+-- 测试用例 69: 创建物化视图并指定刷新日志格式
+CREATE MATERIALIZED VIEW mv_test_18
+WITH (refresh_log_format = 'json')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 70: 刷新指定刷新日志格式的物化视图
+REFRESH MATERIALIZED VIEW mv_test_18;
+-- 测试用例 71: 查询指定刷新日志格式的物化视图
+SELECT * FROM mv_test_18;
+-- 测试用例 72: 删除指定刷新日志格式的物化视图
+DROP MATERIALIZED VIEW mv_test_18;
+-- 测试用例 73: 创建物化视图并指定刷新日志大小
+CREATE MATERIALIZED VIEW mv_test_19
+WITH (refresh_log_size = '100MB')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 74: 刷新指定刷新日志大小的物化视图
+REFRESH MATERIALIZED VIEW mv_test_19;
+-- 测试用例 75: 查询指定刷新日志大小的物化视图
+SELECT * FROM mv_test_19;
+-- 测试用例 76: 删除指定刷新日志大小的物化视图
+DROP MATERIALIZED VIEW mv_test_19;
+-- 测试用例 77: 创建物化视图并指定刷新日志保留时间
+CREATE MATERIALIZED VIEW mv_test_20
+WITH (refresh_log_retention = '7 days')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 78: 刷新指定刷新日志保留时间的物化视图
+REFRESH MATERIALIZED VIEW mv_test_20;
+-- 测试用例 79: 查询指定刷新日志保留时间的物化视图
+SELECT * FROM mv_test_20;
+-- 测试用例 80: 删除指定刷新日志保留时间的物化视图
+DROP MATERIALIZED VIEW mv_test_20;
+-- 测试用例 81: 创建物化视图并指定刷新日志压缩
+CREATE MATERIALIZED VIEW mv_test_21
+WITH (refresh_log_compression = 'on')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 82: 刷新指定刷新日志压缩的物化视图
+REFRESH MATERIALIZED VIEW mv_test_21;
+-- 测试用例 83: 查询指定刷新日志压缩的物化视图
+SELECT * FROM mv_test_21;
+-- 测试用例 84: 删除指定刷新日志压缩的物化视图
+DROP MATERIALIZED VIEW mv_test_21;
+-- 测试用例 85: 创建物化视图并指定刷新日志加密
+CREATE MATERIALIZED VIEW mv_test_22
+WITH (refresh_log_encryption = 'on')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 86: 刷新指定刷新日志加密的物化视图
+REFRESH MATERIALIZED VIEW mv_test_22;
+-- 测试用例 87: 查询指定刷新日志加密的物化视图
+SELECT * FROM mv_test_22;
+-- 测试用例 88: 删除指定刷新日志加密的物化视图
+DROP MATERIALIZED VIEW mv_test_22;
+-- 测试用例 89: 创建物化视图并指定刷新日志分区
+CREATE MATERIALIZED VIEW mv_test_23
+WITH (refresh_log_partition = 'by_day')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 90: 刷新指定刷新日志分区的物化视图
+REFRESH MATERIALIZED VIEW mv_test_23;
+-- 测试用例 91: 查询指定刷新日志分区的物化视图
+SELECT * FROM mv_test_23;
+-- 测试用例 92: 删除指定刷新日志分区的物化视图
+DROP MATERIALIZED VIEW mv_test_23;
+-- 测试用例 93: 创建物化视图并指定刷新日志归档
+CREATE MATERIALIZED VIEW mv_test_24
+WITH (refresh_log_archive = 'on')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 94: 刷新指定刷新日志归档的物化视图
+REFRESH MATERIALIZED VIEW mv_test_24;
+-- 测试用例 95: 查询指定刷新日志归档的物化视图
+SELECT * FROM mv_test_24;
+-- 测试用例 96: 删除指定刷新日志归档的物化视图
+DROP MATERIALIZED VIEW mv_test_24;
+-- 测试用例 97: 创建物化视图并指定刷新日志归档路径
+CREATE MATERIALIZED VIEW mv_test_25
+WITH (refresh_log_archive_path = '/var/log/postgresql/archive/mv_test_25')
+AS
+SELECT id, name, value
+FROM test_table_1
+WHERE value > 100;
+-- 测试用例 98: 刷新指定刷新日志归档路径的物化视图
+REFRESH MATERIALIZED VIEW mv_test_25;
+-- 测试用例 99: 查询指定刷新日志归档路径的物化视图
+SELECT * FROM mv_test_25;
+-- 测试用例 100: 删除指定刷新日志归档路径的物化视图
+DROP MATERIALIZED VIEW mv_test_25

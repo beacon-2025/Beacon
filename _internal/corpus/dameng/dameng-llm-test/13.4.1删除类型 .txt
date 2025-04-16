@@ -1,0 +1,42 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 创建类型
+CREATE TYPE schema1.type1 AS (id INT, name TEXT);
+CREATE TYPE schema2.type2 AS (id INT, name TEXT);
+-- 创建带有类型体的对象类型
+CREATE TYPE schema1.type3 AS OBJECT (id INT, name TEXT);
+CREATE TYPE BODY schema1.type3 AS 
+BEGIN
+    MEMBER FUNCTION get_name RETURN TEXT IS
+    BEGIN
+        RETURN self.name;
+END;
+END;
+-- 测试用例1: 删除存在的类型
+DROP TYPE schema1.type1;
+-- 测试用例2: 删除不存在的类型（不使用IF EXISTS）
+-- 预期结果：报错
+DROP TYPE schema1.nonexistent_type;
+-- 测试用例3: 删除不存在的类型（使用IF EXISTS）
+-- 预期结果：不报错
+DROP TYPE IF EXISTS schema1.nonexistent_type;
+-- 测试用例4: 删除不属于当前模式的类型（指定模式名）
+DROP TYPE schema2.type2;
+-- 测试用例5: 删除带有类型体的对象类型
+-- 预期结果：类型体和类型一起被删除
+DROP TYPE schema1.type3;
+-- 测试用例6: 使用RESTRICT选项删除类型
+-- 预期结果：如果类型被其他对象依赖，则报错
+DROP TYPE schema1.type1 RESTRICT;
+-- 测试用例7: 使用CASCADE选项删除类型
+-- 预期结果：如果类型被其他对象依赖，则级联删除依赖对象
+DROP TYPE schema1.type1 CASCADE;
+-- 测试用例8: 删除当前模式下的类型（不指定模式名）
+-- 假设当前模式为schema1
+SET search_path TO schema1;
+DROP TYPE type1;
+-- 测试用例9: 删除当前模式下的类型（指定模式名）
+DROP TYPE schema1.type1;
+-- 测试用例10: 删除类型时使用IF EXISTS和CASCADE
+DROP TYPE IF EXISTS schema1.type1 CASCADE

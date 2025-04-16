@@ -1,0 +1,91 @@
+-- 创建测试表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT
+);
+CREATE TABLE test_table2 (
+    id INT PRIMARY KEY,
+    department VARCHAR(50),
+    salary DECIMAL(10, 2)
+);
+-- 插入测试数据
+INSERT INTO test_table1 (id, name, age) VALUES (1, 'Alice', 30);
+INSERT INTO test_table1 (id, name, age) VALUES (2, 'Bob', 25);
+INSERT INTO test_table1 (id, name, age) VALUES (3, 'Charlie', 35);
+INSERT INTO test_table2 (id, department, salary) VALUES (1, 'HR', 50000.00);
+INSERT INTO test_table2 (id, department, salary) VALUES (2, 'Engineering', 70000.00);
+INSERT INTO test_table2 (id, department, salary) VALUES (3, 'Marketing', 60000.00);
+WITH cte AS (
+    SELECT id, name FROM test_table1 WHERE age > 30
+)
+SELECT * FROM cte;
+WITH cte AS (
+    SELECT t1.id, t1.name, t2.department
+    FROM test_table1 t1
+    JOIN test_table2 t2 ON t1.id = t2.id
+)
+SELECT * FROM cte;
+WITH cte AS (
+    SELECT department, AVG(salary) AS avg_salary
+    FROM test_table2
+    GROUP BY department
+)
+SELECT * FROM cte;
+WITH cte1 AS (
+    SELECT id, name FROM test_table1 WHERE age > 25
+),
+cte2 AS (
+    SELECT id, department FROM test_table2 WHERE salary > 55000
+)
+SELECT cte1.name, cte2.department
+FROM cte1
+JOIN cte2 ON cte1.id = cte2.id;
+WITH FUNCTION calculate_bonus(salary DECIMAL) RETURNS DECIMAL AS
+BEGIN
+    RETURN salary * 0.1;
+END;
+SELECT id, department, calculate_bonus(salary) AS bonus
+FROM test_table2;
+WITH FUNCTION calculate_tax(salary DECIMAL) RETURNS DECIMAL AS
+BEGIN
+    RETURN salary * 0.2;
+END;
+SELECT id, department, salary, calculate_tax(salary) AS tax
+FROM test_table2;
+WITH FUNCTION calculate_bonus(salary DECIMAL) RETURNS DECIMAL AS
+BEGIN
+    RETURN salary * 0.1;
+END,
+cte AS (
+    SELECT id, department, salary FROM test_table2 WHERE salary > 60000
+)
+SELECT id, department, salary, calculate_bonus(salary) AS bonus
+FROM cte;
+WITH RECURSIVE cte AS (
+    SELECT id, name, age FROM test_table1 WHERE id = 1
+    UNION ALL
+    SELECT t1.id, t1.name, t1.age
+    FROM test_table1 t1
+    JOIN cte ON t1.id = cte.id + 1
+)
+SELECT * FROM cte;
+WITH RECURSIVE cte AS (
+    SELECT id, name, age, 1 AS level
+    FROM test_table1 WHERE id = 1
+    UNION ALL
+    SELECT t1.id, t1.name, t1.age, cte.level + 1
+    FROM test_table1 t1
+    JOIN cte ON t1.id = cte.id + 1
+)
+SELECT * FROM cte;
+WITH RECURSIVE cte AS (
+    SELECT id, name, age, 1 AS level
+    FROM test_table1 WHERE id = 1
+    UNION ALL
+    SELECT t1.id, t1.name, t1.age, cte.level + 1
+    FROM test_table1 t1
+    JOIN cte ON t1.id = cte.id + 1
+    WHERE cte.level < 3
+)
+SELECT * FROM cte

@@ -1,0 +1,21 @@
+```
+S -> IMPORT_TABLE_STATEMENT
+IMPORT_TABLE_STATEMENT -> 'IMPORT' 'TABLE' 'FROM' SDI_FILE_LIST
+SDI_FILE_LIST -> SDI_FILE | SDI_FILE ',' SDI_FILE_LIST
+
+# sdi_file is a string literal representing .sdi files or patterns
+SDI_FILE -> 'sdi_file_value'
+
+# Generic pattern matching options as part of the rule explanations
+PATTERN -> "string_literal_or_pattern"
+
+# Explanation of matching
+PATTERN_CHAR -> '?'
+PATTERN_SEQ -> '*'
+INCLUDES -> "matches any single character"
+MATCHES -> "matches any sequence of characters, including no characters"
+```
+
+Note: 
+- 'sdi_file_value' indicates a placeholder for the actual string literals or patterns that specify the file or files.
+- PATTERN, PATTERN_CHAR, PATTERN_SEQ, INCLUDES, and MATCHES are indicative representations related to pattern matching functionalities as described in the documentation.

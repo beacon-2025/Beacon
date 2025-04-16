@@ -1,0 +1,70 @@
+-- 创建用于测试的表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+CREATE TABLE test_table2 (
+    id INT PRIMARY KEY,
+    description VARCHAR(100)
+);
+-- 插入一些测试数据
+INSERT INTO test_table1 (id, name) VALUES (1, 'Alice');
+INSERT INTO test_table1 (id, name) VALUES (2, 'Bob');
+INSERT INTO test_table2 (id, description) VALUES (1, 'Description for Alice');
+INSERT INTO test_table2 (id, description) VALUES (2, 'Description for Bob');
+-- 测试用例 1: 创建外部函数并调用
+CREATE OR REPLACE FUNCTION MY_CONCAT(A VARCHAR, B VARCHAR)  
+RETURN VARCHAR 
+EXTERNAL '/usr/local/testroot/for_dmserver/smoketest_data/dameng/detest64.dll' C_CAT 
+USING C;
+SELECT MY_CONCAT('hello ', 'world');
+-- 测试用例 2: 创建另一个外部函数并调用
+CREATE OR REPLACE FUNCTION MY_CONCAT2(A VARCHAR, B VARCHAR)  
+RETURN VARCHAR 
+EXTERNAL '/usr/local/testroot/for_dmserver/smoketest_data/dameng/detest64.dll' C_CAT 
+USING C;
+SELECT MY_CONCAT2('goodbye ', 'world');
+-- 测试用例 3: 使用外部函数在查询中
+SELECT MY_CONCAT(name, ' is a user') AS concatenated_name 
+FROM test_table1 
+WHERE id = 1;
+-- 测试用例 4: 使用外部函数在查询中连接两个字段
+SELECT MY_CONCAT(name, description) AS concatenated_result 
+FROM test_table1 
+JOIN test_table2 ON test_table1.id = test_table2.id;
+-- 测试用例 5: 创建外部函数并调用，使用不同的路径
+CREATE OR REPLACE FUNCTION MY_CONCAT3(A VARCHAR, B VARCHAR)  
+RETURN VARCHAR 
+EXTERNAL '/usr/local/testroot/for_dmserver/smoketest_data/dameng/detest64_2.dll' C_CAT 
+USING C;
+SELECT MY_CONCAT3('hello ', 'again');
+-- 测试用例 6: 创建外部函数并调用，使用不同的函数名
+CREATE OR REPLACE FUNCTION MY_CONCAT4(A VARCHAR, B VARCHAR)  
+RETURN VARCHAR 
+EXTERNAL '/usr/local/testroot/for_dmserver/smoketest_data/dameng/detest64.dll' C_CAT 
+USING C;
+SELECT MY_CONCAT4('hello ', 'everyone');
+-- 测试用例 7: 创建外部函数并调用，使用不同的参数类型
+CREATE OR REPLACE FUNCTION MY_CONCAT5(A VARCHAR, B INT)  
+RETURN VARCHAR 
+EXTERNAL '/usr/local/testroot/for_dmserver/smoketest_data/dameng/detest64.dll' C_CAT 
+USING C;
+SELECT MY_CONCAT5('number ', 123);
+-- 测试用例 8: 创建外部函数并调用，使用不同的返回类型
+CREATE OR REPLACE FUNCTION MY_CONCAT6(A VARCHAR, B VARCHAR)  
+RETURN INT 
+EXTERNAL '/usr/local/testroot/for_dmserver/smoketest_data/dameng/detest64.dll' C_CAT 
+USING C;
+SELECT MY_CONCAT6('hello ', 'world');
+-- 测试用例 9: 创建外部函数并调用，使用不同的库文件
+CREATE OR REPLACE FUNCTION MY_CONCAT7(A VARCHAR, B VARCHAR)  
+RETURN VARCHAR 
+EXTERNAL '/usr/local/testroot/for_dmserver/smoketest_data/dameng/detest64_3.dll' C_CAT 
+USING C;
+SELECT MY_CONCAT7('hello ', 'library');
+-- 测试用例 10: 创建外部函数并调用，使用不同的库文件路径
+CREATE OR REPLACE FUNCTION MY_CONCAT8(A VARCHAR, B VARCHAR)  
+RETURN VARCHAR 
+EXTERNAL '/usr/local/testroot/for_dmserver/smoketest_data/dameng/detest64_4.dll' C_CAT 
+USING C;
+SELECT MY_CONCAT8('hello ', 'path')

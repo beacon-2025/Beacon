@@ -1,0 +1,6 @@
+
+CREATE TABLE t1 (
+  `id` int(11) NOT NULL auto_increment,
+  `data` varchar(100),
+  PRIMARY KEY  (`id`)
+ ) ENGINE=MyISAM

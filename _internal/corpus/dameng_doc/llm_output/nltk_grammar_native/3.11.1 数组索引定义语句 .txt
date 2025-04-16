@@ -1,0 +1,3 @@
+```plaintext
+CREATE_ARRAY_INDEX -> 'CREATE' 'ARRAY' 'INDEX' 'index_name_1' 'ON' 'schema_name_1' '.' 'table_name_1' '(' 'index_column_definition' ')'
+```

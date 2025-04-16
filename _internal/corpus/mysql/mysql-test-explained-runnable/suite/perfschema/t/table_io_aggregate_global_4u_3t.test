@@ -1,0 +1,5 @@
+
+
+# global
+update performance_schema.setup_consumers
+  set enabled='NO' where name='thread_instrumentation'

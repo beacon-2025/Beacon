@@ -1,0 +1,11 @@
+15.1.35 DROP VIEW Statement
+DROP VIEW [IF EXISTS]
+    view_name [, view_name] ...
+    [RESTRICT | CASCADE]
+DROP VIEW removes one or more views. You must have the DROP privilege for each view.
+If any views named in the argument list do not exist, the statement fails with an error indicating by
+name which nonexisting views it was unable to drop, and no changes are made.
+The IF EXISTS clause prevents an error from occurring for views that don't exist. When this clause
+is given, a NOTE is generated for each nonexistent view. See Section 15.7.7.41, “SHOW WARNINGS
+Statement”.
+RESTRICT and CASCADE, if given, are parsed and ignored.

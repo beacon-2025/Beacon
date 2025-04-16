@@ -1,0 +1,7 @@
+```plaintext
+S -> DROP_PACKAGE_BODY
+DROP_PACKAGE_BODY -> 'DROP' 'PACKAGE' 'BODY' IF_EXISTS SCHEMA_NAME '.' PACKAGE_NAME ';'
+IF_EXISTS -> 'IF EXISTS' | ''
+SCHEMA_NAME -> 'schemaname_1' | ''
+PACKAGE_NAME -> 'packagename_1'
+```

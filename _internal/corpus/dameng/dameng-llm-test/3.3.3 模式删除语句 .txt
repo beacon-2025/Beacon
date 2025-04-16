@@ -1,0 +1,34 @@
+-- 创建一个模式用于测试
+CREATE SCHEMA test_schema1;
+CREATE SCHEMA test_schema2;
+CREATE SCHEMA test_schema3;
+-- 测试用例 1: 删除一个存在的模式，使用默认的RESTRICT选项
+DROP SCHEMA test_schema1;
+-- 测试用例 2: 删除一个存在的模式，显式使用RESTRICT选项
+DROP SCHEMA test_schema2 RESTRICT;
+-- 测试用例 3: 删除一个存在的模式，使用CASCADE选项
+DROP SCHEMA test_schema3 CASCADE;
+-- 测试用例 4: 删除一个不存在的模式，不使用IF EXISTS，预期会报错
+DROP SCHEMA non_existent_schema;
+-- 测试用例 5: 删除一个不存在的模式，使用IF EXISTS，预期不会报错
+DROP SCHEMA IF EXISTS non_existent_schema;
+-- 测试用例 6: 删除一个包含对象的模式，使用RESTRICT选项，预期会报错
+-- 前置语句：在模式中创建一个表
+CREATE SCHEMA test_schema4;
+CREATE TABLE test_schema4.test_table (id INT);
+-- 删除模式，预期会报错
+DROP SCHEMA test_schema4 RESTRICT;
+-- 测试用例 7: 删除一个包含对象的模式，使用CASCADE选项，预期会成功
+-- 前置语句：在模式中创建一个表
+CREATE SCHEMA test_schema5;
+CREATE TABLE test_schema5.test_table (id INT);
+-- 删除模式，预期会成功
+DROP SCHEMA test_schema5 CASCADE;
+-- 测试用例 8: 删除一个空的模式，使用IF EXISTS和RESTRICT选项
+CREATE SCHEMA test_schema6;
+DROP SCHEMA IF EXISTS test_schema6 RESTRICT;
+-- 测试用例 9: 删除一个空的模式，使用IF EXISTS和CASCADE选项
+CREATE SCHEMA test_schema7;
+DROP SCHEMA IF EXISTS test_schema7 CASCADE;
+-- 测试用例 10: 删除一个不存在的模式，使用IF EXISTS和CASCADE选项
+DROP SCHEMA IF EXISTS non_existent_schema CASCADE

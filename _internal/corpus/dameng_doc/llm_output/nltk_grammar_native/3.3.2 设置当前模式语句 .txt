@@ -1,0 +1,3 @@
+```plaintext
+SET_SCHEMA -> 'SET' 'SCHEMA' 'schemaname_1'
+```

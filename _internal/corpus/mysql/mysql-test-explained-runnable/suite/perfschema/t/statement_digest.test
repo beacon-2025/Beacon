@@ -1,0 +1,5 @@
+# -----------------------------------------------------------------------
+# Tests for the performance schema statement Digests.
+# -----------------------------------------------------------------------
+
+SET sql_mode='NO_ENGINE_SUBSTITUTION'

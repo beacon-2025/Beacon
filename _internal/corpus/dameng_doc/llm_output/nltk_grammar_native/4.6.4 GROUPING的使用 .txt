@@ -1,0 +1,6 @@
+```plaintext
+GROUPING_ITEM -> 'GROUPING' '(' GROUPING_COLUMN ')'
+GROUPING_COLUMN -> 'column_name_1' | 'value_expression_1'
+
+SELECT_STATEMENT -> 'SELECT' GROUPING_ITEM 'AS' 'G_CITY' ',' GROUPING_ITEM 'AS' 'G_ADD' ',' 'CITY' ',' 'ADDRESS1' ',' 'COUNT' '(' '*' ')' 'AS' 'NUMS' 'FROM' 'PERSON.ADDRESS' 'GROUP' 'BY' 'ROLLUP' '(' 'CITY' ',' 'ADDRESS1' ')'
+```

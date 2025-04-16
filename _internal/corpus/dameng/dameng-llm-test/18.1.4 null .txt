@@ -1,0 +1,179 @@
+-- 创建表 t_json_null
+DROP TABLE IF EXISTS t_json_null;
+CREATE TABLE t_json_null (
+    c1 INT,
+    c2 VARCHAR2(100) CHECK (c2 IS JSON)
+);
+-- 插入SQL语句的NULL
+INSERT INTO t_json_null VALUES (1, NULL);
+COMMIT;
+-- 插入JSON数据的null
+INSERT INTO t_json_null VALUES (2, '{"dameng":null}');
+COMMIT;
+-- 插入SQL语句的NULL（大写）
+INSERT INTO t_json_null VALUES (3, NULL);
+COMMIT;
+-- 插入JSON数据的NULL（大写）
+INSERT INTO t_json_null VALUES (4, '{"dameng":NULL}');
+COMMIT;
+-- 查询json_value
+SELECT json_value(c2, '$.dameng') FROM t_json_null;
+-- 查询json_query WITH WRAPPER
+SELECT json_query(c2, '$.dameng' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null（大小写混合）
+INSERT INTO t_json_null VALUES (5, '{"dameng":nUll}');
+COMMIT;
+-- 插入JSON数据的NULL（大小写混合）
+INSERT INTO t_json_null VALUES (6, '{"dameng":nULL}');
+COMMIT;
+-- 查询json_value（大小写混合）
+SELECT json_value(c2, '$.dameng') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（大小写混合）
+SELECT json_query(c2, '$.dameng' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称
+INSERT INTO t_json_null VALUES (7, '{"null":123}');
+COMMIT;
+-- 查询json_value（null作为名称）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（大小写混合）
+INSERT INTO t_json_null VALUES (8, '{"nUll":456}');
+COMMIT;
+-- 查询json_value（null作为名称，大小写混合）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，大小写混合）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（大写）
+INSERT INTO t_json_null VALUES (9, '{"NULL":789}');
+COMMIT;
+-- 查询json_value（null作为名称，大写）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，大写）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（小写）
+INSERT INTO t_json_null VALUES (10, '{"null":101}');
+COMMIT;
+-- 查询json_value（null作为名称，小写）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，小写）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（大小写混合）
+INSERT INTO t_json_null VALUES (11, '{"nUll":202}');
+COMMIT;
+-- 查询json_value（null作为名称，大小写混合）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，大小写混合）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（大写）
+INSERT INTO t_json_null VALUES (12, '{"NULL":303}');
+COMMIT;
+-- 查询json_value（null作为名称，大写）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，大写）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（小写）
+INSERT INTO t_json_null VALUES (13, '{"null":404}');
+COMMIT;
+-- 查询json_value（null作为名称，小写）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，小写）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（大小写混合）
+INSERT INTO t_json_null VALUES (14, '{"nUll":505}');
+COMMIT;
+-- 查询json_value（null作为名称，大小写混合）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，大小写混合）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（大写）
+INSERT INTO t_json_null VALUES (15, '{"NULL":606}');
+COMMIT;
+-- 查询json_value（null作为名称，大写）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，大写）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（小写）
+INSERT INTO t_json_null VALUES (16, '{"null":707}');
+COMMIT;
+-- 查询json_value（null作为名称，小写）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，小写）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（大小写混合）
+INSERT INTO t_json_null VALUES (17, '{"nUll":808}');
+COMMIT;
+-- 查询json_value（null作为名称，大小写混合）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，大小写混合）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（大写）
+INSERT INTO t_json_null VALUES (18, '{"NULL":909}');
+COMMIT;
+-- 查询json_value（null作为名称，大写）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，大写）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（小写）
+INSERT INTO t_json_null VALUES (19, '{"null":1010}');
+COMMIT;
+-- 查询json_value（null作为名称，小写）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，小写）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（大小写混合）
+INSERT INTO t_json_null VALUES (20, '{"nUll":1111}');
+COMMIT;
+-- 查询json_value（null作为名称，大小写混合）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，大小写混合）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（大写）
+INSERT INTO t_json_null VALUES (21, '{"NULL":1212}');
+COMMIT;
+-- 查询json_value（null作为名称，大写）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，大写）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（小写）
+INSERT INTO t_json_null VALUES (22, '{"null":1313}');
+COMMIT;
+-- 查询json_value（null作为名称，小写）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，小写）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（大小写混合）
+INSERT INTO t_json_null VALUES (23, '{"nUll":1414}');
+COMMIT;
+-- 查询json_value（null作为名称，大小写混合）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，大小写混合）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（大写）
+INSERT INTO t_json_null VALUES (24, '{"NULL":1515}');
+COMMIT;
+-- 查询json_value（null作为名称，大写）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，大写）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（小写）
+INSERT INTO t_json_null VALUES (25, '{"null":1616}');
+COMMIT;
+-- 查询json_value（null作为名称，小写）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，小写）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（大小写混合）
+INSERT INTO t_json_null VALUES (26, '{"nUll":1717}');
+COMMIT;
+-- 查询json_value（null作为名称，大小写混合）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，大小写混合）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null;
+-- 插入JSON数据的null作为名称（大写）
+INSERT INTO t_json_null VALUES (27, '{"NULL":1818}');
+COMMIT;
+-- 查询json_value（null作为名称，大写）
+SELECT json_value(c2, '$.null') FROM t_json_null;
+-- 查询json_query WITH WRAPPER（null作为名称，大写）
+SELECT json_query(c2, '$.null' WITH WRAPPER) FROM t_json_null

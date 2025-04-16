@@ -1,0 +1,8 @@
+```plaintext
+EXPLAIN_STATEMENT -> 'EXPLAIN' SQL_STATEMENT
+SQL_STATEMENT -> DELETE_STATEMENT | INSERT_STATEMENT | SELECT_STATEMENT | UPDATE_STATEMENT
+DELETE_STATEMENT -> 'delete_sql_statement'
+INSERT_STATEMENT -> 'insert_sql_statement'
+SELECT_STATEMENT -> 'select_sql_statement'
+UPDATE_STATEMENT -> 'update_sql_statement'
+```

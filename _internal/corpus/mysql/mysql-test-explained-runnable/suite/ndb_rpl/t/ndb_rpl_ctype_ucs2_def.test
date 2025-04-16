@@ -1,0 +1,14 @@
+
+
+#
+# Check that NDB replication doesn't explode with default charset
+# being multibyte.
+#
+# Theorised that this could be a problem when dealing with:
+# Bug #27404 util thd mysql_parse sig11 when mysqld default multibyte charset
+#
+# Sort of related to:
+# Bug#18004 Connecting crashes server when default charset is UCS2
+#
+#
+show variables like "%character_set_ser%"

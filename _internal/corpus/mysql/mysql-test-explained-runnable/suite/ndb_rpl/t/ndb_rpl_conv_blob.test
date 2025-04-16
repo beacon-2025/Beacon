@@ -1,0 +1,2 @@
+
+set global replica_type_conversions='ALL_LOSSY,ALL_NON_LOSSY'

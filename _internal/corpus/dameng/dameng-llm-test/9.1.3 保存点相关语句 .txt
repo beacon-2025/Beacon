@@ -1,0 +1,141 @@
+-- 创建表 ADDRESS_TYPE
+CREATE TABLE ADDRESS_TYPE (
+    ID SERIAL PRIMARY KEY,
+    NAME VARCHAR(100) NOT NULL
+);
+-- 插入数据到表 ADDRESS_TYPE
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('发货地址');
+-- 设置保存点
+SAVEPOINT savepoint_1;
+-- 插入另一条数据
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('家庭地址');
+-- 回滚到保存点
+ROLLBACK TO SAVEPOINT savepoint_1;
+-- 查询表 ADDRESS_TYPE
+SELECT * FROM ADDRESS_TYPE;
+-- 插入数据到表 ADDRESS_TYPE
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('办公地址');
+-- 设置第一个保存点
+SAVEPOINT savepoint_2;
+-- 插入另一条数据
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('学校地址');
+-- 设置第二个保存点
+SAVEPOINT savepoint_3;
+-- 插入第三条数据
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('医院地址');
+-- 回滚到第一个保存点
+ROLLBACK TO SAVEPOINT savepoint_2;
+-- 查询表 ADDRESS_TYPE
+SELECT * FROM ADDRESS_TYPE;
+-- 插入数据到表 ADDRESS_TYPE
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('临时地址');
+-- 设置保存点
+SAVEPOINT savepoint_4;
+-- 插入另一条数据
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('永久地址');
+-- 使用 ROLLBACK WORK 回滚到保存点
+ROLLBACK WORK TO SAVEPOINT savepoint_4;
+-- 查询表 ADDRESS_TYPE
+SELECT * FROM ADDRESS_TYPE;
+-- 开始事务
+BEGIN;
+-- 插入数据到表 ADDRESS_TYPE
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址');
+-- 设置保存点
+SAVEPOINT savepoint_5;
+-- 插入另一条数据
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址2');
+-- 提交事务
+COMMIT;
+-- 查询表 ADDRESS_TYPE
+SELECT * FROM ADDRESS_TYPE;
+-- 开始事务
+BEGIN;
+-- 插入数据到表 ADDRESS_TYPE
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址3');
+-- 设置保存点
+SAVEPOINT savepoint_6;
+-- 插入另一条数据
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址4');
+-- 回滚到保存点
+ROLLBACK TO SAVEPOINT savepoint_6;
+-- 提交事务
+COMMIT;
+-- 查询表 ADDRESS_TYPE
+SELECT * FROM ADDRESS_TYPE;
+-- 开始事务
+BEGIN;
+-- 插入数据到表 ADDRESS_TYPE
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址5');
+-- 设置保存点
+SAVEPOINT savepoint_7;
+-- 插入另一条数据
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址6');
+-- 回滚到保存点
+ROLLBACK TO SAVEPOINT savepoint_7;
+-- 继续插入数据
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址7');
+-- 提交事务
+COMMIT;
+-- 查询表 ADDRESS_TYPE
+SELECT * FROM ADDRESS_TYPE;
+-- 开始事务
+BEGIN;
+-- 插入数据到表 ADDRESS_TYPE
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址8');
+-- 设置保存点
+SAVEPOINT savepoint_8;
+-- 插入另一条数据
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址9');
+-- 回滚到保存点
+ROLLBACK TO SAVEPOINT savepoint_8;
+-- 回滚整个事务
+ROLLBACK;
+-- 查询表 ADDRESS_TYPE
+SELECT * FROM ADDRESS_TYPE;
+-- 开始事务
+BEGIN;
+-- 插入数据到表 ADDRESS_TYPE
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址10');
+-- 设置保存点
+SAVEPOINT savepoint_9;
+-- 插入另一条数据
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址11');
+-- 回滚到保存点
+ROLLBACK TO SAVEPOINT savepoint_9;
+-- 继续插入数据
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址12');
+-- 提交事务
+COMMIT;
+-- 查询表 ADDRESS_TYPE
+SELECT * FROM ADDRESS_TYPE;
+-- 开始事务
+BEGIN;
+-- 插入数据到表 ADDRESS_TYPE
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址13');
+-- 设置保存点
+SAVEPOINT savepoint_10;
+-- 插入另一条数据
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址14');
+-- 回滚到保存点
+ROLLBACK TO SAVEPOINT savepoint_10;
+-- 回滚整个事务
+ROLLBACK;
+-- 查询表 ADDRESS_TYPE
+SELECT * FROM ADDRESS_TYPE;
+-- 开始事务
+BEGIN;
+-- 插入数据到表 ADDRESS_TYPE
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址15');
+-- 设置保存点
+SAVEPOINT savepoint_11;
+-- 插入另一条数据
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址16');
+-- 回滚到保存点
+ROLLBACK TO SAVEPOINT savepoint_11;
+-- 继续插入数据
+INSERT INTO ADDRESS_TYPE (NAME) VALUES ('测试地址17');
+-- 提交事务
+COMMIT;
+-- 查询表 ADDRESS_TYPE
+SELECT * FROM ADDRESS_TYPE

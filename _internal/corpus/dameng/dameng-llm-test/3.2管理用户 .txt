@@ -1,0 +1,262 @@
+-- 创建一个公共的数据库用于测试
+CREATE DATABASE test_db;
+USE test_db;
+-- 创建一个新用户
+CREATE USER 'user1'@'localhost' IDENTIFIED BY 'password1';
+-- 创建一个新用户并授予所有权限
+CREATE USER 'user2'@'localhost' IDENTIFIED BY 'password2';
+GRANT ALL PRIVILEGES ON test_db.* TO 'user2'@'localhost';
+-- 修改用户密码
+ALTER USER 'user1'@'localhost' IDENTIFIED BY 'new_password1';
+-- 删除用户
+DROP USER 'user1'@'localhost';
+-- 创建一个新用户并授予SELECT权限
+CREATE USER 'user3'@'localhost' IDENTIFIED BY 'password3';
+GRANT SELECT ON test_db.* TO 'user3'@'localhost';
+-- 撤销用户的SELECT权限
+REVOKE SELECT ON test_db.* FROM 'user3'@'localhost';
+-- 创建一个新用户并授予SELECT, INSERT权限
+CREATE USER 'user4'@'localhost' IDENTIFIED BY 'password4';
+GRANT SELECT, INSERT ON test_db.* TO 'user4'@'localhost';
+-- 查看用户的权限
+SHOW GRANTS FOR 'user2'@'localhost';
+-- 创建一个新用户并设置资源限制
+CREATE USER 'user5'@'localhost' IDENTIFIED BY 'password5'
+WITH MAX_QUERIES_PER_HOUR 100
+MAX_UPDATES_PER_HOUR 50
+MAX_CONNECTIONS_PER_HOUR 10;
+-- 修改用户的资源限制
+ALTER USER 'user5'@'localhost'
+WITH MAX_QUERIES_PER_HOUR 200
+MAX_UPDATES_PER_HOUR 100
+MAX_CONNECTIONS_PER_HOUR 20;
+-- 创建一个新用户并设置密码过期策略
+CREATE USER 'user6'@'localhost' IDENTIFIED BY 'password6'
+PASSWORD EXPIRE INTERVAL 90 DAY;
+-- 修改用户的密码过期策略
+ALTER USER 'user6'@'localhost'
+PASSWORD EXPIRE INTERVAL 180 DAY;
+-- 创建一个新用户并锁定账户
+CREATE USER 'user7'@'localhost' IDENTIFIED BY 'password7'
+ACCOUNT LOCK;
+-- 解锁用户账户
+ALTER USER 'user7'@'localhost' ACCOUNT UNLOCK;
+-- 创建一个新用户并设置默认角色
+CREATE USER 'user8'@'localhost' IDENTIFIED BY 'password8';
+CREATE ROLE 'role1';
+GRANT 'role1' TO 'user8'@'localhost';
+SET DEFAULT ROLE 'role1' TO 'user8'@'localhost';
+-- 修改用户的默认角色
+CREATE ROLE 'role2';
+GRANT 'role2' TO 'user8'@'localhost';
+SET DEFAULT ROLE 'role2' TO 'user8'@'localhost';
+-- 创建一个新用户并授予角色
+CREATE USER 'user9'@'localhost' IDENTIFIED BY 'password9';
+CREATE ROLE 'role3';
+GRANT 'role3' TO 'user9'@'localhost';
+-- 撤销用户的角色
+REVOKE 'role3' FROM 'user9'@'localhost';
+-- 创建一个新用户并设置密码验证策略
+CREATE USER 'user10'@'localhost' IDENTIFIED BY 'password10'
+PASSWORD REQUIRE CURRENT;
+-- 修改用户的密码验证策略
+ALTER USER 'user10'@'localhost'
+PASSWORD REQUIRE CURRENT;
+-- 创建一个新用户并设置密码历史
+CREATE USER 'user11'@'localhost' IDENTIFIED BY 'password11'
+PASSWORD HISTORY 5;
+-- 修改用户的密码历史
+ALTER USER 'user11'@'localhost'
+PASSWORD HISTORY 10;
+-- 创建一个新用户并设置密码重用间隔
+CREATE USER 'user12'@'localhost' IDENTIFIED BY 'password12'
+PASSWORD REUSE INTERVAL 365 DAY;
+-- 修改用户的密码重用间隔
+ALTER USER 'user12'@'localhost'
+PASSWORD REUSE INTERVAL 180 DAY;
+-- 创建一个新用户并设置密码复杂性要求
+CREATE USER 'user13'@'localhost' IDENTIFIED BY 'password13'
+PASSWORD REQUIRE CURRENT;
+-- 修改用户的密码复杂性要求
+ALTER USER 'user13'@'localhost'
+PASSWORD REQUIRE CURRENT;
+-- 创建一个新用户并设置密码过期
+CREATE USER 'user14'@'localhost' IDENTIFIED BY 'password14'
+PASSWORD EXPIRE;
+-- 修改用户的密码过期
+ALTER USER 'user14'@'localhost'
+PASSWORD EXPIRE;
+-- 创建一个新用户并设置密码锁定
+CREATE USER 'user15'@'localhost' IDENTIFIED BY 'password15'
+PASSWORD LOCK;
+-- 修改用户的密码锁定
+ALTER USER 'user15'@'localhost'
+PASSWORD UNLOCK;
+-- 创建一个新用户并设置密码验证策略
+CREATE USER 'user16'@'localhost' IDENTIFIED BY 'password16'
+PASSWORD REQUIRE CURRENT;
+-- 修改用户的密码验证策略
+ALTER USER 'user16'@'localhost'
+PASSWORD REQUIRE CURRENT;
+-- 创建一个新用户并设置密码历史
+CREATE USER 'user17'@'localhost' IDENTIFIED BY 'password17'
+PASSWORD HISTORY 5;
+-- 修改用户的密码历史
+ALTER USER 'user17'@'localhost'
+PASSWORD HISTORY 10;
+-- 创建一个新用户并设置密码重用间隔
+CREATE USER 'user18'@'localhost' IDENTIFIED BY 'password18'
+PASSWORD REUSE INTERVAL 365 DAY;
+-- 修改用户的密码重用间隔
+ALTER USER 'user18'@'localhost'
+PASSWORD REUSE INTERVAL 180 DAY;
+-- 创建一个新用户并设置密码复杂性要求
+CREATE USER 'user19'@'localhost' IDENTIFIED BY 'password19'
+PASSWORD REQUIRE CURRENT;
+-- 修改用户的密码复杂性要求
+ALTER USER 'user19'@'localhost'
+PASSWORD REQUIRE CURRENT;
+-- 创建一个新用户并设置密码过期
+CREATE USER 'user20'@'localhost' IDENTIFIED BY 'password20'
+PASSWORD EXPIRE;
+-- 修改用户的密码过期
+ALTER USER 'user20'@'localhost'
+PASSWORD EXPIRE;
+-- 创建一个新用户并设置密码锁定
+CREATE USER 'user21'@'localhost' IDENTIFIED BY 'password21'
+PASSWORD LOCK;
+-- 修改用户的密码锁定
+ALTER USER 'user21'@'localhost'
+PASSWORD UNLOCK;
+-- 创建一个新用户并设置密码验证策略
+CREATE USER 'user22'@'localhost' IDENTIFIED BY 'password22'
+PASSWORD REQUIRE CURRENT;
+-- 修改用户的密码验证策略
+ALTER USER 'user22'@'localhost'
+PASSWORD REQUIRE CURRENT;
+-- 创建一个新用户并设置密码历史
+CREATE USER 'user23'@'localhost' IDENTIFIED BY 'password23'
+PASSWORD HISTORY 5;
+-- 修改用户的密码历史
+ALTER USER 'user23'@'localhost'
+PASSWORD HISTORY 10;
+-- 创建一个新用户并设置密码重用间隔
+CREATE USER 'user24'@'localhost' IDENTIFIED BY 'password24'
+PASSWORD REUSE INTERVAL 365 DAY;
+-- 修改用户的密码重用间隔
+ALTER USER 'user24'@'localhost'
+PASSWORD REUSE INTERVAL 180 DAY;
+-- 创建一个新用户并设置密码复杂性要求
+CREATE USER 'user25'@'localhost' IDENTIFIED BY 'password25'
+PASSWORD REQUIRE CURRENT;
+-- 修改用户的密码复杂性要求
+ALTER USER 'user25'@'localhost'
+PASSWORD REQUIRE CURRENT;
+-- 创建一个新用户并设置密码过期
+CREATE USER 'user26'@'localhost' IDENTIFIED BY 'password26'
+PASSWORD EXPIRE;
+-- 修改用户的密码过期
+ALTER USER 'user26'@'localhost'
+PASSWORD EXPIRE;
+-- 创建一个新用户并设置密码锁定
+CREATE USER 'user27'@'localhost' IDENTIFIED BY 'password27'
+PASSWORD LOCK;
+-- 修改用户的密码锁定
+ALTER USER 'user27'@'localhost'
+PASSWORD UNLOCK;
+-- 创建一个新用户并设置密码验证策略
+CREATE USER 'user28'@'localhost' IDENTIFIED BY 'password28'
+PASSWORD REQUIRE CURRENT;
+-- 修改用户的密码验证策略
+ALTER USER 'user28'@'localhost'
+PASSWORD REQUIRE CURRENT;
+-- 创建一个新用户并设置密码历史
+CREATE USER 'user29'@'localhost' IDENTIFIED BY 'password29'
+PASSWORD HISTORY 5;
+-- 修改用户的密码历史
+ALTER USER 'user29'@'localhost'
+PASSWORD HISTORY 10;
+-- 创建一个新用户并设置密码重用间隔
+CREATE USER 'user30'@'localhost' IDENTIFIED BY 'password30'
+PASSWORD REUSE INTERVAL 365 DAY;
+-- 修改用户的密码重用间隔
+ALTER USER 'user30'@'localhost'
+PASSWORD REUSE INTERVAL 180 DAY;
+-- 创建一个新用户并设置密码复杂性要求
+CREATE USER 'user31'@'localhost' IDENTIFIED BY 'password31'
+PASSWORD REQUIRE CURRENT;
+-- 修改用户的密码复杂性要求
+ALTER USER 'user31'@'localhost'
+PASSWORD REQUIRE CURRENT;
+-- 创建一个新用户并设置密码过期
+CREATE USER 'user32'@'localhost' IDENTIFIED BY 'password32'
+PASSWORD EXPIRE;
+-- 修改用户的密码过期
+ALTER USER 'user32'@'localhost'
+PASSWORD EXPIRE;
+-- 创建一个新用户并设置密码锁定
+CREATE USER 'user33'@'localhost' IDENTIFIED BY 'password33'
+PASSWORD LOCK;
+-- 修改用户的密码锁定
+ALTER USER 'user33'@'localhost'
+PASSWORD UNLOCK;
+-- 创建一个新用户并设置密码验证策略
+CREATE USER 'user34'@'localhost' IDENTIFIED BY 'password34'
+PASSWORD REQUIRE CURRENT;
+-- 修改用户的密码验证策略
+ALTER USER 'user34'@'localhost'
+PASSWORD REQUIRE CURRENT;
+-- 创建一个新用户并设置密码历史
+CREATE USER 'user35'@'localhost' IDENTIFIED BY 'password35'
+PASSWORD HISTORY 5;
+-- 修改用户的密码历史
+ALTER USER 'user35'@'localhost'
+PASSWORD HISTORY 10;
+-- 创建一个新用户并设置密码重用间隔
+CREATE USER 'user36'@'localhost' IDENTIFIED BY 'password36'
+PASSWORD REUSE INTERVAL 365 DAY;
+-- 修改用户的密码重用间隔
+ALTER USER 'user36'@'localhost'
+PASSWORD REUSE INTERVAL 180 DAY;
+-- 创建一个新用户并设置密码复杂性要求
+CREATE USER 'user37'@'localhost' IDENTIFIED BY 'password37'
+PASSWORD REQUIRE CURRENT;
+-- 修改用户的密码复杂性要求
+ALTER USER 'user37'@'localhost'
+PASSWORD REQUIRE CURRENT;
+-- 创建一个新用户并设置密码过期
+CREATE USER 'user38'@'localhost' IDENTIFIED BY 'password38'
+PASSWORD EXPIRE;
+-- 修改用户的密码过期
+ALTER USER 'user38'@'localhost'
+PASSWORD EXPIRE;
+-- 创建一个新用户并设置密码锁定
+CREATE USER 'user39'@'localhost' IDENTIFIED BY 'password39'
+PASSWORD LOCK;
+-- 修改用户的密码锁定
+ALTER USER 'user39'@'localhost'
+PASSWORD UNLOCK;
+-- 创建一个新用户并设置密码验证策略
+CREATE USER 'user40'@'localhost' IDENTIFIED BY 'password40'
+PASSWORD REQUIRE CURRENT;
+-- 修改用户的密码验证策略
+ALTER USER 'user40'@'localhost'
+PASSWORD REQUIRE CURRENT;
+-- 创建一个新用户并设置密码历史
+CREATE USER 'user41'@'localhost' IDENTIFIED BY 'password41'
+PASSWORD HISTORY 5;
+-- 修改用户的密码历史
+ALTER USER 'user41'@'localhost'
+PASSWORD HISTORY 10;
+-- 创建一个新用户并设置密码重用间隔
+CREATE USER 'user42'@'localhost' IDENTIFIED BY 'password42'
+PASSWORD REUSE INTERVAL 365 DAY;
+-- 修改用户的密码重用间隔
+ALTER USER 'user42'@'localhost'
+PASSWORD REUSE INTERVAL 180 DAY;
+-- 创建一个新用户并设置密码复杂性要求
+CREATE USER 'user43'@'localhost' IDENTIFIED BY 'password43'
+PASSWORD REQUIRE CURRENT;
+-- 修改用户的密码复杂性要求
+ALTER USER 'user43'@'localhost'
+PASSWORD REQUIRE CURRENT

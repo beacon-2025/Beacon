@@ -1,0 +1,2 @@
+
+SELECT user,plugin FROM mysql.user WHERE user='u1' or user='u2'

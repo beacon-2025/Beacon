@@ -1,0 +1,21 @@
+-- 无需要公共前置语句，因为测试用例直接使用jsonb_each函数，不需要依赖表或数据。;
+-- 测试用例 1: 使用jsonb_each函数，将最外层JSON对象扩展为键/值对
+SELECT * FROM jsonb_each('{"a":1,"b":true,"c":null,"d":"str\ttest","e":[1,2,3],"f":{"name1":"aaa\ttest","name2":"bbb\ttest"}}');
+-- 测试用例 2: 当参数为NULL时，返回的结果集为空集
+SELECT * FROM jsonb_each(NULL);
+-- 测试用例 3: 当参数对应的JSON数据类型不是OBJECT时，报错
+SELECT * FROM jsonb_each('[1,2,3]');
+-- 测试用例 4: 使用jsonb_each函数，处理包含嵌套对象的JSON
+SELECT * FROM jsonb_each('{"x":{"y":1,"z":2},"w":"test"}');
+-- 测试用例 5: 使用jsonb_each函数，处理包含数组的JSON
+SELECT * FROM jsonb_each('{"arr":[1,2,3],"obj":{"a":1,"b":2}}');
+-- 测试用例 6: 使用jsonb_each函数，处理包含转义字符的JSON
+SELECT * FROM jsonb_each('{"escaped":"This is a \"quoted\" string"}');
+-- 测试用例 7: 使用jsonb_each函数，处理包含布尔值的JSON
+SELECT * FROM jsonb_each('{"bool_true":true,"bool_false":false}');
+-- 测试用例 8: 使用jsonb_each函数，处理包含null值的JSON
+SELECT * FROM jsonb_each('{"null_value":null,"not_null":"value"}');
+-- 测试用例 9: 使用jsonb_each函数，处理包含数字的JSON
+SELECT * FROM jsonb_each('{"int":123,"float":123.456}');
+-- 测试用例 10: 使用jsonb_each函数，处理包含复杂嵌套结构的JSON
+SELECT * FROM jsonb_each('{"a":{"b":{"c":1}},"d":[{"e":2},{"f":3}]}')

@@ -1,0 +1,21 @@
+```nltk
+FAST_REFRESH_CONSTRAINTS -> CONSTRAINT_1 CONSTRAINT_2 CONSTRAINT_3 CONSTRAINT_4 CONSTRAINT_5 CONSTRAINT_6 CONSTRAINT_7 CONSTRAINT_8 CONSTRAINT_9 CONSTRAINT_10 CONSTRAINT_11 CONSTRAINT_12 CONSTRAINT_13 CONSTRAINT_14 CONSTRAINT_15 CONSTRAINT_16 CONSTRAINT_17 CONSTRAINT_18
+CONSTRAINT_1 -> '快速刷新物化视图要求每个基表都包含有物化视图日志，并且物化视图日志的创建时间不得晚于物化视图的最后刷新时间'
+CONSTRAINT_2 -> '不能含有不确定性函数，如SYSDATE或ROWNUM'
+CONSTRAINT_3 -> '不能含有大字段类型'
+CONSTRAINT_4 -> '查询项不能含有分析函数'
+CONSTRAINT_5 -> '查询不能含有HAVING子句'
+CONSTRAINT_6 -> '不能包含ANY、ALL及NOT EXISTS'
+CONSTRAINT_7 -> '不能含有层次查询'
+CONSTRAINT_8 -> '不能在多个站点含有相关表'
+CONSTRAINT_9 -> '同一张表上最多允许建立127个快速刷新的物化视图'
+CONSTRAINT_10 -> '不能含有UNION，UNION ALL，MINUS等集合运算'
+CONSTRAINT_11 -> '不能含有子查询'
+CONSTRAINT_12 -> '只能基于普通表（视图，外部表，派生表等不支持）'
+CONSTRAINT_13 -> 'WITH PRIMAY KEY时物化视图定义里如果是单表，则日志表里有PK，如果是多表，则每张表的日志表里都有PK；WITH ROWID时物化视图里是单表，则日志表里必须有ROWID，如果是多表，则每张日志表里都有ROWID'
+CONSTRAINT_14 -> '对于WITH ROWID的快速刷新需要一一选择ROWID并给出别名'
+CONSTRAINT_15 -> 'WITH PRIMAY KEY刷新时，物化视图定义中必须包含所有其基于的表的PK列'
+CONSTRAINT_16 -> '如果日志定义中没有WITH PRIMARY KEY而扩展列又包含了，那么DM认为这个和建立日志时指定WITH PRIMARY KEY效果相同。也就是说，基于这个日志建立WITH PK的快速刷新物化视图是允许的'
+CONSTRAINT_17 -> 'DM8目前仅支持简单类型和部分连接物化视图的快速刷新。连接物化视图不支持的具体类型是外连接和自然连接'
+CONSTRAINT_18 -> '连接物化视图不支持GROUP BY和聚集操作'
+```

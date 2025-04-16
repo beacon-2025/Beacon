@@ -1,0 +1,23 @@
+################## mysql-test/t/innodb_undo_directory_basic.test ##############
+#                                                                             #
+# Variable Name: innodb_undo_directory                                        #
+# Scope: Global                                                               #
+# Access Type: Static                                                         #
+# Data Type: string                                                           #
+#                                                                             #
+#                                                                             #
+# Creation Date: 2011-07-05                                                   #
+# Author : Sunny Bains                                                        #
+#                                                                             #
+#                                                                             #
+# Description: Read-only config global variable innodb_undo_directory         #
+#              * Value check                                                  #
+#              * Scope check                                                  #
+#                                                                             #
+###############################################################################
+
+
+####################################################################
+#   Display the default value                                      #
+####################################################################
+SELECT COUNT(@@GLOBAL.innodb_undo_directory)

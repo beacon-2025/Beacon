@@ -1,0 +1,58 @@
+-- 创建包含数组列的表
+CREATE TABLE test_table_1 (
+    id SERIAL PRIMARY KEY,
+    data INT[]
+);
+-- 插入一些测试数据
+INSERT INTO test_table_1 (data) VALUES (ARRAY[1, 2, 3]);
+INSERT INTO test_table_1 (data) VALUES (ARRAY[4, 5, 6]);
+INSERT INTO test_table_1 (data) VALUES (ARRAY[7, 8, 9]);
+-- 测试用例 1: 创建数组索引
+CREATE INDEX idx_test_table_1_data ON test_table_1 USING GIN (data);
+-- 测试用例 2: 查询数组列中的元素
+SELECT * FROM test_table_1 WHERE data @> ARRAY[2];
+-- 测试用例 3: 查询数组列中的元素是否存在
+SELECT * FROM test_table_1 WHERE 2 = ANY(data);
+-- 测试用例 4: 查询数组列中的元素是否包含在另一个数组中
+SELECT * FROM test_table_1 WHERE data <@ ARRAY[1, 2, 3, 4, 5];
+-- 测试用例 5: 查询数组列中的元素是否与另一个数组有交集
+SELECT * FROM test_table_1 WHERE data && ARRAY[3, 4, 5];
+-- 测试用例 6: 查询数组列中的元素是否为空
+SELECT * FROM test_table_1 WHERE data IS NULL;
+-- 测试用例 7: 查询数组列中的元素是否不为空
+SELECT * FROM test_table_1 WHERE data IS NOT NULL;
+-- 测试用例 8: 查询数组列中的元素是否包含特定值
+SELECT * FROM test_table_1 WHERE data @> ARRAY[5];
+-- 测试用例 9: 查询数组列中的元素是否包含多个特定值
+SELECT * FROM test_table_1 WHERE data @> ARRAY[5, 6];
+-- 测试用例 10: 查询数组列中的元素是否包含所有特定值
+SELECT * FROM test_table_1 WHERE data @> ARRAY[7, 8, 9];
+-- 创建另一个包含数组列的表
+CREATE TABLE test_table_2 (
+    id SERIAL PRIMARY KEY,
+    data TEXT[]
+);
+-- 插入一些测试数据
+INSERT INTO test_table_2 (data) VALUES (ARRAY['apple', 'banana', 'cherry']);
+INSERT INTO test_table_2 (data) VALUES (ARRAY['date', 'elderberry', 'fig']);
+INSERT INTO test_table_2 (data) VALUES (ARRAY['grape', 'honeydew', 'kiwi']);
+-- 测试用例 11: 创建数组索引
+CREATE INDEX idx_test_table_2_data ON test_table_2 USING GIN (data);
+-- 测试用例 12: 查询数组列中的元素
+SELECT * FROM test_table_2 WHERE data @> ARRAY['banana'];
+-- 测试用例 13: 查询数组列中的元素是否存在
+SELECT * FROM test_table_2 WHERE 'banana' = ANY(data);
+-- 测试用例 14: 查询数组列中的元素是否包含在另一个数组中
+SELECT * FROM test_table_2 WHERE data <@ ARRAY['apple', 'banana', 'cherry', 'date'];
+-- 测试用例 15: 查询数组列中的元素是否与另一个数组有交集
+SELECT * FROM test_table_2 WHERE data && ARRAY['cherry', 'date', 'elderberry'];
+-- 测试用例 16: 查询数组列中的元素是否为空
+SELECT * FROM test_table_2 WHERE data IS NULL;
+-- 测试用例 17: 查询数组列中的元素是否不为空
+SELECT * FROM test_table_2 WHERE data IS NOT NULL;
+-- 测试用例 18: 查询数组列中的元素是否包含特定值
+SELECT * FROM test_table_2 WHERE data @> ARRAY['fig'];
+-- 测试用例 19: 查询数组列中的元素是否包含多个特定值
+SELECT * FROM test_table_2 WHERE data @> ARRAY['fig', 'grape'];
+-- 测试用例 20: 查询数组列中的元素是否包含所有特定值
+SELECT * FROM test_table_2 WHERE data @> ARRAY['grape', 'honeydew', 'kiwi']

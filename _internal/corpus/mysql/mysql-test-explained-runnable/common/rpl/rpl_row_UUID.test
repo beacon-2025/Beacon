@@ -1,0 +1,4 @@
+
+
+# Cleanup dump files.
+# Long-term "system rm" is not portable

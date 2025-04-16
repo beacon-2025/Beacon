@@ -1,0 +1,25 @@
+-- 创建一个用于存储JSON数据的表
+CREATE TABLE json_table (
+    id SERIAL PRIMARY KEY,
+    data JSON
+);
+INSERT INTO json_table (data) VALUES ('{"name": "Alice", "age": 30}');
+INSERT INTO json_table (data) VALUES ('{"name": "Bob", "hobbies": ["reading", "swimming"]}');
+INSERT INTO json_table (data) VALUES ('{"name": "Charlie", "address": {"city": "New York", "zip": "10001"}}');
+INSERT INTO json_table (data) VALUES ('{"name": "David", "is_student": true}');
+INSERT INTO json_table (data) VALUES ('{"name": "Eve", "middle_name": null}');
+SELECT data->>'name' AS name FROM json_table WHERE id = 1;
+SELECT data->'address'->>'city' AS city FROM json_table WHERE id = 3;
+SELECT data->'hobbies'->>0 AS first_hobby FROM json_table WHERE id = 2;
+UPDATE json_table SET data = jsonb_set(data::jsonb, '{age}', '31') WHERE id = 1;
+UPDATE json_table SET data = data::jsonb - 'middle_name' WHERE id = 5;
+INSERT INTO json_table (data) VALUES ('{"name": "Frank", "file_path": "/home/frank/data.txt"}');
+SELECT data->>'file_path' AS file_path FROM json_table WHERE id = 11;
+INSERT INTO json_table (data) VALUES ('{"name": "Grace", "contact": {"email": "grace@example.com", "phone": {"home": "123-456-7890", "work": "987-654-3210"}}}');
+SELECT data->'contact'->>'email' AS email, data->'contact'->'phone'->>'home' AS home_phone FROM json_table WHERE id = 13;
+INSERT INTO json_table (data) VALUES ('{"name": "Henry", "scores": [{"subject": "math", "score": 90}, {"subject": "science", "score": 85}]}');
+SELECT data->'scores'->0->>'subject' AS first_subject FROM json_table WHERE id = 15;
+INSERT INTO json_table (data) VALUES ('{"name": "Ivy", "details": {"age": 25, "is_active": true, "tags": ["student", "engineer"]}}');
+SELECT data->'details'->>'age' AS age, data->'details'->>'is_active' AS is_active FROM json_table WHERE id = 17;
+INSERT INTO json_table (data) VALUES ('{"name": "Jack", "metadata": {}}');
+SELECT data->'metadata' AS metadata FROM json_table WHERE id = 19

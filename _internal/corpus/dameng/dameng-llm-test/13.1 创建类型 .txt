@@ -1,0 +1,139 @@
+-- 创建模式
+CREATE SCHEMA test_schema;
+-- 创建记录类型
+CREATE TYPE test_schema.record_type AS RECORD (
+    id INT,
+    name VARCHAR(50)
+);
+-- 创建对象类型
+CREATE TYPE test_schema.object_type AS OBJECT (
+    id INT,
+    name VARCHAR(50),
+    MEMBER FUNCTION get_name RETURN VARCHAR(50)
+);
+-- 创建数组类型
+CREATE TYPE test_schema.array_type AS ARRAY INT[10];
+-- 创建集合类型 (VARRAY)
+CREATE TYPE test_schema.varray_type AS VARRAY(10) OF INT;
+-- 创建集合类型 (嵌套表)
+CREATE TYPE test_schema.nested_table_type AS TABLE OF INT;
+-- 创建集合类型 (索引表)
+CREATE TYPE test_schema.index_table_type AS TABLE OF INT INDEX BY VARCHAR(50);
+-- 创建父对象类型
+CREATE TYPE test_schema.parent_object_type AS OBJECT (
+    id INT,
+    name VARCHAR(50)
+);
+-- 创建子对象类型并继承父类型
+CREATE TYPE test_schema.child_object_type UNDER test_schema.parent_object_type (
+    age INT
+);
+-- 创建对象类型并声明静态方法
+CREATE TYPE test_schema.static_method_type AS OBJECT (
+    id INT,
+    STATIC PROCEDURE print_hello
+);
+-- 创建对象类型并声明成员方法
+CREATE TYPE test_schema.member_method_type AS OBJECT (
+    id INT,
+    MEMBER FUNCTION get_id RETURN INT
+);
+-- 创建对象类型并声明构造函数
+CREATE TYPE test_schema.constructor_type AS OBJECT (
+    id INT,
+    CONSTRUCTOR FUNCTION constructor_type(id INT) RETURN SELF AS RESULT
+);
+-- 创建对象类型并声明MAP函数
+CREATE TYPE test_schema.map_function_type AS OBJECT (
+    id INT,
+    MAP MEMBER FUNCTION get_id RETURN INT
+);
+-- 创建对象类型并声明PIPELINED函数
+CREATE TYPE test_schema.pipelined_function_type AS OBJECT (
+    id INT,
+    MEMBER FUNCTION get_id RETURN INT PIPELINED
+);
+-- 创建对象类型并声明DETERMINISTIC函数
+CREATE TYPE test_schema.deterministic_function_type AS OBJECT (
+    id INT,
+    MEMBER FUNCTION get_id RETURN INT DETERMINISTIC
+);
+-- 创建对象类型并声明FINAL方法
+CREATE TYPE test_schema.final_method_type AS OBJECT (
+    id INT,
+    FINAL MEMBER FUNCTION get_id RETURN INT
+);
+-- 创建对象类型并声明NOT FINAL方法
+CREATE TYPE test_schema.not_final_method_type AS OBJECT (
+    id INT,
+    NOT FINAL MEMBER FUNCTION get_id RETURN INT
+);
+-- 创建对象类型并声明INSTANTIABLE方法
+CREATE TYPE test_schema.instantiable_method_type AS OBJECT (
+    id INT,
+    INSTANTIABLE MEMBER FUNCTION get_id RETURN INT
+);
+-- 创建对象类型并声明NOT INSTANTIABLE方法
+CREATE TYPE test_schema.not_instantiable_method_type AS OBJECT (
+    id INT,
+    NOT INSTANTIABLE MEMBER FUNCTION get_id RETURN INT
+);
+-- 创建对象类型并声明重载方法
+CREATE TYPE test_schema.overloading_method_type AS OBJECT (
+    id INT,
+    OVERRIDING MEMBER FUNCTION get_id RETURN INT
+);
+-- 创建对象类型并声明NOT OVERRIDING方法
+CREATE TYPE test_schema.not_overriding_method_type AS OBJECT (
+    id INT,
+    NOT OVERRIDING MEMBER FUNCTION get_id RETURN INT
+);
+-- 创建对象类型并声明AUTHID DEFINER
+CREATE TYPE test_schema.authid_definer_type AS OBJECT (
+    id INT
+) AUTHID DEFINER;
+-- 创建对象类型并声明AUTHID CURRENT_USER
+CREATE TYPE test_schema.authid_current_user_type AS OBJECT (
+    id INT
+) AUTHID CURRENT_USER;
+-- 创建对象类型并加密
+CREATE TYPE test_schema.encrypted_type AS OBJECT (
+    id INT
+) WITH ENCRYPTION;
+-- 创建多维数组类型
+CREATE TYPE test_schema.multi_dim_array_type AS ARRAY INT[10, 10];
+-- 创建动态数组类型
+CREATE TYPE test_schema.dynamic_array_type AS ARRAY INT[];
+-- 创建对象类型
+CREATE TYPE test_schema.object_element_type AS OBJECT (
+    id INT,
+    name VARCHAR(50)
+);
+-- 创建嵌套表类型并指定元素类型为对象类型
+CREATE TYPE test_schema.nested_table_object_type AS TABLE OF test_schema.object_element_type;
+-- 创建记录类型
+CREATE TYPE test_schema.record_element_type AS RECORD (
+    id INT,
+    name VARCHAR(50)
+);
+-- 创建索引表类型并指定元素类型为记录类型
+CREATE TYPE test_schema.index_table_record_type AS TABLE OF test_schema.record_element_type INDEX BY VARCHAR(50);
+-- 创建静态数组类型
+CREATE TYPE test_schema.static_array_element_type AS ARRAY INT[10];
+-- 创建索引表类型并指定元素类型为静态数组类型
+CREATE TYPE test_schema.index_table_static_array_type AS TABLE OF test_schema.static_array_element_type INDEX BY VARCHAR(50);
+-- 创建嵌套表类型
+CREATE TYPE test_schema.nested_table_element_type AS TABLE OF INT;
+-- 创建索引表类型并指定元素类型为嵌套表类型
+CREATE TYPE test_schema.index_table_nested_table_type AS TABLE OF test_schema.nested_table_element_type INDEX BY VARCHAR(50);
+-- 创建索引表类型
+CREATE TYPE test_schema.index_table_element_type AS TABLE OF INT INDEX BY VARCHAR(50);
+-- 创建索引表类型并指定元素类型为索引表类型
+CREATE TYPE test_schema.index_table_index_table_type AS TABLE OF test_schema.index_table_element_type INDEX BY VARCHAR(50);
+-- 创建对象类型并声明多个方法
+CREATE TYPE test_schema.multiple_methods_type AS OBJECT (
+    id INT,
+    MEMBER FUNCTION get_id RETURN INT,
+    STATIC PROCEDURE print_hello,
+    CONSTRUCTOR FUNCTION multiple_methods_type(id INT) RETURN SELF AS RESULT
+)

@@ -1,0 +1,40 @@
+-- 创建表用于测试数组索引
+CREATE TABLE test_table1 (
+    id SERIAL PRIMARY KEY,
+    data INT[]
+);
+-- 插入一些测试数据
+INSERT INTO test_table1 (data) VALUES (ARRAY[1, 2, 3]);
+INSERT INTO test_table1 (data) VALUES (ARRAY[4, 5, 6]);
+INSERT INTO test_table1 (data) VALUES (ARRAY[7, 8, 9]);
+-- 创建数组索引
+CREATE INDEX idx_test_table1_data ON test_table1 USING GIN (data);
+-- 测试用例 1: 删除数组索引
+DROP INDEX idx_test_table1_data;
+-- 测试用例 2: 删除数组索引并检查表结构
+DROP INDEX idx_test_table1_data;
+\d test_table1;
+-- 测试用例 3: 删除数组索引后重新创建
+DROP INDEX idx_test_table1_data;
+CREATE INDEX idx_test_table1_data_new ON test_table1 USING GIN (data);
+-- 测试用例 4: 删除数组索引并插入新数据
+DROP INDEX idx_test_table1_data;
+INSERT INTO test_table1 (data) VALUES (ARRAY[10, 11, 12]);
+-- 测试用例 5: 删除数组索引并查询数据
+DROP INDEX idx_test_table1_data;
+SELECT * FROM test_table1 WHERE data @> ARRAY[1];
+-- 测试用例 6: 删除数组索引并创建不同类型的索引
+DROP INDEX idx_test_table1_data;
+CREATE INDEX idx_test_table1_data_btree ON test_table1 USING BTREE (data);
+-- 测试用例 7: 删除数组索引并创建唯一索引
+DROP INDEX idx_test_table1_data;
+CREATE UNIQUE INDEX idx_test_table1_data_unique ON test_table1 USING GIN (data);
+-- 测试用例 8: 删除数组索引并创建部分索引
+DROP INDEX idx_test_table1_data;
+CREATE INDEX idx_test_table1_data_partial ON test_table1 USING GIN (data) WHERE id > 1;
+-- 测试用例 9: 删除数组索引并创建并发索引
+DROP INDEX idx_test_table1_data;
+CREATE INDEX CONCURRENTLY idx_test_table1_data_concurrent ON test_table1 USING GIN (data);
+-- 测试用例 10: 删除数组索引并创建带有存储参数的索引
+DROP INDEX idx_test_table1_data;
+CREATE INDEX idx_test_table1_data_with_params ON test_table1 USING GIN (data) WITH (fastupdate = off)

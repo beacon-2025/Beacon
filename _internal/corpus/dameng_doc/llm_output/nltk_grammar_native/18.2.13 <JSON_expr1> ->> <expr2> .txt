@@ -1,0 +1,5 @@
+```
+JSON_EXPR -> JSON_EXPR1 '->>' EXPR2
+JSON_EXPR1 -> 'json_expr1_value'
+EXPR2 -> 'expr2_value'
+```

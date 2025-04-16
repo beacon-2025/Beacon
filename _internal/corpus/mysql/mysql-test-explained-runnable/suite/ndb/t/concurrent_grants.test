@@ -1,0 +1,2 @@
+
+CREATE USER 'priv_test_U'@'localhost' IDENTIFIED by 'priv_test_pass'

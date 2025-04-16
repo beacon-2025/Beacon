@@ -1,0 +1,94 @@
+15.1.10 ALTER TABLESPACE Statement
+ALTER [UNDO] TABLESPACE tablespace_name
+  NDB only:
+    {ADD | DROP} DATAFILE 'file_name'
+    [INITIAL_SIZE [=] size]
+    [WAIT]
+  InnoDB and NDB:
+    [RENAME TO tablespace_name]
+  InnoDB only:
+    [AUTOEXTEND_SIZE [=] 'value']
+    [SET {ACTIVE | INACTIVE}]
+    [ENCRYPTION [=] {'Y' | 'N'}]
+  InnoDB and NDB:
+    [ENGINE [=] engine_name]
+  Reserved for future use:
+    [ENGINE_ATTRIBUTE [=] 'string']
+This statement is used with NDB and InnoDB tablespaces. It can be used to add a new data file to, or
+to drop a data file from an NDB tablespace. It can also be used to rename an NDB Cluster Disk Data
+tablespace, rename an InnoDB general tablespace, encrypt an InnoDB general tablespace, or mark
+an InnoDB undo tablespace as active or inactive.
+The UNDO keyword is used with the SET {ACTIVE | INACTIVE} clause to mark an InnoDB undo
+tablespace as active or inactive. For more information, see Section 17.6.3.4, “Undo Tablespaces”.
+The ADD DATAFILE variant enables you to specify an initial size for an NDB Disk Data tablespace
+using an INITIAL_SIZE clause, where size is measured in bytes; the default value is 134217728
+(128 MB). You may optionally follow size with a one-letter abbreviation for an order of magnitude,
+similar to those used in my.cnf. Generally, this is one of the letters M (megabytes) or G (gigabytes).
+On 32-bit systems, the maximum supported value for INITIAL_SIZE is 4294967296 (4 GB). (Bug
+#29186)
+INITIAL_SIZE is rounded, explicitly, as for CREATE TABLESPACE.
+Once a data file has been created, its size cannot be changed; however, you can add more data files to
+an NDB tablespace using additional ALTER TABLESPACE ... ADD DATAFILE statements.
+When ALTER TABLESPACE ... ADD DATAFILE is used with ENGINE = NDB, a data file is created
+on each Cluster data node, but only one row is generated in the Information Schema FILES table. See
+the description of this table, as well as Section 25.6.11.1, “NDB Cluster Disk Data Objects”, for more
+information. ADD DATAFILE is not supported with InnoDB tablespaces.
+Using DROP DATAFILE with ALTER TABLESPACE drops the data file 'file_name' from an NDB
+tablespace. You cannot drop a data file from a tablespace which is in use by any table; in other
+words, the data file must be empty (no extents used). See Section 25.6.11.1, “NDB Cluster Disk Data
+Objects”. In addition, any data file to be dropped must previously have been added to the tablespace
+with CREATE TABLESPACE or ALTER TABLESPACE. DROP DATAFILE is not supported with InnoDB
+tablespaces.
+WAIT is parsed but otherwise ignored. It is intended for future expansion.
+The ENGINE clause, which specifies the storage engine used by the tablespace, is deprecated, since
+the tablespace storage engine is known by the data dictionary, making the ENGINE clause obsolete. In
+MySQL 9.1, it is supported in the following two cases only:
+•
+ 
+ALTER TABLESPACE tablespace_name ADD DATAFILE 'file_name'
+    ENGINE={NDB|NDBCLUSTER}
+•
+ALTER UNDO TABLESPACE tablespace_name SET {ACTIVE|INACTIVE}
+    ENGINE=INNODB
+You should expect the eventual removal of ENGINE from these statements as well, in a future version
+of MySQL.
+RENAME TO operations are implicitly performed in autocommit mode, regardless of the value of
+autocommit.
+A RENAME TO operation cannot be performed while LOCK TABLES or FLUSH TABLES WITH READ
+LOCK is in effect for tables that reside in the tablespace.
+Exclusive metadata locks are taken on tables that reside in a general tablespace while the tablespace
+is renamed, which prevents concurrent DDL. Concurrent DML is supported.
+The CREATE TABLESPACE privilege is required to rename an InnoDB general tablespace.
+The AUTOEXTEND_SIZE option defines the amount by which InnoDB extends the size of a tablespace
+when it becomes full. The setting must be a multiple of 4MB. The default setting is 0, which causes
+the tablespace to be extended according to the implicit default behavior. For more information, see
+Section 17.6.3.9, “Tablespace AUTOEXTEND_SIZE Configuration”.
+The ENCRYPTION clause enables or disables page-level data encryption for an InnoDB general
+tablespace or the mysql system tablespace.
+A keyring plugin must be installed and configured before encryption can be enabled.
+If the table_encryption_privilege_check variable is enabled, the
+TABLE_ENCRYPTION_ADMIN privilege is required to alter a general tablespace with an ENCRYPTION
+clause setting that differs from the default_table_encryption setting.
+Enabling encryption for a general tablespace fails if any table in the tablespace belongs to a schema
+defined with DEFAULT ENCRYPTION='N'. Similarly, disabling encryption fails if any table in the
+general tablespace belongs to a schema defined with DEFAULT ENCRYPTION='Y'.
+If an ALTER TABLESPACE statement executed on a general tablespace does not include an
+ENCRYPTION clause, the tablespace retains its current encryption status, regardless of the
+default_table_encryption setting.
+When a general tablespace or the mysql system tablespace is encrypted, all tables residing in the
+tablespace are encrypted. Likewise, a table created in an encrypted tablespace is encrypted.
+The INPLACE algorithm is used when altering the ENCRYPTION attribute of a general tablespace or the
+mysql system tablespace. The INPLACE algorithm permits concurrent DML on tables that reside in the
+tablespace. Concurrent DDL is blocked.
+For more information, see Section 17.13, “InnoDB Data-at-Rest Encryption”.
+The ENGINE_ATTRIBUTE option is used to specify tablespace attributes for primary storage engines.
+The option is reserved for future use.
+The value assigned to this option is a string literal containing a valid JSON document or an empty
+string (''). Invalid JSON is rejected.
+ALTER TABLESPACE ts1 ENGINE_ATTRIBUTE='{"key":"value"}';
+ENGINE_ATTRIBUTE values can be repeated without error. In this case, the last specified value is
+used.
+ENGINE_ATTRIBUTE values are not checked by the server, nor are they cleared when the table's
+storage engine is changed.
+It is not permitted to alter an individual element of a JSON attribute value. You can only add or replace
+an attribute.

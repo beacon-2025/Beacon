@@ -1,0 +1,111 @@
+-- 公共前置语句：创建一个模式
+CREATE SCHEMA test_schema;
+-- 创建DOMAIN
+CREATE DOMAIN test_schema.email_domain AS VARCHAR(100) CHECK (VALUE LIKE '%@%.%');
+-- 创建表并使用DOMAIN
+CREATE TABLE test_schema.users (
+    user_id INT PRIMARY KEY,
+    user_email test_schema.email_domain
+);
+-- 插入有效数据
+INSERT INTO test_schema.users (user_id, user_email) VALUES (1, 'user1@example.com');
+-- 插入无效数据（应失败）
+INSERT INTO test_schema.users (user_id, user_email) VALUES (2, 'invalid-email');
+-- 创建带默认值的DOMAIN
+CREATE DOMAIN test_schema.status_domain AS VARCHAR(20) DEFAULT 'active';
+-- 创建表并使用DOMAIN
+CREATE TABLE test_schema.orders (
+    order_id INT PRIMARY KEY,
+    order_status test_schema.status_domain
+);
+-- 插入数据，使用默认值
+INSERT INTO test_schema.orders (order_id) VALUES (1);
+-- 查询数据，验证默认值
+SELECT * FROM test_schema.orders;
+-- 创建DOMAIN
+CREATE DOMAIN test_schema.age_domain AS INT CHECK (VALUE BETWEEN 0 AND 120);
+-- 删除DOMAIN
+DROP DOMAIN test_schema.age_domain;
+-- 尝试创建表使用已删除的DOMAIN（应失败）
+CREATE TABLE test_schema.persons (
+    person_id INT PRIMARY KEY,
+    person_age test_schema.age_domain
+);
+-- 创建DOMAIN
+CREATE DOMAIN test_schema.phone_domain AS VARCHAR(15) CHECK (VALUE ~ '^[0-9]{10,15}$');
+-- 授权DOMAIN给其他用户
+GRANT USAGE ON DOMAIN test_schema.phone_domain TO another_user;
+-- 创建表并使用DOMAIN
+CREATE TABLE test_schema.contacts (
+    contact_id INT PRIMARY KEY,
+    contact_phone test_schema.phone_domain
+);
+-- 插入有效数据
+INSERT INTO test_schema.contacts (contact_id, contact_phone) VALUES (1, '1234567890');
+-- 创建DOMAIN
+CREATE DOMAIN test_schema.amount_domain AS DECIMAL(10, 2) CHECK (VALUE >= 0);
+-- 创建表并使用DOMAIN约束多个列
+CREATE TABLE test_schema.transactions (
+    transaction_id INT PRIMARY KEY,
+    amount1 test_schema.amount_domain,
+    amount2 test_schema.amount_domain
+);
+-- 插入有效数据
+INSERT INTO test_schema.transactions (transaction_id, amount1, amount2) VALUES (1, 100.50, 200.75);
+-- 插入无效数据（应失败）
+INSERT INTO test_schema.transactions (transaction_id, amount1, amount2) VALUES (2, -50.00, 300.00);
+-- 创建DOMAIN
+CREATE DOMAIN test_schema.json_domain AS JSONB CHECK (VALUE ? 'key');
+-- 创建表并使用DOMAIN
+CREATE TABLE test_schema.documents (
+    document_id INT PRIMARY KEY,
+    document_data test_schema.json_domain
+);
+-- 插入有效数据
+INSERT INTO test_schema.documents (document_id, document_data) VALUES (1, '{"key": "value"}');
+-- 插入无效数据（应失败）
+INSERT INTO test_schema.documents (document_id, document_data) VALUES (2, '{"other_key": "value"}');
+-- 创建DOMAIN
+CREATE DOMAIN test_schema.int_array_domain AS INT[] CHECK (ARRAY_LENGTH(VALUE, 1) <= 5);
+-- 创建表并使用DOMAIN
+CREATE TABLE test_schema.arrays (
+    array_id INT PRIMARY KEY,
+    array_data test_schema.int_array_domain
+);
+-- 插入有效数据
+INSERT INTO test_schema.arrays (array_id, array_data) VALUES (1, ARRAY[1, 2, 3, 4, 5]);
+-- 插入无效数据（应失败）
+INSERT INTO test_schema.arrays (array_id, array_data) VALUES (2, ARRAY[1, 2, 3, 4, 5, 6]);
+-- 创建DOMAIN
+CREATE DOMAIN test_schema.timestamp_domain AS TIMESTAMP CHECK (VALUE > '2020-01-01 00:00:00');
+-- 创建表并使用DOMAIN
+CREATE TABLE test_schema.events (
+    event_id INT PRIMARY KEY,
+    event_time test_schema.timestamp_domain
+);
+-- 插入有效数据
+INSERT INTO test_schema.events (event_id, event_time) VALUES (1, '2023-01-01 12:00:00');
+-- 插入无效数据（应失败）
+INSERT INTO test_schema.events (event_id, event_time) VALUES (2, '2019-12-31 23:59:59');
+-- 创建DOMAIN
+CREATE DOMAIN test_schema.flag_domain AS BOOLEAN DEFAULT FALSE;
+-- 创建表并使用DOMAIN
+CREATE TABLE test_schema.flags (
+    flag_id INT PRIMARY KEY,
+    is_active test_schema.flag_domain
+);
+-- 插入数据，使用默认值
+INSERT INTO test_schema.flags (flag_id) VALUES (1);
+-- 查询数据，验证默认值
+SELECT * FROM test_schema.flags;
+-- 创建DOMAIN
+CREATE DOMAIN test_schema.color_domain AS VARCHAR(10) CHECK (VALUE IN ('red', 'green', 'blue'));
+-- 创建表并使用DOMAIN
+CREATE TABLE test_schema.colors (
+    color_id INT PRIMARY KEY,
+    color_name test_schema.color_domain
+);
+-- 插入有效数据
+INSERT INTO test_schema.colors (color_id, color_name) VALUES (1, 'red');
+-- 插入无效数据（应失败）
+INSERT INTO test_schema.colors (color_id, color_name) VALUES (2, 'yellow')

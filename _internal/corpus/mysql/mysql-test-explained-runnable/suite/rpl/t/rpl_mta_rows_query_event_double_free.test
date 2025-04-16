@@ -1,0 +1,4 @@
+
+
+# 2. On the source, create a table.
+CREATE TABLE t1 (c1 INT PRIMARY KEY, c2 INT, INDEX(c2)) ENGINE = InnoDB

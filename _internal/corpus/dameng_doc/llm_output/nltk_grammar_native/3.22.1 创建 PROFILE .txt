@@ -1,0 +1,5 @@
+```plaintext
+CREATE_PROFILE -> 'CREATE' 'PROFILE' 'profile_name_1' LIMIT_OPTION
+LIMIT_OPTION -> 'LIMIT' RESOURCE_SETTINGS | ''
+RESOURCE_SETTINGS -> 'resource_settings_value'
+```

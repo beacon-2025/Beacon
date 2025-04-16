@@ -1,0 +1,3 @@
+
+
+SET SESSION BINLOG_ROW_IMAGE = minimal

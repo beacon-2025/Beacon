@@ -1,0 +1,5 @@
+```plaintext
+S -> SAVEPOINT_STMT | ROLLBACK_TO_SAVEPOINT_STMT
+SAVEPOINT_STMT -> 'SAVEPOINT' 'savepoint_name_1'
+ROLLBACK_TO_SAVEPOINT_STMT -> 'ROLLBACK' 'WORK' 'TO' 'SAVEPOINT' 'savepoint_name_1' | 'ROLLBACK' 'TO' 'SAVEPOINT' 'savepoint_name_1'
+```

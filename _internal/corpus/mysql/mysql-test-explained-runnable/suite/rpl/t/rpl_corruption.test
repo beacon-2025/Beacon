@@ -1,0 +1,3 @@
+
+
+SET @old_source_verify_checksum = @@source_verify_checksum

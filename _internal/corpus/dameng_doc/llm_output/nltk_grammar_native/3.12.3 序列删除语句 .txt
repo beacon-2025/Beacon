@@ -1,0 +1,6 @@
+```nltk
+DROP_SEQUENCE -> 'DROP' 'SEQUENCE' IF_EXISTS SCHEMA_NAME '.' SEQUENCE_NAME
+IF_EXISTS -> 'IF EXISTS' | ''
+SCHEMA_NAME -> 'schemaname_1'
+SEQUENCE_NAME -> 'sequencename_1'
+```

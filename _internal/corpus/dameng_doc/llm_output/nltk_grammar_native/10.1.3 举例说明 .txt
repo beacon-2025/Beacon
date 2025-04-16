@@ -1,0 +1,10 @@
+```plaintext
+S -> EXAMPLE | CREATE_FUNCTION | CALL_FUNCTION | VIEW_RESULT
+EXAMPLE -> '编写' 'C语言' '外部函数' 'C_CONCAT' '用于将两个字符串连接'
+CREATE_FUNCTION -> 'CREATE' 'OR' 'REPLACE' 'FUNCTION' 'MY_CONCAT' '(' 'A' 'VARCHAR' ',' 'B' 'VARCHAR' ')' 'RETURN' 'VARCHAR' 'EXTERNAL' 'external_lib_value' 'C_CONCAT' 'USING' 'C'
+CALL_FUNCTION -> 'SELECT' 'MY_CONCAT' '(' 'string_value' ',' 'string_value' ')'
+VIEW_RESULT -> '查看结果' 'string_value'
+
+external_lib_value -> 'd:\xx\tt\newp.dll' | '/mnt/libtest.so'
+string_value -> 'hello ' | 'world!'
+```

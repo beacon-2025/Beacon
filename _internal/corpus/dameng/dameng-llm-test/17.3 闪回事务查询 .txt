@@ -1,0 +1,44 @@
+-- 创建用于测试的表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    data JSON
+);
+CREATE TABLE test_table2 (
+    id INT PRIMARY KEY,
+    description VARCHAR(100),
+    details JSON
+);
+-- 插入一些测试数据
+INSERT INTO test_table1 (id, name, data) VALUES (1, 'Alice', '{"age": 30, "city": "New York"}');
+INSERT INTO test_table1 (id, name, data) VALUES (2, 'Bob', '{"age": 25, "city": "Los Angeles"}');
+INSERT INTO test_table2 (id, description, details) VALUES (1, 'Project A', '{"status": "completed", "budget": 100000}');
+INSERT INTO test_table2 (id, description, details) VALUES (2, 'Project B', '{"status": "ongoing", "budget": 200000}');
+-- 查询指定时间之后的事务信息
+SELECT * FROM V$FLASHBACK_TRX_INFO WHERE COMMIT_TIMESTAMP > '2023-01-01 12:00:00';
+-- 验证JSON数据的正确性
+SELECT id, name, data FROM test_table1 WHERE data IS JSON;
+-- 查询JSON数据中的特定字段
+SELECT id, name, data->'$.age' AS age FROM test_table1;
+-- 插入新的JSON数据
+INSERT INTO test_table1 (id, name, data) VALUES (3, 'Charlie', '{"age": 35, "city": "Chicago"}');
+-- 更新JSON数据中的特定字段
+UPDATE test_table1 SET data = JSON_SET(data, '$.city', 'San Francisco') WHERE id = 1;
+-- 删除JSON数据中的特定字段
+UPDATE test_table1 SET data = JSON_REMOVE(data, '$.age') WHERE id = 2;
+-- 查询嵌套的JSON字段
+SELECT id, description, details->'$.status' AS status FROM test_table2;
+-- 插入嵌套的JSON数据
+INSERT INTO test_table2 (id, description, details) VALUES (3, 'Project C', '{"status": "planned", "budget": 150000, "team": {"size": 5, "leader": "David"}}');
+-- 更新嵌套的JSON字段
+UPDATE test_table2 SET details = JSON_SET(details, '$.team.leader', 'Eve') WHERE id = 3;
+-- 删除嵌套的JSON字段
+UPDATE test_table2 SET details = JSON_REMOVE(details, '$.team.size') WHERE id = 3;
+-- 查询所有JSON数据
+SELECT * FROM test_table1 WHERE data IS JSON;
+-- 查询所有JSON数据中的特定字段
+SELECT id, name, data->'$.city' AS city FROM test_table1;
+-- 查询所有嵌套的JSON数据
+SELECT * FROM test_table2 WHERE details IS JSON;
+-- 查询所有嵌套的JSON数据中的特定字段
+SELECT id, description, details->'$.budget' AS budget FROM test_table2

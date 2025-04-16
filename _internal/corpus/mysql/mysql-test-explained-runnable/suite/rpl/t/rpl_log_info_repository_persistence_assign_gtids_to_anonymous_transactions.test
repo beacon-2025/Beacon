@@ -1,0 +1,2 @@
+
+UPDATE mysql.slave_relay_log_info SET Number_of_lines = 12

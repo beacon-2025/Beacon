@@ -1,0 +1,6 @@
+```plaintext
+SAMPLE_CLAUSE -> 'SAMPLE' '(' 'expression_value' ')' 
+                | 'SAMPLE' '(' 'expression_value' ')' 'SEED' '(' 'expression_value' ')'
+                | 'SAMPLE' 'BLOCK' '(' 'expression_value' ')'
+                | 'SAMPLE' 'BLOCK' '(' 'expression_value' ')' 'SEED' '(' 'expression_value' ')'
+```

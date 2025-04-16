@@ -1,0 +1,18 @@
+```
+S -> DROP_TABLE | CREATE_TABLE | INSERT_VALUES | COMMIT | SELECT_JSON_VALUE
+
+DROP_TABLE -> 'DROP' 'TABLE' 't_json_boolean_1' 'CASCADE'
+
+CREATE_TABLE -> 'CREATE' 'TABLE' 't_json_boolean_1' '(' COLUMN_DEFINITIONS ')'
+COLUMN_DEFINITIONS -> COLUMN_DEFINITION | COLUMN_DEFINITION ',' COLUMN_DEFINITION
+COLUMN_DEFINITION -> 'c1' 'int' | 'c2' 'varchar2' '(' '100' ')' 'CHECK' '(' 'c2' 'IS' 'JSON' '(' 'STRICT' ')' ')' | 'c3' 'varchar2' '(' '100' ')' 'CHECK' '(' 'c3' 'IS' 'JSON' '(' 'LAX' ')' ')'
+
+INSERT_VALUES -> 'INSERT' 'INTO' 't_json_boolean_1' 'VALUES' '(' VALUE_LIST ')'
+VALUE_LIST -> VALUE | VALUE ',' VALUE
+VALUE -> '1' | '2' | '3' | '4' | 'NULL' | '{"dameng":TRUE}' | '{"dameng":true}' | '{true:1}' | '{TRUE:1}'
+
+COMMIT -> 'COMMIT'
+
+SELECT_JSON_VALUE -> 'SELECT' 'C1' ',' 'json_value' '(' 'c3' ',' JSON_PATH ')' 'FROM' 't_json_boolean_1'
+JSON_PATH -> "'$.dameng'" | "'$.dameng' 'returning' 'number'" | "'$.true'" | "'$.TRUE'"
+```

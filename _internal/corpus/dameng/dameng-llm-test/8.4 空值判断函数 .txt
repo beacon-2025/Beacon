@@ -1,0 +1,82 @@
+-- 公共前置语句：创建测试表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    col1 VARCHAR(50),
+    col2 INT,
+    col3 DATE
+);
+CREATE TABLE test_table2 (
+    id INT PRIMARY KEY,
+    col1 VARCHAR(50),
+    col2 INT,
+    col3 DATE
+);
+-- 插入测试数据
+INSERT INTO test_table1 (id, col1, col2, col3) VALUES (1, 'value1', 100, '2023-01-01');
+INSERT INTO test_table1 (id, col1, col2, col3) VALUES (2, NULL, 200, '2023-02-01');
+INSERT INTO test_table1 (id, col1, col2, col3) VALUES (3, 'value3', NULL, '2023-03-01');
+INSERT INTO test_table1 (id, col1, col2, col3) VALUES (4, NULL, NULL, NULL);
+INSERT INTO test_table2 (id, col1, col2, col3) VALUES (1, 'value1', 100, '2023-01-01');
+INSERT INTO test_table2 (id, col1, col2, col3) VALUES (2, NULL, 200, '2023-02-01');
+INSERT INTO test_table2 (id, col1, col2, col3) VALUES (3, 'value3', NULL, '2023-03-01');
+INSERT INTO test_table2 (id, col1, col2, col3) VALUES (4, NULL, NULL, NULL);
+-- 测试用例 1: COALESCE 函数
+SELECT COALESCE(col1, 'default_value') FROM test_table1 WHERE id = 2;
+-- 测试用例 2: COALESCE 函数
+SELECT COALESCE(col2, 999) FROM test_table1 WHERE id = 3;
+-- 测试用例 3: COALESCE 函数
+SELECT COALESCE(col3, '2023-12-31') FROM test_table1 WHERE id = 4;
+-- 测试用例 4: COALESCE 函数
+SELECT COALESCE(NULL, 'value1', 'value2');
+-- 测试用例 5: COALESCE 函数
+SELECT COALESCE(NULL, NULL, NULL);
+-- 测试用例 6: IFNULL 函数
+SELECT IFNULL(col1, 'default_value') FROM test_table1 WHERE id = 2;
+-- 测试用例 7: IFNULL 函数
+SELECT IFNULL(col2, 999) FROM test_table1 WHERE id = 3;
+-- 测试用例 8: IFNULL 函数
+SELECT IFNULL(col3, '2023-12-31') FROM test_table1 WHERE id = 4;
+-- 测试用例 9: IFNULL 函数
+SELECT IFNULL(NULL, 3);
+-- 测试用例 10: IFNULL 函数
+SELECT IFNULL('', 2);
+-- 测试用例 11: ISNULL 函数
+SELECT ISNULL(col1, 'default_value') FROM test_table1 WHERE id = 2;
+-- 测试用例 12: ISNULL 函数
+SELECT ISNULL(col2, 999) FROM test_table1 WHERE id = 3;
+-- 测试用例 13: ISNULL 函数
+SELECT ISNULL(col3, '2023-12-31') FROM test_table1 WHERE id = 4;
+-- 测试用例 14: ISNULL 函数
+SELECT ISNULL(1, 3);
+-- 测试用例 15: NULLIF 函数
+SELECT NULLIF(col1, 'value1') FROM test_table1 WHERE id = 1;
+-- 测试用例 16: NULLIF 函数
+SELECT NULLIF(col2, 100) FROM test_table1 WHERE id = 1;
+-- 测试用例 17: NULLIF 函数
+SELECT NULLIF(col3, '2023-01-01') FROM test_table1 WHERE id = 1;
+-- 测试用例 18: NULLIF 函数
+SELECT NULLIF(1, 2);
+-- 测试用例 19: NULLIF 函数
+SELECT NULLIF(1, 1);
+-- 测试用例 20: NVL 函数
+SELECT NVL(col1, 'default_value') FROM test_table1 WHERE id = 2;
+-- 测试用例 21: NVL 函数
+SELECT NVL(col2, 999) FROM test_table1 WHERE id = 3;
+-- 测试用例 22: NVL 函数
+SELECT NVL(col3, '2023-12-31') FROM test_table1 WHERE id = 4;
+-- 测试用例 23: NVL 函数
+SELECT NVL(NULL, 3);
+-- 测试用例 24: NVL 函数
+SELECT NVL('', 2);
+-- 测试用例 25: NULL_EQU 函数
+SELECT NULL_EQU(col1, 'value1') FROM test_table1 WHERE id = 1;
+-- 测试用例 26: NULL_EQU 函数
+SELECT NULL_EQU(col2, 100) FROM test_table1 WHERE id = 1;
+-- 测试用例 27: NULL_EQU 函数
+SELECT NULL_EQU(col3, '2023-01-01') FROM test_table1 WHERE id = 1;
+-- 测试用例 28: NULL_EQU 函数
+SELECT NULL_EQU(1, 1);
+-- 测试用例 29: NULL_EQU 函数
+SELECT NULL_EQU(1, 3);
+-- 测试用例 30: NULL_EQU 函数
+SELECT NULL_EQU(1, NULL)

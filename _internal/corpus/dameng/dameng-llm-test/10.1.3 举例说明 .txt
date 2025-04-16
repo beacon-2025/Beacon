@@ -1,0 +1,25 @@
+-- 创建外部函数所需的前置语句
+CREATE OR REPLACE FUNCTION MY_CONCAT(A VARCHAR, B VARCHAR)  
+RETURN VARCHAR 
+EXTERNAL '/mnt/libtest.so' C_CONCAT USING CS;
+-- 测试用例 1: 调用外部函数 MY_CONCAT
+SELECT MY_CONCAT('hello ', 'world!');
+-- 测试用例 2: 调用外部函数 MY_CONCAT 并连接两个空字符串
+SELECT MY_CONCAT('', '');
+-- 测试用例 3: 调用外部函数 MY_CONCAT 并连接一个空字符串和一个非空字符串
+SELECT MY_CONCAT('', 'world!');
+-- 测试用例 4: 调用外部函数 MY_CONCAT 并连接一个非空字符串和一个空字符串
+SELECT MY_CONCAT('hello ', '');
+-- 测试用例 5: 调用外部函数 MY_CONCAT 并连接两个长字符串
+SELECT MY_CONCAT('This is a long string. ', 'This is another long string.');
+-- 测试用例 6: 调用外部函数 MY_CONCAT 并连接包含特殊字符的字符串
+SELECT MY_CONCAT('Special chars: !@#$%^&*()', 'More special chars: {}[];
+:,.<>?');
+-- 测试用例 7: 调用外部函数 MY_CONCAT 并连接包含数字的字符串
+SELECT MY_CONCAT('Numbers: 12345 ', 'More numbers: 67890');
+-- 测试用例 8: 调用外部函数 MY_CONCAT 并连接包含空格的字符串
+SELECT MY_CONCAT('String with spaces ', 'Another string with spaces');
+-- 测试用例 9: 调用外部函数 MY_CONCAT 并连接包含换行符的字符串
+SELECT MY_CONCAT('String with\nnewline ', 'Another string with\nnewline');
+-- 测试用例 10: 调用外部函数 MY_CONCAT 并连接包含制表符的字符串
+SELECT MY_CONCAT('String with\ttab ', 'Another string with\ttab')

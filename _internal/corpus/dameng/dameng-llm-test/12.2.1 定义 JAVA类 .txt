@@ -1,0 +1,483 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+CREATE JAVA CLASS SimpleClass {
+    PUBLIC STATIC FINAL int myVar = 10;
+PUBLIC void myMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ParentClass {
+    PUBLIC int parentVar = 5;
+PUBLIC void parentMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass EXTENDS ParentClass {
+    PUBLIC int childVar = 10;
+PUBLIC void childMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA ABSTRACT CLASS AbstractClass {
+    PUBLIC ABSTRACT void abstractMethod();
+};
+CREATE JAVA CLASS FinalMethodClass {
+    PUBLIC FINAL void finalMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS StaticMethodClass {
+    PUBLIC STATIC void staticMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS PrivateMethodClass {
+    PRIVATE void privateMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS OverrideParentClass {
+    PUBLIC void overriddenMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS OverrideChildClass EXTENDS OverrideParentClass {
+    PUBLIC OVERRIDE void overriddenMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA ABSTRACT CLASS AbstractFinalClass {
+    PUBLIC ABSTRACT void abstractMethod();
+PUBLIC FINAL void finalMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS StaticVarClass {
+    PUBLIC STATIC int staticVar = 20;
+};
+CREATE JAVA CLASS DefaultValueClass {
+    PUBLIC int myVar = 100;
+};
+CREATE JAVA CLASS MultiVarClass {
+    PUBLIC int var1 = 1;
+PUBLIC int var2 = 2;
+PUBLIC int var3 = 3;
+};
+CREATE JAVA CLASS MultiMethodClass {
+    PUBLIC void method1() {
+        // 方法实现
+    }
+    PUBLIC void method2() {
+        // 方法实现
+    }
+    PUBLIC void method3() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ParentClass2 {
+    PUBLIC void parentMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass2 EXTENDS ParentClass2 {
+    PUBLIC void childMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ParentClass3 {
+    PUBLIC int parentVar = 5;
+};
+CREATE JAVA CLASS ChildClass3 EXTENDS ParentClass3 {
+    PUBLIC int childVar = 10;
+};
+CREATE JAVA CLASS ParentClass4 {
+    PUBLIC void overriddenMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass4 EXTENDS ParentClass4 {
+    PUBLIC OVERRIDE void overriddenMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA ABSTRACT CLASS ParentClass5 {
+    PUBLIC ABSTRACT void abstractMethod();
+};
+CREATE JAVA CLASS ChildClass5 EXTENDS ParentClass5 {
+    PUBLIC OVERRIDE void abstractMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ParentClass6 {
+    PUBLIC FINAL void finalMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass6 EXTENDS ParentClass6 {
+    // 不能重写finalMethod
+};
+CREATE JAVA CLASS ParentClass7 {
+    PUBLIC STATIC void staticMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass7 EXTENDS ParentClass7 {
+    // 不能重写staticMethod
+};
+CREATE JAVA CLASS ParentClass8 {
+    PRIVATE void privateMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass8 EXTENDS ParentClass8 {
+    // 不能访问privateMethod
+};
+CREATE JAVA CLASS ParentClass9 {
+    PUBLIC void method1() {
+        // 方法实现
+    }
+    PUBLIC void method2() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass9 EXTENDS ParentClass9 {
+    PUBLIC void method3() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ParentClass10 {
+    PUBLIC int var1 = 1;
+PUBLIC int var2 = 2;
+};
+CREATE JAVA CLASS ChildClass10 EXTENDS ParentClass10 {
+    PUBLIC int var3 = 3;
+};
+CREATE JAVA CLASS ParentClass11 {
+    PUBLIC void overriddenMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass11 EXTENDS ParentClass11 {
+    PUBLIC OVERRIDE void overriddenMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA ABSTRACT CLASS ParentClass12 {
+    PUBLIC ABSTRACT void abstractMethod();
+};
+CREATE JAVA CLASS ChildClass12 EXTENDS ParentClass12 {
+    PUBLIC OVERRIDE void abstractMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ParentClass13 {
+    PUBLIC FINAL void finalMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass13 EXTENDS ParentClass13 {
+    // 不能重写finalMethod
+};
+CREATE JAVA CLASS ParentClass14 {
+    PUBLIC STATIC void staticMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass14 EXTENDS ParentClass14 {
+    // 不能重写staticMethod
+};
+CREATE JAVA CLASS ParentClass15 {
+    PRIVATE void privateMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass15 EXTENDS ParentClass15 {
+    // 不能访问privateMethod
+};
+CREATE JAVA CLASS ParentClass16 {
+    PUBLIC void method1() {
+        // 方法实现
+    }
+    PUBLIC void method2() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass16 EXTENDS ParentClass16 {
+    PUBLIC void method3() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ParentClass17 {
+    PUBLIC int var1 = 1;
+PUBLIC int var2 = 2;
+};
+CREATE JAVA CLASS ChildClass17 EXTENDS ParentClass17 {
+    PUBLIC int var3 = 3;
+};
+CREATE JAVA CLASS ParentClass18 {
+    PUBLIC void overriddenMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass18 EXTENDS ParentClass18 {
+    PUBLIC OVERRIDE void overriddenMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA ABSTRACT CLASS ParentClass19 {
+    PUBLIC ABSTRACT void abstractMethod();
+};
+CREATE JAVA CLASS ChildClass19 EXTENDS ParentClass19 {
+    PUBLIC OVERRIDE void abstractMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ParentClass20 {
+    PUBLIC FINAL void finalMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass20 EXTENDS ParentClass20 {
+    // 不能重写finalMethod
+};
+CREATE JAVA CLASS ParentClass21 {
+    PUBLIC STATIC void staticMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass21 EXTENDS ParentClass21 {
+    // 不能重写staticMethod
+};
+CREATE JAVA CLASS ParentClass22 {
+    PRIVATE void privateMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass22 EXTENDS ParentClass22 {
+    // 不能访问privateMethod
+};
+CREATE JAVA CLASS ParentClass23 {
+    PUBLIC void method1() {
+        // 方法实现
+    }
+    PUBLIC void method2() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass23 EXTENDS ParentClass23 {
+    PUBLIC void method3() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ParentClass24 {
+    PUBLIC int var1 = 1;
+PUBLIC int var2 = 2;
+};
+CREATE JAVA CLASS ChildClass24 EXTENDS ParentClass24 {
+    PUBLIC int var3 = 3;
+};
+CREATE JAVA CLASS ParentClass25 {
+    PUBLIC void overriddenMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass25 EXTENDS ParentClass25 {
+    PUBLIC OVERRIDE void overriddenMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA ABSTRACT CLASS ParentClass26 {
+    PUBLIC ABSTRACT void abstractMethod();
+};
+CREATE JAVA CLASS ChildClass26 EXTENDS ParentClass26 {
+    PUBLIC OVERRIDE void abstractMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ParentClass27 {
+    PUBLIC FINAL void finalMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass27 EXTENDS ParentClass27 {
+    // 不能重写finalMethod
+};
+CREATE JAVA CLASS ParentClass28 {
+    PUBLIC STATIC void staticMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass28 EXTENDS ParentClass28 {
+    // 不能重写staticMethod
+};
+CREATE JAVA CLASS ParentClass29 {
+    PRIVATE void privateMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass29 EXTENDS ParentClass29 {
+    // 不能访问privateMethod
+};
+CREATE JAVA CLASS ParentClass30 {
+    PUBLIC void method1() {
+        // 方法实现
+    }
+    PUBLIC void method2() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass30 EXTENDS ParentClass30 {
+    PUBLIC void method3() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ParentClass31 {
+    PUBLIC int var1 = 1;
+PUBLIC int var2 = 2;
+};
+CREATE JAVA CLASS ChildClass31 EXTENDS ParentClass31 {
+    PUBLIC int var3 = 3;
+};
+CREATE JAVA CLASS ParentClass32 {
+    PUBLIC void overriddenMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass32 EXTENDS ParentClass32 {
+    PUBLIC OVERRIDE void overriddenMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA ABSTRACT CLASS ParentClass33 {
+    PUBLIC ABSTRACT void abstractMethod();
+};
+CREATE JAVA CLASS ChildClass33 EXTENDS ParentClass33 {
+    PUBLIC OVERRIDE void abstractMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ParentClass34 {
+    PUBLIC FINAL void finalMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass34 EXTENDS ParentClass34 {
+    // 不能重写finalMethod
+};
+CREATE JAVA CLASS ParentClass35 {
+    PUBLIC STATIC void staticMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass35 EXTENDS ParentClass35 {
+    // 不能重写staticMethod
+};
+CREATE JAVA CLASS ParentClass36 {
+    PRIVATE void privateMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass36 EXTENDS ParentClass36 {
+    // 不能访问privateMethod
+};
+CREATE JAVA CLASS ParentClass37 {
+    PUBLIC void method1() {
+        // 方法实现
+    }
+    PUBLIC void method2() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass37 EXTENDS ParentClass37 {
+    PUBLIC void method3() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ParentClass38 {
+    PUBLIC int var1 = 1;
+PUBLIC int var2 = 2;
+};
+CREATE JAVA CLASS ChildClass38 EXTENDS ParentClass38 {
+    PUBLIC int var3 = 3;
+};
+CREATE JAVA CLASS ParentClass39 {
+    PUBLIC void overriddenMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass39 EXTENDS ParentClass39 {
+    PUBLIC OVERRIDE void overriddenMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA ABSTRACT CLASS ParentClass40 {
+    PUBLIC ABSTRACT void abstractMethod();
+};
+CREATE JAVA CLASS ChildClass40 EXTENDS ParentClass40 {
+    PUBLIC OVERRIDE void abstractMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ParentClass41 {
+    PUBLIC FINAL void finalMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass41 EXTENDS ParentClass41 {
+    // 不能重写finalMethod
+};
+CREATE JAVA CLASS ParentClass42 {
+    PUBLIC STATIC void staticMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass42 EXTENDS ParentClass42 {
+    // 不能重写staticMethod
+};
+CREATE JAVA CLASS ParentClass43 {
+    PRIVATE void privateMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass43 EXTENDS ParentClass43 {
+    // 不能访问privateMethod
+};
+CREATE JAVA CLASS ParentClass44 {
+    PUBLIC void method1() {
+        // 方法实现
+    }
+    PUBLIC void method2() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass44 EXTENDS ParentClass44 {
+    PUBLIC void method3() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ParentClass45 {
+    PUBLIC int var1 = 1;
+PUBLIC int var2 = 2;
+};
+CREATE JAVA CLASS ChildClass45 EXTENDS ParentClass45 {
+    PUBLIC int var3 = 3;
+};
+CREATE JAVA CLASS ParentClass46 {
+    PUBLIC void overriddenMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA CLASS ChildClass46 EXTENDS ParentClass46 {
+    PUBLIC OVERRIDE void overriddenMethod() {
+        // 方法实现
+    }
+};
+CREATE JAVA ABSTRACT CLASS ParentClass47 {
+    PUBLIC ABSTRACT void abstractMethod();
+};
+CREATE JAVA CLASS ChildClass47 EXTENDS ParentClass47 {
+    PUBLIC OVERRIDE void abstractMethod() {
+        // 方法实现
+    }
+}

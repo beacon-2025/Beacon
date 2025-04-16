@@ -1,0 +1,13 @@
+15.1.28 DROP LOGFILE GROUP Statement
+DROP LOGFILE GROUP logfile_group
+    ENGINE [=] engine_name
+This statement drops the log file group named logfile_group. The log file group must already
+exist or an error results. (For information on creating log file groups, see Section 15.1.16, “CREATE
+LOGFILE GROUP Statement”.)
+Important
+Before dropping a log file group, you must drop all tablespaces that use that log
+file group for UNDO logging.
+The required ENGINE clause provides the name of the storage engine used by the log file group to be
+dropped. The only permitted values for engine_name are NDB and NDBCLUSTER.
+DROP LOGFILE GROUP is useful only with Disk Data storage for NDB Cluster. See Section 25.6.11,
+“NDB Cluster Disk Data Tables”.

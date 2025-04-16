@@ -1,0 +1,11 @@
+```plaintext
+INI_PARAMETER -> MANUAL_PARAMETER | STATIC_PARAMETER | DYNAMIC_PARAMETER
+MANUAL_PARAMETER -> 'READ ONLY'
+STATIC_PARAMETER -> 'IN FILE'
+DYNAMIC_PARAMETER -> 'SYS' | 'SESSION'
+
+PARAMETER_MODIFICATION -> MANUAL_MODIFICATION | STATIC_MODIFICATION | DYNAMIC_MODIFICATION
+MANUAL_MODIFICATION -> '服务器运行过程中' '手动参数不能被修改'
+STATIC_MODIFICATION -> '静态参数只能通过修改' 'dm.ini文件' '进行修改' '修改后重启服务器才能生效' '为系统级参数' '生效后会影响所有的会话'
+DYNAMIC_MODIFICATION -> '动态参数可在' 'dm.ini文件' '和' '内存' '同时修改' '修改后即时生效' '其中' 'SYS为系统级参数' '修改后会影响所有的会话' 'SESSION为会话级参数' '服务器运行过程中被修改时' '之前创建的会话不受影响' '只有新创建的会话使用新的参数值'
+```

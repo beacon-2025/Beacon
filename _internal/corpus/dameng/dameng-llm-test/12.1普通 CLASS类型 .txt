@@ -1,0 +1,144 @@
+-- 创建一个简单的类
+CREATE CLASS SimpleClass (
+    id INT,
+    name VARCHAR(50)
+);
+-- 声明一个类
+CREATE CLASS Employee (
+    emp_id INT,
+    emp_name VARCHAR(50),
+    emp_salary DECIMAL(10, 2)
+);
+-- 实现类的构造函数
+CREATE OR REPLACE FUNCTION Employee() RETURNS Employee AS $$
+BEGIN
+    RETURN NEW Employee(emp_id := NULL, emp_name := NULL, emp_salary := NULL);
+END;
+$$ LANGUAGE plpgsql;
+-- 实现类的全参构造函数
+CREATE OR REPLACE FUNCTION Employee(emp_id INT, emp_name VARCHAR(50), emp_salary DECIMAL(10, 2)) RETURNS Employee AS $$
+BEGIN
+    RETURN NEW Employee(emp_id := emp_id, emp_name := emp_name, emp_salary := emp_salary);
+END;
+$$ LANGUAGE plpgsql;
+-- 使用默认构造函数创建对象
+DECLARE
+    emp Employee;
+BEGIN
+    emp := Employee();
+emp.emp_id := 1;
+emp.emp_name := 'John Doe';
+emp.emp_salary := 50000.00;
+END;
+-- 使用全参构造函数创建对象
+DECLARE
+    emp Employee;
+BEGIN
+    emp := Employee(2, 'Jane Doe', 60000.00);
+END;
+-- 删除类
+DROP CLASS Employee;
+-- 删除类的实现
+DROP FUNCTION Employee();
+DROP FUNCTION Employee(INT, VARCHAR(50), DECIMAL(10, 2));
+-- 声明一个类
+CREATE CLASS Product (
+    product_id INT,
+    product_name VARCHAR(50),
+    product_price DECIMAL(10, 2)
+);
+-- 自定义构造函数
+CREATE OR REPLACE FUNCTION Product(product_id INT) RETURNS Product AS $$
+BEGIN
+    RETURN NEW Product(product_id := product_id, product_name := NULL, product_price := NULL);
+END;
+$$ LANGUAGE plpgsql;
+-- 使用自定义构造函数创建对象
+DECLARE
+    prod Product;
+BEGIN
+    prod := Product(101);
+prod.product_name := 'Laptop';
+prod.product_price := 1200.00;
+END;
+-- 声明一个类
+CREATE CLASS Customer (
+    cust_id INT,
+    cust_name VARCHAR(50),
+    cust_email VARCHAR(100)
+);
+-- 使用默认构造函数创建对象并访问属性
+DECLARE
+    cust Customer;
+BEGIN
+    cust := Customer();
+cust.cust_id := 1;
+cust.cust_name := 'Alice';
+cust.cust_email := 'alice@example.com';
+END;
+-- 声明一个类
+CREATE CLASS Account (
+    account_id INT,
+    balance DECIMAL(10, 2)
+);
+-- 实现类的成员方法
+CREATE OR REPLACE FUNCTION Account.deposit(amount DECIMAL(10, 2)) RETURNS VOID AS $$
+BEGIN
+    self.balance := self.balance + amount;
+END;
+$$ LANGUAGE plpgsql;
+-- 使用成员方法
+DECLARE
+    acc Account;
+BEGIN
+    acc := Account(1, 1000.00);
+acc.deposit(500.00);
+END;
+-- 声明一个类
+CREATE CLASS Order (
+    order_id INT,
+    order_date DATE,
+    order_total DECIMAL(10, 2)
+);
+-- 使用记录类型
+DECLARE
+    ord Order;
+BEGIN
+    ord := Order(1, '2023-10-01', 200.00);
+END;
+-- 声明一个类
+CREATE CLASS Student (
+    student_id INT,
+    grades INT[]
+);
+-- 使用数组类型
+DECLARE
+    stu Student;
+BEGIN
+    stu := Student(1, ARRAY[90, 85, 88]);
+END;
+-- 声明一个类
+CREATE CLASS BankAccount (
+    account_id INT,
+    balance DECIMAL(10, 2)
+);
+-- 实现类的异常处理
+CREATE OR REPLACE FUNCTION BankAccount.withdraw(amount DECIMAL(10, 2)) RETURNS VOID AS $$
+BEGIN
+    IF amount > self.balance THEN
+        RAISE EXCEPTION 'Insufficient funds';
+END IF;
+self.balance := self.balance - amount;
+END;
+$$ LANGUAGE plpgsql;
+-- 使用异常处理
+DECLARE
+    acc BankAccount;
+BEGIN
+    acc := BankAccount(1, 500.00);
+acc.withdraw(600.00);
+-- 这将引发异常
+EXCEPTION
+    WHEN OTHERS THEN
+        RAISE NOTICE 'Error: %', SQLERRM;
+END

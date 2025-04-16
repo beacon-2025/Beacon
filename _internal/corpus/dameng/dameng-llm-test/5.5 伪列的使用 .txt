@@ -1,0 +1,77 @@
+-- 创建测试表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+-- 插入测试数据
+INSERT INTO test_table1 (id, name) VALUES (1, 'Alice');
+INSERT INTO test_table1 (id, name) VALUES (2, 'Bob');
+INSERT INTO test_table1 (id, name) VALUES (3, 'Charlie');
+-- 测试用例 1: 使用ROWID伪列
+SELECT ROWID, id, name FROM test_table1;
+-- 测试用例 2: 使用UID伪列
+SELECT UID, id, name FROM test_table1;
+-- 测试用例 3: 使用USER伪列
+SELECT USER, id, name FROM test_table1;
+-- 测试用例 4: 使用TRXID伪列
+SELECT TRXID, id, name FROM test_table1;
+-- 测试用例 5: 使用ROWID伪列进行条件查询
+SELECT ROWID, id, name FROM test_table1 WHERE ROWID = (SELECT ROWID FROM test_table1 WHERE id = 1);
+-- 测试用例 6: 使用UID伪列进行条件查询
+SELECT UID, id, name FROM test_table1 WHERE UID = (SELECT UID FROM test_table1 WHERE id = 2);
+-- 测试用例 7: 使用USER伪列进行条件查询
+SELECT USER, id, name FROM test_table1 WHERE USER = (SELECT USER FROM test_table1 WHERE id = 3);
+-- 测试用例 8: 使用TRXID伪列进行条件查询
+SELECT TRXID, id, name FROM test_table1 WHERE TRXID = (SELECT TRXID FROM test_table1 WHERE id = 1);
+-- 测试用例 9: 使用ROWID伪列进行排序
+SELECT ROWID, id, name FROM test_table1 ORDER BY ROWID;
+-- 测试用例 10: 使用UID伪列进行排序
+SELECT UID, id, name FROM test_table1 ORDER BY UID;
+-- 测试用例 11: 使用USER伪列进行排序
+SELECT USER, id, name FROM test_table1 ORDER BY USER;
+-- 测试用例 12: 使用TRXID伪列进行排序
+SELECT TRXID, id, name FROM test_table1 ORDER BY TRXID;
+-- 测试用例 13: 使用ROWID伪列进行分组
+SELECT ROWID, COUNT(*) FROM test_table1 GROUP BY ROWID;
+-- 测试用例 14: 使用UID伪列进行分组
+SELECT UID, COUNT(*) FROM test_table1 GROUP BY UID;
+-- 测试用例 15: 使用USER伪列进行分组
+SELECT USER, COUNT(*) FROM test_table1 GROUP BY USER;
+-- 测试用例 16: 使用TRXID伪列进行分组
+SELECT TRXID, COUNT(*) FROM test_table1 GROUP BY TRXID;
+-- 测试用例 17: 使用ROWID伪列进行连接查询
+CREATE TABLE test_table2 (
+    id INT PRIMARY KEY,
+    rowid_col VARCHAR(50)
+);
+INSERT INTO test_table2 (id, rowid_col) VALUES (1, (SELECT ROWID FROM test_table1 WHERE id = 1));
+SELECT t1.ROWID, t1.id, t1.name, t2.rowid_col 
+FROM test_table1 t1 
+JOIN test_table2 t2 ON t1.ROWID = t2.rowid_col;
+-- 测试用例 18: 使用UID伪列进行连接查询
+CREATE TABLE test_table3 (
+    id INT PRIMARY KEY,
+    uid_col INT
+);
+INSERT INTO test_table3 (id, uid_col) VALUES (1, (SELECT UID FROM test_table1 WHERE id = 2));
+SELECT t1.UID, t1.id, t1.name, t3.uid_col 
+FROM test_table1 t1 
+JOIN test_table3 t3 ON t1.UID = t3.uid_col;
+-- 测试用例 19: 使用USER伪列进行连接查询
+CREATE TABLE test_table4 (
+    id INT PRIMARY KEY,
+    user_col VARCHAR(50)
+);
+INSERT INTO test_table4 (id, user_col) VALUES (1, (SELECT USER FROM test_table1 WHERE id = 3));
+SELECT t1.USER, t1.id, t1.name, t4.user_col 
+FROM test_table1 t1 
+JOIN test_table4 t4 ON t1.USER = t4.user_col;
+-- 测试用例 20: 使用TRXID伪列进行连接查询
+CREATE TABLE test_table5 (
+    id INT PRIMARY KEY,
+    trxid_col INT
+);
+INSERT INTO test_table5 (id, trxid_col) VALUES (1, (SELECT TRXID FROM test_table1 WHERE id = 1));
+SELECT t1.TRXID, t1.id, t1.name, t5.trxid_col 
+FROM test_table1 t1 
+JOIN test_table5 t5 ON t1.TRXID = t5.trxid_col

@@ -1,0 +1,6 @@
+
+
+##########
+# Verify that 'one     ' compares equal to 'one'.
+# Both when used as part of a key, as well as in a condition.
+select "'one' IS EQUAL 'one  ...'" from dual where "one" = "one      "

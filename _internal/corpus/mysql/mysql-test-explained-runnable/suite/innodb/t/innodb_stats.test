@@ -1,0 +1,6 @@
+
+
+CREATE TABLE test_innodb_stats (
+	a INT,
+	KEY a_key (a)
+) ENGINE=INNODB STATS_PERSISTENT=1

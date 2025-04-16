@@ -1,0 +1,79 @@
+-- 创建一个示例表，用于触发器操作
+CREATE TABLE example_table1 (
+    id INT PRIMARY KEY,
+    data VARCHAR(100)
+);
+-- 插入一些示例数据
+INSERT INTO example_table1 (id, data) VALUES (1, 'Sample Data 1');
+INSERT INTO example_table1 (id, data) VALUES (2, 'Sample Data 2');
+CREATE OR REPLACE TRIGGER daily_trigger
+AFTER TIMER ON DATABASE
+FOR EACH 1 DAY AT TIME '23:59'
+BEGIN
+    UPDATE example_table1 SET data = 'Updated at midnight' WHERE id = 1;
+END;
+/;
+CREATE OR REPLACE TRIGGER weekly_trigger
+AFTER TIMER ON DATABASE
+FOR EACH 1 WEEK ON DAY 1 AT TIME '12:00'
+BEGIN
+    UPDATE example_table1 SET data = 'Updated every Monday at noon' WHERE id = 2;
+END;
+/;
+CREATE OR REPLACE TRIGGER monthly_trigger
+AFTER TIMER ON DATABASE
+FOR EACH 1 MONTH ON DAY 15 AT TIME '08:00'
+BEGIN
+    UPDATE example_table1 SET data = 'Updated on the 15th of every month at 8 AM' WHERE id = 1;
+END;
+/;
+CREATE OR REPLACE TRIGGER minute_trigger
+AFTER TIMER ON DATABASE
+FOR EACH 1 MINUTE
+BEGIN
+    INSERT INTO example_table1 (id, data) VALUES (3, 'Inserted every minute');
+END;
+/;
+CREATE OR REPLACE TRIGGER hourly_trigger
+AFTER TIMER ON DATABASE
+FOR EACH 1 HOUR
+BEGIN
+    DELETE FROM example_table1 WHERE id = 3;
+END;
+/;
+CREATE OR REPLACE TRIGGER time_range_trigger
+AFTER TIMER ON DATABASE
+FOR EACH 1 MINUTE FROM TIME '09:00' TO TIME '17:00'
+BEGIN
+    UPDATE example_table1 SET data = 'Updated during working hours' WHERE id = 2;
+END;
+/;
+CREATE OR REPLACE TRIGGER date_range_trigger
+AFTER TIMER ON DATABASE
+FOR EACH 1 DAY FROM DATETIME '2023-10-01 00:00' TO DATETIME '2023-10-31 23:59'
+BEGIN
+    UPDATE example_table1 SET data = 'Updated during October 2023' WHERE id = 1;
+END;
+/;
+CREATE OR REPLACE TRIGGER node_trigger
+AFTER TIMER ON DATABASE
+FOR EACH 1 DAY AT TIME '06:00' EXECUTE AT 1
+BEGIN
+    UPDATE example_table1 SET data = 'Updated on node 1' WHERE id = 2;
+END;
+/;
+CREATE OR REPLACE TRIGGER conditional_trigger
+AFTER TIMER ON DATABASE
+FOR EACH 1 DAY AT TIME '12:00'
+WHEN (SELECT COUNT(*) FROM example_table1) > 1
+BEGIN
+    UPDATE example_table1 SET data = 'Updated when more than 1 row exists' WHERE id = 1;
+END;
+/;
+CREATE OR REPLACE TRIGGER last_weekday_trigger
+AFTER TIMER ON DATABASE
+FOR EACH 1 MONTH ON DAY LAST OF WEEK 5 AT TIME '18:00'
+BEGIN
+    UPDATE example_table1 SET data = 'Updated on the last weekday of the month' WHERE id = 2;
+END;
+/

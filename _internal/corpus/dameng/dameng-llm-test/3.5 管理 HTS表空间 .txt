@@ -1,0 +1,65 @@
+-- 创建HUGE表空间HTS1
+CREATE HUGE TABLESPACE HTS1 PATH '/data/hts1';
+-- 测试用例1: 使用自定义HUGE表空间HTS1创建HUGE表
+CREATE HUGE TABLE huge_table1 (
+    id INT,
+    name VARCHAR(50)
+) TABLESPACE HTS1;
+-- 测试用例2: 使用系统HUGE表空间HMAIN创建HUGE表
+CREATE HUGE TABLE huge_table2 (
+    id INT,
+    name VARCHAR(50)
+) TABLESPACE HMAIN;
+-- 测试用例3: 创建HUGE表时不指定表空间，默认使用系统HUGE表空间HMAIN
+CREATE HUGE TABLE huge_table3 (
+    id INT,
+    name VARCHAR(50)
+);
+-- 测试用例4: 创建HUGE表空间HTS2并使用它创建HUGE表
+CREATE HUGE TABLESPACE HTS2 PATH '/data/hts2';
+CREATE HUGE TABLE huge_table4 (
+    id INT,
+    name VARCHAR(50)
+) TABLESPACE HTS2;
+-- 测试用例5: 创建HUGE表空间HTS3并使用它创建HUGE表，表结构包含多个列
+CREATE HUGE TABLESPACE HTS3 PATH '/data/hts3';
+CREATE HUGE TABLE huge_table5 (
+    id INT,
+    name VARCHAR(50),
+    age INT,
+    address VARCHAR(100)
+) TABLESPACE HTS3;
+-- 测试用例6: 创建HUGE表空间HTS4并使用它创建HUGE表，表结构包含主键
+CREATE HUGE TABLESPACE HTS4 PATH '/data/hts4';
+CREATE HUGE TABLE huge_table6 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+) TABLESPACE HTS4;
+-- 测试用例7: 创建HUGE表空间HTS5并使用它创建HUGE表，表结构包含唯一约束
+CREATE HUGE TABLESPACE HTS5 PATH '/data/hts5';
+CREATE HUGE TABLE huge_table7 (
+    id INT UNIQUE,
+    name VARCHAR(50)
+) TABLESPACE HTS5;
+-- 测试用例8: 创建HUGE表空间HTS6并使用它创建HUGE表，表结构包含外键
+CREATE HUGE TABLESPACE HTS6 PATH '/data/hts6';
+CREATE HUGE TABLE huge_table8 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+) TABLESPACE HTS6;
+CREATE HUGE TABLE huge_table8_child (
+    child_id INT PRIMARY KEY,
+    parent_id INT REFERENCES huge_table8(id)
+) TABLESPACE HTS6;
+-- 测试用例9: 创建HUGE表空间HTS7并使用它创建HUGE表，表结构包含检查约束
+CREATE HUGE TABLESPACE HTS7 PATH '/data/hts7';
+CREATE HUGE TABLE huge_table9 (
+    id INT PRIMARY KEY,
+    age INT CHECK (age > 0)
+) TABLESPACE HTS7;
+-- 测试用例10: 创建HUGE表空间HTS8并使用它创建HUGE表，表结构包含默认值
+CREATE HUGE TABLESPACE HTS8 PATH '/data/hts8';
+CREATE HUGE TABLE huge_table10 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50) DEFAULT 'Unknown'
+) TABLESPACE HTS8

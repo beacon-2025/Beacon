@@ -1,0 +1,12 @@
+
+
+
+#########################################################################################
+# This test verify that only user with super privileges can execute following
+# commands"
+# - START GROUP_REPLICATION
+# - STOP GROUP_REPLICATION
+#
+#########################################################################################
+
+CREATE USER 'group_rpl_user' IDENTIFIED BY ''

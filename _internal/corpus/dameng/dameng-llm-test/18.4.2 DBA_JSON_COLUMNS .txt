@@ -1,0 +1,59 @@
+-- 创建一些包含 JSON 列的表
+CREATE TABLE test_table_1 (
+    id INT PRIMARY KEY,
+    json_data TEXT
+);
+CREATE TABLE test_table_2 (
+    id INT PRIMARY KEY,
+    json_column CLOB
+);
+CREATE TABLE test_table_3 (
+    id INT PRIMARY KEY,
+    json_field VARCHAR2(4000)
+);
+-- 插入一些数据
+INSERT INTO test_table_1 (id, json_data) VALUES (1, '{"name": "Alice", "age": 30}');
+INSERT INTO test_table_2 (id, json_column) VALUES (1, '{"name": "Bob", "age": 25}');
+INSERT INTO test_table_3 (id, json_field) VALUES (1, '{"name": "Charlie", "age": 35}');
+-- 查询所有 JSON 列的信息
+SELECT * FROM DBA_JSON_COLUMNS;
+-- 查询特定模式下的 JSON 列信息
+SELECT * FROM DBA_JSON_COLUMNS WHERE OWNER = 'PUBLIC';
+-- 查询特定表名下的 JSON 列信息
+SELECT * FROM DBA_JSON_COLUMNS WHERE TABLE_NAME = 'test_table_1';
+-- 查询特定列名下的 JSON 列信息
+SELECT * FROM DBA_JSON_COLUMNS WHERE COLUMN_NAME = 'json_data';
+-- 查询特定数据类型的 JSON 列信息
+SELECT * FROM DBA_JSON_COLUMNS WHERE DATA_TYPE = 'TEXT';
+-- 查询特定格式的 JSON 列信息
+SELECT * FROM DBA_JSON_COLUMNS WHERE FORMAT = 'TEXT';
+-- 查询特定模式和表名下的 JSON 列信息
+SELECT * FROM DBA_JSON_COLUMNS WHERE OWNER = 'PUBLIC' AND TABLE_NAME = 'test_table_2';
+-- 查询特定表名和列名下的 JSON 列信息
+SELECT * FROM DBA_JSON_COLUMNS WHERE TABLE_NAME = 'test_table_3' AND COLUMN_NAME = 'json_field';
+-- 查询特定数据类型和格式的 JSON 列信息
+SELECT * FROM DBA_JSON_COLUMNS WHERE DATA_TYPE = 'CLOB' AND FORMAT = 'TEXT';
+-- 查询特定模式、表名和列名下的 JSON 列信息
+SELECT * FROM DBA_JSON_COLUMNS WHERE OWNER = 'PUBLIC' AND TABLE_NAME = 'test_table_1' AND COLUMN_NAME = 'json_data';
+-- 查询所有 JSON 列的信息，并按表名排序
+SELECT * FROM DBA_JSON_COLUMNS ORDER BY TABLE_NAME;
+-- 查询所有 JSON 列的信息，并按列名排序
+SELECT * FROM DBA_JSON_COLUMNS ORDER BY COLUMN_NAME;
+-- 查询所有 JSON 列的信息，并按数据类型排序
+SELECT * FROM DBA_JSON_COLUMNS ORDER BY DATA_TYPE;
+-- 查询所有 JSON 列的信息，并按格式排序
+SELECT * FROM DBA_JSON_COLUMNS ORDER BY FORMAT;
+-- 查询所有 JSON 列的信息，并限制返回的行数
+SELECT * FROM DBA_JSON_COLUMNS LIMIT 5;
+-- 查询所有 JSON 列的信息，并返回前 10 行
+SELECT * FROM DBA_JSON_COLUMNS FETCH FIRST 10 ROWS ONLY;
+-- 查询所有 JSON 列的信息，并返回特定列
+SELECT OWNER, TABLE_NAME, COLUMN_NAME FROM DBA_JSON_COLUMNS;
+-- 查询所有 JSON 列的信息，并返回特定列和条件
+SELECT OWNER, TABLE_NAME, COLUMN_NAME FROM DBA_JSON_COLUMNS WHERE DATA_TYPE = 'VARCHAR2';
+-- 查询所有 JSON 列的信息，并返回特定列和排序
+SELECT OWNER, TABLE_NAME, COLUMN_NAME FROM DBA_JSON_COLUMNS ORDER BY OWNER;
+-- 查询所有 JSON 列的信息，并返回特定列和限制行数
+SELECT OWNER, TABLE_NAME, COLUMN_NAME FROM DBA_JSON_COLUMNS LIMIT 3;
+-- 查询所有 JSON 列的信息，并返回特定列和条件
+SELECT OWNER, TABLE_NAME, COLUMN_NAME FROM DBA_JSON_COLUMNS WHERE FORMAT = 'TEXT' AND DATA_TYPE = 'TEXT'

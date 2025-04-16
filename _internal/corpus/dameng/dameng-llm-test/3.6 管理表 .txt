@@ -1,0 +1,115 @@
+-- 创建一个公共的数据库用于测试
+CREATE DATABASE test_db;
+USE test_db;
+-- 创建一个简单的表
+CREATE TABLE employees (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    position VARCHAR(50),
+    salary DECIMAL(10, 2)
+);
+-- 创建一个部门表
+CREATE TABLE departments (
+    dept_id INT PRIMARY KEY,
+    dept_name VARCHAR(100)
+);
+-- 创建一个员工表，带有外键引用部门表
+CREATE TABLE employees_with_dept (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    dept_id INT,
+    FOREIGN KEY (dept_id) REFERENCES departments(dept_id)
+);
+-- 在employees表中添加一个email列
+ALTER TABLE employees ADD COLUMN email VARCHAR(100);
+-- 修改employees表中的salary列类型为INT
+ALTER TABLE employees MODIFY COLUMN salary INT;
+-- 删除employees表中的email列
+ALTER TABLE employees DROP COLUMN email;
+-- 将employees表重命名为staff
+ALTER TABLE employees RENAME TO staff;
+-- 删除staff表
+DROP TABLE staff;
+-- 创建一个带有索引的表
+CREATE TABLE products (
+    product_id INT PRIMARY KEY,
+    product_name VARCHAR(100),
+    INDEX idx_product_name (product_name)
+);
+-- 创建一个带有唯一约束的表
+CREATE TABLE users (
+    user_id INT PRIMARY KEY,
+    username VARCHAR(100) UNIQUE,
+    email VARCHAR(100) UNIQUE
+);
+-- 创建一个带有检查约束的表
+CREATE TABLE orders (
+    order_id INT PRIMARY KEY,
+    order_date DATE,
+    total_amount DECIMAL(10, 2),
+    CHECK (total_amount >= 0)
+);
+-- 创建一个带有默认值的表
+CREATE TABLE customers (
+    customer_id INT PRIMARY KEY,
+    name VARCHAR(100),
+    join_date DATE DEFAULT CURRENT_DATE
+);
+-- 创建一个带有自增列的表
+CREATE TABLE invoices (
+    invoice_id INT PRIMARY KEY AUTO_INCREMENT,
+    invoice_number VARCHAR(50),
+    amount DECIMAL(10, 2)
+);
+-- 创建一个带有复合主键的表
+CREATE TABLE order_items (
+    order_id INT,
+    product_id INT,
+    quantity INT,
+    PRIMARY KEY (order_id, product_id)
+);
+-- 创建一个带有外键和级联删除的表
+CREATE TABLE orders_with_cascade (
+    order_id INT PRIMARY KEY,
+    customer_id INT,
+    order_date DATE,
+    FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE
+);
+-- 创建一个带有外键和级联更新的表
+CREATE TABLE order_items_with_cascade (
+    order_id INT,
+    product_id INT,
+    quantity INT,
+    FOREIGN KEY (order_id) REFERENCES orders_with_cascade(order_id) ON UPDATE CASCADE
+);
+-- 创建一个带有注释的表
+CREATE TABLE comments (
+    comment_id INT PRIMARY KEY COMMENT '主键ID',
+    content TEXT COMMENT '评论内容',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间'
+);
+-- 创建一个带有分区表的表
+CREATE TABLE sales (
+    sale_id INT PRIMARY KEY,
+    sale_date DATE,
+    amount DECIMAL(10, 2)
+) PARTITION BY RANGE (YEAR(sale_date)) (
+    PARTITION p0 VALUES LESS THAN (2020),
+    PARTITION p1 VALUES LESS THAN (2021),
+    PARTITION p2 VALUES LESS THAN (2022)
+);
+-- 创建一个临时表
+CREATE TEMPORARY TABLE temp_employees (
+    id INT PRIMARY KEY,
+    name VARCHAR(100)
+);
+-- 创建一个视图
+CREATE VIEW high_salary_employees AS
+SELECT id, name, salary
+FROM employees
+WHERE salary > 5000;
+-- 创建一个触发器
+CREATE TRIGGER before_employee_insert
+BEFORE INSERT ON employees
+FOR EACH ROW
+SET NEW.salary = IFNULL(NEW.salary, 0)

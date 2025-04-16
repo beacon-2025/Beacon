@@ -1,0 +1,328 @@
+-- 创建测试表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+-- 插入测试数据
+INSERT INTO test_table1 (id, name) VALUES (1, 'Alice');
+INSERT INTO test_table1 (id, name) VALUES (2, 'Bob');
+-- 测试用例 1: 调用一个简单的JAVA外部函数
+SELECT java_function('com.example.MyClass', 'myMethod', 'arg1') FROM dual;
+-- 测试用例 2: 调用JAVA外部函数并传递多个参数
+SELECT java_function('com.example.MyClass', 'myMethod', 'arg1', 'arg2', 'arg3') FROM dual;
+-- 测试用例 3: 调用JAVA外部函数并将结果插入到表中
+INSERT INTO test_table1 (id, name)
+SELECT 3, java_function('com.example.MyClass', 'myMethod', 'arg1') FROM dual;
+-- 测试用例 4: 调用JAVA外部函数并在WHERE子句中使用
+SELECT * FROM test_table1 WHERE name = java_function('com.example.MyClass', 'myMethod', 'arg1');
+-- 测试用例 5: 调用JAVA外部函数并在UPDATE语句中使用
+UPDATE test_table1 SET name = java_function('com.example.MyClass', 'myMethod', 'arg1') WHERE id = 1;
+-- 测试用例 6: 调用JAVA外部函数并在DELETE语句中使用
+DELETE FROM test_table1 WHERE name = java_function('com.example.MyClass', 'myMethod', 'arg1');
+-- 测试用例 7: 调用JAVA外部函数并在JOIN条件中使用
+SELECT t1.id, t1.name
+FROM test_table1 t1
+JOIN test_table2 t2 ON t1.name = java_function('com.example.MyClass', 'myMethod', t2.name);
+-- 测试用例 8: 调用JAVA外部函数并在GROUP BY子句中使用
+SELECT java_function('com.example.MyClass', 'myMethod', name), COUNT(*)
+FROM test_table1
+GROUP BY java_function('com.example.MyClass', 'myMethod', name);
+-- 测试用例 9: 调用JAVA外部函数并在ORDER BY子句中使用
+SELECT * FROM test_table1
+ORDER BY java_function('com.example.MyClass', 'myMethod', name);
+-- 测试用例 10: 调用JAVA外部函数并在HAVING子句中使用
+SELECT name, COUNT(*)
+FROM test_table1
+GROUP BY name
+HAVING COUNT(*) > java_function('com.example.MyClass', 'myMethod', 'arg1');
+-- 创建另一个测试表
+CREATE TABLE test_table2 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+-- 插入测试数据
+INSERT INTO test_table2 (id, name) VALUES (1, 'Charlie');
+INSERT INTO test_table2 (id, name) VALUES (2, 'David');
+-- 测试用例 11: 调用JAVA外部函数并在子查询中使用
+SELECT * FROM test_table1
+WHERE name = (SELECT java_function('com.example.MyClass', 'myMethod', name) FROM test_table2 WHERE id = 1);
+-- 测试用例 12: 调用JAVA外部函数并在CASE语句中使用
+SELECT id,
+       CASE
+           WHEN name = java_function('com.example.MyClass', 'myMethod', 'arg1') THEN 'Match'
+           ELSE 'No Match'
+       END AS result
+FROM test_table1;
+-- 测试用例 13: 调用JAVA外部函数并在UNION中使用
+SELECT name FROM test_table1
+UNION
+SELECT java_function('com.example.MyClass', 'myMethod', name) FROM test_table2;
+-- 测试用例 14: 调用JAVA外部函数并在INTERSECT中使用
+SELECT name FROM test_table1
+INTERSECT
+SELECT java_function('com.example.MyClass', 'myMethod', name) FROM test_table2;
+-- 测试用例 15: 调用JAVA外部函数并在EXCEPT中使用
+SELECT name FROM test_table1
+EXCEPT
+SELECT java_function('com.example.MyClass', 'myMethod', name) FROM test_table2;
+-- 测试用例 16: 调用JAVA外部函数并在WITH子句中使用
+WITH cte AS (
+    SELECT java_function('com.example.MyClass', 'myMethod', name) AS new_name
+    FROM test_table1
+)
+SELECT * FROM cte;
+-- 测试用例 17: 调用JAVA外部函数并在CREATE VIEW中使用
+CREATE VIEW test_view AS
+SELECT java_function('com.example.MyClass', 'myMethod', name) AS new_name
+FROM test_table1;
+-- 测试用例 18: 调用JAVA外部函数并在CREATE MATERIALIZED VIEW中使用
+CREATE MATERIALIZED VIEW test_mview AS
+SELECT java_function('com.example.MyClass', 'myMethod', name) AS new_name
+FROM test_table1;
+-- 测试用例 19: 调用JAVA外部函数并在CREATE FUNCTION中使用
+CREATE FUNCTION test_function(p_name VARCHAR)
+RETURNS VARCHAR
+AS
+BEGIN
+    RETURN java_function('com.example.MyClass', 'myMethod', p_name);
+END;
+-- 测试用例 20: 调用JAVA外部函数并在CREATE PROCEDURE中使用
+CREATE PROCEDURE test_procedure(p_name VARCHAR)
+AS
+BEGIN
+    DECLARE v_result VARCHAR;
+SET v_result = java_function('com.example.MyClass', 'myMethod', p_name);
+INSERT INTO test_table1 (id, name) VALUES (4, v_result);
+END;
+-- 创建第三个测试表
+CREATE TABLE test_table3 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+-- 插入测试数据
+INSERT INTO test_table3 (id, name) VALUES (1, 'Eve');
+INSERT INTO test_table3 (id, name) VALUES (2, 'Frank');
+-- 测试用例 21: 调用JAVA外部函数并在CREATE TRIGGER中使用
+CREATE TRIGGER test_trigger
+AFTER INSERT ON test_table3
+FOR EACH ROW
+BEGIN
+    DECLARE v_result VARCHAR;
+SET v_result = java_function('com.example.MyClass', 'myMethod', NEW.name);
+INSERT INTO test_table1 (id, name) VALUES (5, v_result);
+END;
+-- 测试用例 22: 调用JAVA外部函数并在CREATE INDEX中使用
+CREATE INDEX test_index ON test_table3 (java_function('com.example.MyClass', 'myMethod', name));
+-- 测试用例 23: 调用JAVA外部函数并在CREATE SEQUENCE中使用
+CREATE SEQUENCE test_seq
+START WITH 1
+INCREMENT BY java_function('com.example.MyClass', 'myMethod', '1');
+-- 测试用例 24: 调用JAVA外部函数并在CREATE SYNONYM中使用
+CREATE SYNONYM test_synonym FOR java_function('com.example.MyClass', 'myMethod', 'test_table1');
+-- 测试用例 25: 调用JAVA外部函数并在CREATE DATABASE LINK中使用
+CREATE DATABASE LINK test_link
+CONNECT TO username IDENTIFIED BY password
+USING 'java_function('com.example.MyClass', 'myMethod', 'connection_string')';
+-- 创建第四个测试表
+CREATE TABLE test_table4 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+-- 插入测试数据
+INSERT INTO test_table4 (id, name) VALUES (1, 'Grace');
+INSERT INTO test_table4 (id, name) VALUES (2, 'Henry');
+-- 测试用例 26: 调用JAVA外部函数并在CREATE ROLE中使用
+CREATE ROLE test_role
+IDENTIFIED BY java_function('com.example.MyClass', 'myMethod', 'password');
+-- 测试用例 27: 调用JAVA外部函数并在CREATE USER中使用
+CREATE USER test_user
+IDENTIFIED BY java_function('com.example.MyClass', 'myMethod', 'password');
+-- 测试用例 28: 调用JAVA外部函数并在CREATE PROFILE中使用
+CREATE PROFILE test_profile
+LIMIT PASSWORD_LIFE_TIME java_function('com.example.MyClass', 'myMethod', '30');
+-- 测试用例 29: 调用JAVA外部函数并在CREATE TABLESPACE中使用
+CREATE TABLESPACE test_tablespace
+DATAFILE '/path/to/datafile.dbf'
+SIZE java_function('com.example.MyClass', 'myMethod', '100M');
+-- 测试用例 30: 调用JAVA外部函数并在CREATE DIRECTORY中使用
+CREATE DIRECTORY test_directory AS '/path/to/directory';
+-- 创建第五个测试表
+CREATE TABLE test_table5 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+-- 插入测试数据
+INSERT INTO test_table5 (id, name) VALUES (1, 'Ivy');
+INSERT INTO test_table5 (id, name) VALUES (2, 'Jack');
+-- 测试用例 31: 调用JAVA外部函数并在CREATE CONTEXT中使用
+CREATE CONTEXT test_context USING java_function('com.example.MyClass', 'myMethod', 'context_name');
+-- 测试用例 32: 调用JAVA外部函数并在CREATE LIBRARY中使用
+CREATE LIBRARY test_library AS '/path/to/library.jar';
+-- 测试用例 33: 调用JAVA外部函数并在CREATE PACKAGE中使用
+CREATE PACKAGE test_package AS
+    FUNCTION test_function(p_name VARCHAR) RETURN VARCHAR;
+END;
+-- 测试用例 34: 调用JAVA外部函数并在CREATE PACKAGE BODY中使用
+CREATE PACKAGE BODY test_package AS
+    FUNCTION test_function(p_name VARCHAR) RETURN VARCHAR IS
+    BEGIN
+        RETURN java_function('com.example.MyClass', 'myMethod', p_name);
+END;
+END;
+-- 测试用例 35: 调用JAVA外部函数并在CREATE TYPE中使用
+CREATE TYPE test_type AS OBJECT (
+    name VARCHAR(50),
+    MEMBER FUNCTION test_function RETURN VARCHAR
+);
+-- 测试用例 36: 调用JAVA外部函数并在CREATE TYPE BODY中使用
+CREATE TYPE BODY test_type AS
+    MEMBER FUNCTION test_function RETURN VARCHAR IS
+    BEGIN
+        RETURN java_function('com.example.MyClass', 'myMethod', SELF.name);
+END;
+END;
+-- 测试用例 37: 调用JAVA外部函数并在CREATE JOB中使用
+BEGIN
+    DBMS_SCHEDULER.CREATE_JOB (
+        job_name        => 'test_job',
+        job_type        => 'PLSQL_BLOCK',
+        job_action      => 'BEGIN java_function(''com.example.MyClass'', ''myMethod'', ''arg1'');
+END;
+',
+        start_date      => SYSTIMESTAMP,
+        repeat_interval => 'FREQ=DAILY;
+INTERVAL=1',
+        end_date        => NULL,
+        enabled         => TRUE
+    );
+END;
+-- 测试用例 38: 调用JAVA外部函数并在CREATE PROGRAM中使用
+BEGIN
+    DBMS_SCHEDULER.CREATE_PROGRAM (
+        program_name   => 'test_program',
+        program_type   => 'PLSQL_BLOCK',
+        program_action => 'BEGIN java_function(''com.example.MyClass'', ''myMethod'', ''arg1'');
+END;
+',
+        enabled        => TRUE
+    );
+END;
+-- 测试用例 39: 调用JAVA外部函数并在CREATE SCHEDULE中使用
+BEGIN
+    DBMS_SCHEDULER.CREATE_SCHEDULE (
+        schedule_name   => 'test_schedule',
+        start_date      => SYSTIMESTAMP,
+        repeat_interval => 'FREQ=DAILY;
+INTERVAL=1',
+        end_date        => NULL
+    );
+END;
+-- 测试用例 40: 调用JAVA外部函数并在CREATE WINDOW中使用
+BEGIN
+    DBMS_SCHEDULER.CREATE_WINDOW (
+        window_name    => 'test_window',
+        resource_plan  => 'test_plan',
+        schedule_name  => 'test_schedule',
+        duration       => INTERVAL '1' HOUR,
+        window_priority=> 'LOW',
+        comments       => 'Test Window'
+    );
+END;
+-- 创建第六个测试表
+CREATE TABLE test_table6 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+-- 插入测试数据
+INSERT INTO test_table6 (id, name) VALUES (1, 'Karen');
+INSERT INTO test_table6 (id, name) VALUES (2, 'Leo');
+-- 测试用例 41: 调用JAVA外部函数并在CREATE RESOURCE PLAN中使用
+BEGIN
+    DBMS_RESOURCE_MANAGER.CREATE_PLAN (
+        plan    => 'test_plan',
+        comment => 'Test Plan'
+    );
+END;
+-- 测试用例 42: 调用JAVA外部函数并在CREATE CONSUMER GROUP中使用
+BEGIN
+    DBMS_RESOURCE_MANAGER.CREATE_CONSUMER_GROUP (
+        consumer_group => 'test_group',
+        comment        => 'Test Group'
+    );
+END;
+-- 测试用例 43: 调用JAVA外部函数并在CREATE PLAN DIRECTIVE中使用
+BEGIN
+    DBMS_RESOURCE_MANAGER.CREATE_PLAN_DIRECTIVE (
+        plan                     => 'test_plan',
+        group_or_subplan         => 'test_group',
+        comment                  => 'Test Directive',
+        mgmt_p1                 => java_function('com.example.MyClass', 'myMethod', '100'),
+        parallel_degree_limit_p1 => java_function('com.example.MyClass', 'myMethod', '10')
+    );
+END;
+-- 测试用例 44: 调用JAVA外部函数并在CREATE AUDIT POLICY中使用
+CREATE AUDIT POLICY test_policy
+ACTIONS ALL ON test_table6;
+-- 测试用例 45: 调用JAVA外部函数并在CREATE AUDIT TRAIL中使用
+CREATE AUDIT TRAIL test_trail
+DEFAULT DIRECTORY '/path/to/audit'
+FILE_NAME 'test_audit.log';
+-- 测试用例 46: 调用JAVA外部函数并在CREATE FLASHBACK ARCHIVE中使用
+CREATE FLASHBACK ARCHIVE test_archive
+TABLESPACE test_tablespace
+QUOTA java_function('com.example.MyClass', 'myMethod', '100M')
+RETENTION java_function('com.example.MyClass', 'myMethod', '365');
+-- 测试用例 47: 调用JAVA外部函数并在CREATE RESTORE POINT中使用
+CREATE RESTORE POINT test_restore_point;
+-- 测试用例 48: 调用JAVA外部函数并在CREATE SNAPSHOT中使用
+CREATE SNAPSHOT test_snapshot
+AS SELECT * FROM test_table6;
+-- 测试用例 49: 调用JAVA外部函数并在CREATE MATERIALIZED VIEW LOG中使用
+CREATE MATERIALIZED VIEW LOG ON test_table6
+WITH PRIMARY KEY;
+-- 测试用例 50: 调用JAVA外部函数并在CREATE MATERIALIZED VIEW REFRESH中使用
+CREATE MATERIALIZED VIEW test_mview
+REFRESH FAST ON DEMAND
+AS SELECT * FROM test_table6;
+-- 创建第七个测试表
+CREATE TABLE test_table7 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+-- 插入测试数据
+INSERT INTO test_table7 (id, name) VALUES (1, 'Mia');
+INSERT INTO test_table7 (id, name) VALUES (2, 'Noah');
+-- 测试用例 51: 调用JAVA外部函数并在CREATE DIMENSION中使用
+CREATE DIMENSION test_dimension
+LEVEL level1 IS test_table7.id
+LEVEL level2 IS test_table7.name;
+-- 测试用例 52: 调用JAVA外部函数并在CREATE HIERARCHY中使用
+CREATE HIERARCHY test_hierarchy
+LEVEL level1 IS test_table7.id
+LEVEL level2 IS test_table7.name;
+-- 测试用例 53: 调用JAVA外部函数并在CREATE ATTRIBUTE DIMENSION中使用
+CREATE ATTRIBUTE DIMENSION test_attr_dimension
+LEVEL level1 IS test_table7.id
+LEVEL level2 IS test_table7.name;
+-- 测试用例 54: 调用JAVA外部函数并在CREATE ANALYTIC VIEW中使用
+CREATE ANALYTIC VIEW test_analytic_view
+USING test_table7
+DIMENSION BY (id, name)
+MEASURES (COUNT(*));
+-- 测试用例 55: 调用JAVA外部函数并在CREATE ATTRIBUTE VIEW中使用
+CREATE ATTRIBUTE VIEW test_attr_view
+USING test_table7
+DIMENSION BY (id, name)
+MEASURES (COUNT(*));
+-- 测试用例 56: 调用JAVA外部函数并在CREATE HIERARCHY VIEW中使用
+CREATE HIERARCHY VIEW test_hierarchy_view
+USING test_table7
+DIMENSION BY (id, name)
+MEASURES (COUNT(*));
+-- 测试用例 57: 调用JAVA外部函数并在CREATE MEASURE FOLDER中使用
+CREATE MEASURE FOLDER test_measure_folder
+USING test_table7
+MEASURES (COUNT(*));
+-- 测试用例 58: 调用JAVA外部函数并在CREATE CALCULATED MEMBER中使用
+CREATE CALCULATED MEMBER test_calculated_member
+AS java_function('com.example.MyClass', 'myMethod', 'arg1')

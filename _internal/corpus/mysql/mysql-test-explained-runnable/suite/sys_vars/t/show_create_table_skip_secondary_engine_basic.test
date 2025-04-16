@@ -1,0 +1,3 @@
+
+
+SET SESSION show_create_table_skip_secondary_engine=default

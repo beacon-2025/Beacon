@@ -1,0 +1,27 @@
+-- 创建模式
+CREATE SCHEMA test_schema1;
+CREATE SCHEMA test_schema2;
+-- 创建物化视图
+CREATE MATERIALIZED VIEW test_schema1.mv_view1 AS SELECT 1 AS col1;
+CREATE MATERIALIZED VIEW test_schema2.mv_view2 AS SELECT 2 AS col2;
+CREATE MATERIALIZED VIEW mv_view3 AS SELECT 3 AS col3;
+-- 测试用例1: 删除存在的物化视图（带模式名）
+DROP MATERIALIZED VIEW test_schema1.mv_view1;
+-- 测试用例2: 删除存在的物化视图（不带模式名）
+DROP MATERIALIZED VIEW mv_view3;
+-- 测试用例3: 删除不存在的物化视图（不带IF EXISTS，预期报错）
+DROP MATERIALIZED VIEW non_existent_view;
+-- 测试用例4: 删除不存在的物化视图（带IF EXISTS，不报错）
+DROP MATERIALIZED VIEW IF EXISTS non_existent_view;
+-- 测试用例5: 删除存在的物化视图（带模式名和IF EXISTS）
+DROP MATERIALIZED VIEW IF EXISTS test_schema2.mv_view2;
+-- 测试用例6: 删除不存在的物化视图（带模式名和IF EXISTS，不报错）
+DROP MATERIALIZED VIEW IF EXISTS test_schema1.non_existent_view;
+-- 测试用例7: 删除存在的物化视图（不带模式名和IF EXISTS）
+DROP MATERIALIZED VIEW mv_view3;
+-- 测试用例8: 删除不存在的物化视图（带模式名，不带IF EXISTS，预期报错）
+DROP MATERIALIZED VIEW test_schema1.non_existent_view;
+-- 测试用例9: 删除存在的物化视图（带模式名和IF EXISTS）
+DROP MATERIALIZED VIEW IF EXISTS test_schema1.mv_view1;
+-- 测试用例10: 删除不存在的物化视图（带模式名和IF EXISTS，不报错）
+DROP MATERIALIZED VIEW IF EXISTS test_schema2.non_existent_view

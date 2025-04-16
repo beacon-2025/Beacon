@@ -1,0 +1,24 @@
+-- 创建HTS表空间
+CREATE HUGE TABLESPACE HTS_NAME_1;
+CREATE HUGE TABLESPACE HTS_NAME_2;
+CREATE HUGE TABLESPACE HTS_NAME_3;
+-- 测试用例 1: 为HTS表空间HTS_NAME_1添加路径
+ALTER HUGE TABLESPACE HTS_NAME_1 ADD PATH '/var/lib/hts/path1';
+-- 测试用例 2: 为HTS表空间HTS_NAME_2添加路径
+ALTER HUGE TABLESPACE HTS_NAME_2 ADD PATH '/var/lib/hts/path2';
+-- 测试用例 3: 为HTS表空间HTS_NAME_3添加路径
+ALTER HUGE TABLESPACE HTS_NAME_3 ADD PATH '/var/lib/hts/path3';
+-- 测试用例 4: 为HTS表空间HTS_NAME_1添加第二个路径
+ALTER HUGE TABLESPACE HTS_NAME_1 ADD PATH '/var/lib/hts/path4';
+-- 测试用例 5: 为HTS表空间HTS_NAME_2添加第二个路径
+ALTER HUGE TABLESPACE HTS_NAME_2 ADD PATH '/var/lib/hts/path5';
+-- 测试用例 6: 为HTS表空间HTS_NAME_3添加第二个路径
+ALTER HUGE TABLESPACE HTS_NAME_3 ADD PATH '/var/lib/hts/path6';
+-- 测试用例 7: 为HTS表空间HTS_NAME_1添加第三个路径
+ALTER HUGE TABLESPACE HTS_NAME_1 ADD PATH '/var/lib/hts/path7';
+-- 测试用例 8: 为HTS表空间HTS_NAME_2添加第三个路径
+ALTER HUGE TABLESPACE HTS_NAME_2 ADD PATH '/var/lib/hts/path8';
+-- 测试用例 9: 为HTS表空间HTS_NAME_3添加第三个路径
+ALTER HUGE TABLESPACE HTS_NAME_3 ADD PATH '/var/lib/hts/path9';
+-- 测试用例 10: 为HTS表空间HTS_NAME_1添加第四个路径
+ALTER HUGE TABLESPACE HTS_NAME_1 ADD PATH '/var/lib/hts/path10'

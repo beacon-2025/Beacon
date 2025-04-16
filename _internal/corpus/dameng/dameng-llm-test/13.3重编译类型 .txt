@@ -1,0 +1,30 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 创建类型
+CREATE TYPE schema1.type1 AS (id INT, name TEXT);
+CREATE TYPE schema2.type2 AS (value FLOAT, description TEXT);
+-- 测试用例1: 重编译类型，不带DEBUG选项
+ALTER TYPE schema1.type1 COMPILE;
+-- 测试用例2: 重编译类型，带DEBUG选项
+ALTER TYPE schema2.type2 COMPILE DEBUG;
+-- 测试用例3: 重编译类型，不带模式名
+ALTER TYPE type1 COMPILE;
+-- 测试用例4: 重编译类型，带DEBUG选项，不带模式名
+ALTER TYPE type2 COMPILE DEBUG;
+-- 测试用例5: 重编译类型，使用不存在的模式名
+ALTER TYPE non_existent_schema.type1 COMPILE;
+-- 测试用例6: 重编译类型，使用不存在的类型名
+ALTER TYPE schema1.non_existent_type COMPILE;
+-- 测试用例7: 重编译类型，使用不存在的模式名和类型名
+ALTER TYPE non_existent_schema.non_existent_type COMPILE;
+-- 测试用例8: 重编译类型，不带模式名和DEBUG选项
+ALTER TYPE type1 COMPILE;
+-- 测试用例9: 重编译类型，不带模式名，带DEBUG选项
+ALTER TYPE type2 COMPILE DEBUG;
+-- 测试用例10: 重编译类型，使用不存在的模式名，带DEBUG选项
+ALTER TYPE non_existent_schema.type1 COMPILE DEBUG;
+-- 测试用例11: 重编译类型，使用不存在的类型名，带DEBUG选项
+ALTER TYPE schema1.non_existent_type COMPILE DEBUG;
+-- 测试用例12: 重编译类型，使用不存在的模式名和类型名，带DEBUG选项
+ALTER TYPE non_existent_schema.non_existent_type COMPILE DEBUG

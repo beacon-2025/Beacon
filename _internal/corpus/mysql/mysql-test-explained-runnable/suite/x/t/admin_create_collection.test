@@ -1,0 +1,2 @@
+
+create database xtest_1 default charset 'utf8mb4'

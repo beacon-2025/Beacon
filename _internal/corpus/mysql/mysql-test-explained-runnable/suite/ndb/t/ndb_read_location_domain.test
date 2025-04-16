@@ -1,0 +1,10 @@
+
+
+create table test.t2 (a int primary key,
+                      b int,
+                      c int,
+                      d text,
+                      unique(b) using hash,
+                      key(c))
+  comment="NDB_TABLE=READ_BACKUP=1"
+  engine=ndb

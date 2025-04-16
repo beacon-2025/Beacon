@@ -1,0 +1,30 @@
+# ==== Purpose ====
+# Like rpl_atomic_ddl.test this test file
+# proves successful slave service recovery after a simulated failure
+# at handling recoverable DDL queries.
+# The "half" atomic cases include those DDL statements that can not
+# roll back. Once this feature is implemented for a statement it can
+# merged with the fully atomic ones of rpl_atomic_ddl.test.
+# See rpl_atomic_ddl.test for more info.
+#
+# ==== Implementation ====
+#
+# Mostly follows rpl_atomic_ddl.test.
+# Difference is in that the slave does not try to simulate
+# a failure before binary logging stage has been completed. That is
+# only SET @@GLOBAL.debug="+d,crash_commit_after_log" and
+# pre_binlog_check, see below commented, is not used.
+#
+# ==== References ====
+# WL#9175  Correct recovery of DDL statements/transactions by binary log
+#
+#
+# Params:
+# --let $rpl_atomic_ddl_print_verbose # get out more info
+#
+# === Limitations ===
+# --force-restart is required to run the test.
+#
+# When the object deletion was interrupted by crash
+# there could be errors on object recreation attempt like
+# 1007: Can't create database '...'

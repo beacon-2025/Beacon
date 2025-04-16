@@ -1,0 +1,63 @@
+-- 创建表 t_json_boolean
+DROP TABLE IF EXISTS t_json_boolean CASCADE;
+CREATE TABLE t_json_boolean (
+    c1 INT,
+    c2 VARCHAR2(100) CHECK (c2 IS JSON(STRICT)),
+    c3 VARCHAR2(100) CHECK (c3 IS JSON(LAX))
+);
+-- 测试用例 1: 插入符合 STRICT 约束的 JSON 数据
+INSERT INTO t_json_boolean VALUES (1, '{"dameng":true}', NULL);
+COMMIT;
+-- 测试用例 2: 插入符合 LAX 约束的 JSON 数据，不区分大小写
+INSERT INTO t_json_boolean VALUES (2, NULL, '{"dameng":TRUE}');
+COMMIT;
+-- 测试用例 3: 插入不符合 STRICT 约束的 JSON 数据，true 作为名称
+-- 预期结果：插入失败，违反 CHECK 约束
+INSERT INTO t_json_boolean VALUES (3, '{true:1}', NULL);
+-- 测试用例 4: 插入符合 LAX 约束的 JSON 数据，true 作为名称
+INSERT INTO t_json_boolean VALUES (4, NULL, '{TRUE:1}');
+COMMIT;
+-- 测试用例 5: 查询 JSON 数据中的布尔值
+SELECT c1, json_value(c3, '$.dameng') FROM t_json_boolean;
+-- 测试用例 6: 查询 JSON 数据中的布尔值并返回数字类型
+SELECT c1, json_value(c3, '$.dameng' RETURNING NUMBER) FROM t_json_boolean;
+-- 测试用例 7: 查询 JSON 数据中的 true 作为名称的值
+SELECT c1, json_value(c3, '$.true') FROM t_json_boolean;
+-- 测试用例 8: 查询 JSON 数据中的 TRUE 作为名称的值
+SELECT c1, json_value(c3, '$.TRUE') FROM t_json_boolean;
+-- 测试用例 9: 插入符合 STRICT 约束的 JSON 数据，false 作为值
+INSERT INTO t_json_boolean VALUES (5, '{"dameng":false}', NULL);
+COMMIT;
+-- 测试用例 10: 插入符合 LAX 约束的 JSON 数据，false 作为值
+INSERT INTO t_json_boolean VALUES (6, NULL, '{"dameng":FALSE}');
+COMMIT;
+-- 测试用例 11: 插入不符合 STRICT 约束的 JSON 数据，false 作为名称
+-- 预期结果：插入失败，违反 CHECK 约束
+INSERT INTO t_json_boolean VALUES (7, '{false:1}', NULL);
+-- 测试用例 12: 插入符合 LAX 约束的 JSON 数据，false 作为名称
+INSERT INTO t_json_boolean VALUES (8, NULL, '{FALSE:1}');
+COMMIT;
+-- 测试用例 13: 查询 JSON 数据中的 false 作为名称的值
+SELECT c1, json_value(c3, '$.false') FROM t_json_boolean;
+-- 测试用例 14: 查询 JSON 数据中的 FALSE 作为名称的值
+SELECT c1, json_value(c3, '$.FALSE') FROM t_json_boolean;
+-- 测试用例 15: 插入符合 STRICT 约束的 JSON 数据，true 和 false 作为值
+INSERT INTO t_json_boolean VALUES (9, '{"dameng":true, "test":false}', NULL);
+COMMIT;
+-- 测试用例 16: 插入符合 LAX 约束的 JSON 数据，true 和 false 作为值
+INSERT INTO t_json_boolean VALUES (10, NULL, '{"dameng":TRUE, "test":FALSE}');
+COMMIT;
+-- 测试用例 17: 查询 JSON 数据中的多个布尔值
+SELECT c1, json_value(c3, '$.dameng'), json_value(c3, '$.test') FROM t_json_boolean;
+-- 测试用例 18: 查询 JSON 数据中的多个布尔值并返回数字类型
+SELECT c1, json_value(c3, '$.dameng' RETURNING NUMBER), json_value(c3, '$.test' RETURNING NUMBER) FROM t_json_boolean;
+-- 测试用例 19: 插入符合 STRICT 约束的 JSON 数据，true 和 false 作为名称
+-- 预期结果：插入失败，违反 CHECK 约束
+INSERT INTO t_json_boolean VALUES (11, '{true:1, false:2}', NULL);
+-- 测试用例 20: 插入符合 LAX 约束的 JSON 数据，true 和 false 作为名称
+INSERT INTO t_json_boolean VALUES (12, NULL, '{TRUE:1, FALSE:2}');
+COMMIT;
+-- 测试用例 21: 查询 JSON 数据中的多个布尔值作为名称的值
+SELECT c1, json_value(c3, '$.true'), json_value(c3, '$.false') FROM t_json_boolean;
+-- 测试用例 22: 查询 JSON 数据中的多个布尔值作为名称的值并返回数字类型
+SELECT c1, json_value(c3, '$.true' RETURNING NUMBER), json_value(c3, '$.false' RETURNING NUMBER) FROM t_json_boolean

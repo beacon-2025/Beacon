@@ -1,0 +1,2 @@
+
+CREATE TABLE test.t2 ( a int primary key)

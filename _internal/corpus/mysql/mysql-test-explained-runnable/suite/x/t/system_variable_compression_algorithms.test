@@ -1,0 +1,4 @@
+
+
+## Cleanup
+SET GLOBAL Mysqlx_compression_algorithms = DEFAULT

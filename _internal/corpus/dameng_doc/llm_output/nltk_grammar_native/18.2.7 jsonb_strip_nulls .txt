@@ -1,0 +1,4 @@
+```plaintext
+JSONB_STRIP_NULLS_FUNC -> 'jsonb_strip_nulls' '(' JSON_EXP1 ')'
+JSON_EXP1 -> 'json_string_value' | 'clob_value'
+```

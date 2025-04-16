@@ -1,0 +1,119 @@
+-- 创建测试表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT,
+    salary DECIMAL(10, 2),
+    hire_date DATE
+);
+-- 插入测试数据
+INSERT INTO test_table1 (id, name, age, salary, hire_date) VALUES
+(1, 'Alice', 30, 50000.00, '2020-01-15'),
+(2, 'Bob', 25, 45000.00, '2019-05-20'),
+(3, 'Charlie', 35, 60000.00, '2018-11-10');
+SELECT CONCAT(name, ' is ', age, ' years old') AS description FROM test_table1;
+SELECT SUBSTRING(name, 1, 3) AS short_name FROM test_table1;
+SELECT UPPER(name) AS upper_name FROM test_table1;
+SELECT LOWER(name) AS lower_name FROM test_table1;
+SELECT ROUND(salary, 0) AS rounded_salary FROM test_table1;
+SELECT ABS(age - 30) AS age_difference FROM test_table1;
+SELECT CEIL(salary / 1000) AS salary_in_k FROM test_table1;
+SELECT FLOOR(salary / 1000) AS salary_in_k FROM test_table1;
+SELECT NOW() AS current_time FROM test_table1;
+SELECT DATEDIFF(NOW(), hire_date) AS days_since_hire FROM test_table1;
+SELECT DATE_ADD(hire_date, INTERVAL 1 YEAR) AS hire_date_plus_one_year FROM test_table1;
+SELECT DATE_SUB(hire_date, INTERVAL 1 MONTH) AS hire_date_minus_one_month FROM test_table1;
+SELECT COUNT(*) AS total_employees FROM test_table1;
+SELECT AVG(salary) AS average_salary FROM test_table1;
+SELECT SUM(salary) AS total_salary FROM test_table1;
+SELECT MAX(salary) AS max_salary FROM test_table1;
+SELECT MIN(salary) AS min_salary FROM test_table1;
+SELECT name, 
+       CASE 
+           WHEN age < 30 THEN 'Young'
+           WHEN age BETWEEN 30 AND 40 THEN 'Middle-aged'
+           ELSE 'Senior'
+       END AS age_group
+FROM test_table1;
+SELECT name, IF(age > 30, 'Senior', 'Junior') AS employee_status FROM test_table1;
+SELECT COALESCE(NULL, name, 'Unknown') AS safe_name FROM test_table1;
+SELECT NULLIF(age, 30) AS age_if_not_30 FROM test_table1;
+SELECT REPLACE(name, 'Alice', 'Alicia') AS replaced_name FROM test_table1;
+SELECT LENGTH(name) AS name_length FROM test_table1;
+SELECT TRIM('  ' FROM name) AS trimmed_name FROM test_table1;
+SELECT LEFT(name, 2) AS left_name FROM test_table1;
+SELECT RIGHT(name, 2) AS right_name FROM test_table1;
+SELECT POWER(age, 2) AS age_squared FROM test_table1;
+SELECT SQRT(salary) AS salary_sqrt FROM test_table1;
+SELECT MOD(age, 5) AS age_mod_5 FROM test_table1;
+SELECT RAND() AS random_number FROM test_table1;
+SELECT YEAR(hire_date) AS hire_year FROM test_table1;
+SELECT MONTH(hire_date) AS hire_month FROM test_table1;
+SELECT DAY(hire_date) AS hire_day FROM test_table1;
+SELECT DAYOFWEEK(hire_date) AS hire_day_of_week FROM test_table1;
+SELECT DAYOFYEAR(hire_date) AS hire_day_of_year FROM test_table1;
+SELECT WEEK(hire_date) AS hire_week FROM test_table1;
+SELECT QUARTER(hire_date) AS hire_quarter FROM test_table1;
+SELECT HOUR(NOW()) AS current_hour FROM test_table1;
+SELECT MINUTE(NOW()) AS current_minute FROM test_table1;
+SELECT SECOND(NOW()) AS current_second FROM test_table1;
+SELECT DATE_FORMAT(hire_date, '%Y-%m-%d') AS formatted_hire_date FROM test_table1;
+SELECT STR_TO_DATE('2023-10-01', '%Y-%m-%d') AS parsed_date FROM test_table1;
+SELECT REVERSE(name) AS reversed_name FROM test_table1;
+SELECT CHAR_LENGTH(name) AS char_length_name FROM test_table1;
+SELECT POSITION('a' IN name) AS a_position FROM test_table1;
+SELECT INSTR(name, 'a') AS a_instr FROM test_table1;
+SELECT LPAD(name, 10, '*') AS lpad_name FROM test_table1;
+SELECT RPAD(name, 10, '*') AS rpad_name FROM test_table1;
+SELECT REPEAT(name, 2) AS repeated_name FROM test_table1;
+SELECT CONCAT(name, SPACE(5), age) AS name_with_space FROM test_table1;
+SELECT ASCII(name) AS ascii_name FROM test_table1;
+SELECT CHAR(65) AS char_65 FROM test_table1;
+SELECT HEX(name) AS hex_name FROM test_table1;
+SELECT UNHEX(HEX(name)) AS unhex_name FROM test_table1;
+SELECT BIN(age) AS bin_age FROM test_table1;
+SELECT OCT(age) AS oct_age FROM test_table1;
+SELECT CONV(age, 10, 2) AS age_in_binary FROM test_table1;
+SELECT FORMAT(salary, 2) AS formatted_salary FROM test_table1;
+SELECT LOCATE('a', name) AS locate_a FROM test_table1;
+SELECT FIELD('Alice', name, 'Bob', 'Charlie') AS field_alice FROM test_table1;
+SELECT ELT(1, name, 'Bob', 'Charlie') AS elt_name FROM test_table1;
+SELECT MAKE_SET(1, name, 'Bob', 'Charlie') AS make_set_name FROM test_table1;
+SELECT EXPORT_SET(1, 'Y', 'N', ',', 4) AS export_set FROM test_table1;
+SELECT INSERT(name, 2, 3, 'XXX') AS inserted_name FROM test_table1;
+SELECT REPLACE(name, 'Alice', 'Alicia') AS replaced_name FROM test_table1;
+SELECT SOUNDEX(name) AS soundex_name FROM test_table1;
+SELECT DIFFERENCE(name, 'Alice') AS difference_name FROM test_table1;
+SELECT QUOTE(name) AS quoted_name FROM test_table1;
+SELECT UNQUOTE(QUOTE(name)) AS unquoted_name FROM test_table1;
+SELECT LOAD_FILE('/tmp/test.txt') AS file_content FROM test_table1;
+SELECT BENCHMARK(1000000, MD5('test')) AS benchmark_result FROM test_table1;
+SELECT MD5(name) AS md5_name FROM test_table1;
+SELECT SHA1(name) AS sha1_name FROM test_table1;
+SELECT SHA2(name, 256) AS sha2_name FROM test_table1;
+SELECT AES_ENCRYPT(name, 'key') AS aes_encrypted_name FROM test_table1;
+SELECT AES_DECRYPT(AES_ENCRYPT(name, 'key'), 'key') AS aes_decrypted_name FROM test_table1;
+SELECT DES_ENCRYPT(name, 'key') AS des_encrypted_name FROM test_table1;
+SELECT DES_DECRYPT(DES_ENCRYPT(name, 'key'), 'key') AS des_decrypted_name FROM test_table1;
+SELECT ENCODE(name, 'key') AS encoded_name FROM test_table1;
+SELECT DECODE(ENCODE(name, 'key'), 'key') AS decoded_name FROM test_table1;
+SELECT COMPRESS(name) AS compressed_name FROM test_table1;
+SELECT UNCOMPRESS(COMPRESS(name)) AS uncompressed_name FROM test_table1;
+SELECT PASSWORD(name) AS password_name FROM test_table1;
+SELECT OLD_PASSWORD(name) AS old_password_name FROM test_table1;
+SELECT ENCRYPT(name, 'salt') AS encrypted_name FROM test_table1;
+SELECT DECRYPT(ENCRYPT(name, 'salt'), 'salt') AS decrypted_name FROM test_table1;
+SELECT RANDOM_BYTES(16) AS random_bytes FROM test_table1;
+SELECT UUID() AS uuid FROM test_table1;
+SELECT UUID_SHORT() AS uuid_short FROM test_table1;
+SELECT UUID_TO_BIN(UUID()) AS uuid_bin FROM test_table1;
+SELECT BIN_TO_UUID(UUID_TO_BIN(UUID())) AS uuid_from_bin FROM test_table1;
+SELECT IS_UUID(UUID()) AS is_uuid FROM test_table1;
+SELECT UUID_TO_BIN(UUID(), 1) AS uuid_bin_with_swap FROM test_table1;
+SELECT BIN_TO_UUID(UUID_TO_BIN(UUID(), 1), 1) AS uuid_from_bin_with_swap FROM test_table1;
+SELECT IS_UUID(UUID()) AS is_uuid FROM test_table1;
+SELECT UUID_TO_BIN(UUID(), 1) AS uuid_bin_with_swap FROM test_table1;
+SELECT BIN_TO_UUID(UUID_TO_BIN(UUID(), 1), 1) AS uuid_from_bin_with_swap FROM test_table1;
+SELECT IS_UUID(UUID()) AS is_uuid FROM test_table1;
+SELECT UUID_TO_BIN(UUID(), 1) AS uuid_bin_with_swap FROM test_table1;
+SELECT BIN_TO_UUID(UUID_TO_BIN(UUID(), 1), 1) AS uuid_from_bin_with_swap FROM test_table1

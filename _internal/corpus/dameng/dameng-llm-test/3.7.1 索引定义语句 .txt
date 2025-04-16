@@ -1,0 +1,82 @@
+-- 创建模式
+CREATE SCHEMA purchasing;
+CREATE SCHEMA sales;
+-- 创建表 VENDOR
+CREATE TABLE purchasing.vendor (
+    vendorid INT,
+    accountno INT,
+    name VARCHAR(100)
+);
+-- 创建表 SALESPERSON
+CREATE TABLE sales.salesperson (
+    salespersonid INT,
+    salesthisyear INT,
+    saleslastyear INT
+);
+-- 创建表 testgeo
+CREATE TABLE testgeo (
+    id INT,
+    name VARCHAR(20),
+    geo ST_POLYGON
+);
+-- 创建表 t1
+CREATE TABLE t1 (
+    c1 INT,
+    c2 RAW(100),
+    c3 TIMESTAMP,
+    c4 DATE,
+    c5 FLOAT,
+    c6 INTERVAL DAY TO SECOND,
+    c7 INTERVAL YEAR TO MONTH
+);
+-- 创建表 t2
+CREATE TABLE t2 (
+    c1 INT,
+    c2 VARCHAR(100)
+);
+-- 测试用例 1: 创建普通索引
+CREATE INDEX s1 ON purchasing.vendor (vendorid);
+-- 测试用例 2: 创建唯一索引
+CREATE UNIQUE INDEX s2 ON purchasing.vendor (accountno, name);
+-- 测试用例 3: 创建函数索引
+CREATE INDEX index_fbi ON sales.salesperson (salesthisyear - saleslastyear);
+-- 测试用例 4: 创建空间索引
+CREATE SPATIAL INDEX spidx ON testgeo (geo);
+-- 测试用例 5: 创建反向索引
+CREATE INDEX i1 ON t1(c1) REVERSE;
+CREATE INDEX i2 ON t1(c2) REVERSE;
+CREATE INDEX i3 ON t1(c3) REVERSE;
+CREATE INDEX i4 ON t1(c4) REVERSE;
+CREATE INDEX i5 ON t1(c5) REVERSE;
+CREATE INDEX i6 ON t1(c6) REVERSE;
+CREATE INDEX i7 ON t1(c7) REVERSE;
+-- 测试用例 6: 创建无效索引
+CREATE INDEX uidx ON t2(c1) UNUSABLE;
+-- 测试用例 7: 创建位图索引
+CREATE BITMAP INDEX bm_idx ON purchasing.vendor (vendorid);
+-- 测试用例 8: 创建聚簇索引
+CREATE CLUSTER INDEX cl_idx ON purchasing.vendor (vendorid);
+-- 测试用例 9: 创建全局索引
+CREATE INDEX global_idx ON purchasing.vendor (vendorid) GLOBAL;
+-- 测试用例 10: 创建带有STORAGE子句的索引
+CREATE INDEX storage_idx ON purchasing.vendor (vendorid) STORAGE (INITIAL 10, NEXT 5, MINEXTENTS 2, ON 'tablespace1', FILLFACTOR 80);
+-- 测试用例 11: 创建带有NOSORT选项的索引
+CREATE INDEX nosort_idx ON purchasing.vendor (vendorid) NOSORT;
+-- 测试用例 12: 创建带有ONLINE选项的索引
+CREATE INDEX online_idx ON purchasing.vendor (vendorid) ONLINE;
+-- 测试用例 13: 创建带有REVERSE和ONLINE选项的索引
+CREATE INDEX reverse_online_idx ON t1(c1) REVERSE ONLINE;
+-- 测试用例 14: 创建带有UNUSABLE和REVERSE选项的索引
+CREATE INDEX unusable_reverse_idx ON t2(c1) UNUSABLE REVERSE;
+-- 测试用例 15: 创建带有STORAGE子句2的索引
+CREATE INDEX storage2_idx ON testgeo (id) STORAGE (ON 'tablespace2', STAT NONE);
+-- 测试用例 16: 创建带有CLUSTER和NOT PARTIAL选项的索引
+CREATE CLUSTER INDEX cluster_not_partial_idx ON purchasing.vendor (vendorid) NOT PARTIAL;
+-- 测试用例 17: 创建带有SPATIAL和GLOBAL选项的索引
+CREATE SPATIAL INDEX spatial_global_idx ON testgeo (geo) GLOBAL;
+-- 测试用例 18: 创建带有BITMAP和NOSORT选项的索引
+CREATE BITMAP INDEX bitmap_nosort_idx ON purchasing.vendor (vendorid) NOSORT;
+-- 测试用例 19: 创建带有UNIQUE和ONLINE选项的索引
+CREATE UNIQUE INDEX unique_online_idx ON purchasing.vendor (accountno) ONLINE;
+-- 测试用例 20: 创建带有REVERSE和UNUSABLE选项的索引
+CREATE INDEX reverse_unusable_idx ON t1(c1) REVERSE UNUSABLE

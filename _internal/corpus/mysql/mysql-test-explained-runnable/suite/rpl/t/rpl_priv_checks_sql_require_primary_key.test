@@ -1,0 +1,6 @@
+
+
+#
+# 3) Create a table on the master
+#
+CREATE TABLE t1 (c1 INT PRIMARY KEY)

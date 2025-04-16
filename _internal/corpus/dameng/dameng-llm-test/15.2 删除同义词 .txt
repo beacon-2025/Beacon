@@ -1,0 +1,56 @@
+-- 创建模式A
+CREATE SCHEMA A;
+-- 创建模式B
+CREATE SCHEMA B;
+-- 在模式A下创建同义词S1
+CREATE SYNONYM A.S1 FOR A.T1;
+-- 在模式B下创建同义词S1
+CREATE SYNONYM B.S1 FOR B.T1;
+-- 创建公有同义词S2
+CREATE PUBLIC SYNONYM S2 FOR A.T1;
+-- 创建公有同义词S3
+CREATE PUBLIC SYNONYM S3 FOR B.T1;
+-- 创建表A.T1
+CREATE TABLE A.T1 (id INT);
+-- 创建表B.T1
+CREATE TABLE B.T1 (id INT);
+-- 测试用例1: 删除模式A下的同义词S1
+DROP SYNONYM A.S1;
+-- 测试用例2: 删除公有同义词S2
+DROP PUBLIC SYNONYM S2;
+-- 测试用例3: 删除不存在的同义词S4（不指定IF EXISTS，预期报错）
+DROP SYNONYM S4;
+-- 测试用例4: 删除不存在的同义词S4（指定IF EXISTS，预期不报错）
+DROP SYNONYM IF EXISTS S4;
+-- 测试用例5: 删除模式B下的同义词S1
+DROP SYNONYM B.S1;
+-- 测试用例6: 删除公有同义词S3
+DROP PUBLIC SYNONYM S3;
+-- 测试用例7: 删除当前模式下的同义词S1（假设当前模式为A）
+DROP SYNONYM S1;
+-- 测试用例8: 删除当前模式下的同义词S1（假设当前模式为B）
+DROP SYNONYM S1;
+-- 测试用例9: 删除公有同义词S2（不指定PUBLIC，预期报错）
+DROP SYNONYM S2;
+-- 测试用例10: 删除私有同义词S1（指定PUBLIC，预期报错）
+DROP PUBLIC SYNONYM S1;
+-- 测试用例11: 删除模式A下的同义词S1（指定IF EXISTS，即使存在也不报错）
+DROP SYNONYM IF EXISTS A.S1;
+-- 测试用例12: 删除模式B下的同义词S1（指定IF EXISTS，即使存在也不报错）
+DROP SYNONYM IF EXISTS B.S1;
+-- 测试用例13: 删除公有同义词S2（指定IF EXISTS，即使存在也不报错）
+DROP PUBLIC SYNONYM IF EXISTS S2;
+-- 测试用例14: 删除公有同义词S3（指定IF EXISTS，即使存在也不报错）
+DROP PUBLIC SYNONYM IF EXISTS S3;
+-- 测试用例15: 删除不存在的公有同义词S4（指定IF EXISTS，预期不报错）
+DROP PUBLIC SYNONYM IF EXISTS S4;
+-- 测试用例16: 删除不存在的私有同义词S4（指定IF EXISTS，预期不报错）
+DROP SYNONYM IF EXISTS S4;
+-- 测试用例17: 删除模式A下的同义词S1（不指定模式名，假设当前模式为A）
+DROP SYNONYM S1;
+-- 测试用例18: 删除模式B下的同义词S1（不指定模式名，假设当前模式为B）
+DROP SYNONYM S1;
+-- 测试用例19: 删除模式A下的同义词S1（指定模式名，假设当前模式为B）
+DROP SYNONYM A.S1;
+-- 测试用例20: 删除模式B下的同义词S1（指定模式名，假设当前模式为A）
+DROP SYNONYM B.S1

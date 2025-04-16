@@ -1,0 +1,7 @@
+# Variable name: innodb_page_cleaners
+# Scope: Global
+# Access type: Static
+# Data type: numeric
+
+
+SELECT COUNT(@@GLOBAL.innodb_page_cleaners)

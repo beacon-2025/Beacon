@@ -1,0 +1,76 @@
+-- 创建模式
+CREATE SCHEMA test_schema;
+-- 创建基表
+CREATE TABLE test_schema.table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    active_flag CHAR(1),
+    web_url VARCHAR(100),
+    credit DECIMAL(10, 2)
+);
+CREATE TABLE test_schema.table2 (
+    row_id ROWID,
+    account_no INT,
+    name VARCHAR(50),
+    active_flag CHAR(1),
+    web_url VARCHAR(100),
+    credit DECIMAL(10, 2)
+);
+CREATE TABLE test_schema.table3 (
+    seq_id INT,
+    account_no INT,
+    name VARCHAR(50),
+    active_flag CHAR(1),
+    web_url VARCHAR(100),
+    credit DECIMAL(10, 2)
+);
+-- 用例1: 在默认模式下创建物化视图日志，使用默认的SEQUENCE选项
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1;
+-- 用例2: 在指定模式下创建物化视图日志，使用PRIMARY KEY选项
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 WITH PRIMARY KEY;
+-- 用例3: 在指定模式下创建物化视图日志，使用ROWID选项
+CREATE MATERIALIZED VIEW LOG ON test_schema.table2 WITH ROWID;
+-- 用例4: 在指定模式下创建物化视图日志，使用SEQUENCE选项
+CREATE MATERIALIZED VIEW LOG ON test_schema.table3 WITH SEQUENCE;
+-- 用例5: 在指定模式下创建物化视图日志，使用特定列
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 WITH (name, active_flag, web_url);
+-- 用例6: 在指定模式下创建物化视图日志，使用IMMEDIATE PURGE选项
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE IMMEDIATE;
+-- 用例7: 在指定模式下创建物化视图日志，使用IMMEDIATE SYNCHRONOUS PURGE选项
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE IMMEDIATE SYNCHRONOUS;
+-- 用例8: 在指定模式下创建物化视图日志，使用IMMEDIATE ASYNCHRONOUS PURGE选项
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE IMMEDIATE ASYNCHRONOUS;
+-- 用例9: 在指定模式下创建物化视图日志，使用START WITH定时清除
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 REPEAT INTERVAL '1' DAY;
+-- 用例10: 在指定模式下创建物化视图日志，使用START WITH和NEXT选项
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 NEXT SYSDATE + 1;
+-- 用例11: 在指定模式下创建物化视图日志，使用START WITH和REPEAT INTERVAL选项
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 REPEAT INTERVAL '1' DAY;
+-- 用例12: 在指定模式下创建物化视图日志，使用START WITH和NEXT选项，间隔2天
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 NEXT SYSDATE + 2;
+-- 用例13: 在指定模式下创建物化视图日志，使用START WITH和REPEAT INTERVAL选项，间隔3天
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 REPEAT INTERVAL '3' DAY;
+-- 用例14: 在指定模式下创建物化视图日志，使用START WITH和NEXT选项，间隔1小时
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 NEXT SYSDATE + 1/24;
+-- 用例15: 在指定模式下创建物化视图日志，使用START WITH和REPEAT INTERVAL选项，间隔1小时
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 REPEAT INTERVAL '1' HOUR;
+-- 用例16: 在指定模式下创建物化视图日志，使用START WITH和NEXT选项，间隔1分钟
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 NEXT SYSDATE + 1/1440;
+-- 用例17: 在指定模式下创建物化视图日志，使用START WITH和REPEAT INTERVAL选项，间隔1分钟
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 REPEAT INTERVAL '1' MINUTE;
+-- 用例18: 在指定模式下创建物化视图日志，使用START WITH和NEXT选项，间隔1秒
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 NEXT SYSDATE + 1/86400;
+-- 用例19: 在指定模式下创建物化视图日志，使用START WITH和REPEAT INTERVAL选项，间隔1秒
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 REPEAT INTERVAL '1' SECOND;
+-- 用例20: 在指定模式下创建物化视图日志，使用START WITH和NEXT选项，间隔1周
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 NEXT SYSDATE + 7;
+-- 用例21: 在指定模式下创建物化视图日志，使用START WITH和REPEAT INTERVAL选项，间隔1周
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 REPEAT INTERVAL '7' DAY;
+-- 用例22: 在指定模式下创建物化视图日志，使用START WITH和NEXT选项，间隔1月
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 NEXT ADD_MONTHS(SYSDATE, 1);
+-- 用例23: 在指定模式下创建物化视图日志，使用START WITH和REPEAT INTERVAL选项，间隔1月
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 REPEAT INTERVAL '1' MONTH;
+-- 用例24: 在指定模式下创建物化视图日志，使用START WITH和NEXT选项，间隔1年
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 NEXT ADD_MONTHS(SYSDATE, 12);
+-- 用例25: 在指定模式下创建物化视图日志，使用START WITH和REPEAT INTERVAL选项，间隔1年
+CREATE MATERIALIZED VIEW LOG ON test_schema.table1 PURGE START WITH SYSDATE + 5 REPEAT INTERVAL '1' YEAR

@@ -1,0 +1,5 @@
+-- 创建一个测试表，用于存储数字
+CREATE TABLE test_numbers (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    value DOUBLE
+)

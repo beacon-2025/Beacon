@@ -1,0 +1,1 @@
+{"event": "corpus name = create.sql", "logger": "console+/root/_internal/logs/sp_evaluation_catalogclickhouse-2025-04-18T19-32-33.json", "level": "info", "timestamp": "2025-04-18T19:32:33.484095Z", "filename": "test_minimized_grant_cacluator_common.py", "func_name": "test_calculate_minimized_grant", "lineno": 107}

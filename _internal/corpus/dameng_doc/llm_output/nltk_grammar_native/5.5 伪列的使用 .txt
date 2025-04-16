@@ -1,0 +1,3 @@
+```text
+PSEUDO_COLUMN -> ROWID | UID | USER | TRXID
+```

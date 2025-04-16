@@ -1,0 +1,6 @@
+```plaintext
+JSON_OBJECT -> '{' '}' | '{' PAIR_LIST '}'
+PAIR_LIST -> PAIR | PAIR ',' PAIR
+PAIR -> STRING ':' VALUE
+VALUE -> 'string_value' | 'number_value' | 'object_value' | 'array_value' | 'true_value' | 'false_value' | 'null_value'
+```

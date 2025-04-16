@@ -1,0 +1,41 @@
+-- 无需要公共前置语句，因为测试用例直接使用jsonb_array_elements函数;
+-- 测试用例1: 使用jsonb_array_elements，将JSON数组扩展为JSON值的集合
+SELECT * FROM jsonb_array_elements('[1, true, null, "str\ttest", [1, 2, 3], {"name1":"aaa\ttest","name2":"bbb\ttest"}]');
+-- 测试用例2: 当参数<JSON_exp1>为NULL时，返回的结果集为空集
+SELECT * FROM jsonb_array_elements(NULL);
+-- 测试用例3: 当参数<JSON_exp1>对应的JSON数据类型不是ARRAY时，报错
+SELECT * FROM jsonb_array_elements('1');
+-- 测试用例4: 使用jsonb_array_elements处理包含嵌套数组的JSON
+SELECT * FROM jsonb_array_elements('[{"key1":"value1"}, [1, 2, 3], "string", null]');
+-- 测试用例5: 使用jsonb_array_elements处理包含嵌套对象的JSON
+SELECT * FROM jsonb_array_elements('[{"key1":"value1"}, {"key2":"value2"}, "string", null]');
+-- 测试用例6: 使用jsonb_array_elements处理包含布尔值的JSON数组
+SELECT * FROM jsonb_array_elements('[true, false, true]');
+-- 测试用例7: 使用jsonb_array_elements处理包含数字的JSON数组
+SELECT * FROM jsonb_array_elements('[1, 2, 3, 4, 5]');
+-- 测试用例8: 使用jsonb_array_elements处理包含字符串的JSON数组
+SELECT * FROM jsonb_array_elements('["apple", "banana", "cherry"]');
+-- 测试用例9: 使用jsonb_array_elements处理包含混合类型的JSON数组
+SELECT * FROM jsonb_array_elements('[1, "two", false, null, {"key":"value"}]');
+-- 测试用例10: 使用jsonb_array_elements处理包含转义字符的JSON数组
+SELECT * FROM jsonb_array_elements('["line1\nline2", "tab\tseparated", "backslash\\test"]');
+-- 测试用例11: 使用jsonb_array_elements处理包含空数组的JSON
+SELECT * FROM jsonb_array_elements('[]');
+-- 测试用例12: 使用jsonb_array_elements处理包含空对象的JSON数组
+SELECT * FROM jsonb_array_elements('[{}]');
+-- 测试用例13: 使用jsonb_array_elements处理包含多个嵌套数组的JSON
+SELECT * FROM jsonb_array_elements('[[1, 2], [3, 4], [5, 6]]');
+-- 测试用例14: 使用jsonb_array_elements处理包含多个嵌套对象的JSON数组
+SELECT * FROM jsonb_array_elements('[{"a":1}, {"b":2}, {"c":3}]');
+-- 测试用例15: 使用jsonb_array_elements处理包含复杂嵌套结构的JSON数组
+SELECT * FROM jsonb_array_elements('[{"a":1, "b":[1, 2, 3]}, {"c":2, "d":{"e":4}}, [1, 2, 3]]');
+-- 测试用例16: 使用jsonb_array_elements处理包含特殊字符的JSON数组
+SELECT * FROM jsonb_array_elements('["特殊字符测试", "!@#$%^&*()", "中文测试"]');
+-- 测试用例17: 使用jsonb_array_elements处理包含长字符串的JSON数组
+SELECT * FROM jsonb_array_elements('["这是一个非常长的字符串，用于测试jsonb_array_elements函数的处理能力。", "另一个长字符串"]');
+-- 测试用例18: 使用jsonb_array_elements处理包含大整数的JSON数组
+SELECT * FROM jsonb_array_elements('[1234567890123456789, 9876543210987654321]');
+-- 测试用例19: 使用jsonb_array_elements处理包含浮点数的JSON数组
+SELECT * FROM jsonb_array_elements('[1.23, 4.56, 7.89]');
+-- 测试用例20: 使用jsonb_array_elements处理包含科学计数法表示的JSON数组
+SELECT * FROM jsonb_array_elements('[1.23e10, 4.56e-10]')

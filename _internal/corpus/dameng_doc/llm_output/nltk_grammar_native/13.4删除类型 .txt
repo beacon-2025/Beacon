@@ -1,0 +1,5 @@
+```
+S -> DELETE_TYPE | DELETE_TYPE_BODY
+DELETE_TYPE -> '删除类型'
+DELETE_TYPE_BODY -> '删除类型体'
+```

@@ -1,0 +1,228 @@
+-- 公共前置语句：创建测试表
+CREATE TABLE TEST_PRODUCTS (
+    PRODUCTID INT PRIMARY KEY,
+    NAME VARCHAR(100),
+    NOWPRICE DECIMAL(10, 2)
+);
+-- 插入测试数据
+INSERT INTO TEST_PRODUCTS (PRODUCTID, NAME, NOWPRICE) VALUES
+(1, '老人与海', 15.20),
+(2, '射雕英雄传(全四册)', 14.30),
+(3, '长征', 6.10),
+(4, '数据结构(C语言版)(附光盘)', 21.70),
+(5, '噼里啪啦丛书(全 7册)', 20.00),
+(6, '红楼梦', 37.70),
+(7, '西游记', 25.50),
+(8, '水浒传', 11.40),
+(9, '三国演义', 11.10),
+(10, '金瓶梅', 42.00);
+-- 测试用例 1: ABS 函数
+SELECT PRODUCTID, NAME FROM TEST_PRODUCTS WHERE ABS(NOWPRICE - 15) > 5;
+-- 测试用例 2: ACOS 函数
+SELECT ACOS(0);
+-- 测试用例 3: ASIN 函数
+SELECT ASIN(0);
+-- 测试用例 4: ATAN 函数
+SELECT ATAN(1);
+-- 测试用例 5: ATAN2 函数
+SELECT ATAN2(0.2, 0.3);
+-- 测试用例 6: CEIL 函数
+SELECT CEIL(15.6);
+-- 测试用例 7: CEILING 函数
+SELECT CEILING(-16.23);
+-- 测试用例 8: COS 函数
+SELECT COS(14.78);
+-- 测试用例 9: COSH 函数
+SELECT COSH(0);
+-- 测试用例 10: COT 函数
+SELECT COT(20 * 3.1415926 / 180);
+-- 测试用例 11: DEGREES 函数
+SELECT DEGREES(1.0);
+-- 测试用例 12: EXP 函数
+SELECT EXP(4);
+-- 测试用例 13: FLOOR 函数
+SELECT FLOOR(15.6);
+-- 测试用例 14: GREATEST 函数
+SELECT GREATEST(1.2, 3.4, 2.1);
+-- 测试用例 15: GREAT 函数
+SELECT GREAT(2, 4);
+-- 测试用例 16: LEAST 函数
+SELECT LEAST(1.2, 3.4, 2.1);
+-- 测试用例 17: LN 函数
+SELECT LN(95);
+-- 测试用例 18: LOG 函数
+SELECT LOG(10, 100);
+-- 测试用例 19: LOG10 函数
+SELECT LOG10(100);
+-- 测试用例 20: MOD 函数
+SELECT MOD(15, 10);
+-- 测试用例 21: PI 函数
+SELECT PI();
+-- 测试用例 22: POWER 函数
+SELECT POWER(3, 2);
+-- 测试用例 23: RADIANS 函数
+SELECT RADIANS(180.0);
+-- 测试用例 24: RAND 函数
+SELECT RAND();
+-- 测试用例 25: ROUND 函数
+SELECT ROUND(15.163, -1);
+-- 测试用例 26: SIGN 函数
+SELECT SIGN(-10);
+-- 测试用例 27: SIN 函数
+SELECT SIN(0);
+-- 测试用例 28: SINH 函数
+SELECT SINH(1);
+-- 测试用例 29: SQRT 函数
+SELECT SQRT(25);
+-- 测试用例 30: TAN 函数
+SELECT TAN(45 * PI() / 180);
+-- 测试用例 31: TANH 函数
+SELECT TANH(0);
+-- 测试用例 32: TO_NUMBER 函数
+SELECT TO_NUMBER('2,222.22', '9G999D99');
+-- 测试用例 33: TRUNC 函数
+SELECT TRUNC(15.167, -1);
+-- 测试用例 34: TRUNCATE 函数
+SELECT TRUNCATE(15.167, -1);
+-- 测试用例 35: TO_CHAR 函数
+SELECT TO_CHAR(1234.56, 'L999G999D99MI');
+-- 测试用例 36: BITAND 函数
+SELECT BITAND(-4, -5);
+-- 测试用例 37: 使用 TO_CHAR 函数和 NLS 参数
+CREATE TABLE T_INT (C1 INT);
+INSERT INTO T_INT VALUES (456), (0), (213);
+SELECT TO_CHAR(C1, 'L999D99MI', 'NLS_NUMERIC_CHARACTERS = '';
+:'' NLS_CURRENCY = ''AusDollars'' ') FROM T_INT;
+-- 测试用例 38: 使用 TO_CHAR 函数和 NLS_ISO_CURRENCY 参数
+SELECT TO_CHAR(C1, 'C999D99MI', 'NLS_NUMERIC_CHARACTERS = '';
+:'' NLS_CURRENCY = ''AusDollars'' NLS_ISO_CURRENCY = ''TAIWAN'' ') FROM T_INT;
+-- 测试用例 39: 使用 TO_CHAR 函数和科学计数法
+SELECT TO_CHAR(123456789, 'TM9');
+-- 测试用例 40: 使用 TO_CHAR 函数和罗马数字
+SELECT TO_CHAR(1234, 'RN');
+-- 测试用例 41: 使用 TO_CHAR 函数和负号
+SELECT TO_CHAR(-1234, 'S9999');
+-- 测试用例 42: 使用 TO_CHAR 函数和货币符号
+SELECT TO_CHAR(1234, '$9999');
+-- 测试用例 43: 使用 TO_CHAR 函数和组分隔符
+SELECT TO_CHAR(1234567, '9G999G999');
+-- 测试用例 44: 使用 TO_CHAR 函数和小数点
+SELECT TO_CHAR(1234.56, '9999.99');
+-- 测试用例 45: 使用 TO_CHAR 函数和十六进制
+SELECT TO_CHAR(1234, 'XXXX');
+-- 测试用例 46: 使用 TO_CHAR 函数和科学计数法后缀
+SELECT TO_CHAR(123456789, '999999999EEEE');
+-- 测试用例 47: 使用 TO_CHAR 函数和负号后缀
+SELECT TO_CHAR(-1234, '9999MI');
+-- 测试用例 48: 使用 TO_CHAR 函数和尖括号
+SELECT TO_CHAR(-1234, '9999PR');
+-- 测试用例 49: 使用 TO_CHAR 函数和货币名称缩写
+SELECT TO_CHAR(1234, 'C9999');
+-- 测试用例 50: 使用 TO_CHAR 函数和本地货币符号
+SELECT TO_CHAR(1234, 'L9999');
+-- 测试用例 51: 使用 TO_CHAR 函数和前缀冲突
+SELECT TO_CHAR(1234, '$S9999');
+-- 测试用例 52: 使用 TO_CHAR 函数和后缀冲突
+SELECT TO_CHAR(1234, '9999MIEEEE');
+-- 测试用例 53: 使用 TO_CHAR 函数和后缀与前缀冲突
+SELECT TO_CHAR(1234, 'L9999C');
+-- 测试用例 54: 使用 TO_CHAR 函数和后缀之间的冲突
+SELECT TO_CHAR(1234, '9999MIPR');
+-- 测试用例 55: 使用 TO_CHAR 函数和 NLS_NUMERIC_CHARACTERS
+SELECT TO_CHAR(1234.56, '9999D99', 'NLS_NUMERIC_CHARACTERS = '';
+:''');
+-- 测试用例 56: 使用 TO_CHAR 函数和 NLS_CURRENCY
+SELECT TO_CHAR(1234, 'L9999', 'NLS_CURRENCY = ''AusDollars''');
+-- 测试用例 57: 使用 TO_CHAR 函数和 NLS_ISO_CURRENCY
+SELECT TO_CHAR(1234, 'C9999', 'NLS_ISO_CURRENCY = ''TAIWAN''');
+-- 测试用例 58: 使用 TO_CHAR 函数和 NLS 参数组合
+SELECT TO_CHAR(1234.56, 'L9999D99MI', 'NLS_NUMERIC_CHARACTERS = '';
+:'' NLS_CURRENCY = ''AusDollars'' NLS_ISO_CURRENCY = ''TAIWAN''');
+-- 测试用例 59: 使用 TO_CHAR 函数和科学计数法
+SELECT TO_CHAR(123456789, 'TM9');
+-- 测试用例 60: 使用 TO_CHAR 函数和罗马数字
+SELECT TO_CHAR(1234, 'RN');
+-- 测试用例 61: 使用 TO_CHAR 函数和负号
+SELECT TO_CHAR(-1234, 'S9999');
+-- 测试用例 62: 使用 TO_CHAR 函数和货币符号
+SELECT TO_CHAR(1234, '$9999');
+-- 测试用例 63: 使用 TO_CHAR 函数和组分隔符
+SELECT TO_CHAR(1234567, '9G999G999');
+-- 测试用例 64: 使用 TO_CHAR 函数和小数点
+SELECT TO_CHAR(1234.56, '9999.99');
+-- 测试用例 65: 使用 TO_CHAR 函数和十六进制
+SELECT TO_CHAR(1234, 'XXXX');
+-- 测试用例 66: 使用 TO_CHAR 函数和科学计数法后缀
+SELECT TO_CHAR(123456789, '999999999EEEE');
+-- 测试用例 67: 使用 TO_CHAR 函数和负号后缀
+SELECT TO_CHAR(-1234, '9999MI');
+-- 测试用例 68: 使用 TO_CHAR 函数和尖括号
+SELECT TO_CHAR(-1234, '9999PR');
+-- 测试用例 69: 使用 TO_CHAR 函数和货币名称缩写
+SELECT TO_CHAR(1234, 'C9999');
+-- 测试用例 70: 使用 TO_CHAR 函数和本地货币符号
+SELECT TO_CHAR(1234, 'L9999');
+-- 测试用例 71: 使用 TO_CHAR 函数和前缀冲突
+SELECT TO_CHAR(1234, '$S9999');
+-- 测试用例 72: 使用 TO_CHAR 函数和后缀冲突
+SELECT TO_CHAR(1234, '9999MIEEEE');
+-- 测试用例 73: 使用 TO_CHAR 函数和后缀与前缀冲突
+SELECT TO_CHAR(1234, 'L9999C');
+-- 测试用例 74: 使用 TO_CHAR 函数和后缀之间的冲突
+SELECT TO_CHAR(1234, '9999MIPR');
+-- 测试用例 75: 使用 TO_CHAR 函数和 NLS_NUMERIC_CHARACTERS
+SELECT TO_CHAR(1234.56, '9999D99', 'NLS_NUMERIC_CHARACTERS = '';
+:''');
+-- 测试用例 76: 使用 TO_CHAR 函数和 NLS_CURRENCY
+SELECT TO_CHAR(1234, 'L9999', 'NLS_CURRENCY = ''AusDollars''');
+-- 测试用例 77: 使用 TO_CHAR 函数和 NLS_ISO_CURRENCY
+SELECT TO_CHAR(1234, 'C9999', 'NLS_ISO_CURRENCY = ''TAIWAN''');
+-- 测试用例 78: 使用 TO_CHAR 函数和 NLS 参数组合
+SELECT TO_CHAR(1234.56, 'L9999D99MI', 'NLS_NUMERIC_CHARACTERS = '';
+:'' NLS_CURRENCY = ''AusDollars'' NLS_ISO_CURRENCY = ''TAIWAN''');
+-- 测试用例 79: 使用 TO_CHAR 函数和科学计数法
+SELECT TO_CHAR(123456789, 'TM9');
+-- 测试用例 80: 使用 TO_CHAR 函数和罗马数字
+SELECT TO_CHAR(1234, 'RN');
+-- 测试用例 81: 使用 TO_CHAR 函数和负号
+SELECT TO_CHAR(-1234, 'S9999');
+-- 测试用例 82: 使用 TO_CHAR 函数和货币符号
+SELECT TO_CHAR(1234, '$9999');
+-- 测试用例 83: 使用 TO_CHAR 函数和组分隔符
+SELECT TO_CHAR(1234567, '9G999G999');
+-- 测试用例 84: 使用 TO_CHAR 函数和小数点
+SELECT TO_CHAR(1234.56, '9999.99');
+-- 测试用例 85: 使用 TO_CHAR 函数和十六进制
+SELECT TO_CHAR(1234, 'XXXX');
+-- 测试用例 86: 使用 TO_CHAR 函数和科学计数法后缀
+SELECT TO_CHAR(123456789, '999999999EEEE');
+-- 测试用例 87: 使用 TO_CHAR 函数和负号后缀
+SELECT TO_CHAR(-1234, '9999MI');
+-- 测试用例 88: 使用 TO_CHAR 函数和尖括号
+SELECT TO_CHAR(-1234, '9999PR');
+-- 测试用例 89: 使用 TO_CHAR 函数和货币名称缩写
+SELECT TO_CHAR(1234, 'C9999');
+-- 测试用例 90: 使用 TO_CHAR 函数和本地货币符号
+SELECT TO_CHAR(1234, 'L9999');
+-- 测试用例 91: 使用 TO_CHAR 函数和前缀冲突
+SELECT TO_CHAR(1234, '$S9999');
+-- 测试用例 92: 使用 TO_CHAR 函数和后缀冲突
+SELECT TO_CHAR(1234, '9999MIEEEE');
+-- 测试用例 93: 使用 TO_CHAR 函数和后缀与前缀冲突
+SELECT TO_CHAR(1234, 'L9999C');
+-- 测试用例 94: 使用 TO_CHAR 函数和后缀之间的冲突
+SELECT TO_CHAR(1234, '9999MIPR');
+-- 测试用例 95: 使用 TO_CHAR 函数和 NLS_NUMERIC_CHARACTERS
+SELECT TO_CHAR(1234.56, '9999D99', 'NLS_NUMERIC_CHARACTERS = '';
+:''');
+-- 测试用例 96: 使用 TO_CHAR 函数和 NLS_CURRENCY
+SELECT TO_CHAR(1234, 'L9999', 'NLS_CURRENCY = ''AusDollars''');
+-- 测试用例 97: 使用 TO_CHAR 函数和 NLS_ISO_CURRENCY
+SELECT TO_CHAR(1234, 'C9999', 'NLS_ISO_CURRENCY = ''TAIWAN''');
+-- 测试用例 98: 使用 TO_CHAR 函数和 NLS 参数组合
+SELECT TO_CHAR(1234.56, 'L9999D99MI', 'NLS_NUMERIC_CHARACTERS = '';
+:'' NLS_CURRENCY = ''AusDollars'' NLS_ISO_CURRENCY = ''TAIWAN''');
+-- 测试用例 99: 使用 TO_CHAR 函数和科学计数法
+SELECT TO_CHAR(123456789, 'TM9');
+-- 测试用例 100: 使用 TO_CHAR 函数和罗马数字
+SELECT TO_CHAR(1234, 'RN')

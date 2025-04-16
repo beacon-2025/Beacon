@@ -1,0 +1,66 @@
+-- 创建测试表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT
+);
+CREATE TABLE test_table2 (
+    id INT PRIMARY KEY,
+    description VARCHAR(100),
+    created_at TIMESTAMP
+);
+-- 插入测试数据
+INSERT INTO test_table1 (id, name, age) VALUES (1, 'Alice', 30);
+INSERT INTO test_table1 (id, name, age) VALUES (2, 'Bob', 25);
+INSERT INTO test_table2 (id, description, created_at) VALUES (1, 'First record', '2023-01-01 00:00:00');
+INSERT INTO test_table2 (id, description, created_at) VALUES (2, 'Second record', '2023-01-02 00:00:00');
+-- 测试用例 1: 查看SELECT语句的执行计划
+EXPLAIN FOR SELECT name, age FROM test_table1 WHERE age > 20;
+-- 测试用例 2: 查看带有别名的SELECT语句的执行计划
+EXPLAIN AS select_plan FOR SELECT name AS full_name, age FROM test_table1 WHERE age > 20;
+-- 测试用例 3: 查看INSERT语句的执行计划
+EXPLAIN FOR INSERT INTO test_table1 (id, name, age) VALUES (3, 'Charlie', 28);
+-- 测试用例 4: 查看带有别名的INSERT语句的执行计划
+EXPLAIN AS insert_plan FOR INSERT INTO test_table1 (id, name, age) VALUES (4, 'David', 22);
+-- 测试用例 5: 查看UPDATE语句的执行计划
+EXPLAIN FOR UPDATE test_table1 SET age = 31 WHERE name = 'Alice';
+-- 测试用例 6: 查看带有别名的UPDATE语句的执行计划
+EXPLAIN AS update_plan FOR UPDATE test_table1 SET age = 26 WHERE name = 'Bob';
+-- 测试用例 7: 查看DELETE语句的执行计划
+EXPLAIN FOR DELETE FROM test_table1 WHERE age < 25;
+-- 测试用例 8: 查看带有别名的DELETE语句的执行计划
+EXPLAIN AS delete_plan FOR DELETE FROM test_table1 WHERE age < 25;
+-- 测试用例 9: 查看复杂SELECT语句的执行计划
+EXPLAIN FOR SELECT t1.name, t2.description 
+FROM test_table1 t1 
+JOIN test_table2 t2 ON t1.id = t2.id 
+WHERE t1.age > 20;
+-- 测试用例 10: 查看带有别名的复杂SELECT语句的执行计划
+EXPLAIN AS complex_select_plan FOR SELECT t1.name AS full_name, t2.description 
+FROM test_table1 t1 
+JOIN test_table2 t2 ON t1.id = t2.id 
+WHERE t1.age > 20;
+-- 测试用例 11: 查看带有子查询的SELECT语句的执行计划
+EXPLAIN FOR SELECT name FROM test_table1 WHERE id IN (SELECT id FROM test_table2 WHERE description LIKE '%record%');
+-- 测试用例 12: 查看带有别名的子查询的SELECT语句的执行计划
+EXPLAIN AS subquery_select_plan FOR SELECT name FROM test_table1 WHERE id IN (SELECT id FROM test_table2 WHERE description LIKE '%record%');
+-- 测试用例 13: 查看带有ORDER BY的SELECT语句的执行计划
+EXPLAIN FOR SELECT name, age FROM test_table1 ORDER BY age DESC;
+-- 测试用例 14: 查看带有别名的ORDER BY的SELECT语句的执行计划
+EXPLAIN AS order_by_plan FOR SELECT name, age FROM test_table1 ORDER BY age DESC;
+-- 测试用例 15: 查看带有GROUP BY的SELECT语句的执行计划
+EXPLAIN FOR SELECT age, COUNT(*) FROM test_table1 GROUP BY age;
+-- 测试用例 16: 查看带有别名的GROUP BY的SELECT语句的执行计划
+EXPLAIN AS group_by_plan FOR SELECT age, COUNT(*) AS count FROM test_table1 GROUP BY age;
+-- 测试用例 17: 查看带有LIMIT的SELECT语句的执行计划
+EXPLAIN FOR SELECT name, age FROM test_table1 LIMIT 1;
+-- 测试用例 18: 查看带有别名的LIMIT的SELECT语句的执行计划
+EXPLAIN AS limit_plan FOR SELECT name, age FROM test_table1 LIMIT 1;
+-- 测试用例 19: 查看带有JOIN的SELECT语句的执行计划
+EXPLAIN FOR SELECT t1.name, t2.description 
+FROM test_table1 t1 
+JOIN test_table2 t2 ON t1.id = t2.id;
+-- 测试用例 20: 查看带有别名的JOIN的SELECT语句的执行计划
+EXPLAIN AS join_plan FOR SELECT t1.name AS full_name, t2.description 
+FROM test_table1 t1 
+JOIN test_table2 t2 ON t1.id = t2.id

@@ -1,0 +1,5 @@
+
+# Disable the history_long consumers:
+UPDATE performance_schema.setup_consumers
+   SET ENABLED = 'NO'
+ WHERE NAME LIKE '%\_history\_long'

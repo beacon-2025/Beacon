@@ -1,0 +1,4 @@
+```plaintext
+JSONB_ARRAY_ELEMENTS_FUNCTION -> 'jsonb_array_elements' '(' JSON_EXP1 ')'
+JSON_EXP1 -> 'json_exp1_value'
+```

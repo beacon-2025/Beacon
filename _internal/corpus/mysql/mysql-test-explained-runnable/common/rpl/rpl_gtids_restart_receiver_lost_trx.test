@@ -1,0 +1,5 @@
+
+# The following "FLUSH LOGS" will make the master to clear the "created" flag
+# of the Format Description events in the next binlog files (and also in
+# their replicated versions in the slave's relaylog).
+FLUSH LOGS

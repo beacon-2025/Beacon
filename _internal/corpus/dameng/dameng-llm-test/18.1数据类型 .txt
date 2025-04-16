@@ -1,0 +1,5 @@
+-- 创建一个用于测试的表
+CREATE TABLE json_test_table (
+    id SERIAL PRIMARY KEY,
+    json_data JSON
+)

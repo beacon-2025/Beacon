@@ -1,0 +1,2 @@
+
+SELECT user FROM mysql.user ORDER BY user

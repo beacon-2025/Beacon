@@ -1,0 +1,3 @@
+
+# Create a situation in which a transaction holds more than one lock on same record.
+BEGIN

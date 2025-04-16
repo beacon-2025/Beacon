@@ -1,0 +1,92 @@
+-- 公共前置语句：创建模式
+CREATE SCHEMA test_schema;
+-- 公共前置语句：创建普通表
+CREATE TABLE test_schema.test_table (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT,
+    salary DECIMAL(10, 2)
+);
+-- 公共前置语句：插入数据
+INSERT INTO test_schema.test_table (id, name, age, salary) VALUES (1, 'Alice', 30, 50000.00);
+INSERT INTO test_schema.test_table (id, name, age, salary) VALUES (2, 'Bob', 25, 45000.00);
+-- 测试用例1：修改表名
+ALTER TABLE test_schema.test_table RENAME TO test_schema.new_table_name;
+-- 测试用例2：增加列
+ALTER TABLE test_schema.new_table_name ADD COLUMN email VARCHAR(100);
+-- 测试用例3：删除列
+ALTER TABLE test_schema.new_table_name DROP COLUMN email;
+-- 测试用例4：修改列数据类型
+ALTER TABLE test_schema.new_table_name MODIFY name VARCHAR(100);
+-- 测试用例5：设置列默认值
+ALTER TABLE test_schema.new_table_name ALTER COLUMN age SET DEFAULT 30;
+-- 测试用例6：删除列默认值
+ALTER TABLE test_schema.new_table_name ALTER COLUMN age DROP DEFAULT;
+-- 测试用例7：重命名列
+ALTER TABLE test_schema.new_table_name ALTER COLUMN name RENAME TO full_name;
+-- 测试用例8：设置列NOT NULL
+ALTER TABLE test_schema.new_table_name ALTER COLUMN full_name SET NOT NULL;
+-- 测试用例9：设置列NULL
+ALTER TABLE test_schema.new_table_name ALTER COLUMN full_name SET NULL;
+-- 测试用例10：增加表级约束
+ALTER TABLE test_schema.new_table_name ADD CONSTRAINT chk_age CHECK (age > 0);
+-- 测试用例11：删除表级约束
+ALTER TABLE test_schema.new_table_name DROP CONSTRAINT chk_age;
+-- 测试用例12：启用所有触发器
+ALTER TABLE test_schema.new_table_name ENABLE ALL TRIGGERS;
+-- 测试用例13：禁用所有触发器
+ALTER TABLE test_schema.new_table_name DISABLE ALL TRIGGERS;
+-- 测试用例14：修改外部表文件路径
+ALTER TABLE test_schema.new_table_name MODIFY PATH '/new/path/to/file';
+-- 测试用例15：移动表到另一个表空间
+ALTER TABLE test_schema.new_table_name MOVE TABLESPACE new_tablespace;
+-- 测试用例16：增加自增列
+ALTER TABLE test_schema.new_table_name ADD COLUMN new_id INT IDENTITY(1,1);
+-- 测试用例17：删除自增列
+ALTER TABLE test_schema.new_table_name DROP IDENTITY;
+-- 测试用例18：启用约束
+ALTER TABLE test_schema.new_table_name ENABLE CONSTRAINT chk_age;
+-- 测试用例19：禁用约束
+ALTER TABLE test_schema.new_table_name DISABLE CONSTRAINT chk_age;
+-- 测试用例20：设置列可见性
+ALTER TABLE test_schema.new_table_name ALTER COLUMN full_name SET VISIBLE;
+-- 测试用例21：设置列不可见
+ALTER TABLE test_schema.new_table_name ALTER COLUMN full_name SET NOT VISIBLE;
+-- 测试用例22：增加逻辑日志
+ALTER TABLE test_schema.new_table_name ADD LOGIC LOG;
+-- 测试用例23：删除逻辑日志
+ALTER TABLE test_schema.new_table_name DROP LOGIC LOG;
+-- 测试用例24：删除高级日志
+ALTER TABLE test_schema.new_table_name WITHOUT ADVANCED LOG;
+-- 测试用例25：截断高级日志
+ALTER TABLE test_schema.new_table_name TRUNCATE ADVANCED LOG;
+-- 测试用例26：截断分区
+ALTER TABLE test_schema.new_table_name TRUNCATE PARTITION partition_name;
+-- 测试用例27：截断子分区
+ALTER TABLE test_schema.new_table_name TRUNCATE SUBPARTITION subpartition_name;
+-- 测试用例28：合并分区
+ALTER TABLE test_schema.new_table_name MERGE PARTITIONS partition1, partition2 INTO PARTITION new_partition;
+-- 测试用例29：拆分分区
+ALTER TABLE test_schema.new_table_name SPLIT PARTITION partition_name AT (100) INTO (PARTITION new_partition1, PARTITION new_partition2);
+-- 测试用例30：交换分区
+ALTER TABLE test_schema.new_table_name EXCHANGE PARTITION partition_name WITH TABLE another_table;
+-- 测试用例31：设置分区模板
+ALTER TABLE test_schema.new_table_name SET SUBPARTITION TEMPLATE (SUBPARTITION sp1 VALUES LESS THAN (10), SUBPARTITION sp2 VALUES LESS THAN (20));
+-- 测试用例32：启用行迁移
+ALTER TABLE test_schema.new_table_name ENABLE ROW MOVEMENT;
+-- 测试用例33：禁用行迁移
+ALTER TABLE test_schema.new_table_name DISABLE ROW MOVEMENT;
+-- 测试用例34：修改分区子表名
+ALTER TABLE test_schema.new_table_name RENAME PARTITION old_partition_name TO new_partition_name;
+-- 测试用例35：修改子分区子表名
+ALTER TABLE test_schema.new_table_name RENAME SUBPARTITION old_subpartition_name TO new_subpartition_name;
+-- 测试用例36：修改HUGE表的列统计状态
+ALTER TABLE test_schema.new_table_name ALTER COLUMN full_name SET STAT NONE;
+-- 测试用例37：修改HUGE表的统计状态
+ALTER TABLE test_schema.new_table_name SET STAT SYNCHRONOUS;
+-- 测试用例38：刷新HUGE表的统计信息
+ALTER TABLE test_schema.new_table_name REFRESH STAT;
+-- 测试用例39：强制列存储
+ALTER TABLE test_schema.new_table_name FORCE COLUMN STORAGE;
+-- 测试用例40：修改HUGE表为事务型
+ALTER TABLE test_schema.new_table_name WITH DELTA

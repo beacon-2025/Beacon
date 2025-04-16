@@ -1,0 +1,5 @@
+
+
+# 2users
+delete from performance_schema.setup_actors
+  where user in ('user2', 'user4')

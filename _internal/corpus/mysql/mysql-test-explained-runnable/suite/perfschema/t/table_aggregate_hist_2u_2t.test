@@ -1,0 +1,5 @@
+
+
+# 2tables
+delete from performance_schema.setup_objects
+  where object_name='t2'

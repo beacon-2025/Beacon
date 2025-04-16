@@ -1,0 +1,5 @@
+```nltk
+S -> DROP_HUGE_TABLESPACE
+DROP_HUGE_TABLESPACE -> 'DROP' 'HUGE' 'TABLESPACE' IF_EXISTS 'tablespace_name_1'
+IF_EXISTS -> 'IF EXISTS' | ''
+```

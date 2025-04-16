@@ -1,0 +1,36 @@
+-- 创建一些包含 JSON 数据的表
+CREATE TABLE employees_1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    details JSON
+);
+CREATE TABLE employees_2 (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    details JSON
+);
+-- 插入一些 JSON 数据
+INSERT INTO employees_1 (id, name, details) VALUES (1, 'Alice', '{"age": 30, "department": "HR"}');
+INSERT INTO employees_1 (id, name, details) VALUES (2, 'Bob', '{"age": 25, "department": "IT"}');
+INSERT INTO employees_2 (id, name, details) VALUES (1, 'Charlie', '{"age": 35, "department": "Finance"}');
+INSERT INTO employees_2 (id, name, details) VALUES (2, 'David', '{"age": 40, "department": "Marketing"}');
+-- 测试用例 1: 查询 ALL_JSON_COLUMNS 视图
+SELECT * FROM ALL_JSON_COLUMNS;
+-- 测试用例 2: 查询特定表的 JSON 列信息
+SELECT * FROM ALL_JSON_COLUMNS WHERE TABLE_NAME = 'EMPLOYEES_1';
+-- 测试用例 3: 查询特定列的 JSON 列信息
+SELECT * FROM ALL_JSON_COLUMNS WHERE COLUMN_NAME = 'DETAILS';
+-- 测试用例 4: 查询特定用户拥有的 JSON 列信息
+SELECT * FROM ALL_JSON_COLUMNS WHERE OWNER = 'CURRENT_USER';
+-- 测试用例 5: 查询 JSON 列的数据类型
+SELECT COLUMN_NAME, DATA_TYPE FROM ALL_JSON_COLUMNS WHERE TABLE_NAME = 'EMPLOYEES_2';
+-- 测试用例 6: 查询 JSON 列的详细信息
+SELECT COLUMN_NAME, DATA_TYPE, DATA_LENGTH FROM ALL_JSON_COLUMNS WHERE TABLE_NAME = 'EMPLOYEES_1';
+-- 测试用例 7: 查询 JSON 列的注释信息
+SELECT COLUMN_NAME, COMMENTS FROM ALL_JSON_COLUMNS WHERE TABLE_NAME = 'EMPLOYEES_2';
+-- 测试用例 8: 查询 JSON 列的默认值
+SELECT COLUMN_NAME, DATA_DEFAULT FROM ALL_JSON_COLUMNS WHERE TABLE_NAME = 'EMPLOYEES_1';
+-- 测试用例 9: 查询 JSON 列的可空性
+SELECT COLUMN_NAME, NULLABLE FROM ALL_JSON_COLUMNS WHERE TABLE_NAME = 'EMPLOYEES_2';
+-- 测试用例 10: 查询 JSON 列的字符集信息
+SELECT COLUMN_NAME, CHARACTER_SET_NAME FROM ALL_JSON_COLUMNS WHERE TABLE_NAME = 'EMPLOYEES_1'

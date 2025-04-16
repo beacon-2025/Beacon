@@ -1,0 +1,48 @@
+-- 创建两个模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 在schema1中创建两个包
+CREATE PACKAGE schema1.package1 AS
+BEGIN
+    NULL;
+END;
+/
+
+CREATE PACKAGE BODY schema1.package1 AS
+BEGIN
+    NULL;
+END;
+/
+
+-- 在schema2中创建一个包
+CREATE PACKAGE schema2.package2 AS
+BEGIN
+    NULL;
+END;
+/
+
+CREATE PACKAGE BODY schema2.package2 AS
+BEGIN
+    NULL;
+END;
+/;
+-- 测试用例1: 删除当前模式下的包主体
+DROP PACKAGE BODY schema1.package1;
+-- 测试用例2: 删除指定模式下的包主体
+DROP PACKAGE BODY schema2.package2;
+-- 测试用例3: 删除不存在的包主体（不指定IF EXISTS，预期报错）
+DROP PACKAGE BODY schema1.nonexistent_package;
+-- 测试用例4: 删除不存在的包主体（指定IF EXISTS，预期不报错）
+DROP PACKAGE BODY IF EXISTS schema1.nonexistent_package;
+-- 测试用例5: 删除当前模式下的包主体（不指定模式名）
+DROP PACKAGE BODY package1;
+-- 测试用例6: 删除指定模式下的包主体（不指定IF EXISTS）
+DROP PACKAGE BODY schema2.package2;
+-- 测试用例7: 删除不存在的包主体（指定IF EXISTS，不指定模式名）
+DROP PACKAGE BODY IF EXISTS nonexistent_package;
+-- 测试用例8: 删除当前模式下的包主体（指定IF EXISTS）
+DROP PACKAGE BODY IF EXISTS schema1.package1;
+-- 测试用例9: 删除指定模式下的包主体（指定IF EXISTS）
+DROP PACKAGE BODY IF EXISTS schema2.package2;
+-- 测试用例10: 删除不存在的包主体（不指定IF EXISTS，不指定模式名，预期报错）
+DROP PACKAGE BODY nonexistent_package

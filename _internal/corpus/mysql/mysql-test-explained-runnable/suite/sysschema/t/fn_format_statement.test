@@ -1,0 +1,4 @@
+
+
+# Increase truncation limit and test that it takes effect
+SET @sys.statement_truncate_len = 80

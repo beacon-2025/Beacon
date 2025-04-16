@@ -1,0 +1,5 @@
+############################################################
+# WL#9426: Single Primary Mode in Group Replication
+#
+# This test case starts a group and validates that:
+# 1. There is only one writable primary

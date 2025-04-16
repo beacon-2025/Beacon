@@ -1,0 +1,77 @@
+15.6.4 Variables in Stored Programs
+System variables and user-defined variables can be used in stored programs, just as they can be
+used outside stored-program context. In addition, stored programs can use DECLARE to define local
+variables, and stored routines (procedures and functions) can be declared to take parameters that
+communicate values between the routine and its caller.
+• To declare local variables, use the DECLARE statement, as described in Section 15.6.4.1, “Local
+Variable DECLARE Statement”.
+• Variables can be set directly with the SET statement. See Section 15.7.6.1, “SET Syntax for Variable
+Assignment”.
+• Results from queries can be retrieved into local variables using SELECT ... INTO var_list or
+by opening a cursor and using FETCH ... INTO var_list. See Section 15.2.13.1, “SELECT ...
+INTO Statement”, and Section 15.6.6, “Cursors”.
+For information about the scope of local variables and how MySQL resolves ambiguous names, see
+Section 15.6.4.2, “Local Variable Scope and Resolution”.
+It is not permitted to assign the value DEFAULT to stored procedure or function parameters or stored
+program local variables (for example with a SET var_name = DEFAULT statement). In MySQL 9.1,
+this results in a syntax error.
+15.6.4.1 Local Variable DECLARE Statement
+DECLARE var_name [, var_name] ... type [DEFAULT value]
+This statement declares local variables within stored programs. To provide a default value for a
+variable, include a DEFAULT clause. The value can be specified as an expression; it need not be a
+constant. If the DEFAULT clause is missing, the initial value is NULL.
+Local variables are treated like stored routine parameters with respect to data type and overflow
+checking. See Section 15.1.17, “CREATE PROCEDURE and CREATE FUNCTION Statements”.
+Variable declarations must appear before cursor or handler declarations.
+Local variable names are not case-sensitive. Permissible characters and quoting rules are the same as
+for other identifiers, as described in Section 11.2, “Schema Object Names”.
+The scope of a local variable is the BEGIN ... END block within which it is declared. The variable can
+be referred to in blocks nested within the declaring block, except those blocks that declare a variable
+with the same name.
+For examples of variable declarations, see Section 15.6.4.2, “Local Variable Scope and Resolution”.
+15.6.4.2 Local Variable Scope and Resolution
+The scope of a local variable is the BEGIN ... END block within which it is declared. The variable can
+be referred to in blocks nested within the declaring block, except those blocks that declare a variable
+with the same name.
+Because local variables are in scope only during stored program execution, references to them are not
+permitted in prepared statements created within a stored program. Prepared statement scope is the
+current session, not the stored program, so the statement could be executed after the program ends, at
+which point the variables would no longer be in scope. For example, SELECT ... INTO local_var
+cannot be used as a prepared statement. This restriction also applies to stored procedure and function
+parameters. See Section 15.5.1, “PREPARE Statement”.
+A local variable should not have the same name as a table column. If an SQL statement, such as a
+SELECT ... INTO statement, contains a reference to a column and a declared local variable with
+the same name, MySQL currently interprets the reference as the name of a variable. Consider the
+following procedure definition:
+CREATE PROCEDURE sp1 (x VARCHAR(5))
+BEGIN
+  DECLARE xname VARCHAR(5) DEFAULT 'bob';
+  DECLARE newname VARCHAR(5);
+  DECLARE xid INT;
+  SELECT xname, id INTO newname, xid
+    FROM table1 WHERE xname = xname;
+  SELECT newname;
+END;
+MySQL interprets xname in the SELECT statement as a reference to the xname variable rather than the
+xname column. Consequently, when the procedure sp1()is called, the newname variable returns the
+value 'bob' regardless of the value of the table1.xname column.
+Similarly, the cursor definition in the following procedure contains a SELECT statement that refers
+to xname. MySQL interprets this as a reference to the variable of that name rather than a column
+reference.
+CREATE PROCEDURE sp2 (x VARCHAR(5))
+BEGIN
+  DECLARE xname VARCHAR(5) DEFAULT 'bob';
+  DECLARE newname VARCHAR(5);
+  DECLARE xid INT;
+  DECLARE done TINYINT DEFAULT 0;
+  DECLARE cur1 CURSOR FOR SELECT xname, id FROM table1;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+  OPEN cur1;
+  read_loop: LOOP
+    FETCH FROM cur1 INTO newname, xid;
+    IF done THEN LEAVE read_loop; END IF;
+    SELECT newname;
+  END LOOP;
+  CLOSE cur1;
+END;
+See also Section 27.9, “Restrictions on Stored Programs”.

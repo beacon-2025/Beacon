@@ -1,0 +1,7 @@
+```plaintext
+S -> ALTER_TRIGGER
+ALTER_TRIGGER -> 'ALTER' 'TRIGGER' TRIGGER_NAME 'COMPILE' DEBUG_OPTION
+TRIGGER_NAME -> SCHEMA_NAME '.' 'trigger_name_1' | 'trigger_name_1'
+SCHEMA_NAME -> 'schemaname_1'
+DEBUG_OPTION -> 'DEBUG' | ''
+```

@@ -1,0 +1,6 @@
+
+
+# Test 4. The slave IO thread is started and got connected to master
+#         and SQL thread is started
+
+START REPLICA sql_thread

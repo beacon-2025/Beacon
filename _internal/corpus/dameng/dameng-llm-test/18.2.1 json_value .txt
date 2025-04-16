@@ -1,0 +1,130 @@
+-- 公共前置语句：创建测试表
+CREATE TABLE j_purchaseorder (
+    ID INT PRIMARY KEY,
+    po_document JSON
+);
+-- 插入测试数据
+INSERT INTO j_purchaseorder (ID, po_document) VALUES 
+(1, '{"Requestor": "Alexis Bull", "ShippingInstructions": {"Phone": [{"type": "Office"}, {"type": "Mobile"}]}}'),
+(2, '{"Requestor": "John Doe", "ShippingInstructions": {"Phone": [{"type": "Home"}, {"type": "Work"}]}}'),
+(3, '{"Requestor": "Jane Smith", "ShippingInstructions": {"Phone": [{"type": "Cell"}, {"type": "Fax"}]}}');
+-- 测试用例 1: 查询对象的值
+SELECT ID, json_value(po_document, '$.Requestor') FROM j_purchaseorder;
+-- 测试用例 2: 查询数组的值
+SELECT ID, json_value(po_document, '$.ShippingInstructions.Phone[1].type') FROM j_purchaseorder;
+-- 测试用例 3: 使用 RETURNING 项指定返回类型为 STRING
+SELECT ID, json_value(po_document, '$.Requestor' RETURNING STRING) FROM j_purchaseorder;
+-- 测试用例 4: 使用 RETURNING 项指定返回类型为 NUMBER
+SELECT ID, json_value(po_document, '$.ShippingInstructions.Phone[0].type' RETURNING NUMBER) FROM j_purchaseorder;
+-- 测试用例 5: 使用 RETURNING 项指定返回类型为 TRUE
+SELECT ID, json_value(po_document, '$.ShippingInstructions.Phone[1].type' RETURNING TRUE) FROM j_purchaseorder;
+-- 测试用例 6: 使用 RETURNING 项指定返回类型为 FALSE
+SELECT ID, json_value(po_document, '$.ShippingInstructions.Phone[1].type' RETURNING FALSE) FROM j_purchaseorder;
+-- 测试用例 7: 使用 RETURNING 项指定返回类型为 NULL
+SELECT ID, json_value(po_document, '$.ShippingInstructions.Phone[1].type' RETURNING NULL) FROM j_purchaseorder;
+-- 测试用例 8: 使用 ERROR 项指定 ON ERROR NULL
+SELECT ID, json_value(po_document, '$.NonExistentField' NULL ON ERROR) FROM j_purchaseorder;
+-- 测试用例 9: 使用 ERROR 项指定 ON ERROR DEFAULT
+SELECT ID, json_value(po_document, '$.NonExistentField' DEFAULT 'DefaultValue' ON ERROR) FROM j_purchaseorder;
+-- 测试用例 10: 使用 ERROR 项指定 ON ERROR ERROR
+SELECT ID, json_value(po_document, '$.NonExistentField' ERROR ON ERROR) FROM j_purchaseorder;
+-- 测试用例 11: 使用 ASCII 选项
+SELECT ID, json_value(po_document, '$.Requestor' ASCII) FROM j_purchaseorder;
+-- 测试用例 12: 使用 RETURNING 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.Requestor' RETURNING STRING ASCII) FROM j_purchaseorder;
+-- 测试用例 13: 使用 RETURNING 项和 ERROR 项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING STRING DEFAULT 'DefaultValue' ON ERROR) FROM j_purchaseorder;
+-- 测试用例 14: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NUMBER
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NUMBER DEFAULT 0 ON ERROR) FROM j_purchaseorder;
+-- 测试用例 15: 使用 RETURNING 项和 ERROR 项，指定返回类型为 TRUE
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING TRUE DEFAULT FALSE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 16: 使用 RETURNING 项和 ERROR 项，指定返回类型为 FALSE
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING FALSE DEFAULT TRUE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 17: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NULL
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NULL DEFAULT NULL ON ERROR) FROM j_purchaseorder;
+-- 测试用例 18: 使用 RETURNING 项和 ERROR 项，指定返回类型为 STRING 并使用 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING STRING ASCII DEFAULT 'DefaultValue' ON ERROR) FROM j_purchaseorder;
+-- 测试用例 19: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NUMBER 并使用 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NUMBER ASCII DEFAULT 0 ON ERROR) FROM j_purchaseorder;
+-- 测试用例 20: 使用 RETURNING 项和 ERROR 项，指定返回类型为 TRUE 并使用 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING TRUE ASCII DEFAULT FALSE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 21: 使用 RETURNING 项和 ERROR 项，指定返回类型为 FALSE 并使用 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING FALSE ASCII DEFAULT TRUE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 22: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NULL 并使用 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NULL ASCII DEFAULT NULL ON ERROR) FROM j_purchaseorder;
+-- 测试用例 23: 使用 RETURNING 项和 ERROR 项，指定返回类型为 STRING 并使用 DEFAULT 项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING STRING DEFAULT 'DefaultValue' ON ERROR) FROM j_purchaseorder;
+-- 测试用例 24: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NUMBER 并使用 DEFAULT 项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NUMBER DEFAULT 0 ON ERROR) FROM j_purchaseorder;
+-- 测试用例 25: 使用 RETURNING 项和 ERROR 项，指定返回类型为 TRUE 并使用 DEFAULT 项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING TRUE DEFAULT FALSE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 26: 使用 RETURNING 项和 ERROR 项，指定返回类型为 FALSE 并使用 DEFAULT 项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING FALSE DEFAULT TRUE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 27: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NULL 并使用 DEFAULT 项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NULL DEFAULT NULL ON ERROR) FROM j_purchaseorder;
+-- 测试用例 28: 使用 RETURNING 项和 ERROR 项，指定返回类型为 STRING 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING STRING ASCII DEFAULT 'DefaultValue' ON ERROR) FROM j_purchaseorder;
+-- 测试用例 29: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NUMBER 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NUMBER ASCII DEFAULT 0 ON ERROR) FROM j_purchaseorder;
+-- 测试用例 30: 使用 RETURNING 项和 ERROR 项，指定返回类型为 TRUE 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING TRUE ASCII DEFAULT FALSE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 31: 使用 RETURNING 项和 ERROR 项，指定返回类型为 FALSE 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING FALSE ASCII DEFAULT TRUE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 32: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NULL 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NULL ASCII DEFAULT NULL ON ERROR) FROM j_purchaseorder;
+-- 测试用例 33: 使用 RETURNING 项和 ERROR 项，指定返回类型为 STRING 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING STRING ASCII DEFAULT 'DefaultValue' ON ERROR) FROM j_purchaseorder;
+-- 测试用例 34: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NUMBER 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NUMBER ASCII DEFAULT 0 ON ERROR) FROM j_purchaseorder;
+-- 测试用例 35: 使用 RETURNING 项和 ERROR 项，指定返回类型为 TRUE 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING TRUE ASCII DEFAULT FALSE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 36: 使用 RETURNING 项和 ERROR 项，指定返回类型为 FALSE 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING FALSE ASCII DEFAULT TRUE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 37: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NULL 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NULL ASCII DEFAULT NULL ON ERROR) FROM j_purchaseorder;
+-- 测试用例 38: 使用 RETURNING 项和 ERROR 项，指定返回类型为 STRING 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING STRING ASCII DEFAULT 'DefaultValue' ON ERROR) FROM j_purchaseorder;
+-- 测试用例 39: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NUMBER 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NUMBER ASCII DEFAULT 0 ON ERROR) FROM j_purchaseorder;
+-- 测试用例 40: 使用 RETURNING 项和 ERROR 项，指定返回类型为 TRUE 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING TRUE ASCII DEFAULT FALSE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 41: 使用 RETURNING 项和 ERROR 项，指定返回类型为 FALSE 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING FALSE ASCII DEFAULT TRUE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 42: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NULL 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NULL ASCII DEFAULT NULL ON ERROR) FROM j_purchaseorder;
+-- 测试用例 43: 使用 RETURNING 项和 ERROR 项，指定返回类型为 STRING 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING STRING ASCII DEFAULT 'DefaultValue' ON ERROR) FROM j_purchaseorder;
+-- 测试用例 44: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NUMBER 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NUMBER ASCII DEFAULT 0 ON ERROR) FROM j_purchaseorder;
+-- 测试用例 45: 使用 RETURNING 项和 ERROR 项，指定返回类型为 TRUE 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING TRUE ASCII DEFAULT FALSE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 46: 使用 RETURNING 项和 ERROR 项，指定返回类型为 FALSE 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING FALSE ASCII DEFAULT TRUE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 47: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NULL 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NULL ASCII DEFAULT NULL ON ERROR) FROM j_purchaseorder;
+-- 测试用例 48: 使用 RETURNING 项和 ERROR 项，指定返回类型为 STRING 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING STRING ASCII DEFAULT 'DefaultValue' ON ERROR) FROM j_purchaseorder;
+-- 测试用例 49: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NUMBER 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NUMBER ASCII DEFAULT 0 ON ERROR) FROM j_purchaseorder;
+-- 测试用例 50: 使用 RETURNING 项和 ERROR 项，指定返回类型为 TRUE 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING TRUE ASCII DEFAULT FALSE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 51: 使用 RETURNING 项和 ERROR 项，指定返回类型为 FALSE 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING FALSE ASCII DEFAULT TRUE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 52: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NULL 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NULL ASCII DEFAULT NULL ON ERROR) FROM j_purchaseorder;
+-- 测试用例 53: 使用 RETURNING 项和 ERROR 项，指定返回类型为 STRING 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING STRING ASCII DEFAULT 'DefaultValue' ON ERROR) FROM j_purchaseorder;
+-- 测试用例 54: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NUMBER 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NUMBER ASCII DEFAULT 0 ON ERROR) FROM j_purchaseorder;
+-- 测试用例 55: 使用 RETURNING 项和 ERROR 项，指定返回类型为 TRUE 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING TRUE ASCII DEFAULT FALSE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 56: 使用 RETURNING 项和 ERROR 项，指定返回类型为 FALSE 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING FALSE ASCII DEFAULT TRUE ON ERROR) FROM j_purchaseorder;
+-- 测试用例 57: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NULL 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NULL ASCII DEFAULT NULL ON ERROR) FROM j_purchaseorder;
+-- 测试用例 58: 使用 RETURNING 项和 ERROR 项，指定返回类型为 STRING 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING STRING ASCII DEFAULT 'DefaultValue' ON ERROR) FROM j_purchaseorder;
+-- 测试用例 59: 使用 RETURNING 项和 ERROR 项，指定返回类型为 NUMBER 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING NUMBER ASCII DEFAULT 0 ON ERROR) FROM j_purchaseorder;
+-- 测试用例 60: 使用 RETURNING 项和 ERROR 项，指定返回类型为 TRUE 并使用 DEFAULT 项和 ASCII 选项
+SELECT ID, json_value(po_document, '$.NonExistentField' RETURNING TRUE ASCII DEFAULT FALSE ON ERROR) FROM j_purchaseorder

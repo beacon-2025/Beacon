@@ -1,0 +1,10 @@
+```plaintext
+S -> EXTERNAL_LINK_QUERY | EXTERNAL_LINK_INSERT | EXTERNAL_LINK_UPDATE | EXTERNAL_LINK_DELETE | EXTERNAL_LINK_PROCEDURE_CALL
+EXTERNAL_LINK_QUERY -> 'SELECT' '*' 'FROM' TABLE_OR_VIEW '@' 'link_name_1'
+EXTERNAL_LINK_INSERT -> 'INSERT' 'INTO' 'table_name_1' '@' 'link_name_1' 'VALUES' '(' 'int_value' ',' 'int_value' ',' 'int_value' ')'
+EXTERNAL_LINK_UPDATE -> 'UPDATE' 'table_name_1' '@' 'link_name_1' 'SET' 'column_name_1' '=' 'column_name_1' '+' 'int_value' 'WHERE' 'column_name_2' 'NOT' 'IN' '(' 'SELECT' 'column_name_3' 'FROM' 'local_table_name_1' ')'
+EXTERNAL_LINK_DELETE -> 'DELETE' 'FROM' 'table_name_1' '@' 'link_name_1' 'WHERE' 'column_name_1' 'IN' '(' 'SELECT' 'column_name_2' 'FROM' 'table_name_2' '@' 'link_name_2' ')'
+EXTERNAL_LINK_PROCEDURE_CALL -> 'CALL' 'schema_name_1' '.' 'package_name_1' '.' 'procedure_name_1' '@' 'link_name_1' '(' 'parameter_list' ')'
+
+TABLE_OR_VIEW -> 'table_name_1' | 'view_name_1'
+```

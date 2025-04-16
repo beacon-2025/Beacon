@@ -1,0 +1,4 @@
+
+
+# Generate a deadlock between sessions trying to update with long UTF strings
+BEGIN

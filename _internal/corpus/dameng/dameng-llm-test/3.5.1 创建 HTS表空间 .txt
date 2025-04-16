@@ -1,0 +1,21 @@
+-- 无公共前置语句;
+-- 测试用例 1: 创建HTS表空间，不指定DFS副本子句
+CREATE HUGE TABLESPACE HTS_1 PATH '/var/lib/hts/hts1';
+-- 测试用例 2: 创建HTS表空间，指定DFS副本子句（假设DFS副本子句为REPLICAS 2）
+CREATE HUGE TABLESPACE HTS_2 PATH '/var/lib/hts/hts2' REPLICAS 2;
+-- 测试用例 3: 创建HTS表空间，路径包含特殊字符
+CREATE HUGE TABLESPACE HTS_3 PATH '/var/lib/hts/hts_3_special';
+-- 测试用例 4: 创建HTS表空间，路径较长
+CREATE HUGE TABLESPACE HTS_4 PATH '/var/lib/hts/this_is_a_very_long_path_for_testing';
+-- 测试用例 5: 创建HTS表空间，表空间名较长
+CREATE HUGE TABLESPACE HTS_5_VERY_LONG_NAME PATH '/var/lib/hts/hts5';
+-- 测试用例 6: 创建HTS表空间，路径为根目录
+CREATE HUGE TABLESPACE HTS_6 PATH '/';
+-- 测试用例 7: 创建HTS表空间，路径为相对路径（假设相对路径在当前目录下）
+CREATE HUGE TABLESPACE HTS_7 PATH './hts7';
+-- 测试用例 8: 创建HTS表空间，路径包含数字
+CREATE HUGE TABLESPACE HTS_8 PATH '/var/lib/hts/hts8_123';
+-- 测试用例 9: 创建HTS表空间，路径包含大写字母
+CREATE HUGE TABLESPACE HTS_9 PATH '/var/lib/hts/HTS9_UPPERCASE';
+-- 测试用例 10: 创建HTS表空间，路径包含下划线
+CREATE HUGE TABLESPACE HTS_10 PATH '/var/lib/hts/hts_10_underscore'

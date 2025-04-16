@@ -1,0 +1,478 @@
+-- 创建类 cls01
+CREATE OR REPLACE CLASS cls01 NOT FINAL IS  
+    name VARCHAR2(10);
+MEMBER FUNCTION get_info RETURN VARCHAR2;
+END;
+-- 创建类 cls02，继承自 cls01
+CREATE OR REPLACE CLASS cls02 UNDER cls01 IS 
+    ID INT;
+OVERRIDING MEMBER FUNCTION get_info RETURN VARCHAR2;
+END;
+-- 创建表 tt1
+CREATE TABLE tt1(c1 INT, c2 cls01);
+DECLARE 
+    type ex_rec_t IS RECORD (a INT, b INT);
+-- 使用一个同结构的类型代替类定义的类型
+    rec ex_rec_t;
+o1 cls01;
+o2 cls01;
+BEGIN 
+    o1 := NEW cls01();
+-- 实例化 cls01
+    o1.name := 'Object1';
+-- 设置属性
+    o2 := o1;
+-- 对象引用
+    rec.a := 1;
+-- 设置记录值
+    rec.b := 2;
+PRINT rec.a;
+PRINT rec.b;
+PRINT o1.name;
+-- 成员变量访问
+END;
+DECLARE 
+    o1 cls01;
+result VARCHAR2(10);
+BEGIN 
+    o1 := NEW cls01();
+-- 实例化 cls01
+    o1.name := 'Object1';
+-- 设置属性
+    result := o1.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+-- 插入数据到表 tt1
+INSERT INTO tt1 VALUES(1, NEW cls01());
+DECLARE 
+    o cls01;
+id INT;
+BEGIN 
+    SELECT TOP 1 c2 INTO o FROM tt1;
+-- 列对象的复制
+    SELECT TOP 1 c2.name INTO id FROM tt1;
+-- 列对象成员的访问
+    PRINT id;
+END;
+DECLARE 
+    o cls02;
+result VARCHAR2(10);
+BEGIN 
+    o := NEW cls02();
+-- 实例化 cls02
+    o.name := 'Object2';
+-- 设置属性
+    o.ID := 123;
+-- 设置属性
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+DECLARE 
+    o cls01;
+result VARCHAR2(10);
+BEGIN 
+    SELECT TOP 1 c2 INTO o FROM tt1;
+-- 列对象的复制
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+DECLARE 
+    name VARCHAR2(10);
+BEGIN 
+    SELECT TOP 1 c2.name INTO name FROM tt1;
+-- 列对象成员的访问
+    PRINT name;
+END;
+DECLARE 
+    o cls01;
+BEGIN 
+    o := NEW cls01();
+-- 实例化 cls01
+    o.name := 'Object3';
+-- 设置属性
+    PRINT o.name;
+-- 成员变量访问
+END;
+DECLARE 
+    o cls01;
+result VARCHAR2(10);
+BEGIN 
+    o := NEW cls01();
+-- 实例化 cls01
+    o.name := 'Object4';
+-- 设置属性
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+-- 插入数据到表 tt1
+INSERT INTO tt1 VALUES(2, NEW cls02());
+DECLARE 
+    o cls02;
+id INT;
+BEGIN 
+    SELECT TOP 1 c2 INTO o FROM tt1 WHERE c1 = 2;
+-- 列对象的复制
+    SELECT TOP 1 c2.ID INTO id FROM tt1 WHERE c1 = 2;
+-- 列对象成员的访问
+    PRINT id;
+END;
+DECLARE 
+    o cls02;
+result VARCHAR2(10);
+BEGIN 
+    o := NEW cls02();
+-- 实例化 cls02
+    o.name := 'Object5';
+-- 设置属性
+    o.ID := 456;
+-- 设置属性
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+DECLARE 
+    o cls02;
+result VARCHAR2(10);
+BEGIN 
+    SELECT TOP 1 c2 INTO o FROM tt1 WHERE c1 = 2;
+-- 列对象的复制
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+DECLARE 
+    name VARCHAR2(10);
+BEGIN 
+    SELECT TOP 1 c2.name INTO name FROM tt1 WHERE c1 = 2;
+-- 列对象成员的访问
+    PRINT name;
+END;
+DECLARE 
+    o cls02;
+BEGIN 
+    o := NEW cls02();
+-- 实例化 cls02
+    o.name := 'Object6';
+-- 设置属性
+    PRINT o.name;
+-- 成员变量访问
+END;
+DECLARE 
+    o cls02;
+result VARCHAR2(10);
+BEGIN 
+    o := NEW cls02();
+-- 实例化 cls02
+    o.name := 'Object7';
+-- 设置属性
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+-- 插入数据到表 tt1
+INSERT INTO tt1 VALUES(3, NEW cls01());
+DECLARE 
+    o cls01;
+id INT;
+BEGIN 
+    SELECT TOP 1 c2 INTO o FROM tt1 WHERE c1 = 3;
+-- 列对象的复制
+    SELECT TOP 1 c2.name INTO id FROM tt1 WHERE c1 = 3;
+-- 列对象成员的访问
+    PRINT id;
+END;
+DECLARE 
+    o cls02;
+result VARCHAR2(10);
+BEGIN 
+    o := NEW cls02();
+-- 实例化 cls02
+    o.name := 'Object8';
+-- 设置属性
+    o.ID := 789;
+-- 设置属性
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+DECLARE 
+    o cls01;
+result VARCHAR2(10);
+BEGIN 
+    SELECT TOP 1 c2 INTO o FROM tt1 WHERE c1 = 3;
+-- 列对象的复制
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+DECLARE 
+    name VARCHAR2(10);
+BEGIN 
+    SELECT TOP 1 c2.name INTO name FROM tt1 WHERE c1 = 3;
+-- 列对象成员的访问
+    PRINT name;
+END;
+DECLARE 
+    o cls01;
+BEGIN 
+    o := NEW cls01();
+-- 实例化 cls01
+    o.name := 'Object9';
+-- 设置属性
+    PRINT o.name;
+-- 成员变量访问
+END;
+DECLARE 
+    o cls01;
+result VARCHAR2(10);
+BEGIN 
+    o := NEW cls01();
+-- 实例化 cls01
+    o.name := 'Object10';
+-- 设置属性
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+-- 插入数据到表 tt1
+INSERT INTO tt1 VALUES(4, NEW cls02());
+DECLARE 
+    o cls02;
+id INT;
+BEGIN 
+    SELECT TOP 1 c2 INTO o FROM tt1 WHERE c1 = 4;
+-- 列对象的复制
+    SELECT TOP 1 c2.ID INTO id FROM tt1 WHERE c1 = 4;
+-- 列对象成员的访问
+    PRINT id;
+END;
+DECLARE 
+    o cls02;
+result VARCHAR2(10);
+BEGIN 
+    o := NEW cls02();
+-- 实例化 cls02
+    o.name := 'Object11';
+-- 设置属性
+    o.ID := 1011;
+-- 设置属性
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+DECLARE 
+    o cls02;
+result VARCHAR2(10);
+BEGIN 
+    SELECT TOP 1 c2 INTO o FROM tt1 WHERE c1 = 4;
+-- 列对象的复制
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+DECLARE 
+    name VARCHAR2(10);
+BEGIN 
+    SELECT TOP 1 c2.name INTO name FROM tt1 WHERE c1 = 4;
+-- 列对象成员的访问
+    PRINT name;
+END;
+DECLARE 
+    o cls02;
+BEGIN 
+    o := NEW cls02();
+-- 实例化 cls02
+    o.name := 'Object12';
+-- 设置属性
+    PRINT o.name;
+-- 成员变量访问
+END;
+DECLARE 
+    o cls02;
+result VARCHAR2(10);
+BEGIN 
+    o := NEW cls02();
+-- 实例化 cls02
+    o.name := 'Object13';
+-- 设置属性
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+-- 插入数据到表 tt1
+INSERT INTO tt1 VALUES(5, NEW cls01());
+DECLARE 
+    o cls01;
+id INT;
+BEGIN 
+    SELECT TOP 1 c2 INTO o FROM tt1 WHERE c1 = 5;
+-- 列对象的复制
+    SELECT TOP 1 c2.name INTO id FROM tt1 WHERE c1 = 5;
+-- 列对象成员的访问
+    PRINT id;
+END;
+DECLARE 
+    o cls02;
+result VARCHAR2(10);
+BEGIN 
+    o := NEW cls02();
+-- 实例化 cls02
+    o.name := 'Object14';
+-- 设置属性
+    o.ID := 1213;
+-- 设置属性
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+DECLARE 
+    o cls01;
+result VARCHAR2(10);
+BEGIN 
+    SELECT TOP 1 c2 INTO o FROM tt1 WHERE c1 = 5;
+-- 列对象的复制
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+DECLARE 
+    name VARCHAR2(10);
+BEGIN 
+    SELECT TOP 1 c2.name INTO name FROM tt1 WHERE c1 = 5;
+-- 列对象成员的访问
+    PRINT name;
+END;
+DECLARE 
+    o cls01;
+BEGIN 
+    o := NEW cls01();
+-- 实例化 cls01
+    o.name := 'Object15';
+-- 设置属性
+    PRINT o.name;
+-- 成员变量访问
+END;
+DECLARE 
+    o cls01;
+result VARCHAR2(10);
+BEGIN 
+    o := NEW cls01();
+-- 实例化 cls01
+    o.name := 'Object16';
+-- 设置属性
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+-- 插入数据到表 tt1
+INSERT INTO tt1 VALUES(6, NEW cls02());
+DECLARE 
+    o cls02;
+id INT;
+BEGIN 
+    SELECT TOP 1 c2 INTO o FROM tt1 WHERE c1 = 6;
+-- 列对象的复制
+    SELECT TOP 1 c2.ID INTO id FROM tt1 WHERE c1 = 6;
+-- 列对象成员的访问
+    PRINT id;
+END;
+DECLARE 
+    o cls02;
+result VARCHAR2(10);
+BEGIN 
+    o := NEW cls02();
+-- 实例化 cls02
+    o.name := 'Object17';
+-- 设置属性
+    o.ID := 1415;
+-- 设置属性
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+DECLARE 
+    o cls02;
+result VARCHAR2(10);
+BEGIN 
+    SELECT TOP 1 c2 INTO o FROM tt1 WHERE c1 = 6;
+-- 列对象的复制
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+DECLARE 
+    name VARCHAR2(10);
+BEGIN 
+    SELECT TOP 1 c2.name INTO name FROM tt1 WHERE c1 = 6;
+-- 列对象成员的访问
+    PRINT name;
+END;
+DECLARE 
+    o cls02;
+BEGIN 
+    o := NEW cls02();
+-- 实例化 cls02
+    o.name := 'Object18';
+-- 设置属性
+    PRINT o.name;
+-- 成员变量访问
+END;
+DECLARE 
+    o cls02;
+result VARCHAR2(10);
+BEGIN 
+    o := NEW cls02();
+-- 实例化 cls02
+    o.name := 'Object19';
+-- 设置属性
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+-- 插入数据到表 tt1
+INSERT INTO tt1 VALUES(7, NEW cls01());
+DECLARE 
+    o cls01;
+id INT;
+BEGIN 
+    SELECT TOP 1 c2 INTO o FROM tt1 WHERE c1 = 7;
+-- 列对象的复制
+    SELECT TOP 1 c2.name INTO id FROM tt1 WHERE c1 = 7;
+-- 列对象成员的访问
+    PRINT id;
+END;
+DECLARE 
+    o cls02;
+result VARCHAR2(10);
+BEGIN 
+    o := NEW cls02();
+-- 实例化 cls02
+    o.name := 'Object20';
+-- 设置属性
+    o.ID := 1617;
+-- 设置属性
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+DECLARE 
+    o cls01;
+result VARCHAR2(10);
+BEGIN 
+    SELECT TOP 1 c2 INTO o FROM tt1 WHERE c1 = 7;
+-- 列对象的复制
+    result := o.get_info();
+-- 调用成员方法
+    PRINT result;
+END;
+DECLARE 
+    name VARCHAR2(10);
+BEGIN 
+    SELECT TOP 1 c2.name INTO name FROM tt1 WHERE c1 = 7;
+-- 列对象成员的访问
+    PRINT name;
+END

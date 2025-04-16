@@ -1,0 +1,31 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 创建包
+CREATE PACKAGE schema1.package1 AS
+BEGIN
+    -- 包内容
+END;
+/
+
+CREATE PACKAGE schema2.package2 AS
+BEGIN
+    -- 包内容
+END;
+/;
+-- 测试用例 1: 重编译包，不带DEBUG选项
+ALTER PACKAGE schema1.package1 COMPILE;
+-- 测试用例 2: 重编译包，带DEBUG选项
+ALTER PACKAGE schema1.package1 COMPILE DEBUG;
+-- 测试用例 3: 重编译另一个模式下的包，不带DEBUG选项
+ALTER PACKAGE schema2.package2 COMPILE;
+-- 测试用例 4: 重编译另一个模式下的包，带DEBUG选项
+ALTER PACKAGE schema2.package2 COMPILE DEBUG;
+-- 测试用例 5: 重编译包，不带模式名
+ALTER PACKAGE package1 COMPILE;
+-- 测试用例 6: 重编译包，不带模式名，带DEBUG选项
+ALTER PACKAGE package1 COMPILE DEBUG;
+-- 测试用例 7: 重编译包，不带模式名，不带DEBUG选项
+ALTER PACKAGE package2 COMPILE;
+-- 测试用例 8: 重编译包，不带模式名，带DEBUG选项
+ALTER PACKAGE package2 COMPILE DEBUG

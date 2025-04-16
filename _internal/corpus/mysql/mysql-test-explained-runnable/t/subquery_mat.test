@@ -1,0 +1,5 @@
+# 
+# Run subquery_mat.inc with subquery materialization
+#
+
+set optimizer_switch='materialization=on'

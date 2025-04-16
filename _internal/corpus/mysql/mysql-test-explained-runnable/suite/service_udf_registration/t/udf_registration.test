@@ -1,0 +1,5 @@
+
+
+SELECT * FROM performance_schema.user_defined_functions
+  WHERE UDF_NAME IN('dynamic_udf', 'dynamic_agg')
+  ORDER BY UDF_NAME

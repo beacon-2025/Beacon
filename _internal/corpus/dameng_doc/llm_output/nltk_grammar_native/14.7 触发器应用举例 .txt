@@ -1,0 +1,5 @@
+```text
+S -> TRIGGER_APPLICATION_EXAMPLE
+TRIGGER_APPLICATION_EXAMPLE -> '触发器应用举例' DESCRIPTION
+DESCRIPTION -> '正如我们在本章所介绍的，触发器是DM系统提供的重要机制。我们可以使用该机制来加强比正常的审计机制、完整性约束机制、安全机制等所能提供的功能更复杂的事务规则。为帮助用户更好地使用该机制，我们提供了一些触发器应用的例子供用户参考。'
+```

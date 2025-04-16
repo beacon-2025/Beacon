@@ -1,0 +1,3 @@
+
+
+SELECT @my_version = SUBSTRING(VERSION(), 1, CHAR_LENGTH(@my_version))

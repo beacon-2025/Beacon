@@ -1,0 +1,40 @@
+-- 创建表用于测试数组索引
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    data INT[]
+);
+-- 插入一些测试数据
+INSERT INTO test_table1 (id, data) VALUES (1, ARRAY[10, 20, 30]);
+INSERT INTO test_table1 (id, data) VALUES (2, ARRAY[40, 50, 60]);
+-- 测试用例 1: 创建数组索引
+CREATE INDEX idx_test_table1_data ON test_table1 USING GIN (data);
+-- 测试用例 2: 修改数组索引（重命名索引）
+ALTER INDEX idx_test_table1_data RENAME TO idx_test_table1_data_new;
+-- 测试用例 3: 删除数组索引
+DROP INDEX idx_test_table1_data_new;
+-- 测试用例 4: 创建另一个数组索引并修改其存储参数
+CREATE INDEX idx_test_table1_data_2 ON test_table1 USING GIN (data);
+ALTER INDEX idx_test_table1_data_2 SET (FASTUPDATE = OFF);
+-- 测试用例 5: 创建数组索引并尝试使用 NOSORT（应失败）
+-- 注意：根据文档，数组索引不支持 NOSORT
+CREATE INDEX idx_test_table1_data_3 ON test_table1 USING GIN (data) WITH (NOSORT);
+-- 测试用例 6: 创建数组索引并尝试使用 ONLINE（应失败）
+-- 注意：根据文档，数组索引不支持 ONLINE
+CREATE INDEX idx_test_table1_data_4 ON test_table1 USING GIN (data) WITH (ONLINE);
+-- 测试用例 7: 创建数组索引并修改其表空间
+CREATE TABLESPACE test_tablespace LOCATION '/tmp/test_tablespace';
+CREATE INDEX idx_test_table1_data_5 ON test_table1 USING GIN (data);
+ALTER INDEX idx_test_table1_data_5 SET TABLESPACE test_tablespace;
+-- 测试用例 8: 创建数组索引并修改其并发性
+CREATE INDEX idx_test_table1_data_6 ON test_table1 USING GIN (data);
+ALTER INDEX idx_test_table1_data_6 SET (CONCURRENTLY = TRUE);
+-- 测试用例 9: 创建数组索引并修改其填充因子
+CREATE INDEX idx_test_table1_data_7 ON test_table1 USING GIN (data);
+ALTER INDEX idx_test_table1_data_7 SET (FILLFACTOR = 80);
+-- 测试用例 10: 创建数组索引并修改其并行度
+CREATE INDEX idx_test_table1_data_8 ON test_table1 USING GIN (data);
+ALTER INDEX idx_test_table1_data_8 SET (PARALLEL_WORKERS = 4);
+-- 清理测试表空间
+DROP TABLESPACE test_tablespace;
+-- 清理测试表
+DROP TABLE test_table1

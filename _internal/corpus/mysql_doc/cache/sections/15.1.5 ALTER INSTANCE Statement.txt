@@ -1,0 +1,101 @@
+15.1.5 ALTER INSTANCE Statement
+ALTER INSTANCE instance_action
+instance_action: {
+  | {ENABLE|DISABLE} INNODB REDO_LOG
+  | ROTATE INNODB MASTER KEY
+  | ROTATE BINLOG MASTER KEY
+  | RELOAD TLS
+      [FOR CHANNEL {mysql_main | mysql_admin}]
+      [NO ROLLBACK ON ERROR]
+  | RELOAD KEYRING
+}
+ALTER INSTANCE defines actions applicable to a MySQL server instance. The statement supports
+these actions:
+• ALTER INSTANCE {ENABLE | DISABLE} INNODB REDO_LOG
+This action enables or disables InnoDB redo logging. Redo logging is enabled by default. This
+feature is intended only for loading data into a new MySQL instance. The statement is not written to
+the binary log.
+Warning
+Do not disable redo logging on a production system. While it is permitted
+to shut down and restart the server while redo logging is disabled, an
+unexpected server stoppage while redo logging is disabled can cause data
+loss and instance corruption.
+An ALTER INSTANCE [ENABLE|DISABLE] INNODB REDO_LOG operation requires an exclusive
+backup lock, which prevents other ALTER INSTANCE operations from executing concurrently. Other
+ALTER INSTANCE operations must wait for the lock to be released before executing.
+For more information, see Disabling Redo Logging.
+• ALTER INSTANCE ROTATE INNODB MASTER KEY
+This action rotates the master encryption key used for InnoDB tablespace encryption. Key rotation
+requires the ENCRYPTION_KEY_ADMIN or SUPER privilege. To perform this action, a keyring plugin
+must be installed and configured. For instructions, see Section 8.4.4, “The MySQL Keyring”.
+ALTER INSTANCE ROTATE INNODB MASTER KEY supports concurrent DML. However, it cannot
+be run concurrently with CREATE TABLE ... ENCRYPTION or ALTER TABLE ... ENCRYPTION
+operations, and locks are taken to prevent conflicts that could arise from concurrent execution of
+these statements. If one of the conflicting statements is running, it must complete before another can
+proceed.
+ALTER INSTANCE ROTATE INNODB MASTER KEY statements are written to the binary log so that
+they can be executed on replicated servers.
+For additional ALTER INSTANCE ROTATE INNODB MASTER KEY usage information, see
+Section 17.13, “InnoDB Data-at-Rest Encryption”.
+• ALTER INSTANCE ROTATE BINLOG MASTER KEY
+This action rotates the binary log master key used for binary log encryption. Key rotation for the
+binary log master key requires the BINLOG_ENCRYPTION_ADMIN or SUPER privilege. The statement
+cannot be used if the binlog_encryption system variable is set to OFF. To perform this action,
+a keyring plugin must be installed and configured. For instructions, see Section 8.4.4, “The MySQL
+Keyring”.
+ALTER INSTANCE ROTATE BINLOG MASTER KEY actions are not written to the binary log and are
+not executed on replicas. Binary log master key rotation can therefore be carried out in replication
+environments including a mix of MySQL versions. To schedule regular rotation of the binary log
+master key on all applicable source and replica servers, you can enable the MySQL Event Scheduler
+on each server and issue the ALTER INSTANCE ROTATE BINLOG MASTER KEY statement using
+a CREATE EVENT statement. If you rotate the binary log master key because you suspect that the
+current or any of the previous binary log master keys might have been compromised, issue the
+statement on every applicable source and replica server, which enables you to verify immediate
+compliance.
+For additional ALTER INSTANCE ROTATE BINLOG MASTER KEY usage information, including
+what to do if the process does not complete correctly or is interrupted by an unexpected server halt,
+see Section 19.3.2, “Encrypting Binary Log Files and Relay Log Files”.
+• ALTER INSTANCE RELOAD TLS
+This action reconfigures a TLS context from the current values of the system variables that define
+the context. It also updates the status variables that reflect the active context values. This action
+requires the CONNECTION_ADMIN privilege. For additional information about reconfiguring the TLS
+context, including which system and status variables are context-related, see Server-Side Runtime
+Configuration and Monitoring for Encrypted Connections.
+By default, the statement reloads the TLS context for the main connection interface. If the
+FOR CHANNEL clause is given, the statement reloads the TLS context for the named channel:
+mysql_main for the main connection interface, mysql_admin for the administrative connection
+interface. For information about the different interfaces, see Section 7.1.12.1, “Connection
+Interfaces”. The updated TLS context properties are exposed in the Performance Schema
+tls_channel_status table. See Section 29.12.22.10, “The tls_channel_status Table”.
+Updating the TLS context for the main interface may also affect the administrative interface because
+unless some nondefault TLS value is configured for that interface, it uses the same TLS context as
+the main interface.
+Note
+When you reload the TLS context, OpenSSL reloads the file containing the
+CRL (certificate revocation list) as part of the process. If the CRL file is large,
+the server allocates a large chunk of memory (ten times the file size), which
+is doubled while the new instance is being loaded and the old one has not
+yet been released. The process resident memory is not immediately reduced
+after a large allocation is freed, so if you issue the ALTER INSTANCE
+RELOAD TLS statement repeatedly with a large CRL file, the process resident
+memory usage may grow as a result of this.
+By default, the RELOAD TLS action rolls back with an error and has no effect if the configuration
+values do not permit creation of the new TLS context. The previous context values continue to be
+used for new connections. If the optional NO ROLLBACK ON ERROR clause is given and the new
+context cannot be created, rollback does not occur. Instead, a warning is generated and encryption is
+disabled for new connections on the interface to which the statement applies.
+ALTER INSTANCE RELOAD TLS statements are not written to the binary log (and thus are not
+replicated). TLS configuration is local and depends on local files not necessarily present on all
+servers involved.
+• ALTER INSTANCE RELOAD KEYRING
+If a keyring component is installed, this action tells the component to re-read its configuration file and
+reinitialize any keyring in-memory data. If you modify the component configuration at runtime, the
+new configuration does not take effect until you perform this action. Keyring reloading requires the
+ENCRYPTION_KEY_ADMIN privilege.
+This action enables reconfiguring only the currently installed keyring component. It does not enable
+changing which component is installed. For example, if you change the configuration for the installed
+keyring component, ALTER INSTANCE RELOAD KEYRING causes the new configuration to take
+effect. On the other hand, if you change the keyring component named in the server manifest file,
+ALTER INSTANCE RELOAD KEYRING has no effect and the current component remains installed.
+ALTER INSTANCE RELOAD KEYRING statements are not written to the binary log (and thus are not
+replicated).

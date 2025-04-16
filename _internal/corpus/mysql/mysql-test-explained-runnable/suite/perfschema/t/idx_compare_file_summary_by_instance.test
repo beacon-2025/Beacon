@@ -1,0 +1,2 @@
+
+SET @target_name = @file_name

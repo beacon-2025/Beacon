@@ -1,0 +1,52 @@
+-- 创建测试表
+CREATE TABLE test_table_1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    age INT
+);
+-- 插入测试数据
+INSERT INTO test_table_1 (id, name, age) VALUES (1, 'Alice', 25);
+INSERT INTO test_table_1 (id, name, age) VALUES (2, 'Bob', 30);
+INSERT INTO test_table_1 (id, name, age) VALUES (3, 'Charlie', 35);
+INSERT INTO test_table_1 (id, name, age) VALUES (4, 'David', 40);
+INSERT INTO test_table_1 (id, name, age) VALUES (5, 'Eve', 45);
+-- 测试用例 1: 使用 LIMIT 子句限制返回的行数
+SELECT * FROM test_table_1 LIMIT 2;
+-- 测试用例 2: 使用 LIMIT 子句限制返回的行数，并指定偏移量
+SELECT * FROM test_table_1 LIMIT 2 OFFSET 1;
+-- 测试用例 3: 使用 ROW_LIMIT 子句限制返回的行数
+SELECT * FROM test_table_1 ROW_LIMIT 3;
+-- 测试用例 4: 使用 ROW_LIMIT 子句限制返回的行数，并指定偏移量
+SELECT * FROM test_table_1 ROW_LIMIT 3 OFFSET 2;
+-- 测试用例 5: 结合 WHERE 子句和 LIMIT 子句
+SELECT * FROM test_table_1 WHERE age > 30 LIMIT 2;
+-- 测试用例 6: 结合 WHERE 子句和 ROW_LIMIT 子句
+SELECT * FROM test_table_1 WHERE age > 30 ROW_LIMIT 2;
+-- 测试用例 7: 结合 ORDER BY 子句和 LIMIT 子句
+SELECT * FROM test_table_1 ORDER BY age DESC LIMIT 3;
+-- 测试用例 8: 结合 ORDER BY 子句和 ROW_LIMIT 子句
+SELECT * FROM test_table_1 ORDER BY age DESC ROW_LIMIT 3;
+-- 测试用例 9: 结合 GROUP BY 子句和 LIMIT 子句
+SELECT age, COUNT(*) FROM test_table_1 GROUP BY age LIMIT 2;
+-- 测试用例 10: 结合 GROUP BY 子句和 ROW_LIMIT 子句
+SELECT age, COUNT(*) FROM test_table_1 GROUP BY age ROW_LIMIT 2;
+-- 测试用例 11: 使用 LIMIT 子句限制返回的行数，并指定偏移量，结合 ORDER BY 子句
+SELECT * FROM test_table_1 ORDER BY age LIMIT 2 OFFSET 1;
+-- 测试用例 12: 使用 ROW_LIMIT 子句限制返回的行数，并指定偏移量，结合 ORDER BY 子句
+SELECT * FROM test_table_1 ORDER BY age ROW_LIMIT 2 OFFSET 1;
+-- 测试用例 13: 使用 LIMIT 子句限制返回的行数，结合 WHERE 子句和 ORDER BY 子句
+SELECT * FROM test_table_1 WHERE age > 30 ORDER BY age DESC LIMIT 2;
+-- 测试用例 14: 使用 ROW_LIMIT 子句限制返回的行数，结合 WHERE 子句和 ORDER BY 子句
+SELECT * FROM test_table_1 WHERE age > 30 ORDER BY age DESC ROW_LIMIT 2;
+-- 测试用例 15: 使用 LIMIT 子句限制返回的行数，结合 GROUP BY 子句和 ORDER BY 子句
+SELECT age, COUNT(*) FROM test_table_1 GROUP BY age ORDER BY age DESC LIMIT 2;
+-- 测试用例 16: 使用 ROW_LIMIT 子句限制返回的行数，结合 GROUP BY 子句和 ORDER BY 子句
+SELECT age, COUNT(*) FROM test_table_1 GROUP BY age ORDER BY age DESC ROW_LIMIT 2;
+-- 测试用例 17: 使用 LIMIT 子句限制返回的行数，结合 WHERE 子句和 GROUP BY 子句
+SELECT age, COUNT(*) FROM test_table_1 WHERE age > 30 GROUP BY age LIMIT 2;
+-- 测试用例 18: 使用 ROW_LIMIT 子句限制返回的行数，结合 WHERE 子句和 GROUP BY 子句
+SELECT age, COUNT(*) FROM test_table_1 WHERE age > 30 GROUP BY age ROW_LIMIT 2;
+-- 测试用例 19: 使用 LIMIT 子句限制返回的行数，结合 WHERE 子句、GROUP BY 子句和 ORDER BY 子句
+SELECT age, COUNT(*) FROM test_table_1 WHERE age > 30 GROUP BY age ORDER BY age DESC LIMIT 2;
+-- 测试用例 20: 使用 ROW_LIMIT 子句限制返回的行数，结合 WHERE 子句、GROUP BY 子句和 ORDER BY 子句
+SELECT age, COUNT(*) FROM test_table_1 WHERE age > 30 GROUP BY age ORDER BY age DESC ROW_LIMIT 2

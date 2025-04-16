@@ -1,0 +1,80 @@
+-- 创建package
+CREATE OR REPLACE PACKAGE test_pk AS
+    PROCEDURE set_context(ts_name VARCHAR, key VARCHAR, value VARCHAR);
+PROCEDURE set_user_context(ts_name VARCHAR, key VARCHAR, value VARCHAR, username VARCHAR, client_id VARCHAR);
+PROCEDURE get_context(ts_name VARCHAR, key VARCHAR);
+PROCEDURE clear_context(ts_name VARCHAR, key VARCHAR, value VARCHAR);
+END test_pk;
+/
+
+CREATE OR REPLACE PACKAGE BODY test_pk AS
+    PROCEDURE set_context(ts_name VARCHAR, key VARCHAR, value VARCHAR) AS
+    BEGIN
+        dbms_session.set_context(ts_name, key, value);
+END;
+PROCEDURE set_user_context(ts_name VARCHAR, key VARCHAR, value VARCHAR, username VARCHAR, client_id VARCHAR) AS
+    BEGIN
+        dbms_session.set_context(ts_name, key, value, username, client_id);
+END;
+PROCEDURE get_context(ts_name VARCHAR, key VARCHAR) AS
+    BEGIN
+        dbms_output.put_line('==' || sys_context(ts_name, key) || '--');
+END;
+PROCEDURE clear_context(ts_name VARCHAR, key VARCHAR, value VARCHAR) AS
+    BEGIN
+        dbms_session.clear_context(ts_name, key, value);
+END;
+END test_pk;
+/;
+-- 创建上下文
+CREATE OR REPLACE CONTEXT c_user01 USING test_pk;
+-- 删除上下文
+DROP CONTEXT c_user01;
+-- 尝试删除不存在的上下文（预期报错）
+DROP CONTEXT non_existent_context;
+-- 尝试删除不存在的上下文（不报错）
+DROP CONTEXT IF EXISTS non_existent_context;
+-- 创建上下文
+CREATE OR REPLACE CONTEXT c_user02 USING test_pk;
+-- 设置上下文属性
+CALL test_pk.set_context('c_user02', 'u_k1', 'u_v1');
+-- 删除上下文
+DROP CONTEXT c_user02;
+-- 尝试访问已删除上下文的属性值（预期报错）
+CALL test_pk.get_context('c_user02', 'u_k1');
+-- 创建上下文
+CREATE OR REPLACE CONTEXT c_user03 USING test_pk;
+-- 设置上下文属性
+CALL test_pk.set_context('c_user03', 'u_k1', 'u_v1');
+-- 删除上下文
+DROP CONTEXT IF EXISTS c_user03;
+-- 尝试访问已删除上下文的属性值（预期报错）
+CALL test_pk.get_context('c_user03', 'u_k1');
+-- 尝试删除不存在的上下文（不报错）
+DROP CONTEXT IF EXISTS non_existent_context_2;
+-- 尝试访问不存在的上下文的属性值（预期报错）
+CALL test_pk.get_context('non_existent_context_2', 'u_k1');
+-- 创建上下文
+CREATE OR REPLACE CONTEXT c_user04 USING test_pk;
+-- 设置上下文属性
+CALL test_pk.set_context('c_user04', 'u_k1', 'u_v1');
+-- 删除上下文
+DROP CONTEXT IF EXISTS c_user04;
+-- 尝试访问已删除上下文的属性值（预期报错）
+CALL test_pk.get_context('c_user04', 'u_k1');
+-- 尝试删除不存在的上下文（不报错）
+DROP CONTEXT IF EXISTS non_existent_context_3;
+-- 尝试访问不存在的上下文的属性值（预期报错）
+CALL test_pk.get_context('non_existent_context_3', 'u_k1');
+-- 创建上下文
+CREATE OR REPLACE CONTEXT c_user05 USING test_pk;
+-- 设置上下文属性
+CALL test_pk.set_context('c_user05', 'u_k1', 'u_v1');
+-- 删除上下文
+DROP CONTEXT IF EXISTS c_user05;
+-- 尝试访问已删除上下文的属性值（预期报错）
+CALL test_pk.get_context('c_user05', 'u_k1');
+-- 尝试删除不存在的上下文（不报错）
+DROP CONTEXT IF EXISTS non_existent_context_4;
+-- 尝试访问不存在的上下文的属性值（预期报错）
+CALL test_pk.get_context('non_existent_context_4', 'u_k1')

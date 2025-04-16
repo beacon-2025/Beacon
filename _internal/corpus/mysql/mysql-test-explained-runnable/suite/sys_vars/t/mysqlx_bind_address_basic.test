@@ -1,0 +1,11 @@
+#                                                                             #
+# Variable Name: mysqlx_bind_address                                          #
+# Scope: Global                                                               #
+# Access Type: Static                                                         #
+# Data Type: filename                                                         #
+###############################################################################
+
+####################################################################
+#   Displaying default value                                       #
+####################################################################
+SELECT COUNT(@@GLOBAL.mysqlx_bind_address)

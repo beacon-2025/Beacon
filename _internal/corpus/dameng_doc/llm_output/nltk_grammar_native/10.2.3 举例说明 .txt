@@ -1,0 +1,10 @@
+```plaintext
+S -> EXAMPLE | CREATE_FUNCTION | CALL_FUNCTION
+EXAMPLE -> '编写（JAVA 语言）外部函数：testAdd 用于求两个数之和，testStr 用于在一个字符串后面加上hello。'
+CREATE_FUNCTION -> CREATE_FUNCTION_INT | CREATE_FUNCTION_CHR
+CREATE_FUNCTION_INT -> 'CREATE OR REPLACE FUNCTION MY_INT(a int_value, b int_value) RETURN int_value EXTERNAL \'..\\dmdbms\\bin\\external_jar\\test.jar\' "com.test.package1.test.testAdd" USING java;'
+CREATE_FUNCTION_CHR -> 'CREATE OR REPLACE FUNCTION MY_chr(s string_value) RETURN string_value EXTERNAL \'..\\dmdbms\\bin\\external_jar\\test.jar\' "com.test.package1.test.testStr" USING java;'
+CALL_FUNCTION -> CALL_FUNCTION_INT | CALL_FUNCTION_CHR
+CALL_FUNCTION_INT -> 'select MY_INT(1,2);'
+CALL_FUNCTION_CHR -> 'select MY_chr(\'abc\');'
+```

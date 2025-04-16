@@ -1,0 +1,68 @@
+-- 公共前置语句：创建测试表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    value INT
+);
+CREATE TABLE test_table2 (
+    id INT PRIMARY KEY,
+    description VARCHAR(100),
+    amount DECIMAL(10, 2)
+);
+CREATE TABLE test_table3 (
+    id INT PRIMARY KEY,
+    category VARCHAR(50),
+    price DECIMAL(10, 2)
+);
+-- 插入测试数据
+INSERT INTO test_table1 (id, name, value) VALUES (1, 'Alice', 100);
+INSERT INTO test_table1 (id, name, value) VALUES (2, 'Bob', 200);
+INSERT INTO test_table1 (id, name, value) VALUES (3, 'Charlie', 150);
+INSERT INTO test_table1 (id, name, value) VALUES (4, 'David', NULL);
+INSERT INTO test_table2 (id, description, amount) VALUES (1, 'Item A', 50.00);
+INSERT INTO test_table2 (id, description, amount) VALUES (2, 'Item B', 75.00);
+INSERT INTO test_table2 (id, description, amount) VALUES (3, 'Item C', 100.00);
+INSERT INTO test_table2 (id, description, amount) VALUES (4, 'Item D', NULL);
+INSERT INTO test_table3 (id, category, price) VALUES (1, 'Electronics', 500.00);
+INSERT INTO test_table3 (id, category, price) VALUES (2, 'Clothing', 100.00);
+INSERT INTO test_table3 (id, category, price) VALUES (3, 'Furniture', 300.00);
+INSERT INTO test_table3 (id, category, price) VALUES (4, 'Books', 50.00);
+-- 测试用例1：简单的ORDER BY子句，按列名升序排序
+SELECT * FROM test_table1 ORDER BY name ASC;
+-- 测试用例2：简单的ORDER BY子句，按列名降序排序
+SELECT * FROM test_table1 ORDER BY value DESC;
+-- 测试用例3：使用无符号整数作为排序列
+SELECT id, name FROM test_table1 ORDER BY 2 DESC;
+-- 测试用例4：使用无符号整数作为排序列，但整数超出范围（应报错）
+SELECT id, name FROM test_table1 ORDER BY 3 DESC;
+-- 测试用例5：使用NULLS FIRST指定空值排在前面
+SELECT * FROM test_table1 ORDER BY value NULLS FIRST;
+-- 测试用例6：使用NULLS LAST指定空值排在后面
+SELECT * FROM test_table1 ORDER BY value NULLS LAST;
+-- 测试用例7：多列排序，先按name升序，再按value降序
+SELECT * FROM test_table1 ORDER BY name ASC, value DESC;
+-- 测试用例8：使用表达式作为排序列
+SELECT id, name, value * 2 AS double_value FROM test_table1 ORDER BY double_value DESC;
+-- 测试用例9：在UNION查询中使用ORDER BY
+SELECT id, name FROM test_table1
+UNION
+SELECT id, description FROM test_table2
+ORDER BY 1 DESC;
+-- 测试用例10：在GROUP BY查询中使用ORDER BY
+SELECT category, SUM(price) AS total_price FROM test_table3
+GROUP BY category
+ORDER BY total_price DESC;
+-- 测试用例11：使用集函数作为排序列
+SELECT category, AVG(price) AS avg_price FROM test_table3
+GROUP BY category
+ORDER BY avg_price DESC;
+-- 测试用例12：使用常量表达式作为排序列（不影响排序）
+SELECT * FROM test_table1 ORDER BY 1 + 1;
+-- 测试用例13：使用子查询作为排序列
+SELECT id, name, (SELECT COUNT(*) FROM test_table2) AS count FROM test_table1
+ORDER BY count DESC;
+-- 测试用例14：使用SIBLINGS关键字（需与CONNECT BY一起使用）
+-- 注意：此用例假设支持层次查询
+SELECT id, name, value FROM test_table1
+CONNECT BY PRIOR id = value
+ORDER SIBLINGS BY name ASC

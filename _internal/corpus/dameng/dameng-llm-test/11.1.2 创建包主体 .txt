@@ -1,0 +1,172 @@
+-- 创建模式
+CREATE SCHEMA test_schema;
+-- 创建包规范
+CREATE OR REPLACE PACKAGE test_schema.package1 AS
+    PROCEDURE proc1(param1 INT);
+END package1;
+-- 创建包主体
+CREATE OR REPLACE PACKAGE BODY test_schema.package1 AS
+    -- 变量定义
+    var1 INT := 10;
+-- 过程实现
+    PROCEDURE proc1(param1 INT) AS
+    BEGIN
+        var1 := param1;
+END proc1;
+END package1;
+-- 创建包规范
+CREATE OR REPLACE PACKAGE test_schema.package2 AS
+    FUNCTION func1(param1 INT) RETURN INT;
+CURSOR cur1 IS SELECT * FROM dual;
+END package2;
+-- 创建包主体
+CREATE OR REPLACE PACKAGE BODY test_schema.package2 AS
+    -- 函数实现
+    FUNCTION func1(param1 INT) RETURN INT AS
+    BEGIN
+        RETURN param1 * 2;
+END func1;
+-- 游标定义
+    CURSOR cur1 IS SELECT * FROM dual;
+END package2;
+-- 创建包规范
+CREATE OR REPLACE PACKAGE test_schema.package3 AS
+    TYPE custom_type IS RECORD (field1 INT, field2 VARCHAR(50));
+invalid_input EXCEPTION;
+END package3;
+-- 创建包主体
+CREATE OR REPLACE PACKAGE BODY test_schema.package3 AS
+    -- 类型定义
+    TYPE custom_type IS RECORD (field1 INT, field2 VARCHAR(50));
+-- 异常定义
+    invalid_input EXCEPTION;
+-- 初始化代码
+    BEGIN
+        NULL;
+-- 空初始化代码
+    END;
+END package3;
+-- 创建包规范
+CREATE OR REPLACE PACKAGE test_schema.package4 AS
+    PROCEDURE overloaded_proc(param1 INT);
+PROCEDURE overloaded_proc(param1 VARCHAR(50));
+FUNCTION overloaded_func(param1 INT) RETURN INT;
+FUNCTION overloaded_func(param1 VARCHAR(50)) RETURN VARCHAR(50));
+END package4;
+-- 创建包主体
+CREATE OR REPLACE PACKAGE BODY test_schema.package4 AS
+    -- 过程实现
+    PROCEDURE overloaded_proc(param1 INT) AS
+    BEGIN
+        NULL;
+-- 空实现
+    END overloaded_proc;
+PROCEDURE overloaded_proc(param1 VARCHAR(50)) AS
+    BEGIN
+        NULL;
+-- 空实现
+    END overloaded_proc;
+-- 函数实现
+    FUNCTION overloaded_func(param1 INT) RETURN INT AS
+    BEGIN
+        RETURN param1 * 2;
+END overloaded_func;
+FUNCTION overloaded_func(param1 VARCHAR(50)) RETURN VARCHAR(50)) AS
+    BEGIN
+        RETURN param1 || '_processed';
+END overloaded_func;
+END package4;
+-- 创建包规范
+CREATE OR REPLACE PACKAGE test_schema.package5 AS
+    FUNCTION deterministic_func(param1 INT) RETURN INT DETERMINISTIC;
+END package5;
+-- 创建包主体
+CREATE OR REPLACE PACKAGE BODY test_schema.package5 AS
+    -- 函数实现
+    FUNCTION deterministic_func(param1 INT) RETURN INT DETERMINISTIC AS
+    BEGIN
+        RETURN param1 * 2;
+END deterministic_func;
+END package5;
+-- 创建包规范
+CREATE OR REPLACE PACKAGE test_schema.package6 AS
+    var1 INT;
+END package6;
+-- 创建包主体
+CREATE OR REPLACE PACKAGE BODY test_schema.package6 AS
+    -- 变量定义
+    var1 INT;
+-- 初始化代码
+    BEGIN
+        var1 := 100;
+END;
+END package6;
+-- 创建包规范
+CREATE OR REPLACE PACKAGE test_schema.package7 AS
+    PROCEDURE proc_with_exception(param1 INT);
+END package7;
+-- 创建包主体
+CREATE OR REPLACE PACKAGE BODY test_schema.package7 AS
+    -- 过程实现
+    PROCEDURE proc_with_exception(param1 INT) AS
+    BEGIN
+        IF param1 < 0 THEN
+            RAISE invalid_input;
+END IF;
+EXCEPTION
+        WHEN invalid_input THEN
+            NULL;
+-- 异常处理
+    END proc_with_exception;
+END package7;
+-- 创建包规范
+CREATE OR REPLACE PACKAGE test_schema.package8 AS
+    PROCEDURE main_proc(param1 INT);
+END package8;
+-- 创建包主体
+CREATE OR REPLACE PACKAGE BODY test_schema.package8 AS
+    -- 子过程定义
+    PROCEDURE sub_proc(param1 INT) AS
+    BEGIN
+        NULL;
+-- 空实现
+    END sub_proc;
+-- 子函数定义
+    FUNCTION sub_func(param1 INT) RETURN INT AS
+    BEGIN
+        RETURN param1 * 2;
+END sub_func;
+-- 主过程实现
+    PROCEDURE main_proc(param1 INT) AS
+    BEGIN
+        sub_proc(param1);
+var1 := sub_func(param1);
+END main_proc;
+END package8;
+-- 创建包规范
+CREATE OR REPLACE PACKAGE test_schema.package9 AS
+    TYPE custom_record IS RECORD (field1 INT, field2 VARCHAR(50));
+END package9;
+-- 创建包主体
+CREATE OR REPLACE PACKAGE BODY test_schema.package9 AS
+    -- 记录类型定义
+    TYPE custom_record IS RECORD (field1 INT, field2 VARCHAR(50));
+-- 初始化代码
+    BEGIN
+        NULL;
+-- 空初始化代码
+    END;
+END package9;
+-- 创建包规范
+CREATE OR REPLACE PACKAGE test_schema.package10 AS
+    PROCEDURE encrypted_proc(param1 INT);
+END package10;
+-- 创建包主体
+CREATE OR REPLACE PACKAGE BODY test_schema.package10 WITH ENCRYPTION AS
+    -- 过程实现
+    PROCEDURE encrypted_proc(param1 INT) AS
+    BEGIN
+        NULL;
+-- 空实现
+    END encrypted_proc;
+END package10

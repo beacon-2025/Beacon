@@ -1,0 +1,670 @@
+15.7.3 Table Maintenance Statements
+15.7.3.1 ANALYZE TABLE Statement
+ANALYZE [NO_WRITE_TO_BINLOG | LOCAL]
+    TABLE tbl_name [, tbl_name] ...
+ANALYZE [NO_WRITE_TO_BINLOG | LOCAL]
+    TABLE tbl_name
+    UPDATE HISTOGRAM ON col_name [, col_name] ...
+        [WITH N BUCKETS]
+    [{MANUAL | AUTO} UPDATE]
+ANALYZE [NO_WRITE_TO_BINLOG | LOCAL] 
+    TABLE tbl_name
+    UPDATE HISTOGRAM ON col_name [USING DATA 'json_data']
+ANALYZE [NO_WRITE_TO_BINLOG | LOCAL]
+    TABLE tbl_name
+    DROP HISTOGRAM ON col_name [, col_name] ...
+ANALYZE TABLE generates table statistics:
+• ANALYZE TABLE without any HISTOGRAM clause performs a key distribution analysis and stores the
+distribution for the named table or tables. For MyISAM tables, ANALYZE TABLE for key distribution
+analysis is equivalent to using myisamchk --analyze.
+• ANALYZE TABLE with the UPDATE HISTOGRAM clause generates histogram statistics for the named
+table columns and stores them in the data dictionary. Only one table name is permitted with this
+syntax. MySQL also supports setting the histogram of a single column to a user-defined JSON value.
+• ANALYZE TABLE with the DROP HISTOGRAM clause removes histogram statistics for the named
+table columns from the data dictionary. Only one table name is permitted for this syntax.
+This statement requires SELECT and INSERT privileges for the table.
+ANALYZE TABLE works with InnoDB, NDB, and MyISAM tables. It does not work with views.
+If the innodb_read_only system variable is enabled, ANALYZE TABLE may fail because it
+cannot update statistics tables in the data dictionary, which use InnoDB. For ANALYZE TABLE
+operations that update the key distribution, failure may occur even if the operation updates the
+table itself (for example, if it is a MyISAM table). To obtain the updated distribution statistics, set
+information_schema_stats_expiry=0.
+ANALYZE TABLE is supported for partitioned tables, and you can use ALTER TABLE ... ANALYZE
+PARTITION to analyze one or more partitions; for more information, see Section 15.1.9, “ALTER
+TABLE Statement”, and Section 26.3.4, “Maintenance of Partitions”.
+During the analysis, the table is locked with a read lock for InnoDB and MyISAM.
+By default, the server writes ANALYZE TABLE statements to the binary log so that they replicate to
+replicas. To suppress logging, specify the optional NO_WRITE_TO_BINLOG keyword or its alias LOCAL.
+• ANALYZE TABLE Output
+• Key Distribution Analysis
+• Histogram Statistics Analysis
+• Other Considerations
+ANALYZE TABLE Output
+ANALYZE TABLE returns a result set with the columns shown in the following table.
+Column
+Value
+Table
+The table name
+Op
+analyze or histogram
+Msg_type
+status, error, info, note, or warning
+Msg_text
+An informational message
+Key Distribution Analysis
+ANALYZE TABLE without either HISTOGRAM clause performs a key distribution analysis and stores the
+distribution for the table or tables. Any existing histogram statistics remain unaffected.
+If the table has not changed since the last key distribution analysis, the table is not analyzed again.
+MySQL uses the stored key distribution to decide the order in which tables should be joined for joins
+on something other than a constant. In addition, key distributions can be used when deciding which
+indexes to use for a specific table within a query.
+To check the stored key distribution cardinality, use the SHOW INDEX statement or the
+INFORMATION_SCHEMA STATISTICS table. See Section 15.7.7.23, “SHOW INDEX Statement”, and
+Section 28.3.34, “The INFORMATION_SCHEMA STATISTICS Table”.
+For InnoDB tables, ANALYZE TABLE determines index cardinality by performing random dives on
+each of the index trees and updating index cardinality estimates accordingly. Because these are only
+estimates, repeated runs of ANALYZE TABLE could produce different numbers. This makes ANALYZE
+TABLE fast on InnoDB tables but not 100% accurate because it does not take all rows into account.
+You can make the statistics collected by ANALYZE TABLE more precise and more stable by enabling
+innodb_stats_persistent, as explained in Section 17.8.10.1, “Configuring Persistent Optimizer
+Statistics Parameters”. When innodb_stats_persistent is enabled, it is important to run ANALYZE
+TABLE after major changes to index column data, as statistics are not recalculated periodically (such
+as after a server restart).
+If innodb_stats_persistent is enabled, you can change the number of random dives by modifying
+the innodb_stats_persistent_sample_pages system variable. If innodb_stats_persistent
+is disabled, modify innodb_stats_transient_sample_pages instead.
+For more information about key distribution analysis in InnoDB, see Section 17.8.10.1, “Configuring
+Persistent Optimizer Statistics Parameters”, and Section 17.8.10.3, “Estimating ANALYZE TABLE
+Complexity for InnoDB Tables”.
+MySQL uses index cardinality estimates in join optimization. If a join is not optimized in the right way,
+try running ANALYZE TABLE. In the few cases that ANALYZE TABLE does not produce values good
+enough for your particular tables, you can use FORCE INDEX with your queries to force the use of a
+particular index, or set the max_seeks_for_key system variable to ensure that MySQL prefers index
+lookups over table scans. See Section B.3.5, “Optimizer-Related Issues”.
+Histogram Statistics Analysis
+ANALYZE TABLE with the HISTOGRAM clause enables management of histogram statistics for table
+column values. For information about histogram statistics, see Section 10.9.6, “Optimizer Statistics”.
+These histogram operations are available:
+• ANALYZE TABLE with an UPDATE HISTOGRAM clause generates histogram statistics for the named
+table columns and stores them in the data dictionary. Only one table name is permitted for this
+syntax.
+The optional WITH N BUCKETS clause specifies the number of buckets for the histogram. The value
+of N must be an integer in the range from 1 to 1024. If this clause is omitted, the number of buckets is
+100.
+The optional AUTO UPDATE clause enables automatic updates of histograms on the table. When
+enabled, an ANALYZE TABLE statement on this table automatically updates the histogram, using
+the same number of buckets as last specified by WITH ... BUCKETS if this was previously set for
+this table. In addition, when recalculating persistent statistics for the table (see Section 17.8.10.1,
+“Configuring Persistent Optimizer Statistics Parameters”), the InnoDB background statistics thread
+also updates the histogram. MANUAL UPDATE disables automatic updates, and is the default setting
+if not specified.
+• ANALYZE TABLE with a DROP HISTOGRAM clause removes histogram statistics for the named table
+columns from the data dictionary. Only one table name is permitted for this syntax.
+Stored histogram management statements affect only the named columns. Consider these statements:
+ANALYZE TABLE t UPDATE HISTOGRAM ON c1, c2, c3 WITH 10 BUCKETS;
+ANALYZE TABLE t UPDATE HISTOGRAM ON c1, c3 WITH 10 BUCKETS;
+ANALYZE TABLE t DROP HISTOGRAM ON c2;
+The first statement updates the histograms for columns c1, c2, and c3, replacing any existing
+histograms for those columns. The second statement updates the histograms for c1 and c3, leaving
+the c2 histogram unaffected. The third statement removes the histogram for c2, leaving those for c1
+and c3 unaffected.
+When sampling user data as part of building a histogram, not all values are read; this may lead to
+missing some values considered important. In such cases, it might be useful to modify the histogram,
+or to set your own histogram explicitly based on your own criteria, such as the complete data set.
+ANALYZE TABLE tbl_name UPDATE HISTOGRAM ON col_name USING DATA 'json_data'
+updates a column of the histogram table with data supplied in the same JSON format used to display
+HISTOGRAM column values from the Information Schema COLUMN_STATISTICS table. Only one
+column can be modified when updating the histogram with JSON data.
+We can illustrate the use of USING DATA by first generating a histogram on column c1 of table t, like
+this:
+mysql> ANALYZE TABLE t UPDATE HISTOGRAM ON c1;
++-------+-----------+----------+-----------------------------------------------+
+| Table | Op        | Msg_type | Msg_text                                      |
++-------+-----------+----------+-----------------------------------------------+
+| h.t   | histogram | status   | Histogram statistics created for column 'c1'. |
++-------+-----------+----------+-----------------------------------------------+
+1 row in set (0.00 sec)
+We can see the histogram generated in the COLUMN_STATISTICS table:
+mysql> TABLE information_schema.column_statistics\G
+*************************** 1. row ***************************
+SCHEMA_NAME: h
+ TABLE_NAME: t
+COLUMN_NAME: c1
+  HISTOGRAM: {"buckets": [], "data-type": "int", "auto-update": false,
+"null-values": 0.0, "collation-id": 8, "last-updated": "2024-03-26
+16:54:43.674995", "sampling-rate": 1.0, "histogram-type": "singleton",
+"number-of-buckets-specified": 100}   
+1 row in set (0.00 sec)  
+Now we drop the histogram, and when we check COLUMN_STATISTICS, it is empty:
+mysql> ANALYZE TABLE t DROP HISTOGRAM ON c1;
++-------+-----------+----------+-----------------------------------------------+
+| Table | Op        | Msg_type | Msg_text                                      |
++-------+-----------+----------+-----------------------------------------------+
+| h.t   | histogram | status   | Histogram statistics removed for column 'c1'. |
++-------+-----------+----------+-----------------------------------------------+
+1 row in set (0.01 sec)
+mysql> TABLE information_schema.column_statistics\G
+Empty set (0.00 sec)
+We can restore the dropped histogram by inserting its JSON representation obtained previously from
+the HISTOGRAM column of the COLUMN_STATISTICS table, and when we query that table again, we
+can see that the histogram has been restored to its previous state:
+mysql> ANALYZE TABLE t UPDATE HISTOGRAM ON c1 
+    ->     USING DATA '{"buckets": [], "data-type": "int", "auto-update": false,
+    ->               "null-values": 0.0, "collation-id": 8, "last-updated": "2024-03-26
+    ->               16:54:43.674995", "sampling-rate": 1.0, "histogram-type": "singleton",
+    ->               "number-of-buckets-specified": 100}';   
++-------+-----------+----------+-----------------------------------------------+
+| Table | Op        | Msg_type | Msg_text                                      |
++-------+-----------+----------+-----------------------------------------------+
+| h.t   | histogram | status   | Histogram statistics created for column 'c1'. |
++-------+-----------+----------+-----------------------------------------------+
+mysql> TABLE information_schema.column_statistics\G
+*************************** 1. row ***************************
+SCHEMA_NAME: h
+ TABLE_NAME: t
+COLUMN_NAME: c1
+  HISTOGRAM: {"buckets": [], "data-type": "int", "auto-update": false,
+"null-values": 0.0, "collation-id": 8, "last-updated": "2024-03-26
+16:54:43.674995", "sampling-rate": 1.0, "histogram-type": "singleton",
+"number-of-buckets-specified": 100}      
+Histogram generation is not supported for encrypted tables (to avoid exposing data in the statistics) or
+TEMPORARY tables.
+Histogram generation applies to columns of all data types except geometry types (spatial data) and
+JSON.
+Histograms can be generated for stored and virtual generated columns.
+Histograms cannot be generated for columns that are covered by single-column unique indexes.
+Histogram management statements attempt to perform as much of the requested operation as
+possible, and report diagnostic messages for the remainder. For example, if an UPDATE HISTOGRAM
+statement names multiple columns, but some of them do not exist or have an unsupported data type,
+histograms are generated for the other columns, and messages are produced for the invalid columns.
+Histograms are affected by these DDL statements:
+• DROP TABLE removes histograms for columns in the dropped table.
+• DROP DATABASE removes histograms for any table in the dropped database because the statement
+drops all tables in the database.
+• RENAME TABLE does not remove histograms. Instead, it renames histograms for the renamed table
+to be associated with the new table name.
+• ALTER TABLE statements that remove or modify a column remove histograms for that column.
+• ALTER TABLE ... CONVERT TO CHARACTER SET removes histograms for character columns
+because they are affected by the change of character set. Histograms for noncharacter columns
+remain unaffected.
+The histogram_generation_max_mem_size system variable controls the maximum amount of
+memory available for histogram generation. The global and session values may be set at runtime.
+Changing the global histogram_generation_max_mem_size value requires privileges sufficient to
+set global system variables. Changing the session histogram_generation_max_mem_size value
+requires privileges sufficient to set restricted session system variables. See Section 7.1.9.1, “System
+Variable Privileges”.
+If the estimated amount of data to be read into memory for histogram generation exceeds the limit
+defined by histogram_generation_max_mem_size, MySQL samples the data rather than reading
+all of it into memory. Sampling is evenly distributed over the entire table. MySQL uses SYSTEM
+sampling, which is a page-level sampling method.
+The sampling-rate value in the HISTOGRAM column of the Information Schema
+COLUMN_STATISTICS table can be queried to determine the fraction of data that was sampled to
+create the histogram. The sampling-rate is a number between 0.0 and 1.0. A value of 1 means that
+all of the data was read (no sampling).
+The following example demonstrates sampling. To ensure that the amount of data exceeds the
+histogram_generation_max_mem_size limit for the purpose of the example, the limit is set to a
+low value (2000000 bytes) prior to generating histogram statistics for the birth_date column of the
+employees table.
+mysql> SET histogram_generation_max_mem_size = 2000000;
+mysql> USE employees;
+mysql> ANALYZE TABLE employees UPDATE HISTOGRAM ON birth_date WITH 16 BUCKETS\G
+*************************** 1. row ***************************
+   Table: employees.employees
+      Op: histogram
+Msg_type: status
+Msg_text: Histogram statistics created for column 'birth_date'.
+mysql> SELECT HISTOGRAM->>'$."sampling-rate"'
+       FROM INFORMATION_SCHEMA.COLUMN_STATISTICS
+       WHERE TABLE_NAME = "employees"
+       AND COLUMN_NAME = "birth_date";
++---------------------------------+
+| HISTOGRAM->>'$."sampling-rate"' |
++---------------------------------+
+| 0.0491431208869665              |
++---------------------------------+
+A sampling-rate value of 0.0491431208869665 means that approximately 4.9% of the data from
+the birth_date column was read into memory for generating histogram statistics.
+The InnoDB storage engine provides its own sampling implementation for data stored in InnoDB
+tables. The default sampling implementation used by MySQL when storage engines do not
+provide their own requires a full table scan, which is costly for large tables. The InnoDB sampling
+implementation improves sampling performance by avoiding full table scans.
+The sampled_pages_read and sampled_pages_skipped INNODB_METRICS counters can be
+used to monitor sampling of InnoDB data pages. (For general INNODB_METRICS counter usage
+information, see Section 28.4.21, “The INFORMATION_SCHEMA INNODB_METRICS Table”.)
+The following example demonstrates sampling counter usage, which requires enabling the counters
+prior to generating histogram statistics.
+mysql> SET GLOBAL innodb_monitor_enable = 'sampled%';
+mysql> USE employees;
+mysql> ANALYZE TABLE employees UPDATE HISTOGRAM ON birth_date WITH 16 BUCKETS\G
+*************************** 1. row ***************************
+   Table: employees.employees
+      Op: histogram
+Msg_type: status
+Msg_text: Histogram statistics created for column 'birth_date'.
+mysql> USE INFORMATION_SCHEMA;
+mysql> SELECT NAME, COUNT FROM INNODB_METRICS WHERE NAME LIKE 'sampled%'\G
+*************************** 1. row ***************************
+ NAME: sampled_pages_read
+COUNT: 43
+*************************** 2. row ***************************
+ NAME: sampled_pages_skipped
+COUNT: 843
+This formula approximates a sampling rate based on the sampling counter data:
+sampling rate = sampled_page_read/(sampled_pages_read + sampled_pages_skipped)
+A sampling rate based on sampling counter data is roughly the same as the sampling-rate value in
+the HISTOGRAM column of the Information Schema COLUMN_STATISTICS table.
+For information about memory allocations performed for histogram generation, monitor the
+Performance Schema memory/sql/histograms instrument. See Section 29.12.20.10, “Memory
+Summary Tables”.
+Other Considerations
+ANALYZE TABLE clears table statistics from the Information Schema INNODB_TABLESTATS table and
+sets the STATS_INITIALIZED column to Uninitialized. Statistics are collected again the next
+time the table is accessed.
+15.7.3.2 CHECK TABLE Statement
+CHECK TABLE tbl_name [, tbl_name] ... [option] ...
+option: {
+    FOR UPGRADE
+  | QUICK
+  | FAST
+  | MEDIUM
+  | EXTENDED
+  | CHANGED
+}
+CHECK TABLE checks a table or tables for errors. CHECK TABLE can also check views for problems,
+such as tables that are referenced in the view definition that no longer exist.
+To check a table, you must have some privilege for it.
+CHECK TABLE works for InnoDB, MyISAM, ARCHIVE, and CSV tables.
+Before running CHECK TABLE on InnoDB tables, see CHECK TABLE Usage Notes for InnoDB Tables.
+CHECK TABLE is supported for partitioned tables, and you can use ALTER TABLE ... CHECK
+PARTITION to check one or more partitions; for more information, see Section 15.1.9, “ALTER TABLE
+Statement”, and Section 26.3.4, “Maintenance of Partitions”.
+CHECK TABLE ignores virtual generated columns that are not indexed.
+• CHECK TABLE Output
+• Checking Version Compatibility
+• Checking Data Consistency
+• CHECK TABLE Usage Notes for InnoDB Tables
+• CHECK TABLE Usage Notes for MyISAM Tables
+CHECK TABLE Output
+CHECK TABLE returns a result set with the columns shown in the following table.
+Column
+Value
+Table
+The table name
+Op
+Always check
+Msg_type
+status, error, info, note, or warning
+Msg_text
+An informational message
+The statement might produce many rows of information for each checked table. The last row has a
+Msg_type value of status and the Msg_text normally should be OK. Table is already up to
+date means that the storage engine for the table indicated that there was no need to check the table.
+Checking Version Compatibility
+The FOR UPGRADE option checks whether the named tables are compatible with the current version
+of MySQL. With FOR UPGRADE, the server checks each table to determine whether there have been
+any incompatible changes in any of the table's data types or indexes since the table was created. If not,
+the check succeeds. Otherwise, if there is a possible incompatibility, the server runs a full check on the
+table (which might take some time).
+Incompatibilities might occur because the storage format for a data type has changed or because its
+sort order has changed. Our aim is to avoid these changes, but occasionally they are necessary to
+correct problems that would be worse than an incompatibility between releases.
+FOR UPGRADE discovers these incompatibilities:
+• The indexing order for end-space in TEXT columns for InnoDB and MyISAM tables changed
+between MySQL 4.1 and 5.0.
+• The storage method of the new DECIMAL data type changed between MySQL 5.0.3 and 5.0.5.
+• Changes are sometimes made to character sets or collations that require table indexes to be rebuilt.
+For details about such changes, see Section 3.5, “Changes in MySQL 9.1”. For information about
+rebuilding tables, see Section 3.14, “Rebuilding or Repairing Tables or Indexes”.
+• MySQL 9.1 does not support the 2-digit YEAR(2) data type permitted in older versions of MySQL.
+For tables containing YEAR(2) columns, CHECK TABLE recommends REPAIR TABLE, which
+converts 2-digit YEAR(2) columns to 4-digit YEAR columns.
+• Trigger creation time is maintained.
+• A table is reported as needing a rebuild if it contains old temporal columns in pre-5.6.4 format (TIME,
+DATETIME, and TIMESTAMP columns without support for fractional seconds precision). This helps
+the MySQL upgrade procedure detect and upgrade tables containing old temporal columns.
+• Warnings are issued for tables that use nonnative partitioning because nonnative partitioning is
+removed in MySQL 9.1. See Chapter 26, Partitioning.
+Checking Data Consistency
+The following table shows the other check options that can be given. These options are passed to the
+storage engine, which may use or ignore them.
+Type
+Meaning
+QUICK
+Do not scan the rows to check for incorrect links.
+Applies to InnoDB and MyISAM tables and views.
+FAST
+Check only tables that have not been closed
+properly. Ignored for InnoDB; applies only to
+MyISAM tables and views.
+CHANGED
+Check only tables that have been changed since
+the last check or that have not been closed
+properly. Ignored for InnoDB; applies only to
+MyISAM tables and views.
+MEDIUM
+Scan rows to verify that deleted links are valid.
+This also calculates a key checksum for the rows
+and verifies this with a calculated checksum for
+Type
+Meaning
+the keys. Ignored for InnoDB; applies only to
+MyISAM tables and views.
+EXTENDED
+Do a full key lookup for all keys for each row. This
+ensures that the table is 100% consistent, but
+takes a long time. Ignored for InnoDB; applies
+only to MyISAM tables and views.
+You can combine check options, as in the following example that does a quick check on the table to
+determine whether it was closed properly:
+CHECK TABLE test_table FAST QUICK;
+Note
+If CHECK TABLE finds no problems with a table that is marked as “corrupted” or
+“not closed properly”, CHECK TABLE may remove the mark.
+If a table is corrupted, the problem is most likely in the indexes and not in the data part. All of the
+preceding check types check the indexes thoroughly and should thus find most errors.
+To check a table that you assume is okay, use no check options or the QUICK option. The latter should
+be used when you are in a hurry and can take the very small risk that QUICK does not find an error in
+the data file. (In most cases, under normal usage, MySQL should find any error in the data file. If this
+happens, the table is marked as “corrupted” and cannot be used until it is repaired.)
+FAST and CHANGED are mostly intended to be used from a script (for example, to be executed from
+cron) to check tables periodically. In most cases, FAST is to be preferred over CHANGED. (The only
+case when it is not preferred is when you suspect that you have found a bug in the MyISAM code.)
+EXTENDED is to be used only after you have run a normal check but still get errors from a table
+when MySQL tries to update a row or find a row by key. This is very unlikely if a normal check has
+succeeded.
+Use of CHECK TABLE ... EXTENDED might influence execution plans generated by the query
+optimizer.
+Some problems reported by CHECK TABLE cannot be corrected automatically:
+• Found row where the auto_increment column has the value 0.
+This means that you have a row in the table where the AUTO_INCREMENT index column contains the
+value 0. (It is possible to create a row where the AUTO_INCREMENT column is 0 by explicitly setting
+the column to 0 with an UPDATE statement.)
+This is not an error in itself, but could cause trouble if you decide to dump the table and restore it
+or do an ALTER TABLE on the table. In this case, the AUTO_INCREMENT column changes value
+according to the rules of AUTO_INCREMENT columns, which could cause problems such as a
+duplicate-key error.
+To get rid of the warning, execute an UPDATE statement to set the column to some value other than
+0.
+CHECK TABLE Usage Notes for InnoDB Tables
+The following notes apply to InnoDB tables:
+• If CHECK TABLE encounters a corrupt page, the server exits to prevent error propagation (Bug
+#10132). If the corruption occurs in a secondary index but table data is readable, running CHECK
+TABLE can still cause a server exit.
+• If CHECK TABLE encounters a corrupted DB_TRX_ID or DB_ROLL_PTR field in a clustered index,
+CHECK TABLE can cause InnoDB to access an invalid undo log record, resulting in an MVCC-
+related server exit.
+• If CHECK TABLE encounters errors in InnoDB tables or indexes, it reports an error, and usually
+marks the index and sometimes marks the table as corrupted, preventing further use of the index or
+table. Such errors include an incorrect number of entries in a secondary index or incorrect links.
+• If CHECK TABLE finds an incorrect number of entries in a secondary index, it reports an error but
+does not cause a server exit or prevent access to the file.
+• CHECK TABLE surveys the index page structure, then surveys each key entry. It does not validate
+the key pointer to a clustered record or follow the path for BLOB pointers.
+• When an InnoDB table is stored in its own .ibd file, the first 3 pages of the .ibd file contain
+header information rather than table or index data. The CHECK TABLE statement does not detect
+inconsistencies that affect only the header data. To verify the entire contents of an InnoDB .ibd file,
+use the innochecksum command.
+• When running CHECK TABLE on large InnoDB tables, other threads may be blocked during CHECK
+TABLE execution. To avoid timeouts, the semaphore wait threshold (600 seconds) is extended by
+2 hours (7200 seconds) for CHECK TABLE operations. If InnoDB detects semaphore waits of 240
+seconds or more, it starts printing InnoDB monitor output to the error log. If a lock request extends
+beyond the semaphore wait threshold, InnoDB aborts the process. To avoid the possibility of a
+semaphore wait timeout entirely, run CHECK TABLE QUICK instead of CHECK TABLE.
+• CHECK TABLE functionality for InnoDB SPATIAL indexes includes an R-tree validity check and a
+check to ensure that the R-tree row count matches the clustered index.
+• CHECK TABLE supports secondary indexes on virtual generated columns, which are supported by
+InnoDB.
+• InnoDB supports parallel clustered index reads, which can improve CHECK TABLE performance.
+InnoDB reads the clustered index twice during a CHECK TABLE operation. The second read can be
+performed in parallel. The innodb_parallel_read_threads session variable must be set to a
+value greater than 1 for parallel clustered index reads to occur. The actual number of threads used
+to perform a parallel clustered index read is determined by the innodb_parallel_read_threads
+setting or the number of index subtrees to scan, whichever is smaller.
+CHECK TABLE Usage Notes for MyISAM Tables
+The following notes apply to MyISAM tables:
+• CHECK TABLE updates key statistics for MyISAM tables.
+• If CHECK TABLE output does not return OK or Table is already up to date, you should
+normally run a repair of the table. See Section 9.6, “MyISAM Table Maintenance and Crash
+Recovery”.
+• If none of the CHECK TABLE options QUICK, MEDIUM, or EXTENDED are specified, the default check
+type for dynamic-format MyISAM tables is MEDIUM. This has the same result as running myisamchk
+--medium-check tbl_name on the table. The default check type also is MEDIUM for static-format
+MyISAM tables, unless CHANGED or FAST is specified. In that case, the default is QUICK. The row
+scan is skipped for CHANGED and FAST because the rows are very seldom corrupted.
+15.7.3.3 CHECKSUM TABLE Statement
+CHECKSUM TABLE tbl_name [, tbl_name] ... [QUICK | EXTENDED]
+CHECKSUM TABLE reports a checksum for the contents of a table. You can use this statement to verify
+that the contents are the same before and after a backup, rollback, or other operation that is intended
+to put the data back to a known state.
+This statement requires the SELECT privilege for the table.
+This statement is not supported for views. If you run CHECKSUM TABLE against a view, the Checksum
+value is always NULL, and a warning is returned.
+For a nonexistent table, CHECKSUM TABLE returns NULL and generates a warning.
+During the checksum operation, the table is locked with a read lock for InnoDB and MyISAM.
+Performance Considerations
+By default, the entire table is read row by row and the checksum is calculated. For large tables, this
+could take a long time, thus you would only perform this operation occasionally. This row-by-row
+calculation is what you get with the EXTENDED clause, with InnoDB and all other storage engines other
+than MyISAM, and with MyISAM tables not created with the CHECKSUM=1 clause.
+For MyISAM tables created with the CHECKSUM=1 clause, CHECKSUM TABLE or CHECKSUM
+TABLE ... QUICK returns the “live” table checksum that can be returned very fast. If the table
+does not meet all these conditions, the QUICK method returns NULL. The QUICK method is not
+supported with InnoDB tables. See Section 15.1.20, “CREATE TABLE Statement” for the syntax of the
+CHECKSUM clause.
+The checksum value depends on the table row format. If the row format changes, the checksum
+also changes. For example, the storage format for temporal types such as TIME, DATETIME, and
+TIMESTAMP changed in MySQL 5.6 prior to MySQL 5.6.5, so if a 5.5 table is upgraded to MySQL 5.6,
+the checksum value may change.
+Important
+If the checksums for two tables are different, then it is almost certain that the
+tables are different in some way. However, because the hashing function used
+by CHECKSUM TABLE is not guaranteed to be collision-free, there is a slight
+chance that two tables which are not identical can produce the same checksum.
+15.7.3.4 OPTIMIZE TABLE Statement
+OPTIMIZE [NO_WRITE_TO_BINLOG | LOCAL]
+    TABLE tbl_name [, tbl_name] ...
+OPTIMIZE TABLE reorganizes the physical storage of table data and associated index data, to reduce
+storage space and improve I/O efficiency when accessing the table. The exact changes made to each
+table depend on the storage engine used by that table.
+Use OPTIMIZE TABLE in these cases, depending on the type of table:
+• After doing substantial insert, update, or delete operations on an InnoDB table that has its own
+.ibd file because it was created with the innodb_file_per_table option enabled. The table and
+indexes are reorganized, and disk space can be reclaimed for use by the operating system.
+• After doing substantial insert, update, or delete operations on columns that
+are part of a FULLTEXT index in an InnoDB table. Set the configuration option
+innodb_optimize_fulltext_only=1 first. To keep the index maintenance period to a
+reasonable time, set the innodb_ft_num_word_optimize option to specify how many words to
+update in the search index, and run a sequence of OPTIMIZE TABLE statements until the search
+index is fully updated.
+• After deleting a large part of a MyISAM or ARCHIVE table, or making many changes to a MyISAM or
+ARCHIVE table with variable-length rows (tables that have VARCHAR, VARBINARY, BLOB, or TEXT
+columns). Deleted rows are maintained in a linked list and subsequent INSERT operations reuse
+old row positions. You can use OPTIMIZE TABLE to reclaim the unused space and to defragment
+the data file. After extensive changes to a table, this statement may also improve performance of
+statements that use the table, sometimes significantly.
+This statement requires SELECT and INSERT privileges for the table.
+OPTIMIZE TABLE works for InnoDB, MyISAM, and ARCHIVE tables. OPTIMIZE TABLE is also
+supported for dynamic columns of in-memory NDB tables. It does not work for fixed-width columns
+of in-memory tables, nor does it work for Disk Data tables. The performance of OPTIMIZE on NDB
+Cluster tables can be tuned using --ndb-optimization-delay, which controls the length of
+time to wait between processing batches of rows by OPTIMIZE TABLE. For more information, see
+Section 25.2.7.11, “Previous NDB Cluster Issues Resolved in NDB Cluster 9.1”.
+For NDB Cluster tables, OPTIMIZE TABLE can be interrupted by (for example) killing the SQL thread
+performing the OPTIMIZE operation.
+By default, OPTIMIZE TABLE does not work for tables created using any other storage engine and
+returns a result indicating this lack of support. You can make OPTIMIZE TABLE work for other storage
+engines by starting mysqld with the --skip-new option. In this case, OPTIMIZE TABLE is just
+mapped to ALTER TABLE.
+This statement does not work with views.
+OPTIMIZE TABLE is supported for partitioned tables. For information about using this statement with
+partitioned tables and table partitions, see Section 26.3.4, “Maintenance of Partitions”.
+By default, the server writes OPTIMIZE TABLE statements to the binary log so that they replicate to
+replicas. To suppress logging, specify the optional NO_WRITE_TO_BINLOG keyword or its alias LOCAL.
+You must have the OPTIMIZE_LOCAL_TABLE privilege to use this option.
+• OPTIMIZE TABLE Output
+• InnoDB Details
+• MyISAM Details
+• Other Considerations
+OPTIMIZE TABLE Output
+OPTIMIZE TABLE returns a result set with the columns shown in the following table.
+Column
+Value
+Table
+The table name
+Op
+Always optimize
+Msg_type
+status, error, info, note, or warning
+Msg_text
+An informational message
+OPTIMIZE TABLE table catches and throws any errors that occur while copying table statistics from
+the old file to the newly created file. For example. if the user ID of the owner of the .MYD or .MYI file
+is different from the user ID of the mysqld process, OPTIMIZE TABLE generates a "cannot change
+ownership of the file" error unless mysqld is started by the root user.
+InnoDB Details
+For InnoDB tables, OPTIMIZE TABLE is mapped to ALTER TABLE ... FORCE, which rebuilds the
+table to update index statistics and free unused space in the clustered index. This is displayed in the
+output of OPTIMIZE TABLE when you run it on an InnoDB table, as shown here:
+mysql> OPTIMIZE TABLE foo;
++----------+----------+----------+-------------------------------------------------------------------+
+| Table    | Op       | Msg_type | Msg_text                                                          |
++----------+----------+----------+-------------------------------------------------------------------+
+| test.foo | optimize | note     | Table does not support optimize, doing recreate + analyze instead |
+| test.foo | optimize | status   | OK                                                                |
++----------+----------+----------+-------------------------------------------------------------------+
+OPTIMIZE TABLE uses online DDL for regular and partitioned InnoDB tables, which reduces
+downtime for concurrent DML operations. The table rebuild triggered by OPTIMIZE TABLE is
+completed in place. An exclusive table lock is only taken briefly during the prepare phase and the
+commit phase of the operation. During the prepare phase, metadata is updated and an intermediate
+table is created. During the commit phase, table metadata changes are committed.
+OPTIMIZE TABLE rebuilds the table using the table copy method under the following conditions:
+• When the old_alter_table system variable is enabled.
+• When the server is started with the --skip-new option.
+OPTIMIZE TABLE using online DDL is not supported for InnoDB tables that contain FULLTEXT
+indexes. The table copy method is used instead.
+InnoDB stores data using a page-allocation method and does not suffer from fragmentation in the
+same way that legacy storage engines (such as MyISAM) do. When considering whether or not to run
+optimize, consider the workload of transactions that your server is expected to process:
+• Some level of fragmentation is expected. InnoDB only fills pages 93% full, to leave room for updates
+without having to split pages.
+• Delete operations might leave gaps that leave pages less filled than desired, which could make it
+worthwhile to optimize the table.
+• Updates to rows usually rewrite the data within the same page, depending on the data type and
+row format, when sufficient space is available. See Section 17.9.1.5, “How Compression Works for
+InnoDB Tables” and Section 17.10, “InnoDB Row Formats”.
+• High-concurrency workloads might leave gaps in indexes over time, as InnoDB retains multiple
+versions of the same data due through its MVCC mechanism. See Section 17.3, “InnoDB Multi-
+Versioning”.
+MyISAM Details
+For MyISAM tables, OPTIMIZE TABLE works as follows:
+1. If the table has deleted or split rows, repair the table.
+2. If the index pages are not sorted, sort them.
+3. If the table's statistics are not up to date (and the repair could not be accomplished by sorting the
+index), update them.
+Other Considerations
+OPTIMIZE TABLE is performed online for regular and partitioned InnoDB tables. Otherwise, MySQL
+locks the table during the time OPTIMIZE TABLE is running.
+OPTIMIZE TABLE does not sort R-tree indexes, such as spatial indexes on POINT columns. (Bug
+#23578)
+15.7.3.5 REPAIR TABLE Statement
+REPAIR [NO_WRITE_TO_BINLOG | LOCAL]
+    TABLE tbl_name [, tbl_name] ...
+    [QUICK] [EXTENDED] [USE_FRM]
+REPAIR TABLE repairs a possibly corrupted table, for certain storage engines only.
+This statement requires SELECT and INSERT privileges for the table.
+Although normally you should never have to run REPAIR TABLE, if disaster strikes, this statement is
+very likely to get back all your data from a MyISAM table. If your tables become corrupted often, try to
+find the reason for it, to eliminate the need to use REPAIR TABLE. See Section B.3.3.3, “What to Do If
+MySQL Keeps Crashing”, and Section 18.2.4, “MyISAM Table Problems”.
+REPAIR TABLE checks the table to see whether an upgrade is required. If so, it performs the upgrade,
+following the same rules as CHECK TABLE ... FOR UPGRADE. See Section 15.7.3.2, “CHECK
+TABLE Statement”, for more information.
+Important
+• Make a backup of a table before performing a table repair operation; under
+some circumstances the operation might cause data loss. Possible causes
+include but are not limited to file system errors. See Chapter 9, Backup and
+Recovery.
+• If the server exits during a REPAIR TABLE operation, it is essential after
+restarting it that you immediately execute another REPAIR TABLE statement
+for the table before performing any other operations on it. In the worst case,
+you might have a new clean index file without information about the data file,
+and then the next operation you perform could overwrite the data file. This
+is an unlikely but possible scenario that underscores the value of making a
+backup first.
+• In the event that a table on the source becomes corrupted and you run
+REPAIR TABLE on it, any resulting changes to the original table are not
+propagated to replicas.
+• REPAIR TABLE Storage Engine and Partitioning Support
+• REPAIR TABLE Options
+• REPAIR TABLE Output
+• Table Repair Considerations
+REPAIR TABLE Storage Engine and Partitioning Support
+REPAIR TABLE works for MyISAM, ARCHIVE, and CSV tables. For MyISAM tables, it has the same
+effect as myisamchk --recover tbl_name by default. This statement does not work with views.
+REPAIR TABLE is supported for partitioned tables. However, the USE_FRM option cannot be used with
+this statement on a partitioned table.
+You can use ALTER TABLE ... REPAIR PARTITION to repair one or more partitions; for more
+information, see Section 15.1.9, “ALTER TABLE Statement”, and Section 26.3.4, “Maintenance of
+Partitions”.
+REPAIR TABLE Options
+• NO_WRITE_TO_BINLOG or LOCAL
+By default, the server writes REPAIR TABLE statements to the binary log so that they replicate to
+replicas. To suppress logging, specify the optional NO_WRITE_TO_BINLOG keyword or its alias
+LOCAL.
+• QUICK
+If you use the QUICK option, REPAIR TABLE tries to repair only the index file, and not the data file.
+This type of repair is like that done by myisamchk --recover --quick.
+• EXTENDED
+If you use the EXTENDED option, MySQL creates the index row by row instead of creating one index
+at a time with sorting. This type of repair is like that done by myisamchk --safe-recover.
+• USE_FRM
+The USE_FRM option is available for use if the .MYI index file is missing or if its header is corrupted.
+This option tells MySQL not to trust the information in the .MYI file header and to re-create it using
+information from the data dictionary. This kind of repair cannot be done with myisamchk.
+Caution
+Use the USE_FRM option only if you cannot use regular REPAIR modes.
+Telling the server to ignore the .MYI file makes important table metadata
+stored in the .MYI unavailable to the repair process, which can have
+deleterious consequences:
+• The current AUTO_INCREMENT value is lost.
+• The link to deleted records in the table is lost, which means that free space
+for deleted records remains unoccupied thereafter.
+• The .MYI header indicates whether the table is compressed. If the server
+ignores this information, it cannot tell that a table is compressed and repair
+can cause change or loss of table contents. This means that USE_FRM
+should not be used with compressed tables. That should not be necessary,
+anyway: Compressed tables are read only, so they should not become
+corrupt.
+If you use USE_FRM for a table that was created by a different version of the
+MySQL server than the one you are currently running, REPAIR TABLE does
+not attempt to repair the table. In this case, the result set returned by REPAIR
+TABLE contains a line with a Msg_type value of error and a Msg_text
+value of Failed repairing incompatible .FRM file.
+If USE_FRM is used, REPAIR TABLE does not check the table to see whether
+an upgrade is required.
+REPAIR TABLE Output
+REPAIR TABLE returns a result set with the columns shown in the following table.
+Column
+Value
+Table
+The table name
+Op
+Always repair
+Msg_type
+status, error, info, note, or warning
+Msg_text
+An informational message
+The REPAIR TABLE statement might produce many rows of information for each repaired table. The
+last row has a Msg_type value of status and Msg_test normally should be OK. For a MyISAM table,
+if you do not get OK, you should try repairing it with myisamchk --safe-recover. (REPAIR TABLE
+does not implement all the options of myisamchk. With myisamchk --safe-recover, you can also
+use options that REPAIR TABLE does not support, such as --max-record-length.)
+REPAIR TABLE table catches and throws any errors that occur while copying table statistics from the
+old corrupted file to the newly created file. For example. if the user ID of the owner of the .MYD or .MYI
+file is different from the user ID of the mysqld process, REPAIR TABLE generates a "cannot change
+ownership of the file" error unless mysqld is started by the root user.
+Table Repair Considerations
+You may be able to increase REPAIR TABLE performance by setting certain system variables. See
+Section 10.6.3, “Optimizing REPAIR TABLE Statements”.
+REPAIR TABLE upgrades a table if it contains old temporal columns in pre-5.6.4 format; namely, the
+TIME, DATETIME, and TIMESTAMP columns that lacked support for fractional seconds precision.

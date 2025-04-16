@@ -1,0 +1,38 @@
+# ==== Purpose ====
+#
+# This script tests server behavior when a crash occurs during the
+# execution of `XA PREPARE` and just before engines start preparing the
+# transaction.
+#
+# ==== Requirements ====
+#
+# After server restart:
+# R1. The `XA PREPARE` statement shouldn't be logged to the binlog.
+# R2. There shouldn't be any changes to GTID_EXECUTED.
+# R3. There shouldn't be any pending XA transactions visible with `XA
+#     RECOVER`.
+#
+# ==== Implementation ====
+#
+# 1. Setup scenario: create table and insert some records.
+# 2. Start and execute an XA transaction containing an insert until before
+#    `XA PREPARE`.
+# 3. Take the `GTID_EXECUTED` state.
+# 4. Crash the server during `XA PREPARE` execution, just before storage
+#    engines start preparing.
+# 5. Restart server and check:
+#    a. Error log for messages stating that SE recovery process rolled back
+#       a pending transaction.
+#    b. Error log for messages stating that XA recovery process didn't find
+#       any transaction needing recovery.
+#    c. The `XA PREPARE` wasn't logged to the binary log.
+#    f. There aren't any changes to GTID_EXECUTED.
+#    e. There aren't any pending XA transaction listed in the output of `XA
+#       RECOVER`.
+#    f. There aren't changes to the table.
+#
+# ==== References ====
+#
+# WL#11300: Crash-safe XA + binary log
+#
+# Related tests

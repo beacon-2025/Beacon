@@ -1,0 +1,39 @@
+-- 创建模式和类头
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 在schema1中创建类头和类体
+CREATE CLASS schema1.class1;
+CREATE CLASS BODY schema1.class1;
+-- 在schema2中创建类头和类体
+CREATE CLASS schema2.class2;
+CREATE CLASS BODY schema2.class2;
+DROP CLASS class1;
+DROP CLASS schema1.class1;
+DROP CLASS IF EXISTS schema1.class1;
+DROP CLASS IF EXISTS schema1.nonexistent_class;
+DROP CLASS schema1.class1 RESTRICT;
+DROP CLASS schema1.class1 CASCADE;
+DROP CLASS BODY class1;
+DROP CLASS BODY schema1.class1;
+DROP CLASS BODY IF EXISTS schema1.class1;
+DROP CLASS BODY IF EXISTS schema1.nonexistent_class;
+DROP CLASS BODY schema1.class1 RESTRICT;
+DROP CLASS BODY schema1.class1 CASCADE;
+DROP CLASS nonexistent_class;
+DROP CLASS BODY nonexistent_class;
+DROP CLASS schema2.class2;
+DROP CLASS BODY schema2.class2;
+DROP CLASS IF EXISTS schema2.class2;
+DROP CLASS BODY IF EXISTS schema2.class2;
+DROP CLASS schema2.class2 RESTRICT;
+DROP CLASS BODY schema2.class2 RESTRICT;
+DROP CLASS schema2.class2 CASCADE;
+DROP CLASS BODY schema2.class2 CASCADE;
+DROP CLASS nonexistent_schema.nonexistent_class;
+DROP CLASS BODY nonexistent_schema.nonexistent_class;
+DROP CLASS IF EXISTS nonexistent_schema.nonexistent_class;
+DROP CLASS BODY IF EXISTS nonexistent_schema.nonexistent_class;
+DROP CLASS nonexistent_schema.nonexistent_class RESTRICT;
+DROP CLASS BODY nonexistent_schema.nonexistent_class RESTRICT;
+DROP CLASS nonexistent_schema.nonexistent_class CASCADE;
+DROP CLASS BODY nonexistent_schema.nonexistent_class CASCADE

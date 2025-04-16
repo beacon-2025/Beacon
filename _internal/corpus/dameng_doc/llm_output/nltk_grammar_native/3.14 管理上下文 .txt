@@ -1,0 +1,8 @@
+```plaintext
+CONTEXT -> 'CONTEXT' NAMESPACE NAME_VALUE
+NAMESPACE -> 'NAMESPACE'
+NAME_VALUE -> 'NAME' 'name_value' 'VALUE' 'value_value'
+DBMS_SESSION -> 'DBMS_SESSION' 'package_name_1'
+SYS_CONTEXT -> 'SYS_CONTEXT' 'function_name_1'
+SESSION_ATTRIBUTES -> 'SESSION' 'ID' 'id_value' | 'SCHEMA' 'schema_name_1' | 'USER' 'user_name_1'
+```

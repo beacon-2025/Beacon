@@ -1,0 +1,8 @@
+```  
+S -> DROP_TABLE  
+DROP_TABLE -> 'DROP' 'TABLE' IF_EXISTS SCHEMA_NAME '.' TABLE_NAME DROP_OPTION  
+IF_EXISTS -> 'IF EXISTS' | ''  
+SCHEMA_NAME -> 'schemaname_1'  
+TABLE_NAME -> 'tablename_1'  
+DROP_OPTION -> 'RESTRICT' | 'CASCADE' | ''  
+```

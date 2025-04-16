@@ -1,0 +1,2 @@
+
+GRANT ALL ON *.* TO root@10.0.1.1

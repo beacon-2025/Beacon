@@ -1,0 +1,13 @@
+
+
+#
+# Bug#30102: rename table does corrupt tables with partition files on failure
+# This test case renames the table such that the partition file name 
+# is 255 chars long. Due the restriction of 260 char path name (including drive label)
+# this will fail in windows.
+#
+CREATE TABLE t1 (a INT)
+PARTITION BY RANGE (a)
+(PARTITION p0 VALUES LESS THAN (6),
+ PARTITION `p1....................` VALUES LESS THAN (9),
+ PARTITION p2 VALUES LESS THAN MAXVALUE)

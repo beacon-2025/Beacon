@@ -1,0 +1,6 @@
+```
+S -> DROP_SRS_STATEMENT
+DROP_SRS_STATEMENT -> 'DROP' 'SPATIAL REFERENCE SYSTEM' IF_EXISTS SRID
+IF_EXISTS -> 'IF EXISTS' | ''
+SRID -> 'srid_value'  # Represents a 32-bit unsigned integer
+```

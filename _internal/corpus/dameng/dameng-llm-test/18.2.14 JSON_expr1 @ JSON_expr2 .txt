@@ -1,0 +1,90 @@
+-- 创建一个包含JSON数据的表
+CREATE TABLE json_table1 (
+    id INT PRIMARY KEY,
+    json_data CLOB
+);
+-- 插入一些JSON数据
+INSERT INTO json_table1 (id, json_data) VALUES (1, '{"a":1, "b":2}');
+INSERT INTO json_table1 (id, json_data) VALUES (2, '{"x":10, "y":20, "z":30}');
+INSERT INTO json_table1 (id, json_data) VALUES (3, '{"name":"Alice", "age":25}');
+INSERT INTO json_table1 (id, json_data) VALUES (4, '{"name":"Bob", "age":30, "city":"New York"}');
+-- 测试用例 1: 检查JSON是否包含指定的键值对
+SELECT json_data @> '{"b":2}' AS result FROM json_table1 WHERE id = 1;
+-- 测试用例 2: 检查JSON是否包含指定的键值对
+SELECT json_data @> '{"y":20}' AS result FROM json_table1 WHERE id = 2;
+-- 测试用例 3: 检查JSON是否包含指定的键值对
+SELECT json_data @> '{"age":25}' AS result FROM json_table1 WHERE id = 3;
+-- 测试用例 4: 检查JSON是否包含指定的键值对
+SELECT json_data @> '{"city":"New York"}' AS result FROM json_table1 WHERE id = 4;
+-- 测试用例 5: 检查JSON是否包含不存在的键值对
+SELECT json_data @> '{"c":3}' AS result FROM json_table1 WHERE id = 1;
+-- 测试用例 6: 检查JSON是否包含不存在的键值对
+SELECT json_data @> '{"z":40}' AS result FROM json_table1 WHERE id = 2;
+-- 测试用例 7: 检查JSON是否包含不存在的键值对
+SELECT json_data @> '{"age":30}' AS result FROM json_table1 WHERE id = 3;
+-- 测试用例 8: 检查JSON是否包含不存在的键值对
+SELECT json_data @> '{"city":"Los Angeles"}' AS result FROM json_table1 WHERE id = 4;
+-- 测试用例 9: 检查JSON是否包含嵌套的键值对
+SELECT json_data @> '{"name":"Alice"}' AS result FROM json_table1 WHERE id = 3;
+-- 测试用例 10: 检查JSON是否包含嵌套的键值对
+SELECT json_data @> '{"name":"Bob"}' AS result FROM json_table1 WHERE id = 4;
+-- 测试用例 11: 检查JSON是否包含多个键值对
+SELECT json_data @> '{"a":1, "b":2}' AS result FROM json_table1 WHERE id = 1;
+-- 测试用例 12: 检查JSON是否包含多个键值对
+SELECT json_data @> '{"x":10, "y":20}' AS result FROM json_table1 WHERE id = 2;
+-- 测试用例 13: 检查JSON是否包含多个键值对
+SELECT json_data @> '{"name":"Alice", "age":25}' AS result FROM json_table1 WHERE id = 3;
+-- 测试用例 14: 检查JSON是否包含多个键值对
+SELECT json_data @> '{"name":"Bob", "city":"New York"}' AS result FROM json_table1 WHERE id = 4;
+-- 测试用例 15: 检查JSON是否包含部分键值对
+SELECT json_data @> '{"a":1}' AS result FROM json_table1 WHERE id = 1;
+-- 测试用例 16: 检查JSON是否包含部分键值对
+SELECT json_data @> '{"x":10}' AS result FROM json_table1 WHERE id = 2;
+-- 测试用例 17: 检查JSON是否包含部分键值对
+SELECT json_data @> '{"age":25}' AS result FROM json_table1 WHERE id = 3;
+-- 测试用例 18: 检查JSON是否包含部分键值对
+SELECT json_data @> '{"city":"New York"}' AS result FROM json_table1 WHERE id = 4;
+-- 测试用例 19: 检查JSON是否包含空对象
+SELECT json_data @> '{}' AS result FROM json_table1 WHERE id = 1;
+-- 测试用例 20: 检查JSON是否包含空对象
+SELECT json_data @> '{}' AS result FROM json_table1 WHERE id = 2;
+-- 测试用例 21: 检查JSON是否包含空对象
+SELECT json_data @> '{}' AS result FROM json_table1 WHERE id = 3;
+-- 测试用例 22: 检查JSON是否包含空对象
+SELECT json_data @> '{}' AS result FROM json_table1 WHERE id = 4;
+-- 测试用例 23: 检查JSON是否包含不匹配的键值对
+SELECT json_data @> '{"a":2}' AS result FROM json_table1 WHERE id = 1;
+-- 测试用例 24: 检查JSON是否包含不匹配的键值对
+SELECT json_data @> '{"x":15}' AS result FROM json_table1 WHERE id = 2;
+-- 测试用例 25: 检查JSON是否包含不匹配的键值对
+SELECT json_data @> '{"age":30}' AS result FROM json_table1 WHERE id = 3;
+-- 测试用例 26: 检查JSON是否包含不匹配的键值对
+SELECT json_data @> '{"city":"Los Angeles"}' AS result FROM json_table1 WHERE id = 4;
+-- 测试用例 27: 检查JSON是否包含嵌套的键值对
+SELECT json_data @> '{"name":"Alice", "age":25}' AS result FROM json_table1 WHERE id = 3;
+-- 测试用例 28: 检查JSON是否包含嵌套的键值对
+SELECT json_data @> '{"name":"Bob", "city":"New York"}' AS result FROM json_table1 WHERE id = 4;
+-- 测试用例 29: 检查JSON是否包含嵌套的键值对
+SELECT json_data @> '{"a":1, "b":2}' AS result FROM json_table1 WHERE id = 1;
+-- 测试用例 30: 检查JSON是否包含嵌套的键值对
+SELECT json_data @> '{"x":10, "y":20}' AS result FROM json_table1 WHERE id = 2;
+-- 测试用例 31: 检查JSON是否包含嵌套的键值对
+SELECT json_data @> '{"name":"Alice", "age":25}' AS result FROM json_table1 WHERE id = 3;
+-- 测试用例 32: 检查JSON是否包含嵌套的键值对
+SELECT json_data @> '{"name":"Bob", "city":"New York"}' AS result FROM json_table1 WHERE id = 4;
+-- 测试用例 33: 检查JSON是否包含嵌套的键值对
+SELECT json_data @> '{"a":1, "b":2}' AS result FROM json_table1 WHERE id = 1;
+-- 测试用例 34: 检查JSON是否包含嵌套的键值对
+SELECT json_data @> '{"x":10, "y":20}' AS result FROM json_table1 WHERE id = 2;
+-- 测试用例 35: 检查JSON是否包含嵌套的键值对
+SELECT json_data @> '{"name":"Alice", "age":25}' AS result FROM json_table1 WHERE id = 3;
+-- 测试用例 36: 检查JSON是否包含嵌套的键值对
+SELECT json_data @> '{"name":"Bob", "city":"New York"}' AS result FROM json_table1 WHERE id = 4;
+-- 测试用例 37: 检查JSON是否包含嵌套的键值对
+SELECT json_data @> '{"a":1, "b":2}' AS result FROM json_table1 WHERE id = 1;
+-- 测试用例 38: 检查JSON是否包含嵌套的键值对
+SELECT json_data @> '{"x":10, "y":20}' AS result FROM json_table1 WHERE id = 2;
+-- 测试用例 39: 检查JSON是否包含嵌套的键值对
+SELECT json_data @> '{"name":"Alice", "age":25}' AS result FROM json_table1 WHERE id = 3;
+-- 测试用例 40: 检查JSON是否包含嵌套的键值对
+SELECT json_data @> '{"name":"Bob", "city":"New York"}' AS result FROM json_table1 WHERE id = 4

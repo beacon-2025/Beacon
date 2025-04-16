@@ -1,0 +1,130 @@
+-- 创建一个公共的表，用于触发器测试
+CREATE TABLE employees (
+    id INT PRIMARY KEY,
+    name VARCHAR(100),
+    salary DECIMAL(10, 2)
+);
+-- 创建另一个公共的表，用于记录触发器操作
+CREATE TABLE audit_log (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    action VARCHAR(100),
+    employee_id INT,
+    log_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+-- 创建触发器
+CREATE TRIGGER after_employee_insert
+AFTER INSERT ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (action, employee_id) VALUES ('INSERT', NEW.id);
+END;
+-- 插入一条员工记录
+INSERT INTO employees (id, name, salary) VALUES (1, 'John Doe', 50000.00);
+-- 查询日志表，验证触发器是否生效
+SELECT * FROM audit_log;
+-- 创建触发器
+CREATE TRIGGER after_employee_update
+AFTER UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (action, employee_id) VALUES ('UPDATE', NEW.id);
+END;
+-- 更新员工工资
+UPDATE employees SET salary = 55000.00 WHERE id = 1;
+-- 查询日志表，验证触发器是否生效
+SELECT * FROM audit_log;
+-- 创建触发器
+CREATE TRIGGER after_employee_delete
+AFTER DELETE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (action, employee_id) VALUES ('DELETE', OLD.id);
+END;
+-- 删除员工记录
+DELETE FROM employees WHERE id = 1;
+-- 查询日志表，验证触发器是否生效
+SELECT * FROM audit_log;
+-- 创建触发器
+CREATE TRIGGER before_employee_insert
+BEFORE INSERT ON employees
+FOR EACH ROW
+BEGIN
+    IF NEW.salary <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Salary must be positive';
+END IF;
+END;
+-- 尝试插入一条工资为负数的员工记录
+INSERT INTO employees (id, name, salary) VALUES (2, 'Jane Doe', -1000.00);
+-- 查询员工表，验证触发器是否阻止了插入
+SELECT * FROM employees;
+-- 创建触发器
+CREATE TRIGGER before_employee_update
+BEFORE UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    IF NEW.salary <= 0 THEN
+        SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Salary must be positive';
+END IF;
+END;
+-- 尝试更新员工工资为负数
+UPDATE employees SET salary = -1000.00 WHERE id = 1;
+-- 查询员工表，验证触发器是否阻止了更新
+SELECT * FROM employees;
+-- 删除之前创建的触发器
+DROP TRIGGER after_employee_insert;
+-- 插入一条员工记录，验证触发器是否已被删除
+INSERT INTO employees (id, name, salary) VALUES (3, 'Alice Smith', 60000.00);
+-- 查询日志表，验证触发器是否不再生效
+SELECT * FROM audit_log;
+-- 创建一个新的表，用于测试自动生成ID
+CREATE TABLE employees_auto_id (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    salary DECIMAL(10, 2)
+);
+-- 创建触发器
+CREATE TRIGGER before_employee_auto_id_insert
+BEFORE INSERT ON employees_auto_id
+FOR EACH ROW
+BEGIN
+    SET NEW.id = (SELECT COALESCE(MAX(id), 0) + 1 FROM employees_auto_id);
+END;
+-- 插入一条员工记录，不指定ID
+INSERT INTO employees_auto_id (name, salary) VALUES ('Bob Johnson', 70000.00);
+-- 查询员工表，验证触发器是否自动生成了ID
+SELECT * FROM employees_auto_id;
+-- 创建触发器
+CREATE TRIGGER before_employee_default_salary_insert
+BEFORE INSERT ON employees
+FOR EACH ROW
+BEGIN
+    IF NEW.salary IS NULL THEN
+        SET NEW.salary = 50000.00;
+END IF;
+END;
+-- 插入一条员工记录，不指定工资
+INSERT INTO employees (id, name) VALUES (4, 'Charlie Brown');
+-- 查询员工表，验证触发器是否设置了默认工资
+SELECT * FROM employees;
+-- 创建触发器
+CREATE TRIGGER after_employee_update_log
+AFTER UPDATE ON employees
+FOR EACH ROW
+BEGIN
+    INSERT INTO audit_log (action, employee_id) VALUES ('UPDATE', NEW.id);
+END;
+-- 更新员工记录
+UPDATE employees SET salary = 65000.00 WHERE id = 4;
+-- 查询日志表，验证触发器是否记录了更新操作
+SELECT * FROM audit_log;
+-- 创建触发器
+CREATE TRIGGER after_employee_delete_log
+AFTER DELETE ON employees
+FOR EACH ROW
+BEGIN
+    DELETE FROM audit_log WHERE employee_id = OLD.id;
+END;
+-- 删除员工记录
+DELETE FROM employees WHERE id = 4;
+-- 查询日志表，验证触发器是否删除了相关日志
+SELECT * FROM audit_log

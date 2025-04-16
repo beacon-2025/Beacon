@@ -1,0 +1,70 @@
+-- 创建一些测试用户
+CREATE USER test_user_1;
+CREATE USER test_user_2;
+CREATE USER test_user_3;
+CREATE USER test_user_4;
+CREATE USER test_user_5;
+-- 测试用例 1: 删除一个存在的用户
+DROP USER test_user_1;
+-- 测试用例 2: 删除一个不存在的用户（不使用 IF EXISTS）
+-- 预期结果：报错
+DROP USER non_existent_user;
+-- 测试用例 3: 删除一个不存在的用户（使用 IF EXISTS）
+-- 预期结果：不报错
+DROP USER IF EXISTS non_existent_user;
+-- 测试用例 4: 删除一个存在的用户，并使用 RESTRICT 选项
+DROP USER test_user_2 RESTRICT;
+-- 测试用例 5: 删除一个存在的用户，并使用 CASCADE 选项
+DROP USER test_user_3 CASCADE;
+-- 测试用例 6: 删除一个存在的用户，且该用户有创建的对象（不使用 CASCADE）
+-- 前置语句：创建一个表
+CREATE TABLE test_table_1 (id INT);
+-- 预期结果：报错
+DROP USER test_user_4;
+-- 测试用例 7: 删除一个存在的用户，且该用户有创建的对象（使用 CASCADE）
+-- 前置语句：创建一个表
+CREATE TABLE test_table_2 (id INT);
+-- 预期结果：成功删除用户及其创建的对象
+DROP USER test_user_5 CASCADE;
+-- 测试用例 8: 删除一个正在使用中的用户
+-- 前置语句：创建一个用户并登录
+CREATE USER test_user_6;
+-- 预期结果：成功删除用户，但后续操作会报错
+DROP USER test_user_6;
+-- 测试用例 9: 删除一个系统用户（SYSDBA）
+-- 预期结果：报错
+DROP USER SYSDBA;
+-- 测试用例 10: 删除一个系统用户（SYSAUDITOR）
+-- 预期结果：报错
+DROP USER SYSAUDITOR;
+-- 测试用例 11: 删除一个系统用户（SYSSSO）
+-- 预期结果：报错
+DROP USER SYSSSO;
+-- 测试用例 12: 删除一个用户，且该用户有被其他用户引用的对象（不使用 CASCADE）
+-- 前置语句：创建两个用户和一个表
+CREATE USER test_user_7;
+CREATE USER test_user_8;
+CREATE TABLE test_table_3 (id INT);
+-- 预期结果：报错
+DROP USER test_user_7;
+-- 测试用例 13: 删除一个用户，且该用户有被其他用户引用的对象（使用 CASCADE）
+-- 前置语句：创建两个用户和一个表
+CREATE USER test_user_9;
+CREATE USER test_user_10;
+CREATE TABLE test_table_4 (id INT);
+-- 预期结果：成功删除用户及其创建的对象
+DROP USER test_user_9 CASCADE;
+-- 测试用例 14: 删除一个用户，且该用户有视图依赖关系（不使用 CASCADE）
+-- 前置语句：创建一个用户、一个表和一个视图
+CREATE USER test_user_11;
+CREATE TABLE test_table_5 (id INT);
+CREATE VIEW test_view_1 AS SELECT * FROM test_table_5;
+-- 预期结果：报错
+DROP USER test_user_11;
+-- 测试用例 15: 删除一个用户，且该用户有视图依赖关系（使用 CASCADE）
+-- 前置语句：创建一个用户、一个表和一个视图
+CREATE USER test_user_12;
+CREATE TABLE test_table_6 (id INT);
+CREATE VIEW test_view_2 AS SELECT * FROM test_table_6;
+-- 预期结果：成功删除用户及其创建的对象
+DROP USER test_user_12 CASCADE

@@ -1,0 +1,15 @@
+# ==== Purpose ====
+#
+# This test checks that channels can be created while load is put on the replica
+#
+# ==== Implementation ====
+#
+# 0. The test needs 2 servers, one with load, and a replica where channels are created
+# 1. Create a table on the source and use Slap to apply load on the server
+# 2. Create 20 channels, 1 per second in the replica
+# 3. Check the data was replicated and 20 channel were created
+# 4. Cleanup
+#
+# ==== References ====
+#
+# Bug#33090128 RANDOM ERROR 1201: COULD NOT INITIALIZE MASTER INFO STRUCTURE

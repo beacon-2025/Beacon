@@ -1,0 +1,38 @@
+-- 创建模式
+CREATE SCHEMA IF NOT EXISTS schema1;
+CREATE SCHEMA IF NOT EXISTS schema2;
+-- 创建表
+CREATE TABLE schema1.table1 (id INT PRIMARY KEY, name VARCHAR(50));
+CREATE TABLE schema2.table2 (id INT PRIMARY KEY, name VARCHAR(50));
+-- 创建触发器
+CREATE TRIGGER schema1.trigger1 AFTER INSERT ON schema1.table1 FOR EACH ROW BEGIN END;
+CREATE TRIGGER schema1.trigger2 AFTER UPDATE ON schema1.table1 FOR EACH ROW BEGIN END;
+CREATE TRIGGER schema2.trigger3 AFTER DELETE ON schema2.table2 FOR EACH ROW BEGIN END;
+-- 测试用例 1: 删除存在的触发器
+DROP TRIGGER schema1.trigger1;
+-- 测试用例 2: 删除不存在的触发器（不使用 IF EXISTS）
+-- 预期结果：报错
+DROP TRIGGER schema1.nonexistent_trigger;
+-- 测试用例 3: 删除不存在的触发器（使用 IF EXISTS）
+-- 预期结果：不报错
+DROP TRIGGER IF EXISTS schema1.nonexistent_trigger;
+-- 测试用例 4: 删除模式下的触发器
+DROP TRIGGER schema2.trigger3;
+-- 测试用例 5: 删除触发器后尝试再次删除（使用 IF EXISTS）
+-- 预期结果：不报错
+DROP TRIGGER IF EXISTS schema1.trigger2;
+-- 测试用例 6: 删除触发器后尝试再次删除（不使用 IF EXISTS）
+-- 预期结果：报错
+DROP TRIGGER schema1.trigger2;
+-- 测试用例 7: 删除触发器后删除触发表
+-- 预期结果：触发器自动删除
+DROP TABLE schema1.table1;
+-- 测试用例 8: 删除触发器后删除触发表（使用 IF EXISTS）
+-- 预期结果：触发器自动删除
+DROP TABLE IF EXISTS schema2.table2;
+-- 测试用例 9: 删除触发器后尝试删除不存在的触发表
+-- 预期结果：报错
+DROP TABLE schema1.nonexistent_table;
+-- 测试用例 10: 删除触发器后尝试删除不存在的触发表（使用 IF EXISTS）
+-- 预期结果：不报错
+DROP TABLE IF EXISTS schema1.nonexistent_table

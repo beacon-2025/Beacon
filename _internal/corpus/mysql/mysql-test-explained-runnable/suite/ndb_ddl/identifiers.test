@@ -1,0 +1,5 @@
+
+# The failure should also have pushed some warnings which
+# further explains the problem. These includes also the warnings from
+# discover phase where the same error is triggered.
+SHOW WARNINGS

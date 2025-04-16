@@ -1,0 +1,2 @@
+
+create procedure p2(i int) begin end

@@ -1,0 +1,21 @@
+```plaintext
+PATH_EXPRESSION -> '$' OBJECT | '$' ARRAY
+OBJECT -> '.' NAME | '*' NAME
+ARRAY -> '[' INDEX ']' | '[' '*' ']'
+INDEX -> '0' | '1' | '2' | RANGE
+RANGE -> NUMBER 'to' NUMBER | NUMBER ',' RANGE
+NAME -> 'name_value'
+NUMBER -> 'number_value'
+
+PRETTY_ASCII -> 'PRETTY' | 'ASCII'
+PRETTY_ASCII_RULE -> 'PRETTY' 'ASCII' | 'ASCII'
+
+WRAPPER -> 'WITH' 'WRAPPER' | 'WITHOUT' 'WRAPPER' | 'WITH' 'CONDITIONAL' 'WRAPPER' | 'WITH' 'UNCONDITIONAL' 'WRAPPER'
+WRAPPER_RULE -> 'WITH' 'WRAPPER' | 'WITHOUT' 'WRAPPER' | 'WITH' 'CONDITIONAL' 'WRAPPER'
+
+ERROR -> 'ERROR' 'ON' 'ERROR' | 'NULL' 'ON' 'ERROR' | 'EMPTY' 'ON' 'ERROR' | 'DEFAULT' 'value_value' 'ON' 'ERROR'
+ERROR_RULE -> 'ERROR' 'ON' 'ERROR' | 'NULL' 'ON' 'ERROR' | 'EMPTY' 'ON' 'ERROR' | 'DEFAULT' 'value_value' 'ON' 'ERROR'
+
+JSON_QUERY -> 'json_query' '(' 'po_document_value' ',' PATH_EXPRESSION PRETTY_ASCII_RULE WRAPPER_RULE ERROR_RULE ')'
+JSON_VALUE -> 'json_value' '(' 'po_document_value' ',' PATH_EXPRESSION ERROR_RULE ')'
+```

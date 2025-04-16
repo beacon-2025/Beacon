@@ -1,0 +1,2 @@
+
+CREATE TABLE xtable (phrase VARCHAR(30))

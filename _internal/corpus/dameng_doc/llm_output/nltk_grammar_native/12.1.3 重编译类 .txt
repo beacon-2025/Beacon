@@ -1,0 +1,7 @@
+```plaintext
+S -> ALTER_CLASS
+ALTER_CLASS -> 'ALTER' 'CLASS' SCHEMA_NAME '.' CLASS_NAME 'COMPILE' DEBUG_OPTION
+SCHEMA_NAME -> 'schemaname_1'
+CLASS_NAME -> 'class_name_1'
+DEBUG_OPTION -> 'DEBUG' | ''
+```

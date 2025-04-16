@@ -1,0 +1,142 @@
+-- 公共前置语句：创建基础表
+CREATE TABLE table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+CREATE TABLE table2 (
+    id INT PRIMARY KEY,
+    description VARCHAR(100)
+);
+-- 插入一些基础数据
+INSERT INTO table1 (id, name) VALUES (1, 'Alice');
+INSERT INTO table1 (id, name) VALUES (2, 'Bob');
+INSERT INTO table2 (id, description) VALUES (1, 'Description 1');
+INSERT INTO table2 (id, description) VALUES (2, 'Description 2');
+-- 测试用例1：创建物化视图
+CREATE MATERIALIZED VIEW mv1 AS
+SELECT t1.id, t1.name, t2.description
+FROM table1 t1
+JOIN table2 t2 ON t1.id = t2.id;
+-- 测试用例2：创建物化视图并建立索引
+CREATE MATERIALIZED VIEW mv2 AS
+SELECT t1.id, t1.name
+FROM table1 t1;
+CREATE INDEX idx_mv2 ON mv2(id);
+-- 测试用例3：查询物化视图
+SELECT * FROM mv1;
+-- 测试用例4：查询物化视图日志
+-- 假设物化视图日志已经存在
+SELECT * FROM mlog$_mv1;
+-- 测试用例5：创建物化视图并尝试插入数据（应失败）
+CREATE MATERIALIZED VIEW mv3 AS
+SELECT t1.id, t1.name
+FROM table1 t1;
+-- 尝试插入数据（应失败）
+INSERT INTO mv3 (id, name) VALUES (3, 'Charlie');
+-- 测试用例6：创建物化视图并尝试删除数据（应失败）
+CREATE MATERIALIZED VIEW mv4 AS
+SELECT t1.id, t1.name
+FROM table1 t1;
+-- 尝试删除数据（应失败）
+DELETE FROM mv4 WHERE id = 1;
+-- 测试用例7：创建物化视图并尝试更新数据（应失败）
+CREATE MATERIALIZED VIEW mv5 AS
+SELECT t1.id, t1.name
+FROM table1 t1;
+-- 尝试更新数据（应失败）
+UPDATE mv5 SET name = 'David' WHERE id = 1;
+-- 测试用例8：创建物化视图并尝试TRUNCATE操作（应失败）
+CREATE MATERIALIZED VIEW mv6 AS
+SELECT t1.id, t1.name
+FROM table1 t1;
+-- 尝试TRUNCATE操作（应失败）
+TRUNCATE TABLE mv6;
+-- 测试用例9：创建物化视图并尝试MERGE INTO操作（应失败）
+CREATE MATERIALIZED VIEW mv7 AS
+SELECT t1.id, t1.name
+FROM table1 t1;
+-- 尝试MERGE INTO操作（应失败）
+MERGE INTO mv7 USING table1 ON (mv7.id = table1.id)
+WHEN MATCHED THEN UPDATE SET mv7.name = table1.name;
+-- 测试用例10：创建物化视图并尝试快速刷新
+CREATE MATERIALIZED VIEW mv8 AS
+SELECT t1.id, t1.name
+FROM table1 t1;
+-- 尝试快速刷新
+EXEC DBMS_MVIEW.REFRESH('mv8', 'F');
+-- 测试用例11：创建物化视图并尝试完全刷新
+CREATE MATERIALIZED VIEW mv9 AS
+SELECT t1.id, t1.name
+FROM table1 t1;
+-- 尝试完全刷新
+EXEC DBMS_MVIEW.REFRESH('mv9', 'C');
+-- 测试用例12：创建物化视图并尝试TRUNCATE基础表后进行完全刷新
+CREATE MATERIALIZED VIEW mv10 AS
+SELECT t1.id, t1.name
+FROM table1 t1;
+-- TRUNCATE基础表
+TRUNCATE TABLE table1;
+-- 尝试完全刷新
+EXEC DBMS_MVIEW.REFRESH('mv10', 'C');
+-- 测试用例13：创建物化视图并尝试快速装载后进行完全刷新
+CREATE MATERIALIZED VIEW mv11 AS
+SELECT t1.id, t1.name
+FROM table1 t1;
+-- 假设快速装载操作已经完成
+-- 尝试完全刷新
+EXEC DBMS_MVIEW.REFRESH('mv11', 'C');
+-- 测试用例14：创建物化视图并尝试分区子表数据交换后进行完全刷新
+CREATE MATERIALIZED VIEW mv12 AS
+SELECT t1.id, t1.name
+FROM table1 t1;
+-- 假设分区子表数据交换操作已经完成
+-- 尝试完全刷新
+EXEC DBMS_MVIEW.REFRESH('mv12', 'C');
+-- 测试用例15：创建物化视图并尝试创建普通视图
+CREATE MATERIALIZED VIEW mv13 AS
+SELECT t1.id, t1.name
+FROM table1 t1;
+CREATE VIEW v1 AS
+SELECT * FROM mv13;
+-- 尝试更新普通视图（应失败）
+UPDATE v1 SET name = 'Eve' WHERE id = 1;
+-- 测试用例16：创建物化视图并尝试创建游标
+CREATE MATERIALIZED VIEW mv14 AS
+SELECT t1.id, t1.name
+FROM table1 t1;
+DECLARE
+    CURSOR c1 IS SELECT * FROM mv14;
+BEGIN
+    OPEN c1;
+-- 游标操作
+    CLOSE c1;
+END;
+-- 测试用例17：创建物化视图并尝试创建超过127个物化视图（应失败）
+-- 假设已经创建了126个物化视图
+CREATE MATERIALIZED VIEW mv127 AS
+SELECT t1.id, t1.name
+FROM table1 t1;
+-- 尝试创建第128个物化视图（应失败）
+CREATE MATERIALIZED VIEW mv128 AS
+SELECT t1.id, t1.name
+FROM table1 t1;
+-- 测试用例18：创建物化视图并尝试创建外部表（应失败）
+CREATE MATERIALIZED VIEW mv15 AS
+SELECT * FROM external_table;
+-- 假设external_table是外部表;
+-- 测试用例19：创建物化视图并尝试创建包含外部表的视图（应失败）
+CREATE MATERIALIZED VIEW mv16 AS
+SELECT * FROM external_table;
+-- 假设external_table是外部表;
+-- 测试用例20：创建物化视图并尝试创建包含外部表的游标（应失败）
+CREATE MATERIALIZED VIEW mv17 AS
+SELECT * FROM external_table;
+-- 假设external_table是外部表
+
+DECLARE
+    CURSOR c2 IS SELECT * FROM mv17;
+BEGIN
+    OPEN c2;
+-- 游标操作
+    CLOSE c2;
+END

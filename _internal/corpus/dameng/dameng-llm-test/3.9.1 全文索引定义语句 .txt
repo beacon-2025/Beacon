@@ -1,0 +1,39 @@
+-- 创建模式
+CREATE SCHEMA schema1;
+CREATE SCHEMA schema2;
+-- 创建表
+CREATE TABLE schema1.table1 (
+    id INT PRIMARY KEY,
+    text_column1 VARCHAR(255),
+    text_column2 TEXT
+);
+CREATE TABLE schema1.table2 (
+    id INT PRIMARY KEY,
+    text_column1 CLOB,
+    text_column2 VARCHAR(255)
+);
+CREATE TABLE schema2.table3 (
+    id INT PRIMARY KEY,
+    text_column1 TEXT,
+    text_column2 CLOB
+);
+-- 测试用例 1: 在默认模式下创建全文索引，不指定SYNC子句
+CREATE CONTEXT INDEX idx1 ON schema1.table1(text_column1) LEXER CHINESE_LEXER;
+-- 测试用例 2: 在指定模式下创建全文索引，指定SYNC子句
+CREATE CONTEXT INDEX idx2 ON schema1.table2(text_column1) LEXER CHINESE_VGRAM_LEXER SYNC;
+-- 测试用例 3: 在指定模式下创建全文索引，指定SYNC TRANSACTION子句
+CREATE CONTEXT INDEX idx3 ON schema2.table3(text_column1) LEXER CHINESE_FP_LEXER SYNC TRANSACTION;
+-- 测试用例 4: 在默认模式下创建全文索引，使用默认分词器
+CREATE CONTEXT INDEX idx4 ON schema1.table1(text_column2) LEXER DEFAULT_LEXER;
+-- 测试用例 5: 在指定模式下创建全文索引，使用英文分词器
+CREATE CONTEXT INDEX idx5 ON schema2.table3(text_column2) LEXER ENGLISH_LEXER SYNC;
+-- 测试用例 6: 在默认模式下创建全文索引，指定STORAGE子句
+CREATE CONTEXT INDEX idx6 ON schema1.table2(text_column2) LEXER CHINESE_LEXER STORAGE ON 'tablespace1';
+-- 测试用例 7: 在指定模式下创建全文索引，指定STORAGE子句和SYNC子句
+CREATE CONTEXT INDEX idx7 ON schema2.table3(text_column1) LEXER CHINESE_VGRAM_LEXER STORAGE ON 'tablespace2' SYNC;
+-- 测试用例 8: 在默认模式下创建全文索引，指定STORAGE子句和SYNC TRANSACTION子句
+CREATE CONTEXT INDEX idx8 ON schema1.table1(text_column1) LEXER CHINESE_FP_LEXER STORAGE ON 'tablespace3' SYNC TRANSACTION;
+-- 测试用例 9: 在指定模式下创建全文索引，使用默认分词器和SYNC子句
+CREATE CONTEXT INDEX idx9 ON schema2.table3(text_column2) LEXER DEFAULT_LEXER SYNC;
+-- 测试用例 10: 在默认模式下创建全文索引，使用英文分词器和SYNC TRANSACTION子句
+CREATE CONTEXT INDEX idx10 ON schema1.table2(text_column1) LEXER ENGLISH_LEXER SYNC TRANSACTION

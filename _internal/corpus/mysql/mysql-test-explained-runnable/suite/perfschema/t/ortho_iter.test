@@ -1,0 +1,4 @@
+
+
+  -- Dont want to return a 02000 NOT FOUND, there should be a better way
+  signal sqlstate '01000' set message_text='Done', mysql_errno=42000

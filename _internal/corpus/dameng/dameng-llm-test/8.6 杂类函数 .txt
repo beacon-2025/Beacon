@@ -1,0 +1,384 @@
+-- 公共前置语句：创建测试表
+CREATE TABLE test_table1 (
+    id INT PRIMARY KEY,
+    name VARCHAR(50),
+    value INT
+);
+CREATE TABLE test_table2 (
+    id INT PRIMARY KEY,
+    description VARCHAR(100),
+    category VARCHAR(50)
+);
+CREATE TABLE test_table3 (
+    id INT PRIMARY KEY,
+    address VARCHAR(100),
+    city VARCHAR(50),
+    postalcode VARCHAR(20)
+);
+-- 插入测试数据
+INSERT INTO test_table1 (id, name, value) VALUES (1, 'A', 10);
+INSERT INTO test_table1 (id, name, value) VALUES (2, 'B', 20);
+INSERT INTO test_table1 (id, name, value) VALUES (3, 'C', 30);
+INSERT INTO test_table2 (id, description, category) VALUES (1, 'Description 1', 'Category A');
+INSERT INTO test_table2 (id, description, category) VALUES (2, 'Description 2', 'Category B');
+INSERT INTO test_table2 (id, description, category) VALUES (3, 'Description 3', 'Category C');
+INSERT INTO test_table3 (id, address, city, postalcode) VALUES (1, 'Address 1', 'City A', '10001');
+INSERT INTO test_table3 (id, address, city, postalcode) VALUES (2, 'Address 2', 'City B', '20002');
+INSERT INTO test_table3 (id, address, city, postalcode) VALUES (3, 'Address 3', 'City C', '30003');
+-- 测试用例 1: DECODE 函数
+SELECT DECODE(1, 1, 'A', 2, 'B') FROM dual;
+-- 测试用例 2: DECODE 函数
+SELECT DECODE(3, 1, 'A', 2, 'B') FROM dual;
+-- 测试用例 3: DECODE 函数
+SELECT DECODE(3, 1, 'A', 2, 'B', 'C') FROM dual;
+-- 测试用例 4: ISDATE 函数
+SELECT ISDATE('2012-10-9') FROM dual;
+-- 测试用例 5: ISDATE 函数
+SELECT ISDATE('2012-10-9 13:23:37') FROM dual;
+-- 测试用例 6: ISDATE 函数
+SELECT ISDATE(100) FROM dual;
+-- 测试用例 7: ISNUMERIC 函数
+SELECT ISNUMERIC(1.323E+100) FROM dual;
+-- 测试用例 8: ISNUMERIC 函数
+SELECT ISNUMERIC('2a') FROM dual;
+-- 测试用例 9: DM_HASH 函数
+SELECT DM_HASH('DM HASH VALUE') FROM dual;
+-- 测试用例 10: DM_HASH 函数
+SELECT DM_HASH(101) FROM dual;
+-- 测试用例 11: LNNVL 函数
+SELECT LNNVL(1=0) FROM dual;
+-- 测试用例 12: LNNVL 函数
+SELECT T1.name, T2.name
+FROM test_table1 T1
+RIGHT OUTER JOIN test_table2 T2
+ON T1.id = T2.id
+WHERE LNNVL(T1.name <> 'Category A');
+-- 测试用例 13: LENGTHB 函数
+SELECT LENGTHB(0x1234567) "Length in bytes" FROM dual;
+-- 测试用例 14: FIELD 函数
+SELECT FIELD(50, 10, 50, 100) FROM dual;
+-- 测试用例 15: FIELD 函数
+SELECT * FROM test_table3
+ORDER BY FIELD(city, 'City A', 'City B', 'City C');
+-- 测试用例 16: ORA_HASH 函数
+SELECT ORA_HASH('ORA HASH VALUE') FROM dual;
+-- 测试用例 17: ORA_HASH 函数
+SELECT ORA_HASH('ORA HASH VALUE', 5) FROM dual;
+-- 测试用例 18: ORA_HASH 函数
+SELECT ORA_HASH('ORA HASH VALUE', 5, 100) FROM dual;
+-- 测试用例 19: ORA_HASH 函数
+SELECT ORA_HASH('ORA HASH VALUE', 5, 200) FROM dual;
+-- 测试用例 20: ORA_HASH 函数
+SELECT ORA_HASH('ORA HASH VALUE', 88, 100) FROM dual;
+-- 测试用例 21: 事务隔离级别设置
+SET TRANSACTION ISOLATION LEVEL READ COMMITTED;
+-- 测试用例 22: 手动上锁
+LOCK TABLE test_table1 IN EXCLUSIVE MODE;
+-- 测试用例 23: 事务提交
+BEGIN TRANSACTION;
+UPDATE test_table1 SET value = 40 WHERE id = 1;
+COMMIT;
+-- 测试用例 24: 事务回滚
+BEGIN TRANSACTION;
+UPDATE test_table1 SET value = 50 WHERE id = 2;
+ROLLBACK;
+-- 测试用例 25: 事务级读一致性
+SET TRANSACTION ISOLATION LEVEL SERIALIZABLE;
+SELECT * FROM test_table1;
+COMMIT;
+-- 测试用例 26: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table1 WHERE id = 1 FOR UPDATE;
+COMMIT;
+-- 测试用例 27: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table1 SET value = 60 WHERE id = 3;
+COMMIT;
+-- 测试用例 28: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table1 WHERE id = 1;
+COMMIT;
+-- 测试用例 29: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table1 (id, name, value) VALUES (4, 'D', 40);
+COMMIT;
+-- 测试用例 30: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table1 WHERE id = 2 FOR UPDATE;
+COMMIT;
+-- 测试用例 31: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table2 SET category = 'Category D' WHERE id = 1;
+COMMIT;
+-- 测试用例 32: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table2 WHERE id = 2;
+COMMIT;
+-- 测试用例 33: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table2 (id, description, category) VALUES (4, 'Description 4', 'Category D');
+COMMIT;
+-- 测试用例 34: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table2 WHERE id = 3 FOR UPDATE;
+COMMIT;
+-- 测试用例 35: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table3 SET postalcode = '40004' WHERE id = 1;
+COMMIT;
+-- 测试用例 36: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table3 WHERE id = 2;
+COMMIT;
+-- 测试用例 37: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table3 (id, address, city, postalcode) VALUES (4, 'Address 4', 'City D', '40004');
+COMMIT;
+-- 测试用例 38: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table3 WHERE id = 3 FOR UPDATE;
+COMMIT;
+-- 测试用例 39: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table1 SET value = 70 WHERE id = 4;
+COMMIT;
+-- 测试用例 40: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table1 WHERE id = 4;
+COMMIT;
+-- 测试用例 41: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table1 (id, name, value) VALUES (5, 'E', 50);
+COMMIT;
+-- 测试用例 42: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table1 WHERE id = 5 FOR UPDATE;
+COMMIT;
+-- 测试用例 43: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table2 SET category = 'Category E' WHERE id = 4;
+COMMIT;
+-- 测试用例 44: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table2 WHERE id = 4;
+COMMIT;
+-- 测试用例 45: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table2 (id, description, category) VALUES (5, 'Description 5', 'Category E');
+COMMIT;
+-- 测试用例 46: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table2 WHERE id = 5 FOR UPDATE;
+COMMIT;
+-- 测试用例 47: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table3 SET postalcode = '50005' WHERE id = 4;
+COMMIT;
+-- 测试用例 48: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table3 WHERE id = 4;
+COMMIT;
+-- 测试用例 49: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table3 (id, address, city, postalcode) VALUES (5, 'Address 5', 'City E', '50005');
+COMMIT;
+-- 测试用例 50: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table3 WHERE id = 5 FOR UPDATE;
+COMMIT;
+-- 测试用例 51: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table1 SET value = 80 WHERE id = 5;
+COMMIT;
+-- 测试用例 52: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table1 WHERE id = 5;
+COMMIT;
+-- 测试用例 53: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table1 (id, name, value) VALUES (6, 'F', 60);
+COMMIT;
+-- 测试用例 54: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table1 WHERE id = 6 FOR UPDATE;
+COMMIT;
+-- 测试用例 55: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table2 SET category = 'Category F' WHERE id = 5;
+COMMIT;
+-- 测试用例 56: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table2 WHERE id = 5;
+COMMIT;
+-- 测试用例 57: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table2 (id, description, category) VALUES (6, 'Description 6', 'Category F');
+COMMIT;
+-- 测试用例 58: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table2 WHERE id = 6 FOR UPDATE;
+COMMIT;
+-- 测试用例 59: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table3 SET postalcode = '60006' WHERE id = 5;
+COMMIT;
+-- 测试用例 60: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table3 WHERE id = 5;
+COMMIT;
+-- 测试用例 61: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table3 (id, address, city, postalcode) VALUES (6, 'Address 6', 'City F', '60006');
+COMMIT;
+-- 测试用例 62: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table3 WHERE id = 6 FOR UPDATE;
+COMMIT;
+-- 测试用例 63: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table1 SET value = 90 WHERE id = 6;
+COMMIT;
+-- 测试用例 64: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table1 WHERE id = 6;
+COMMIT;
+-- 测试用例 65: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table1 (id, name, value) VALUES (7, 'G', 70);
+COMMIT;
+-- 测试用例 66: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table1 WHERE id = 7 FOR UPDATE;
+COMMIT;
+-- 测试用例 67: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table2 SET category = 'Category G' WHERE id = 6;
+COMMIT;
+-- 测试用例 68: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table2 WHERE id = 6;
+COMMIT;
+-- 测试用例 69: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table2 (id, description, category) VALUES (7, 'Description 7', 'Category G');
+COMMIT;
+-- 测试用例 70: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table2 WHERE id = 7 FOR UPDATE;
+COMMIT;
+-- 测试用例 71: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table3 SET postalcode = '70007' WHERE id = 6;
+COMMIT;
+-- 测试用例 72: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table3 WHERE id = 6;
+COMMIT;
+-- 测试用例 73: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table3 (id, address, city, postalcode) VALUES (7, 'Address 7', 'City G', '70007');
+COMMIT;
+-- 测试用例 74: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table3 WHERE id = 7 FOR UPDATE;
+COMMIT;
+-- 测试用例 75: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table1 SET value = 100 WHERE id = 7;
+COMMIT;
+-- 测试用例 76: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table1 WHERE id = 7;
+COMMIT;
+-- 测试用例 77: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table1 (id, name, value) VALUES (8, 'H', 80);
+COMMIT;
+-- 测试用例 78: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table1 WHERE id = 8 FOR UPDATE;
+COMMIT;
+-- 测试用例 79: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table2 SET category = 'Category H' WHERE id = 7;
+COMMIT;
+-- 测试用例 80: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table2 WHERE id = 7;
+COMMIT;
+-- 测试用例 81: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table2 (id, description, category) VALUES (8, 'Description 8', 'Category H');
+COMMIT;
+-- 测试用例 82: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table2 WHERE id = 8 FOR UPDATE;
+COMMIT;
+-- 测试用例 83: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table3 SET postalcode = '80008' WHERE id = 7;
+COMMIT;
+-- 测试用例 84: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table3 WHERE id = 7;
+COMMIT;
+-- 测试用例 85: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table3 (id, address, city, postalcode) VALUES (8, 'Address 8', 'City H', '80008');
+COMMIT;
+-- 测试用例 86: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table3 WHERE id = 8 FOR UPDATE;
+COMMIT;
+-- 测试用例 87: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table1 SET value = 110 WHERE id = 8;
+COMMIT;
+-- 测试用例 88: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table1 WHERE id = 8;
+COMMIT;
+-- 测试用例 89: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table1 (id, name, value) VALUES (9, 'I', 90);
+COMMIT;
+-- 测试用例 90: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table1 WHERE id = 9 FOR UPDATE;
+COMMIT;
+-- 测试用例 91: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table2 SET category = 'Category I' WHERE id = 8;
+COMMIT;
+-- 测试用例 92: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table2 WHERE id = 8;
+COMMIT;
+-- 测试用例 93: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table2 (id, description, category) VALUES (9, 'Description 9', 'Category I');
+COMMIT;
+-- 测试用例 94: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table2 WHERE id = 9 FOR UPDATE;
+COMMIT;
+-- 测试用例 95: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table3 SET postalcode = '90009' WHERE id = 8;
+COMMIT;
+-- 测试用例 96: 并发控制
+BEGIN TRANSACTION;
+DELETE FROM test_table3 WHERE id = 8;
+COMMIT;
+-- 测试用例 97: 并发控制
+BEGIN TRANSACTION;
+INSERT INTO test_table3 (id, address, city, postalcode) VALUES (9, 'Address 9', 'City I', '90009');
+COMMIT;
+-- 测试用例 98: 并发控制
+BEGIN TRANSACTION;
+SELECT * FROM test_table3 WHERE id = 9 FOR UPDATE;
+COMMIT;
+-- 测试用例 99: 并发控制
+BEGIN TRANSACTION;
+UPDATE test_table1 SET value = 120 WHERE id = 9;
+COMMIT

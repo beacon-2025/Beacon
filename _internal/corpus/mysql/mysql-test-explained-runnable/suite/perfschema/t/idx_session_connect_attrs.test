@@ -1,0 +1,4 @@
+
+
+select PROCESSLIST_ID from performance_schema.session_connect_attrs limit 1
+  into @plid

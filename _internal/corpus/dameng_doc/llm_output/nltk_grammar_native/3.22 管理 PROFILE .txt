@@ -1,0 +1,4 @@
+```plaintext
+S -> MANAGE_PROFILE
+MANAGE_PROFILE -> 'CREATE' 'PROFILE' 'profile_name_1' | 'ALTER' 'PROFILE' 'profile_name_1' | 'DROP' 'PROFILE' 'profile_name_1' | 'GRANT' 'DDL' 'TO' 'user_name_1' | 'ASSOCIATE' 'PROFILE' 'WITH' 'user_name_1'
+```

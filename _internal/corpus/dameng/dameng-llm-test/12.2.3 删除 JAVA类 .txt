@@ -1,0 +1,30 @@
+-- 创建一些JAVA类以供测试
+CREATE CLASS TestClass1;
+CREATE CLASS TestClass2;
+CREATE CLASS TestClass3;
+-- 测试用例1: 删除一个存在的JAVA类
+DROP CLASS TestClass1;
+-- 测试用例2: 删除一个不存在的JAVA类（不使用IF EXISTS）
+-- 预期结果：报错
+DROP CLASS NonExistentClass;
+-- 测试用例3: 删除一个不存在的JAVA类（使用IF EXISTS）
+-- 预期结果：不报错
+DROP CLASS IF EXISTS NonExistentClass;
+-- 测试用例4: 删除一个存在的JAVA类并使用RESTRICT选项
+DROP CLASS TestClass2 RESTRICT;
+-- 测试用例5: 删除一个存在的JAVA类并使用CASCADE选项
+DROP CLASS TestClass3 CASCADE;
+-- 测试用例6: 删除一个不存在的JAVA类并使用RESTRICT选项（不使用IF EXISTS）
+-- 预期结果：报错
+DROP CLASS NonExistentClass RESTRICT;
+-- 测试用例7: 删除一个不存在的JAVA类并使用CASCADE选项（不使用IF EXISTS）
+-- 预期结果：报错
+DROP CLASS NonExistentClass CASCADE;
+-- 测试用例8: 删除一个不存在的JAVA类并使用RESTRICT选项（使用IF EXISTS）
+-- 预期结果：不报错
+DROP CLASS IF EXISTS NonExistentClass RESTRICT;
+-- 测试用例9: 删除一个不存在的JAVA类并使用CASCADE选项（使用IF EXISTS）
+-- 预期结果：不报错
+DROP CLASS IF EXISTS NonExistentClass CASCADE;
+-- 测试用例10: 删除多个JAVA类（使用IF EXISTS）
+DROP CLASS IF EXISTS TestClass1, TestClass2, TestClass3

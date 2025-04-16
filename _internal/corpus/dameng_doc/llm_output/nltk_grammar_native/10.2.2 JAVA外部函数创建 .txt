@@ -1,0 +1,12 @@
+```plaintext
+CREATE_JAVA_FUNCTION -> 'CREATE' 'OR' 'REPLACE' 'FUNCTION' SCHEMA_NAME '.' FUNCTION_NAME '(' PARAMETER_LIST ')' 'RETURN' RETURN_TYPE 'EXTERNAL' JAR_PATH ALIAS 'USING' 'JAVA'
+SCHEMA_NAME -> 'schemaname_1'
+FUNCTION_NAME -> 'functionname_1'
+PARAMETER_LIST -> PARAMETER | PARAMETER ',' PARAMETER
+PARAMETER -> PARAMETER_MODE PARAMETER_TYPE
+PARAMETER_MODE -> 'IN' | 'OUT' | 'IN OUT' | 'OUT IN'
+PARAMETER_TYPE -> 'int_value' | 'string_value' | 'bigint_value' | 'double_value'
+RETURN_TYPE -> 'datatype_1'
+JAR_PATH -> 'jarpath_value'
+ALIAS -> 'alias_value' | ''
+```

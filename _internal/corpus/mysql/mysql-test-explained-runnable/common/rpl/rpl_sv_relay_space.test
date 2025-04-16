@@ -1,0 +1,6 @@
+
+
+#
+# Bug#7100 relay_log_space_max missing from SHOW VARIABLES
+#
+SHOW VARIABLES LIKE 'relay_log_space_limit'
