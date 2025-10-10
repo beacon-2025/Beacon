@@ -1,0 +1,10 @@
+{
+  "database": "StarRocks",
+  "status": "success",
+  "total_statements": 67897,
+  "valid_statements": 11889,
+  "failed_statements": 56008,
+  "empty_statements": 9018,
+  "add_only_statements": 11984,
+  "success_rate": 0.17510346554339662
+}

@@ -1,0 +1,11 @@
+{
+  "database": "ClickHouse",
+  "status": "success",
+  "total_statements": 76074,
+  "skipped_statements": 60368,
+  "valid_statements": 9187,
+  "failed_statements": 6519,
+  "empty_statements": 3160,
+  "add_only_statements": 7727,
+  "success_rate": 0.5849356933655928
+}

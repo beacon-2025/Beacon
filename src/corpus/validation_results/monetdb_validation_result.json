@@ -1,0 +1,10 @@
+{
+  "database": "MonetDB",
+  "status": "success",
+  "total_statements": 9950,
+  "valid_statements": 4159,
+  "failed_statements": 5791,
+  "empty_statements": 279,
+  "add_only_statements": 1981,
+  "success_rate": 0.4179899497487437
+}

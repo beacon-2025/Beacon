@@ -1,0 +1,10 @@
+{
+  "database": "Dameng",
+  "status": "success",
+  "total_statements": 12129,
+  "valid_statements": 6140,
+  "failed_statements": 5989,
+  "empty_statements": 438,
+  "add_only_statements": 2500,
+  "success_rate": 0.506224750597741
+}

@@ -1,0 +1,11 @@
+{
+  "database": "Oracle",
+  "status": "success",
+  "total_statements": 169107,
+  "skipped_statements": 112005,
+  "valid_statements": 26771,
+  "failed_statements": 30331,
+  "empty_statements": 4619,
+  "add_only_statements": 15214,
+  "success_rate": 0.46882771181394695
+}

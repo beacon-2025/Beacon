@@ -1,0 +1,10 @@
+{
+  "database": "OceanBase",
+  "status": "success",
+  "total_statements": 41094,
+  "valid_statements": 19553,
+  "failed_statements": 21541,
+  "empty_statements": 2124,
+  "add_only_statements": 8958,
+  "success_rate": 0.47581155399815056
+}

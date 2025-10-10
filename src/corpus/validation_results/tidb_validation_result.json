@@ -1,0 +1,10 @@
+{
+  "database": "TiDB",
+  "status": "success",
+  "total_statements": 30377,
+  "valid_statements": 14615,
+  "failed_statements": 15762,
+  "empty_statements": 3896,
+  "add_only_statements": 4910,
+  "success_rate": 0.48112058465286234
+}

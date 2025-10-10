@@ -1,0 +1,10 @@
+{
+  "database": "H2",
+  "status": "success",
+  "total_statements": 12522,
+  "valid_statements": 7088,
+  "failed_statements": 5434,
+  "empty_statements": 763,
+  "add_only_statements": 2860,
+  "success_rate": 0.5660437629771602
+}

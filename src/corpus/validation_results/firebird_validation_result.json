@@ -1,0 +1,11 @@
+{
+  "database": "Firebird",
+  "status": "success",
+  "total_statements": 68546,
+  "skipped_statements": 48864,
+  "valid_statements": 11074,
+  "failed_statements": 8608,
+  "empty_statements": 4047,
+  "add_only_statements": 8935,
+  "success_rate": 0.5626460725536023
+}

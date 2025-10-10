@@ -1,0 +1,11 @@
+{
+  "database": "PostgreSQL",
+  "status": "success",
+  "total_statements": 257873,
+  "skipped_statements": 160728,
+  "valid_statements": 45604,
+  "failed_statements": 51541,
+  "empty_statements": 15638,
+  "add_only_statements": 28748,
+  "success_rate": 0.4694425858253127
+}

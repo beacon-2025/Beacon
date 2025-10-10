@@ -1,0 +1,11 @@
+{
+  "database": "SQLServer",
+  "status": "success",
+  "total_statements": 350880,
+  "skipped_statements": 240809,
+  "valid_statements": 36581,
+  "failed_statements": 73490,
+  "empty_statements": 56349,
+  "add_only_statements": 27733,
+  "success_rate": 0.3323400350682741
+}

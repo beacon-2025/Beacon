@@ -1,0 +1,10 @@
+SELECT SUBSTRING_INDEX(USER(), '@', 1) AS name, 'USER' AS type, null AS parentname;
+SELECT DISTINCT user AS name, 'USER' AS type, null AS parentname FROM mysql.user;
+SELECT table_name AS name, 'TABLE' AS type, '' AS parentname FROM information_schema.tables WHERE table_type='BASE TABLE';
+SELECT column_name AS name, 'COLUMN' AS type, table_name AS parentname FROM information_schema.columns;
+SELECT table_name AS name, 'VIEW' AS type, null AS parentname FROM information_schema.VIEWS;
+SELECT event_name AS name, 'EVENT' AS type, null AS parentname FROM information_schema.events;
+SELECT DISTINCT routine_name AS name, routine_type AS type, null AS parentname FROM information_schema.ROUTINES;
+SELECT trigger_name AS name, 'TRIGGER' AS type, null AS parentname FROM information_schema.triggers;
+SELECT table_name AS name, 'STATISTICS' AS type, null AS parentname FROM information_schema.statistics;
+SELECT SCHEMA_NAME AS name, 'SCHEMA' AS type, null AS parentname FROM information_schema.SCHEMATA;

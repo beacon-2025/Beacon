@@ -1,0 +1,10 @@
+{
+  "database": "MariaDB",
+  "status": "success",
+  "total_statements": 67897,
+  "valid_statements": 33381,
+  "failed_statements": 34516,
+  "empty_statements": 9018,
+  "add_only_statements": 11984,
+  "success_rate": 0.4916417514765012
+}
